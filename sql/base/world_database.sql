@@ -18189,6 +18189,8 @@ INSERT INTO `spell_linked_spell` (`spell_trigger`,`spell_effect`,`type`,`comment
 ( 71480, 71483, 1, 'Blood-Queen: Bloodbolt Splash'),
 ( 71952, 70995, 1, 'Blood-Queen: Presence of the Darkfallen'),
 ( 70157, 69700, 2, 'Sindragosa - Ice Tomb resistance'),
+-- Eye Of Eternity
+( 56397, 63934, 1,'Arcane Barrage - Arcane Barrage'),
 -- Isle of Conquest
 ( 66548, 66550, 0, 'Isle of Conquest (IN>OUT)'),
 ( 66549, 66551, 0, 'Isle of Conquest (OUT>IN)'),
@@ -18212,6 +18214,7 @@ INSERT INTO `spell_linked_spell` (`spell_trigger`,`spell_effect`,`type`,`comment
 ( 50141, 50001, 0, 'Blood Oath to Blood Oath Aura'),
 ( 61263, 61267, 0, 'Intravenous Healing Effect'),
 ( 61263, 61268, 0, 'Intravenous Mana Regeneration Effect'),
+(-57350,60242,0, 'Darkmoon Card: Illusion'),
 -- PvP Trinket / Every Man for Himself / Will of the Forsaken
 (7744, 72757, 0, 'Will of the Forsaken Cooldown Trigger (WOTF)'),
 (42292, 72752, 0, 'Will of the Forsaken Cooldown Trigger'),
@@ -18380,6 +18383,11 @@ INSERT INTO `spell_proc_event` (`entry`,`SchoolMask`,`SpellFamilyName`,`SpellFam
 ( 11180, 0x10,   3, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,   0,   0,   0), -- Winter's Chill (Rank 1)
 ( 11185, 0x00,   3, 0x00000080, 0x00000000, 0x00000000, 0x00050000, 0x00000000,   0,   0,   0), -- Improved Blizzard (Rank 1)
 ( 11255, 0x00,   3, 0x00004000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,   0,   0,   0), -- Improved Counterspell (Rank 1)
+( 11213, 0x00,   3, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,   0,   0,   0), -- Arcane Concentration (Rank 1)
+( 12574, 0x00,   3, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,   0,   0,   0), -- Arcane Concentration (Rank 2)
+( 12575, 0x00,   3, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,   0,   0,   0), -- Arcane Concentration (Rank 3)
+( 12576, 0x00,   3, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,   0,   0,   0), -- Arcane Concentration (Rank 4)
+( 12577, 0x00,   3, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,   0,   0,   0), -- Arcane Concentration (Rank 5)
 ( 12169, 0x00,   0, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000040,   0,   0,   0), -- Shield Block
 ( 12289, 0x00,   4, 0x00000002, 0x00000000, 0x00000000, 0x00000000, 0x00000000,   0,   0,   0), -- Improved Hamstring (Rank 1)
 ( 12298, 0x00,   0, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000070,   0,   0,   0), -- Shield Specialization (Rank 1)
@@ -27806,7 +27814,7 @@ CREATE TABLE `vehicle_accessory` (
   `seat_id` TINYINT(1) SIGNED NOT NULL DEFAULT 0,
   `minion` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
   `description` TEXT NOT NULL,
-  PRIMARY KEY (`entry`, `seat_id`)
+  PRIMARY KEY (`accessory_entry`, `seat_id`)
 )
 COLLATE=utf8_general_ci
 ENGINE=MyISAM
