@@ -32,13 +32,14 @@ enum Spells
     SPELL_FLASH_FREEZE_VISUAL                   = 62148,
     SPELL_BITING_COLD                           = 62038,
     SPELL_BITING_COLD_TRIGGERED                 = 62039,
+    SPELL_BITING_COLD_DAMAGE                    = 62188,
     SPELL_FREEZE                                = 62469,
     SPELL_ICICLE                                = 62234,
     SPELL_ICICLE_SNOWDRIFT                      = 62462,
     SPELL_BLOCK_OF_ICE                          = 61969,
     SPELL_BLOCK_OF_ICE_NPC                      = 61990,
     SPELL_FROZEN_KILL                           = 62226,
-    SPELL_ICICLE_FALL                           = 69428,
+    SPELL_ICICLE_FALL                           = 62453,//69428,
     SPELL_FALL_DAMAGE                           = 62236,
     SPELL_FALL_SNOWDRIFT                        = 62460,
     SPELL_BERSERK                               = 47008,
@@ -212,7 +213,7 @@ public:
             _EnterCombat();
             DoScriptText(SAY_AGGRO, me);
             me->SetReactState(REACT_AGGRESSIVE);
-            DoCast(me, SPELL_BITING_COLD, true);
+            DoCast(me, SPELL_BITING_COLD, false);
             events.ScheduleEvent(EVENT_ICICLE, 2000);
             events.ScheduleEvent(EVENT_FREEZE, 25000);
             events.ScheduleEvent(EVENT_BLOWS, urand(60000, 65000));
@@ -323,6 +324,9 @@ public:
             {
                 if (Unit *pTarget = Unit::GetUnit(*me, (*itr)->getUnitGuid()))
                 {
+                    if(!pTarget->ToPlayer())
+                        continue;
+
                     if (pTarget->HasAura(SPELL_BLOCK_OF_ICE))
                     {
                         DoCast(pTarget, SPELL_FROZEN_KILL);
@@ -374,10 +378,8 @@ public:
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_PACIFIED);
             me->SetReactState(REACT_PASSIVE);
             me->SetDisplayId(28470);
-            pInstance = pCreature->GetInstanceScript();
         }
 
-        InstanceScript* pInstance;
         uint32 IcicleTimer;
 
         void Reset()
@@ -389,11 +391,8 @@ public:
         {
             if (IcicleTimer <= diff)
             {
-                if(pInstance)
-                {
-                    me->CastSpell(me, SPELL_FALL_DAMAGE,true,0,0,pInstance->GetData64(TYPE_HODIR));
-                    me->CastSpell(me, SPELL_ICICLE_FALL,true,0,0,pInstance->GetData64(TYPE_HODIR));
-                }
+                DoCast(me, SPELL_FALL_DAMAGE);
+                DoCast(me, SPELL_ICICLE_FALL);
                 IcicleTimer = 10000;
             }
             else IcicleTimer -= diff;
@@ -401,7 +400,6 @@ public:
     };
 
 };
-
 
 class npc_icicle_snowdrift : public CreatureScript
 {
@@ -862,6 +860,46 @@ public:
     };
 };
 
+class spell_biting_cold : public SpellScriptLoader
+{
+    public:
+        spell_biting_cold() : SpellScriptLoader("spell_biting_cold") { }
+
+    class spell_biting_cold_AuraScript : public AuraScript
+    {
+        PrepareAuraScript(spell_biting_cold_AuraScript)
+
+        void HandlePeriodicDummy(AuraEffect const* aurEff)
+        {
+            PreventDefaultAction();
+            if (Unit* trigger = GetTarget())
+            {
+                if(aurEff->GetSpellProto()->Id == SPELL_BITING_COLD)
+                {
+                    if(trigger->ToPlayer())
+                        trigger->CastSpell(trigger,SPELL_BITING_COLD_TRIGGERED,true,0,0,GetCasterGUID());
+                }
+                else if(aurEff->GetSpellProto()->Id == SPELL_BITING_COLD_TRIGGERED)
+                {
+                    int32 damage = trigger->GetAuraCount(SPELL_BITING_COLD_TRIGGERED);
+                    damage *= 400;
+                    trigger->CastCustomSpell(trigger,SPELL_BITING_COLD_DAMAGE, &damage, NULL, NULL, true, 0, 0, GetCasterGUID());
+                }
+            }
+        }
+
+        void Register()
+        {
+            OnEffectPeriodic += AuraEffectPeriodicFn(spell_biting_cold_AuraScript::HandlePeriodicDummy, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+        }
+    };
+
+    AuraScript *GetAuraScript() const
+    {
+        return new spell_biting_cold_AuraScript();
+    }
+};
+
 /*
 -- Hodir
 UPDATE `creature_template` SET `mechanic_immune_mask` = 650854239, `flags_extra` = 1, `ScriptName` = 'boss_hodir' WHERE `entry` = 32845;
@@ -881,6 +919,12 @@ UPDATE `creature_template` SET `difficulty_entry_1` = 33353, `mechanic_immune_ma
 UPDATE `creature_template` SET `mechanic_immune_mask` = 612597599 WHERE `entry` IN (33352, 33353);
 UPDATE `gameobject_template` SET `flags` = 4 WHERE `entry` = 194173;
 
+DELETE FROM spell_script_names WHERE spell_id IN (62038,62039);
+INSERT INTO spell_script_names (spell_id,Scriptname)
+VALUES
+(62038,'spell_biting_cold'),
+(62039,'spell_biting_cold');
+
 -- Cleanup
 DELETE FROM `creature` WHERE `id` IN (32950, 32941, 32948, 32946, 32938);
 */
@@ -896,4 +940,5 @@ void AddSC_boss_hodir()
     new npc_hodir_mage();
     new npc_toasty_fire();
     new npc_flash_freeze();
+    new spell_biting_cold();
 }

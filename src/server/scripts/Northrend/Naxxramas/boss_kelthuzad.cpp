@@ -233,7 +233,14 @@ const Position PosWastes[MAX_WASTES] =
 enum Achievements
 {
     ACHIEVEMENT_THE_UNDYING_10 = 2187,
-    ACHIEVEMENT_THE_IMMORTAL_25 = 2186
+    ACHIEVEMENT_THE_IMMORTAL_25 = 2186,
+    ACHIEVEMENT_JUST_CANT_GET_ENOUGH_10 = 2184,
+    ACHIEVEMENT_JUST_CANT_GET_ENOUGH_25 = 2185,
+};
+
+enum Actions
+{
+    ACTION_ABO_KILLED,
 };
 
 //Soul Weavers
@@ -273,6 +280,7 @@ public:
         uint32 Phase;
         uint32 uiGuardiansOfIcecrownTimer;
         uint32 uiFaction;
+        uint32 uiAbosKilled;
 
         uint8  nGuardiansOfIcecrownCount;
         uint8  nAbomination;
@@ -327,6 +335,7 @@ public:
             Phase = 0;
             nAbomination = 0;
             nWeaver = 0;
+            uiAbosKilled = 0;
         }
 
         void KilledUnit(Unit* /*victim*/)
@@ -349,6 +358,20 @@ public:
 
             if (instance && instance->GetData(DATA_PLAYER_DEATHS) == 0)
                 instance->DoCompleteAchievement(RAID_MODE(ACHIEVEMENT_THE_UNDYING_10,ACHIEVEMENT_THE_IMMORTAL_25));
+
+            if(instance && uiAbosKilled >= 18)
+                instance->DoCompleteAchievement(RAID_MODE(ACHIEVEMENT_JUST_CANT_GET_ENOUGH_10,ACHIEVEMENT_JUST_CANT_GET_ENOUGH_25));
+                
+        }
+
+        void DoAction(const int32 action)
+        {
+            switch(action)
+            {
+            case ACTION_ABO_KILLED:
+                uiAbosKilled++;
+                break;
+            }
         }
 
         void EnterCombat(Unit* /*who*/)
@@ -780,8 +803,12 @@ public:
 
     struct mob_unstoppable_abominationAI : ScriptedAI 
     {
-        mob_unstoppable_abominationAI(Creature *c) : ScriptedAI(c){}
+        mob_unstoppable_abominationAI(Creature *c) : ScriptedAI(c)
+        {
+            m_pInstance = c->GetInstanceScript();
+        }
 
+        InstanceScript* m_pInstance;
         uint32 uiMortalWound_Timer;
 
         void Reset()
@@ -791,7 +818,16 @@ public:
         void EnterCombat(Unit* /*who*/)
         {
         }
-        
+
+        void JustDied(Unit *killer)
+        {
+            if(!m_pInstance || m_pInstance->GetBossState(BOSS_KELTHUZAD) != IN_PROGRESS)
+                return;
+
+            if(Creature* kel = Creature::GetCreature((*me),m_pInstance->GetData64(DATA_KELTHUZAD)))
+                kel->AI()->DoAction(ACTION_ABO_KILLED);
+        }
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )

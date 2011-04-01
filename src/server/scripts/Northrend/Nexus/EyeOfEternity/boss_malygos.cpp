@@ -140,6 +140,14 @@ enum eMovePoints
     POINT_PHASE_3       = 6
 };
 
+enum eAchievements
+{
+    ACHIEVEMENT_YOU_DONT_HAVE_AN_ETERNITY_10    = 1874,
+    ACHIEVEMENT_YOU_DONT_HAVE_AN_ETERNITY_25    = 1875,
+    ACHIEVEMENT_DENYIN_THE_SCION_10             = 2148,
+    ACHIEVEMENT_DENYIN_THE_SCION_25             = 2149,
+};
+
 static Position Locations[]=
 {
     {1178.01f, 1276.01f, 268.2f, 2.3143f},  // p0 - first fly down position
@@ -323,6 +331,9 @@ public:
             DoScriptText(SAY_DEATH, me);
             Summons.DespawnAll(); // only static fields left
             me->SummonCreature(NPC_ALEXSTRASZA, Locations[3], TEMPSUMMON_TIMED_DESPAWN, 9*MINUTE*IN_MILLISECONDS);
+
+            if(uiEnrageTimer >= 4*MINUTE*IN_MILLISECONDS) //Killed in 4 mins or less
+                m_pInstance->DoCompleteAchievement(RAID_MODE(ACHIEVEMENT_YOU_DONT_HAVE_AN_ETERNITY_10,ACHIEVEMENT_YOU_DONT_HAVE_AN_ETERNITY_25));
         }
 
         void MoveInLineOfSight(Unit* pWho)
@@ -975,6 +986,18 @@ public:
         {
             if (spell->Id == SPELL_ARCANE_BARRAGE)
                 target->CastSpell(target, SPELL_ARCANE_BARRAGE_DMG, true, NULL, NULL, me->GetGUID());
+        }
+
+        void JustDied(Unit *killer)
+        {
+            if(!killer->ToPlayer())
+                return;
+
+            if(killer->GetVehicle() && (killer->GetVehicle()->GetCreatureEntry() == 30234 || killer->GetVehicle()->GetCreatureEntry() == 30248))
+            {
+                if(AchievementEntry const* pAE = GetAchievementStore()->LookupEntry(RAID_MODE(ACHIEVEMENT_DENYIN_THE_SCION_10,ACHIEVEMENT_DENYIN_THE_SCION_25)))
+                    killer->ToPlayer()->CompletedAchievement(pAE,false);
+            }
         }
 
         void UpdateAI(const uint32 uiDiff)

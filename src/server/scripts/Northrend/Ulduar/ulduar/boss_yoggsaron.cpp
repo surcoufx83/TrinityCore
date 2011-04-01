@@ -875,6 +875,7 @@ public:
             case DATA_PORTAL_PHASE:
                 return currentBrainEventPhase;
             }
+            return 0;
         }
 
         void SetPhase(BossPhase newPhase)

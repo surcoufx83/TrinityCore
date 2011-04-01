@@ -3087,14 +3087,14 @@ bool SpellArea::IsFitToRequirements(Player const* player, uint32 newZone, uint32
                 break;
             }
         case 58730: // No fly Zone - Wintergrasp
-			{
-				if (sWorld->getBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
-				{
-				  if ((pvpWG->isWarTime()==false) || !player || (!player->HasAuraType(SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED) && !player->HasAuraType(SPELL_AURA_FLY)) || player->HasAura(45472) || player->HasAura(44795) || player->GetPositionZ() > 619.2f || player->isInFlight())
-				    return false;
-				}
+            {
+                if (sWorld->getBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
+                {
+                    if ((pvpWG->isWarTime()==false) || !player || (!player->HasAuraType(SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED) && !player->HasAuraType(SPELL_AURA_FLY)) || player->HasAura(45472) || player->HasAura(44795) || player->GetPositionZ() > 619.2f || player->isInFlight())
+                    return false;
+                }
                 break;
-			}
+            }
         case 58045: // Essence of Wintergrasp - Wintergrasp
         case 57940: // Essence of Wintergrasp - Northrend
              if (!player || player->GetTeamId() != sWorld->getWorldState(WORLDSTATE_WINTERGRASP_CONTROLING_FACTION))
@@ -4089,6 +4089,10 @@ void SpellMgr::LoadSpellCustomAttr()
             break;
         // ULDUAR SPELLS
         //
+        case 62039: // Hodir - Biting Cold - Remove on Move
+            spellInfo->AuraInterruptFlags |= AURA_INTERRUPT_FLAG_MOVE;
+            count++;
+            break;
         case 62775: // XT-002 - Tympanic Tantrum
             mSpellCustomAttr[i] |= SPELL_ATTR0_CU_IGNORE_ARMOR;
             count++;
