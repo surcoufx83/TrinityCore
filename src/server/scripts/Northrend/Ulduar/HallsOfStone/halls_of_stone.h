@@ -17,6 +17,7 @@
 
 #ifndef DEF_HALLS_OF_STONE_H
 #define DEF_HALLS_OF_STONE_H
+
 enum Data
 {
     DATA_KRYSTALLUS_EVENT,
@@ -24,6 +25,7 @@ enum Data
     DATA_SJONNIR_EVENT,
     DATA_BRANN_EVENT
 };
+
 enum Data64
 {
     DATA_KRYSTALLUS,
@@ -40,6 +42,7 @@ enum Data64
     DATA_SJONNIR_DOOR,
     DATA_MAIDEN_DOOR
 };
+
 enum Creatures
 {
     CREATURE_MAIDEN                                        = 27975,
@@ -50,6 +53,7 @@ enum Creatures
     CREATURE_ABEDNEUM                                      = 30899,
     CREATURE_BRANN                                         = 28070
 };
+
 enum GameObjects
 {
     GO_ABEDNEUM                                            = 191669,
@@ -60,6 +64,8 @@ enum GameObjects
     GO_SJONNIR_DOOR                                        = 191296,
     GO_TRIBUNAL_CONSOLE                                    = 193907,
     GO_TRIBUNAL_CHEST                                      = 190586,
-    GO_TRIBUNAL_CHEST_HERO                                 = 193996
+    GO_TRIBUNAL_CHEST_HERO                                 = 193996,
+    GO_TRIBUNAL_SKYROOM_FLOOR                              = 191527
 };
+
 #endif

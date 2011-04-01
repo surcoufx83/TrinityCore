@@ -91,7 +91,7 @@ public:
 
         void OnCreatureCreate(Creature* creature)
         {
-            switch(creature->GetEntry())
+            switch (creature->GetEntry())
             {
                 case CREATURE_MAIDEN: uiMaidenOfGrief = creature->GetGUID(); break;
                 case CREATURE_KRYSTALLUS: uiKrystallus = creature->GetGUID(); break;
@@ -105,7 +105,7 @@ public:
 
         void OnGameObjectCreate(GameObject* go)
         {
-            switch(go->GetEntry())
+            switch (go->GetEntry())
             {
                 case GO_ABEDNEUM:
                     uiAbedneumGo = go->GetGUID();
@@ -144,9 +144,9 @@ public:
                 case GO_TRIBUNAL_CHEST_HERO:
                     uiTribunalChest = go->GetGUID();
                     if (m_auiEncounter[2] == DONE)
-                        go->RemoveFlag(GAMEOBJECT_FLAGS,GO_FLAG_INTERACT_COND);
+                        go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_INTERACT_COND);
                     break;
-                case 191527:
+                case GO_TRIBUNAL_SKYROOM_FLOOR:
                     uiTribunalSkyFloor = go->GetGUID();
                     break;
             }
@@ -154,30 +154,30 @@ public:
 
         void SetData(uint32 type, uint32 data)
         {
-            switch(type)
+            switch (type)
             {
-                case DATA_MAIDEN_OF_GRIEF_EVENT:
-                    m_auiEncounter[1] = data;
-                    if (m_auiEncounter[1] == DONE)
-                        HandleGameObject(uiBrannDoor,true);
-                    break;
                 case DATA_KRYSTALLUS_EVENT:
                     m_auiEncounter[0] = data;
                     if (m_auiEncounter[0] == DONE)
-                        HandleGameObject(uiMaidenOfGriefDoor,true);
+                        HandleGameObject(uiMaidenOfGriefDoor, true);
                     break;
-                case DATA_SJONNIR_EVENT:
-                    m_auiEncounter[3] = data;
+                case DATA_MAIDEN_OF_GRIEF_EVENT:
+                    m_auiEncounter[1] = data;
+                    if (m_auiEncounter[1] == DONE)
+                        HandleGameObject(uiBrannDoor, true);
                     break;
                 case DATA_BRANN_EVENT:
                     m_auiEncounter[2] = data;
                     if (m_auiEncounter[2] == DONE)
                     {
-                        HandleGameObject(uiSjonnirDoor,true);
+                        HandleGameObject(uiSjonnirDoor, true);
                         GameObject* go = instance->GetGameObject(uiTribunalChest);
                         if (go)
-                            go->RemoveFlag(GAMEOBJECT_FLAGS,GO_FLAG_INTERACT_COND);
+                            go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_INTERACT_COND);
                     }
+                    break;
+                case DATA_SJONNIR_EVENT:
+                    m_auiEncounter[3] = data;
                     break;
             }
 
@@ -187,12 +187,12 @@ public:
 
         uint32 GetData(uint32 type)
         {
-            switch(type)
+            switch (type)
             {
                 case DATA_KRYSTALLUS_EVENT:                return m_auiEncounter[0];
                 case DATA_MAIDEN_OF_GRIEF_EVENT:           return m_auiEncounter[1];
-                case DATA_SJONNIR_EVENT:                   return m_auiEncounter[2];
-                case DATA_BRANN_EVENT:                     return m_auiEncounter[3];
+                case DATA_BRANN_EVENT:                     return m_auiEncounter[2];
+                case DATA_SJONNIR_EVENT:                   return m_auiEncounter[3];
             }
 
             return 0;
@@ -200,7 +200,7 @@ public:
 
         uint64 GetData64(uint32 identifier)
         {
-            switch(identifier)
+            switch (identifier)
             {
                 case DATA_MAIDEN_OF_GRIEF:                 return uiMaidenOfGrief;
                 case DATA_KRYSTALLUS:                      return uiKrystallus;
