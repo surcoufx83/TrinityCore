@@ -52,3 +52,15 @@ VALUES
 
 DELETE FROM disables WHERE sourceType = 4 AND entry IN 
 (10321,10322,10323,10324,10325,10326);
+
+-- For Achievement He Feeds on your Tears
+DELETE FROM achievement_criteria_data WHERE `type` = 18 AND criteria_id IN
+(10568,10570);
+
+INSERT INTO achievement_criteria_data (`criteria_id`,`type`,`value1`,`value2`,`ScriptName`)
+VALUES
+(10568,18,0,0,''),
+(10570,18,0,0,'');
+
+DELETE FROM disables WHERE sourceType = 4 AND entry IN 
+(10568,10570);
