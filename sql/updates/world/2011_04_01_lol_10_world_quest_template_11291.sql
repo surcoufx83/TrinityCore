@@ -16,4 +16,4 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 -- conditions
 DELETE FROM `conditions` WHERE `SourceGroup` = @Gossip AND `SourceTypeOrReferenceId` = 28;
 INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry`, `ElseGroup`, `ConditionTypeOrReference`, `ConditionValue1`, `ConditionValue2`, `ConditionValue3`, `ErrorTextId`, `ScriptName`, `Comment`) VALUES 
-(28,@Gossip,0,0,9,@Quest,0,0,0,'','show gossip menu option if player has completed 11291');
+(15,@Gossip,0,0,28,@Quest,0,0,0,'','show gossip menu option if player has completed 11291');
