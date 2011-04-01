@@ -80,7 +80,7 @@ public:
             return false;
 
         int pos = action - GOSSIP_ACTION_INFO_DEF;
-        if(pos > 0 && pos < MAX)
+        if(pos >= 0 && pos < MAX)
             pPlayer->TeleportTo(MAP_ULDUAR, TeleportPointsUlduarGOs[pos][0], TeleportPointsUlduarGOs[pos][1], TeleportPointsUlduarGOs[pos][2], 0.0f);
         pPlayer->CLOSE_GOSSIP_MENU();
 

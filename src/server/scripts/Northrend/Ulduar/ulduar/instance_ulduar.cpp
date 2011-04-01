@@ -98,6 +98,8 @@ public:
         std::set<uint64> mRubbleSpawns;
 
         uint32 uiSupportKeeperFlag;
+        uint32 uiPlayerDeathFlag;
+        uint32 uiAlgalonKillCount;
 
         void Initialize()
         {
@@ -139,6 +141,8 @@ public:
             uiYoggSaronBrainDoor2GUID = 0;
             uiYoggSaronBrainDoor3GUID = 0;
             uiSupportKeeperFlag     = 0;
+            uiPlayerDeathFlag      = 0;
+            uiAlgalonKillCount = 0;
 
             memset(uiEncounter, 0, sizeof(uiEncounter));
             memset(uiAssemblyGUIDs, 0, sizeof(uiAssemblyGUIDs));
@@ -154,6 +158,134 @@ public:
                     return true;
             }
 
+            return false;
+        }
+
+        uint32 TypeToDeadFlag(uint32 type)
+        {
+            uint32 return_value = 1;
+            for(uint32 i = 0; i < type; i++)
+            {
+                return_value *= 2;
+            }
+            return return_value;
+        }
+
+        void OnPlayerKilled(Player *pPlayer) 
+        {
+            for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+            {
+                if (uiEncounter[i] == IN_PROGRESS)
+                {
+                    if(i < TYPE_ALGALON)
+                        uiPlayerDeathFlag |= eBossDeadFlags(TypeToDeadFlag(i));
+                    else if(i == TYPE_ALGALON)
+                        uiAlgalonKillCount++; // He feeds on your tears
+                }
+            }
+        }
+
+        void OnPlayerEnter(Player* player)
+        {
+            // I try to remove Achievement Progress in Boss Kills without Dying on Enter without a PermBind ...
+            // This will work for 90% of all Players ... someone will found the backdoor (and i try to close this later)
+            if(InstancePlayerBind* bind = player->GetBoundInstance(instance->GetId(),instance->GetDifficulty()))
+            {
+                if(bind->perm)
+                    return;
+
+                uint32 achievement = instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL? ACHIEVEMENT_CHAMPION_OF_ULDUAR : ACHIEVEMENT_CONQUEROR_OF_ULDUAR;
+
+                if(!player->HasAchieved(achievement))
+                   player->GetAchievementMgr().RemoveAchievement(achievement);
+            }
+        }
+
+        bool CheckAchievementCriteriaMeet(uint32 criteria_id, Player const* /*source*/, Unit const* /*target = NULL*/, uint32 /*miscvalue1 = 0*/)
+        {
+            switch(criteria_id)
+            {
+            // Kills without Death Achievement
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_FLAMELEVIATAN_10:
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_FLAMELEVIATAN_25:
+                return !(uiPlayerDeathFlag & DEAD_FLAME_LEVIATHAN);
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_IGNIS_10:
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_IGNIS_25:
+                return !(uiPlayerDeathFlag & DEAD_IGNIS);
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_RAZORSCALE_10:
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_RAZORSCALE_25:
+                return !(uiPlayerDeathFlag & DEAD_RAZORSCALE);
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_XT002_10:
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_XT002_25:
+                return !(uiPlayerDeathFlag & DEAD_XT002);
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_ASSEMBLY_10:
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_ASSEMBLY_25:
+                return !(uiPlayerDeathFlag & DEAD_ASSEMBLY);
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_KOLOGARN_10:
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_KOLOGARN_25:
+                return !(uiPlayerDeathFlag & DEAD_KOLOGARN);
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_AURIAYA_10:
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_AURIAYA_25:
+                return !(uiPlayerDeathFlag & DEAD_AURIAYA);
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_HODIR_10:
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_HODIR_25:
+                return !(uiPlayerDeathFlag & DEAD_HODIR);
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_THORIM_10:
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_THORIM_25:
+                return !(uiPlayerDeathFlag & DEAD_THORIM);
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_FREYA_10:
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_FREYA_25:
+                return !(uiPlayerDeathFlag & DEAD_FREYA);
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_MIMIRON_10:
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_MIMIRON_25:
+                return !(uiPlayerDeathFlag & DEAD_MIMIRON);
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_VEZAX_10:
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_VEZAX_25:
+                return !(uiPlayerDeathFlag & DEAD_VEZAX);
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_YOGGSARON_10:
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_YOGGSARON_25:
+                return !(uiPlayerDeathFlag & DEAD_YOGGSARON);
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_ALGALON_10:
+            case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_ALGALON_25:
+                return !(uiAlgalonKillCount);
+            }
+            // Yogg-Saron
+            switch(criteria_id)
+            {
+            case ACHIEVEMENT_CRITERIA_THE_ASSASSINATION_OF_KING_LLANE_10:
+            case ACHIEVEMENT_CRITERIA_THE_ASSASSINATION_OF_KING_LLANE_25:
+                {
+                    if(GetBossState(TYPE_YOGGSARON) != IN_PROGRESS)
+                        return false;
+
+                    if(Creature* Sara = instance->GetCreature(uiSaraGUID))
+                        return (Sara->AI()->GetData(DATA_PORTAL_PHASE) == 0);
+
+                    return false;
+                }
+            case ACHIEVEMENT_CRITERIA_THE_TORTURED_CHAMPION_10:
+            case ACHIEVEMENT_CRITERIA_THE_TORTURED_CHAMPION_25:
+                {
+                    if(GetBossState(TYPE_YOGGSARON) != IN_PROGRESS)
+                        return false;
+
+                    if(Creature* Sara = instance->GetCreature(uiSaraGUID))
+                        return (Sara->AI()->GetData(DATA_PORTAL_PHASE) == 2);
+
+                    return false;
+                }
+            case ACHIEVEMENT_CRITERIA_FORGING_OF_THE_DEMON_SOUL_10:
+            case ACHIEVEMENT_CRITERIA_FORGING_OF_THE_DEMON_SOUL_25:
+                {
+                    if(GetBossState(TYPE_YOGGSARON) != IN_PROGRESS)
+                        return false;
+
+                    if(Creature* Sara = instance->GetCreature(uiSaraGUID))
+                        return (Sara->AI()->GetData(DATA_PORTAL_PHASE) == 1);
+
+                    return false;
+                }
+            }
             return false;
         }
 
@@ -629,7 +761,7 @@ public:
             OUT_SAVE_INST_DATA;
 
             std::ostringstream saveStream;
-            saveStream << "U U " << GetBossSaveData() << GetData(TYPE_COLOSSUS);
+            saveStream << "U U " << GetBossSaveData() << GetData(TYPE_COLOSSUS) << " " << uiPlayerDeathFlag;
 
             OUT_SAVE_INST_DATA_COMPLETE;
             return saveStream.str();
@@ -664,6 +796,9 @@ public:
                     else
                         SetBossState(i, EncounterState(tmpState));
                 }
+                uint32 tmpState;
+                loadStream >> tmpState;
+                uiPlayerDeathFlag = tmpState;
             }
 
             OUT_LOAD_INST_DATA_COMPLETE;

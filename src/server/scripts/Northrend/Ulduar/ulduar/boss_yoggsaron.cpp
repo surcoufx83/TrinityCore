@@ -128,16 +128,6 @@ enum Achievments
     ACHIEVMENT_REALM_FIRST_DEATHS_DEMISE        = 3117,
 };
 
-enum AchievmentsCriterias
-{
-    ACHIEV_THE_ASSASSINATION_OF_KING_LLANE_25   = 10321,
-    ACHIEV_THE_ASSASSINATION_OF_KING_LLANE_10   = 10324,
-    ACHIEV_THE_FORGING_OF_THE_DEMON_SOUL_25     = 10322,
-    ACHIEV_THE_FORGING_OF_THE_DEMON_SOUL_10     = 10325,
-    ACHIEV_THE_TORTURED_CHAMPION_25             = 10323,
-    ACHIEV_THE_TORTURED_CHAMPION_10             = 10326,
-};
-
 enum Entrys
 {
     NPC_HELP_KEEPER_FREYA                       = 33241,
@@ -878,6 +868,15 @@ public:
             }
         }
 
+        uint32 GetData(uint32 data)
+        {
+            switch(data)
+            {
+            case DATA_PORTAL_PHASE:
+                return currentBrainEventPhase;
+            }
+        }
+
         void SetPhase(BossPhase newPhase)
         {
             if(m_Phase == newPhase)
@@ -1543,6 +1542,7 @@ public:
                                     case PORTAL_PHASE_KING_LLIANE: if(m_pInstance) m_pInstance->HandleGameObject(m_pInstance->GetData64(TYPE_BRAIN_DOOR_3),true); break;
                                     }
                                     currentBrainEventPhase = PORTAL_PHASE_BRAIN_NONE;
+                                    IsEventSpeaking = false;
                                     if(Creature* yogg = me->GetCreature(*me,guidYogg))
                                         me->AddAura(SPELL_SHATTERED_ILLUSIONS,yogg);
                                     me->AddAura(SPELL_SHATTERED_ILLUSIONS,me);
@@ -1918,8 +1918,11 @@ public:
                         DoCast(target,RAND(SPELL_DRAINING_POISON,SPELL_BLACK_PLAGUE,SPELL_APATHY,SPELL_CURSE_OF_DOOM),false);
                     break;
                 case CONSTRICTOR_TENTACLE:
-                    //if(Unit* target = SelectPlayerTargetInRange(50.0f))
-                    //    DoCast(target,SPELL_SQUEEZE,true);
+                    if(Unit* target =  me->FindNearestPlayer(50.0f,true))
+                    {
+                        DoCast(target,SPELL_LUNGE,true);
+                        DoCast(target,SPELL_SQUEEZE,true);
+                    }
                     break;
                 }
                 uiTentacleSpell_Timer = urand(5000,7000);
@@ -1967,29 +1970,7 @@ public:
                 //pPlayer->CastSpell(pPlayer,SPELL_TELEPORT,true);
                 CAST_AI(npc_descend_into_madnessAI,pCreature->AI())->bPhase = PORTAL_PHASE_BRAIN_NONE;
                 AcceptTeleport = false;
-                Difficulty diff = pPlayer->GetDifficulty(true);
-                switch(pTemp)
-                {
-                case PORTAL_PHASE_KING_LLIANE:
-                    if(diff == RAID_DIFFICULTY_10MAN_NORMAL)
-                        pPlayer->GetAchievementMgr().SetCriteriaComplete(ACHIEV_THE_ASSASSINATION_OF_KING_LLANE_10);
-                    else if(diff == RAID_DIFFICULTY_25MAN_NORMAL)
-                        pPlayer->GetAchievementMgr().SetCriteriaComplete(ACHIEV_THE_ASSASSINATION_OF_KING_LLANE_25);
-                    break;
-                case PORTAL_PHASE_DRAGON_SOUL:
-                    if(diff == RAID_DIFFICULTY_10MAN_NORMAL)
-                        pPlayer->GetAchievementMgr().SetCriteriaComplete(ACHIEV_THE_FORGING_OF_THE_DEMON_SOUL_10);
-                    else if(diff == RAID_DIFFICULTY_25MAN_NORMAL)
-                        pPlayer->GetAchievementMgr().SetCriteriaComplete(ACHIEV_THE_FORGING_OF_THE_DEMON_SOUL_25);
-                    break;
-                case PORTAL_PHASE_LICH_KING:
-                    if(diff == RAID_DIFFICULTY_10MAN_NORMAL)
-                        pPlayer->GetAchievementMgr().SetCriteriaComplete(ACHIEV_THE_TORTURED_CHAMPION_10);
-                    else if(diff == RAID_DIFFICULTY_25MAN_NORMAL)
-                        pPlayer->GetAchievementMgr().SetCriteriaComplete(ACHIEV_THE_TORTURED_CHAMPION_25);
-                    break;
-                }
-                //pPlayer->UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET2,SPELL_ILLUSION_ROOM);
+                pPlayer->UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET2,SPELL_ILLUSION_ROOM);
             }
 
         }

@@ -2112,20 +2112,13 @@ bool AchievementMgr::CanUpdateCriteria(AchievementCriteriaEntry const* criteria,
     return true;
 }
 
-void AchievementMgr::SetCriteriaComplete(uint32 criteria_id)
+void AchievementMgr::RemoveAchievement(uint32 entry)
 {
-    AchievementCriteriaEntry const *achievementCriteria =  sAchievementCriteriaStore.LookupEntry(criteria_id);
-    if(!achievementCriteria)
-        return;
-
-    AchievementEntry const *achievement = sAchievementStore.LookupEntry(achievementCriteria->referredAchievement);
-    if (!achievement)
-        return;
-
-    SetCriteriaProgress(achievementCriteria,1,PROGRESS_ACCUMULATE);
-
-    if (IsCompletedCriteria(achievementCriteria, achievement))
-        CompletedCriteriaFor(achievement);
+    AchievementCriteriaEntryList const* achievementCriteriaList = sAchievementMgr->GetAchievementCriteriaByAchievement(entry);
+    for (AchievementCriteriaEntryList::const_iterator i = achievementCriteriaList->begin(); i!=achievementCriteriaList->end(); ++i)
+    {
+        RemoveCriteriaProgress(*i);
+    }
 }
 
 //==========================================================
