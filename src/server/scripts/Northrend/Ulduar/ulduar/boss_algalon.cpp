@@ -31,7 +31,9 @@ enum Spells
     H_SPELL_QUANTUM_STRIKE          = 64592,
     SPELL_BLACK_HOLE_EXPLOSION      = 64122,
     SPELL_ARCANE_BARAGE             = 64599,
-    H_SPELL_ARCANE_BARAGE           = 64607
+    H_SPELL_ARCANE_BARAGE           = 64607,
+
+    SPELL_BOSS_FINISHED             = 65184,
 };
 
 enum Creatures
@@ -121,6 +123,11 @@ public:
 
             if (pInstance)
                 pInstance->SetData(TYPE_ALGALON, IN_PROGRESS);
+        }
+
+        void FinishEncounter()
+        {
+            pInstance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET,SPELL_BOSS_FINISHED);
         }
 
         void KilledUnit(Unit * /*victim*/)

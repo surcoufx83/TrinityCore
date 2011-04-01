@@ -231,6 +231,10 @@ void AnticheatMgr::HandlePlayerLogin(Player* player)
     CharacterDatabase.PExecute("DELETE FROM players_reports_status WHERE guid=%u",player->GetGUIDLow());
     // we initialize the pos of lastMovementPosition var.
     m_Players[player->GetGUIDLow()].SetPosition(player->GetPositionX(),player->GetPositionY(),player->GetPositionZ(),player->GetOrientation());
+    QueryResult resultDB = CharacterDatabase.PQuery("SELECT * FROM daily_players_reports WHERE guid=%u;",player->GetGUIDLow());
+    
+    if (resultDB)
+        m_Players[player->GetGUIDLow()].SetDailyReportState(true);
 }
 
 void AnticheatMgr::HandlePlayerLogout(Player* player)
@@ -315,6 +319,15 @@ void AnticheatMgr::BuildReport(Player* player,uint8 reportType)
         m_Players[key].SetAverage(average);
     }
 
+    if (sWorld->getIntConfig(CONFIG_ANTICHEAT_MAX_REPORTS_FOR_DAILY_REPORT) < m_Players[key].GetTotalReports())
+    {
+        if (!m_Players[key].GetDailyReportState())
+        {
+            CharacterDatabase.PExecute("REPLACE INTO daily_players_reports (guid,average,total_reports,speed_reports,fly_reports,jump_reports,waterwalk_reports,teleportplane_reports,climb_reports,creation_time) VALUES (%u,%f,%u,%u,%u,%u,%u,%u,%u,%u);",player->GetGUIDLow(),m_Players[player->GetGUIDLow()].GetAverage(),m_Players[player->GetGUIDLow()].GetTotalReports(), m_Players[player->GetGUIDLow()].GetTypeReports(SPEED_HACK_REPORT),m_Players[player->GetGUIDLow()].GetTypeReports(FLY_HACK_REPORT),m_Players[player->GetGUIDLow()].GetTypeReports(JUMP_HACK_REPORT),m_Players[player->GetGUIDLow()].GetTypeReports(WALK_WATER_HACK_REPORT),m_Players[player->GetGUIDLow()].GetTypeReports(TELEPORT_PLANE_HACK_REPORT),m_Players[player->GetGUIDLow()].GetTypeReports(CLIMB_HACK_REPORT),m_Players[player->GetGUIDLow()].GetCreationTime());
+            m_Players[key].SetDailyReportState(true);
+        }
+    }
+
     if (m_Players[key].GetTotalReports() > sWorld->getIntConfig(CONFIG_ANTICHEAT_REPORTS_INGAME_NOTIFICATION))
     {
         // display warning at the center of the screen, hacky way?
@@ -329,7 +342,7 @@ void AnticheatMgr::BuildReport(Player* player,uint8 reportType)
 void AnticheatMgr::AnticheatGlobalCommand(ChatHandler* handler)
 {
     // MySQL will sort all for us, anyway this is not the best way we must only save the anticheat data not whole player's data!.
-    sObjectAccessor->SaveAllPlayers();
+    //sObjectAccessor->SaveAllPlayers();
 
     QueryResult resultDB = CharacterDatabase.Query("SELECT guid,average,total_reports FROM players_reports_status WHERE total_reports != 0 ORDER BY average ASC LIMIT 10;");
     if (!resultDB)
@@ -411,4 +424,10 @@ void AnticheatMgr::AnticheatDeleteCommand(uint32 guid)
         }
         CharacterDatabase.PExecute("DELETE FROM players_reports_status WHERE guid=%u;",guid);
     }
+}
+
+void AnticheatMgr::ResetDailyReportStates()
+{
+     for (AnticheatPlayersDataMap::iterator it = m_Players.begin(); it != m_Players.end(); ++it)
+         m_Players[(*it).first].SetDailyReportState(false);
 }
