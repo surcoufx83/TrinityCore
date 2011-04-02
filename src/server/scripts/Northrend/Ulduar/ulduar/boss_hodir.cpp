@@ -877,7 +877,10 @@ class spell_biting_cold : public SpellScriptLoader
                 if(aurEff->GetSpellProto()->Id == SPELL_BITING_COLD)
                 {
                     if(trigger->ToPlayer())
-                        trigger->CastSpell(trigger,SPELL_BITING_COLD_TRIGGERED,true,0,0,GetCasterGUID());
+                    {
+                        if(!trigger->HasAura(62821)) // Not Triggered if in Toasty Fire
+                            trigger->CastSpell(trigger,SPELL_BITING_COLD_TRIGGERED,true,0,0,GetCasterGUID());
+                    }
                 }
                 else if(aurEff->GetSpellProto()->Id == SPELL_BITING_COLD_TRIGGERED)
                 {
