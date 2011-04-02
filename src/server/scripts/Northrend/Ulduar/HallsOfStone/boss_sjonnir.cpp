@@ -192,7 +192,7 @@ public:
                 if (!me->IsNonMeleeSpellCasted(false))
                 {
                     DoCast(me, SPELL_LIGHTING_RING);
-                    uiLightningRingTimer = urand(25000, 30000);
+                    uiLightningRingTimer = urand(30000, 35000);
                 }
             } else uiLightningRingTimer -= diff;
 
@@ -336,7 +336,7 @@ public:
 
         void Reset()
         {
-            uiMergeTimer = 5000;
+            uiMergeTimer = 7500;
         }
 
         void JustSummoned(Creature* pSummon)
@@ -360,7 +360,7 @@ public:
                         me->DisappearAndDie();
                     }
 
-                uiMergeTimer = 5000;
+                uiMergeTimer = 7500;
             } else uiMergeTimer -= diff;
         }
     };
@@ -400,7 +400,7 @@ public:
             if (uiToxicVolleyTimer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_TOXIC_VOLLEY);
-                uiToxicVolleyTimer = 5000;
+                uiToxicVolleyTimer = urand(5000, 10000);
             } else uiToxicVolleyTimer -= diff;
 
             DoMeleeAttackIfReady();

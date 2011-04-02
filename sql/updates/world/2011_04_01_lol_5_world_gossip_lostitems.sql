@@ -92,7 +92,7 @@ INSERT INTO smart_scripts VALUES
 -- +----------+
 -- |Conditions|
 -- +----------+
-DELETE FROM conditions WHERE SourceGroup IN (21772,21774,21769,21773,9709,9253,8918,8908,22127);
+DELETE FROM conditions WHERE SourceTypeOrReferenceId = 15 AND SourceGroup IN (21772,21774,21769,21773,9709,9253,8918,8908,22127);
 INSERT INTO conditions VALUES
 -- Augmented Arcane Prison
 (15,9253,1,0,8,11943,0,0,0,'','show gossip menu option if player has quest 11943 rewarded'),

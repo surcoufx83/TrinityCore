@@ -416,6 +416,7 @@ public:
                     break;
                 // watcher gashra
                 case 28730:
+                    me->setFaction(14);
                     uiSpecialSpell = SPELL_ENRAGE;
                     break;
                 // watcher silthik

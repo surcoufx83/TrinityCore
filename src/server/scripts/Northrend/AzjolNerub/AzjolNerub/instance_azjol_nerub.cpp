@@ -97,12 +97,15 @@ public:
             // bad way to handle trash respawn
             switch (creature->GetDBTableGUIDLow())
             {
-                case 127228:
                 case 127231:
+                case 127236:
+                    creature->setFaction(14); // prevent chain aggro
+                    WatcherTrashGUIDs.insert(creature->GetGUID());
+                    break;
+                case 127228:
                 case 127232:
                 case 127233:
                 case 127234:
-                case 127236:
                     WatcherTrashGUIDs.insert(creature->GetGUID());
                     break;
             }
