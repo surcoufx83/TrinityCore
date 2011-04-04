@@ -779,6 +779,8 @@ public:
 
         void DamageTaken(Unit* attacker, uint32 &amount)
         {
+            if(boomed)
+                return;
             if((me->GetHealth() - amount) < (me->GetMaxHealth()/2))
             {
                 DoCast(SPELL_BOOM);

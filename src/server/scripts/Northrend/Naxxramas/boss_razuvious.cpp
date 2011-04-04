@@ -69,6 +69,7 @@ public:
         void Reset()
         {
             _Reset();
+            me->ApplySpellImmune(0, IMMUNITY_ID, 20184, true);
         }
 
         void KilledUnit(Unit* /*victim*/)
