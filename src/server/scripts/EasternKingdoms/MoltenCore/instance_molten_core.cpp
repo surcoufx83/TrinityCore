@@ -55,7 +55,7 @@ public:
 
     struct instance_molten_core_InstanceMapScript : public InstanceScript
     {
-        instance_molten_core_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
+        instance_molten_core_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {};
 
         uint64 Lucifron, Magmadar, Gehennas, Garr, Geddon, Shazzrah, Sulfuron, Golemagg, Domo, Ragnaros, FlamewakerPriest;
         uint64 RuneKoro, RuneZeth, RuneMazj, RuneTheri, RuneBlaz, RuneKress, RuneMohn, m_uiFirelordCacheGUID;

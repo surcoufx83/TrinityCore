@@ -30,7 +30,7 @@ public:
 
     struct instance_eye_of_eternity_InstanceMapScript : public InstanceScript
     {
-        instance_eye_of_eternity_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
+        instance_eye_of_eternity_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {};
 
         uint64 uiMalygosGUID;
         uint64 uiPlatformGUID;

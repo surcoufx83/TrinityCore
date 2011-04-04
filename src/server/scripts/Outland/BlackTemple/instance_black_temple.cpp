@@ -47,10 +47,10 @@ public:
     
     InstanceScript* GetInstanceScript(InstanceMap *map) const
     {
-       return new instance_black_temple_InstanceScript(map);
+       return new instance_black_temple_InstanceMapScript(map);
     }
 
-    struct instance_black_temple_InstanceScript : public InstanceScript
+    struct instance_black_temple_InstanceMapScript : public InstanceScript
     {
         instance_black_temple_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {}
 

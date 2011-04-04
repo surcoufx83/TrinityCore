@@ -66,10 +66,10 @@ public:
 
     InstanceScript* GetInstanceScript(InstanceMap* pMap) const
     {
-        return new instance_arcatrazMapScript(pMap);
+        return new instance_arcatraz_InstanceMapScript(pMap);
     }
 
-    struct instance_arcatrazMapScript : public InstanceScript
+    struct instance_arcatraz_InstanceMapScript : public InstanceScript
     {
             instance_arcatraz_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {}
 

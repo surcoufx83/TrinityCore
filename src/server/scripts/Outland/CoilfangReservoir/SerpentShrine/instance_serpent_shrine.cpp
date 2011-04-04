@@ -79,7 +79,7 @@ public:
 
     struct instance_serpentshrine_cavern_InstanceMapScript : public InstanceScript
     {
-        instance_serpentshrine_cavern_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
+        instance_serpentshrine_cavern_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {};
 
         uint64 LurkerBelow;
         uint64 Sharkkis;

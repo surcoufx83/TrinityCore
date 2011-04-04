@@ -532,7 +532,7 @@ void OutdoorPvPWG::ProcessEvent(GameObject *obj, uint32 eventId)
             switch(state->type)
             {
                 case BUILDING_WORKSHOP:
-                    msgStr = fmtstring(sObjectMgr->GetTrinityStringForDBCLocale(LANG_BG_WG_WORKSHOP_DAMAGED), msgStr.c_str(), sObjectMgr->GetTrinityStringForDBCLocale(getDefenderTeam() == TEAM_ALLIANCE ? LANG_BG_AB_ALLY : LANG_BG_AB_HORDE));
+                    //msgStr = fmtstring(sObjectMgr->GetTrinityStringForDBCLocale(LANG_BG_WG_WORKSHOP_DAMAGED), msgStr.c_str(), sObjectMgr->GetTrinityStringForDBCLocale(getDefenderTeam() == TEAM_ALLIANCE ? LANG_BG_AB_ALLY : LANG_BG_AB_HORDE));
                     sWorld->SendZoneText(ZONE_WINTERGRASP, msgStr.c_str());
                     break;
                 case BUILDING_WALL:
@@ -556,7 +556,7 @@ void OutdoorPvPWG::ProcessEvent(GameObject *obj, uint32 eventId)
                     break;
                 case BUILDING_TOWER:
                     ++m_towerDamagedCount[state->GetTeam()];
-                    msgStr = fmtstring(sObjectMgr->GetTrinityStringForDBCLocale(LANG_BG_WG_TOWER_DAMAGED), msgStr.c_str());
+                    //msgStr = fmtstring(sObjectMgr->GetTrinityStringForDBCLocale(LANG_BG_WG_TOWER_DAMAGED), msgStr.c_str());
                     sWorld->SendZoneText(ZONE_WINTERGRASP, msgStr.c_str());
                     for (PlayerSet::iterator itr = m_players[getDefenderTeam()].begin(); itr != m_players[getDefenderTeam()].end(); ++itr)
                     {
@@ -585,7 +585,7 @@ void OutdoorPvPWG::ProcessEvent(GameObject *obj, uint32 eventId)
             {
                 case BUILDING_WORKSHOP:
                     ModifyWorkshopCount(state->GetTeam(), false);
-                    msgStr = fmtstring(sObjectMgr->GetTrinityStringForDBCLocale(LANG_BG_WG_WORKSHOP_DESTROYED), msgStr.c_str(), sObjectMgr->GetTrinityStringForDBCLocale(getDefenderTeam() == TEAM_ALLIANCE ? LANG_BG_AB_ALLY : LANG_BG_AB_HORDE));
+                    //msgStr = fmtstring(sObjectMgr->GetTrinityStringForDBCLocale(LANG_BG_WG_WORKSHOP_DESTROYED), msgStr.c_str(), sObjectMgr->GetTrinityStringForDBCLocale(getDefenderTeam() == TEAM_ALLIANCE ? LANG_BG_AB_ALLY : LANG_BG_AB_HORDE));
                     sWorld->SendZoneText(ZONE_WINTERGRASP, msgStr.c_str());
                     break;
                 case BUILDING_WALL:
@@ -634,7 +634,7 @@ void OutdoorPvPWG::ProcessEvent(GameObject *obj, uint32 eventId)
                                 m_timer = m_timer - 600000; // - 10 mins
                         }
                     }
-                    msgStr = fmtstring(sObjectMgr->GetTrinityStringForDBCLocale(LANG_BG_WG_TOWER_DESTROYED), msgStr.c_str());
+                    //msgStr = fmtstring(sObjectMgr->GetTrinityStringForDBCLocale(LANG_BG_WG_TOWER_DESTROYED), msgStr.c_str());
                     sWorld->SendZoneText(ZONE_WINTERGRASP, msgStr.c_str());
                     for (PlayerSet::iterator itr = m_players[getDefenderTeam()].begin(); itr != m_players[getDefenderTeam()].end(); ++itr)
                     {
@@ -1906,8 +1906,8 @@ bool OutdoorPvPWG::Update(uint32 diff)
         }
         if (isWarTime())
         {
-            if (m_timer != 1) // 1 = forceStopBattle
-                sWorld->SendZoneText(ZONE_WINTERGRASP, fmtstring(sObjectMgr->GetTrinityStringForDBCLocale(entry), sObjectMgr->GetTrinityStringForDBCLocale(getDefenderTeam() == TEAM_ALLIANCE ? LANG_BG_AB_ALLY : LANG_BG_AB_HORDE)));
+            //if (m_timer != 1) // 1 = forceStopBattle
+                //sWorld->SendZoneText(ZONE_WINTERGRASP, fmtstring(sObjectMgr->GetTrinityStringForDBCLocale(entry), sObjectMgr->GetTrinityStringForDBCLocale(getDefenderTeam() == TEAM_ALLIANCE ? LANG_BG_AB_ALLY : LANG_BG_AB_HORDE)));
             EndBattle();
         }
         else
@@ -1968,7 +1968,7 @@ void OutdoorPvPWG::forceChangeTeam()
     m_changeAlly = true;
     m_changeHorde = true;
 
-    sWorld->SendZoneText(ZONE_WINTERGRASP, fmtstring(sObjectMgr->GetTrinityStringForDBCLocale(LANG_BG_WG_SWITCH_FACTION), sObjectMgr->GetTrinityStringForDBCLocale(getAttackerTeam() == TEAM_ALLIANCE ? LANG_BG_AB_ALLY : LANG_BG_AB_HORDE)));
+    //sWorld->SendZoneText(ZONE_WINTERGRASP, fmtstring(sObjectMgr->GetTrinityStringForDBCLocale(LANG_BG_WG_SWITCH_FACTION), sObjectMgr->GetTrinityStringForDBCLocale(getAttackerTeam() == TEAM_ALLIANCE ? LANG_BG_AB_ALLY : LANG_BG_AB_HORDE)));
     if (isWarTime())
         forceStartBattle();
     else
@@ -2473,8 +2473,8 @@ void OPvPCapturePointWG::ChangeTeam(TeamId oldTeam)
         m_wintergrasp->ModifyWorkshopCount(m_team, true);
     }
 
-    if (m_capturePoint)
-        GameObject::SetGoArtKit(CapturePointArtKit[m_team], m_capturePoint, m_capturePointGUID);
+    //if (m_capturePoint)
+    //    GameObject::SetGoArtKit(CapturePointArtKit[m_team], m_capturePoint, m_capturePointGUID);
 
     m_buildingState->SetTeam(m_team);
     // TODO: this may be sent twice

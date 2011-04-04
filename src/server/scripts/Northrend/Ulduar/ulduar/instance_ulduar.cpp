@@ -30,7 +30,7 @@ public:
 
     struct instance_ulduar_InstanceMapScript : public InstanceScript
     {
-        instance_ulduar_InstanceMapScript(Map* pMap) : InstanceScript(pMap) { Initialize(); };
+        instance_ulduar_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {};
 
         uint32 uiEncounter[MAX_ENCOUNTER];
 

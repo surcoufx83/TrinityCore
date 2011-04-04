@@ -31,7 +31,7 @@ public:
 
     struct  instance_the_dark_portal_InstanceMapScript : public InstanceScript
     {
-        instance_the_dark_portal_InstanceMapScript(Map *Map) : InstanceScript(Map) {Initialize();};
+        instance_the_dark_portal_InstanceMapScript(Map *Map) : InstanceScript(Map) {};
  
         uint64 Medivh;
         uint32 IsMedivhDead;

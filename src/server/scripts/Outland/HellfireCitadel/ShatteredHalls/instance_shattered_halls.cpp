@@ -38,10 +38,10 @@ public:
 
     InstanceScript* GetInstanceScript(InstanceMap* pMap) const
     {
-        return new instance_shattered_hallsMapScript(pMap);
+        return new instance_shattered_halls_InstanceMapScript(pMap);
     }
 
-    struct instance_shattered_hallsMapScript : public InstanceScript
+    struct instance_shattered_halls_InstanceMapScript : public InstanceScript
     {
             instance_shattered_halls_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {}
 
