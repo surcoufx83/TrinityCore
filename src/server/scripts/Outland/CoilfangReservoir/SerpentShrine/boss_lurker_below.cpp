@@ -149,7 +149,10 @@ public:
         void JustDied(Unit* /*Killer*/)
         {
             if (pInstance)
+            {
                 pInstance->SetData(DATA_THELURKERBELOWEVENT, DONE);
+                pInstance->SetData(DATA_STRANGE_POOL, IN_PROGRESS); // done?
+            }
 
             Summons.DespawnAll();
         }
@@ -458,9 +461,32 @@ public:
 
 };
 
+class go_strange_pool : public GameObjectScript
+{
+    public:
+        go_strange_pool() : GameObjectScript("go_strange_pool") {}
+
+        bool OnGossipHello(Player* player, GameObject* go)
+        {
+            if (InstanceScript* instanceScript = go->GetInstanceScript())
+                if (!urand(0, 9))
+                {
+                    if (instanceScript->GetData(DATA_STRANGE_POOL) == NOT_STARTED)
+                    {
+                        go->CastSpell(player, 54587);
+                        instanceScript->SetData(DATA_STRANGE_POOL, IN_PROGRESS);
+                    }
+                    return true;
+                }
+
+            return false;
+        }
+};
+
 void AddSC_boss_the_lurker_below()
 {
     new boss_the_lurker_below();
     new mob_coilfang_guardian();
     new mob_coilfang_ambusher();
+    new go_strange_pool();
 }

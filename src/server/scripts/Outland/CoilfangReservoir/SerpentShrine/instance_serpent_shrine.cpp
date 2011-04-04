@@ -94,8 +94,6 @@ public:
         uint64 ControlConsole;
         uint64 BridgePart[3];
         uint32 StrangePool;
-        uint32 FishingTimer;
-        uint32 LurkerSubEvent;
         uint32 WaterCheckTimer;
         uint32 FrenzySpawnTimer;
         uint32 Water;
@@ -130,8 +128,6 @@ public:
             ShieldGeneratorDeactivated[1] = false;
             ShieldGeneratorDeactivated[2] = false;
             ShieldGeneratorDeactivated[3] = false;
-            FishingTimer = 1000;
-            LurkerSubEvent = 0;
             WaterCheckTimer = 500;
             FrenzySpawnTimer = 2000;
             DoSpawnFrenzy = false;
@@ -149,15 +145,6 @@ public:
 
         void Update (uint32 diff)
         {
-            //Lurker Fishing event
-            if (LurkerSubEvent == LURKER_FISHING)
-            {
-                if (FishingTimer <= diff)
-                {
-                    LurkerSubEvent = LURKER_HOOKED;
-                    SetData(DATA_STRANGE_POOL, IN_PROGRESS);//just fished, signal Lurker script to emerge and start fight, we use IN_PROGRESS so it won't get saved and lurker will be alway invis at start if server restarted
-                } else FishingTimer -= diff;
-            }
             //Water checks
             if (WaterCheckTimer <= diff)
             {
@@ -239,12 +226,8 @@ public:
                     BridgePart[2] = go->GetGUID();
                     go->setActive(true);
                 break;
-                case 35591://no way checking if fish is hooked, so we create a timed event
-                    if (LurkerSubEvent == LURKER_NOT_STARTED)
-                    {
-                        FishingTimer = 10000+rand()%30000;//random time before lurker emerges
-                        LurkerSubEvent = LURKER_FISHING;
-                    }
+                
+                default:
                     break;
             }
         }
@@ -298,11 +281,7 @@ public:
             switch(type)
             {
             case DATA_STRANGE_POOL:
-                {
                     StrangePool = data;
-                    if (data == NOT_STARTED)
-                        LurkerSubEvent = LURKER_NOT_STARTED;
-                }
                 break;
             case DATA_CONTROL_CONSOLE:
                 if (data == DONE)
