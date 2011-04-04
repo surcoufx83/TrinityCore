@@ -1,4 +1,4 @@
--- Fix Reputation for Bloodsail/Bootybay
+-- Fix Reputation for Bloodsail/Bootybay 
 UPDATE `quest_template` SET `RewRepFaction1`=87, `RewRepFaction2`=21, `RewRepValueId1`=-5, `RewRepValueId2`=5 WHERE `entry`=662;
 UPDATE `quest_template` SET `RewRepFaction1`=87, `RewRepFaction2`=21, `RewRepValueId1`=-2, `RewRepValueId2`=2 WHERE `entry`=663;
 UPDATE `quest_template` SET `RewRepFaction1`=87, `RewRepFaction2`=21, `RewRepValueId1`=-5, `RewRepValueId2`=5 WHERE `entry`=664;
