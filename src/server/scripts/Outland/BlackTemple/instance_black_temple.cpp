@@ -52,7 +52,7 @@ public:
 
     struct instance_black_temple_InstanceScript : public InstanceScript
     {
-        instance_black_temple_InstanceScript(Map *map) : InstanceScript(map) {Initialize();};
+        instance_black_temple_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {}
 
         uint64 Najentus;
         uint64 Akama;                                           // This is the Akama that starts the Illidan encounter.

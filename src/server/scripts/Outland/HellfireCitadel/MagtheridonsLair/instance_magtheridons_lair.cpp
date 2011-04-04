@@ -46,7 +46,6 @@ public:
     {
         instance_magtheridons_lair_InstanceMapScript (Map* pMap) : InstanceScript(pMap)
         {
-            Initialize();
         }
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
