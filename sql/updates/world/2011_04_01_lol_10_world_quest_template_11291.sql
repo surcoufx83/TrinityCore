@@ -1,4 +1,4 @@
--- Fix Taxi from Quest 'To Westguard Keep!' #11291
+-- Fix Taxi from Quest 'To Westguard Keep!' #11291 
 SET @Emilune    = 27930; -- Emilune Winterwind
 SET @Gossip     = 9618;   -- gossip_menu_id
 SET @Quest      = 11291; -- Quest
