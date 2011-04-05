@@ -2,7 +2,7 @@
 -- +-----------------+
 -- |creature_template|
 -- +-----------------+
-UPDATE creature_template SET AIName = 'SmartAI' WHERE entry IN (21772,21774,21769,21773,28518,26117,24186,24273,22127);
+UPDATE creature_template SET AIName = 'SmartAI' WHERE entry IN (21772,21774,21769,21773,28518,26117,24186,24273,22127,28138,29937);
 UPDATE creature_template SET gossip_menu_id = 21772, npcflag = npcflag | 1 WHERE entry = 21772;       -- Chief Apothecary Hildagard
 UPDATE creature_template SET gossip_menu_id = 21774, npcflag = npcflag | 1 WHERE entry = 21774;       -- Zorus the Judicator
 UPDATE creature_template SET gossip_menu_id = 21769, npcflag = npcflag | 1 WHERE entry = 21769;       -- Overlord Or'barokh
@@ -12,10 +12,12 @@ UPDATE creature_template SET gossip_menu_id =  9253, npcflag = npcflag | 1 WHERE
 UPDATE creature_template SET gossip_menu_id =  8908, npcflag = npcflag | 1 WHERE entry = 24186;       -- Sage Mistwalker
 UPDATE creature_template SET gossip_menu_id =  8918, npcflag = npcflag | 1 WHERE entry = 24273;       -- Watcher Moonleaf
 UPDATE creature_template SET gossip_menu_id = 22127, npcflag = npcflag | 1 WHERE entry = 22127;       -- Wildlord Antelarion
+UPDATE creature_template SET gossip_menu_id = 28138, npcflag = npcflag | 1 WHERE entry = 28138;       -- Elder Harkek
+UPDATE creature_template SET gossip_menu_id = 29937, npcflag = npcflag | 1 WHERE entry = 29937;       -- Moteha Windkind
 -- +-----------+
 -- |gossip_menu|
 -- +-----------+
-DELETE FROM gossip_menu WHERE entry IN (21772,21774,21769,21773,9709,9253,8908,8918,22127);
+DELETE FROM gossip_menu WHERE entry IN (21772,21774,21769,21773,9709,9253,8908,8918,22127,28138,29937);
 INSERT INTO gossip_menu VALUES
 (21772,1),      -- Chief Apothecary Hildagard
 (21774,1),      -- Zorus the Judicator
@@ -25,11 +27,13 @@ INSERT INTO gossip_menu VALUES
 (9253,12592),   -- Raelorasz
 (8908,11756),   -- Sage Mistwalker
 (8918,11858),   -- Watcher Moonleaf
-(22127,1);      -- Wildlord Anterarion
+(22127,1),      -- Wildlord Anterarion
+(28138,1),      -- Elder Harkek
+(29937,1);      -- Moteha Windkind
 -- +------------------+
 -- |gossip_menu_option|
 -- +------------------+
-DELETE FROM gossip_menu_option WHERE menu_id IN (21772,21774,21769,21773,9709,9253,8908,8918,22127);
+DELETE FROM gossip_menu_option WHERE menu_id IN (21772,21774,21769,21773,9709,9253,8908,8918,22127,28138,29937);
 INSERT INTO gossip_menu_option VALUES
 -- Chief Apothecary Hildagard
 (21772,0,0,'Please, give me a new Spectrecles.',1,1,0,0,0,0,0,''),
@@ -56,11 +60,15 @@ INSERT INTO gossip_menu_option VALUES
 (8918,1,0,'Please, give me a new Worg Disguise.',1,1,0,0,0,0,0,''),
 -- Wildlord Anterarion
 (22127,0,0,'Please, give me a new Felsworn Gas Mask.',1,1,0,0,0,0,0,''),
-(22127,1,0,'Please, give me a new Felsworn Gas Mask.',1,1,0,0,0,0,0,'');
+(22127,1,0,'Please, give me a new Felsworn Gas Mask.',1,1,0,0,0,0,0,''),
+-- Elder Harkek
+(28138,0,0,'Please, give me a new Goregek큦 Shackles.',1,1,0,0,0,0,0,''),
+-- Brann's Communicator
+(29937,0,0,'Please, give me a new Brann큦 Communicator.',1,1,0,0,0,0,0,'');
 -- +---------+
 -- | SmartAI |
 -- +---------+
-DELETE FROM smart_scripts WHERE entryorguid IN (21772,21774,21769,21773,28518,26117,24186,24273,22127);
+DELETE FROM smart_scripts WHERE entryorguid IN (21772,21774,21769,21773,28518,26117,24186,24273,22127,28138,29937);
 INSERT INTO smart_scripts VALUES
 -- Spectrecles (H)
 (21772,0,0,1,62,0,100,0,21772,0,0,0,11,37700,0x02,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - cast create Spectrecles to invoker'),
@@ -88,11 +96,17 @@ INSERT INTO smart_scripts VALUES
 (24273,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
 -- Felsworn Gas Mask
 (22127,0,0,1,62,0,100,0,22127,0,0,0,11,39101,0x02,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - cast create Felsworn Gas Mask to invoker'),
-(22127,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip');
+(22127,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
+-- Goregek's Shackles
+(28138,0,0,1,62,0,100,0,28138,0,0,0,11,52542,0x02,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - cast create Goregek큦 Shackles to invoker'),
+(28138,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
+-- Brann's Communicator
+(29937,0,0,1,62,0,100,0,29937,0,0,0,56,40971,1,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - add Brann큦 Communicator to invoker'),
+(29937,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip');
 -- +----------+
 -- |Conditions|
 -- +----------+
-DELETE FROM conditions WHERE SourceTypeOrReferenceId = 15 AND SourceGroup IN (21772,21774,21769,21773,9709,9253,8918,8908,22127);
+DELETE FROM conditions WHERE SourceTypeOrReferenceId = 15 AND SourceGroup IN (21772,21774,21769,21773,9709,9253,8918,8908,22127,28138,29937);
 INSERT INTO conditions VALUES
 -- Augmented Arcane Prison
 (15,9253,1,0,8,11943,0,0,0,'','show gossip menu option if player has quest 11943 rewarded'),
@@ -114,8 +128,12 @@ INSERT INTO conditions VALUES
 (15,8918,0,0,28,11325,0,0,0,'','show gossip menu option if player has quest 11325'),
 (15,8918,1,0,8,11325,0,0,0,'','show gossip menu option if player has quest 11325 rewarded'),
 -- Worg Disguise (H)
-(15,8908,0,0,28,11323,0,0,0,'','show gossip menu option if player has quest completed 11323'),   
+(15,8908,0,0,28,11323,0,0,0,'','show gossip menu option if player has quest completed 11323'),
 (15,8908,1,0,8,11323,0,0,0,'','show gossip menu option if player has quest 11323 rewarded'),
 -- Felsworn Gas Mask
 (15,22127,0,0,28,10819,0,0,0,'','show gossip menu option if player has quest completed 10819'),
-(15,22127,1,0,8,10819,0,0,0,'','show gossip menu option if player has quest 10819 rewarded');
+(15,22127,1,0,8,10819,0,0,0,'','show gossip menu option if player has quest 10819 rewarded'),
+-- Goregek큦 Shackles
+(15,28138,0,0,8,12528,0,0,0,'','show gossip menu option if player has quest 12528 rewarded'),
+-- Brann's Communicator
+(15,29937,0,0,8,12910,0,0,0,'','show gossip menu option if player has quest 12910 rewarded');
