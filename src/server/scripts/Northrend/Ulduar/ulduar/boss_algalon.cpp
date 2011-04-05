@@ -382,11 +382,9 @@ public:
 
         if (player->HasItemCount(45796, 1) || player->HasItemCount(45798, 1))
         {
+            pInstance->SetData(TYPE_ALGALON, SPECIAL);
             go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
             go->SetGoState(GO_STATE_ACTIVE);
-            // TODO: move to instance
-            pInstance->HandleGameObject(pInstance->GetData64(GO_ALGALON_DOOR_1), true);
-            pInstance->HandleGameObject(pInstance->GetData64(GO_ALGALON_DOOR_2), true);
         }
         return true;
     }
