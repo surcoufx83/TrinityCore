@@ -2,7 +2,7 @@
 -- +-----------------+
 -- |creature_template|
 -- +-----------------+
-UPDATE creature_template SET AIName = 'SmartAI' WHERE entry IN (21772,21774,21769,21773,28518,26117,24186,24273,22127,28138,29937);
+UPDATE creature_template SET AIName = 'SmartAI' WHERE entry IN (21772,21774,21769,21773,28518,26117,24186,24273,22127,28138,29937,29650);
 UPDATE creature_template SET gossip_menu_id = 21772, npcflag = npcflag | 1 WHERE entry = 21772;       -- Chief Apothecary Hildagard
 UPDATE creature_template SET gossip_menu_id = 21774, npcflag = npcflag | 1 WHERE entry = 21774;       -- Zorus the Judicator
 UPDATE creature_template SET gossip_menu_id = 21769, npcflag = npcflag | 1 WHERE entry = 21769;       -- Overlord Or'barokh
@@ -14,10 +14,11 @@ UPDATE creature_template SET gossip_menu_id =  8918, npcflag = npcflag | 1 WHERE
 UPDATE creature_template SET gossip_menu_id = 22127, npcflag = npcflag | 1 WHERE entry = 22127;       -- Wildlord Antelarion
 UPDATE creature_template SET gossip_menu_id = 28138, npcflag = npcflag | 1 WHERE entry = 28138;       -- Elder Harkek
 UPDATE creature_template SET gossip_menu_id = 29937, npcflag = npcflag | 1 WHERE entry = 29937;       -- Moteha Windkind
+UPDATE creature_template SET gossip_menu_id = 9929, npcflag = npcflag | 1 WHERE entry = 29650;        -- Archaeologist Andorin 
 -- +-----------+
 -- |gossip_menu|
 -- +-----------+
-DELETE FROM gossip_menu WHERE entry IN (21772,21774,21769,21773,9709,9253,8908,8918,22127,28138,29937);
+DELETE FROM gossip_menu WHERE entry IN (21772,21774,21769,21773,9709,9253,8908,8918,22127,28138,29937,9929);
 INSERT INTO gossip_menu VALUES
 (21772,1),      -- Chief Apothecary Hildagard
 (21774,1),      -- Zorus the Judicator
@@ -29,11 +30,12 @@ INSERT INTO gossip_menu VALUES
 (8918,11858),   -- Watcher Moonleaf
 (22127,1),      -- Wildlord Anterarion
 (28138,1),      -- Elder Harkek
-(29937,1);      -- Moteha Windkind
+(29937,1),      -- Moteha Windkind
+(9929,1);       -- Archaeologist Andorin
 -- +------------------+
 -- |gossip_menu_option|
 -- +------------------+
-DELETE FROM gossip_menu_option WHERE menu_id IN (21772,21774,21769,21773,9709,9253,8908,8918,22127,28138,29937);
+DELETE FROM gossip_menu_option WHERE menu_id IN (21772,21774,21769,21773,9709,9253,8908,8918,22127,28138,29937,9929);
 INSERT INTO gossip_menu_option VALUES
 -- Chief Apothecary Hildagard
 (21772,0,0,'Please, give me a new Spectrecles.',1,1,0,0,0,0,0,''),
@@ -64,11 +66,12 @@ INSERT INTO gossip_menu_option VALUES
 -- Elder Harkek
 (28138,0,0,'Please, give me a new Goregek큦 Shackles.',1,1,0,0,0,0,0,''),
 -- Brann's Communicator
-(29937,0,0,'Please, give me a new Brann큦 Communicator.',1,1,0,0,0,0,0,'');
+(29937,0,0,'Please, give me a new Brann큦 Communicator.',1,1,0,0,0,0,0,''),
+(9929,0,0,'Please, give me a new Brann큦 Communicator.',1,1,0,0,0,0,0,'');
 -- +---------+
 -- | SmartAI |
 -- +---------+
-DELETE FROM smart_scripts WHERE entryorguid IN (21772,21774,21769,21773,28518,26117,24186,24273,22127,28138,29937);
+DELETE FROM smart_scripts WHERE entryorguid IN (21772,21774,21769,21773,28518,26117,24186,24273,22127,28138,29937,29650);
 INSERT INTO smart_scripts VALUES
 -- Spectrecles (H)
 (21772,0,0,1,62,0,100,0,21772,0,0,0,11,37700,0x02,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - cast create Spectrecles to invoker'),
@@ -100,13 +103,16 @@ INSERT INTO smart_scripts VALUES
 -- Goregek's Shackles
 (28138,0,0,1,62,0,100,0,28138,0,0,0,11,52542,0x02,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - cast create Goregek큦 Shackles to invoker'),
 (28138,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
--- Brann's Communicator
+-- Brann's Communicator(H)
 (29937,0,0,1,62,0,100,0,29937,0,0,0,56,40971,1,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - add Brann큦 Communicator to invoker'),
-(29937,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip');
+(29937,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
+-- Brann's Communicator(A)
+(29650,0,0,1,62,0,100,0,9929,0,0,0,56,40971,1,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - add Brann큦 Communicator to invoker'),
+(29650,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip');
 -- +----------+
 -- |Conditions|
 -- +----------+
-DELETE FROM conditions WHERE SourceTypeOrReferenceId = 15 AND SourceGroup IN (21772,21774,21769,21773,9709,9253,8918,8908,22127,28138,29937);
+DELETE FROM conditions WHERE SourceTypeOrReferenceId = 15 AND SourceGroup IN (21772,21774,21769,21773,9709,9253,8918,8908,22127,28138,29937,9929);
 INSERT INTO conditions VALUES
 -- Augmented Arcane Prison
 (15,9253,1,0,8,11943,0,0,0,'','show gossip menu option if player has quest 11943 rewarded'),
@@ -136,4 +142,5 @@ INSERT INTO conditions VALUES
 -- Goregek큦 Shackles
 (15,28138,0,0,8,12528,0,0,0,'','show gossip menu option if player has quest 12528 rewarded'),
 -- Brann's Communicator
-(15,29937,0,0,8,12910,0,0,0,'','show gossip menu option if player has quest 12910 rewarded');
+(15,29937,0,0,8,12910,0,0,0,'','show gossip menu option if player has quest 12910 rewarded'),
+(15,9929,0,0,8,12855,0,0,0,'','show gossip menu option if player has quest 12855 rewarded');
