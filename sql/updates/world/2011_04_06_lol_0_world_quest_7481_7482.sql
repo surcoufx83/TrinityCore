@@ -5,8 +5,8 @@ SET @Gossip = 5743; 	-- gossip_menu id Kariel
 SET @Kariel = 179544; 	-- GO Skeletal Remains of Kariel Winthalus
 SET @Lydros = 14368; 	-- Lorekeeper Lydros
 -- update
-UPDATE gameobject_template SET AIName = 'SmartGameObjectAI' WHERE @Kariel;
-UPDATE creature_template SET AIName = 'SmartAI' WHERE @Lydros;
+UPDATE `gameobject_template` SET `AIName`='SmartGameObjectAI' WHERE `entry`=@Kariel;
+UPDATE `creature_template` SET `AIName`='SmartAI' WHERE `entry`=@Lydros;
 -- creature_text
 DELETE FROM creature_text WHERE entry = @Lydros;
 INSERT INTO creature_text VALUES
