@@ -676,31 +676,8 @@ public:
                         if (GameObject* go = instance->GetGameObject(uiFreyaChestGUID))
                             go->SetRespawnTime(go->GetRespawnDelay());
                     break;
-             }
-
-             if(GetBossState(TYPE_FREYA) == DONE &&
-                 GetBossState(TYPE_MIMIRON) == DONE &&
-                 GetBossState(TYPE_HODIR) == DONE &&
-                 GetBossState(TYPE_THORIM) == DONE)
-                if (GameObject* go = instance->GetGameObject(uiWayToYoggGUID))
-                        go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
-             return true;
-        }
-
-        EncounterState GetBossState(uint32 type)
-        {
-            if(type > MAX_ENCOUNTER)
-                return NOT_STARTED;
-
-            return EncounterState(uiEncounter[type]);
-        }
-
-        void SetData(uint32 type, uint32 data)
-        {
-            switch(type)
-            {
                 case TYPE_ALGALON:
-                    switch (data)
+                    switch (state)
                     {
                         case SPECIAL:
                             if (Creature* algalon = instance->GetCreature(uiAlgalonGUID))
@@ -739,6 +716,29 @@ public:
                             break;
                     }
                     break;
+             }
+
+             if(GetBossState(TYPE_FREYA) == DONE &&
+                 GetBossState(TYPE_MIMIRON) == DONE &&
+                 GetBossState(TYPE_HODIR) == DONE &&
+                 GetBossState(TYPE_THORIM) == DONE)
+                if (GameObject* go = instance->GetGameObject(uiWayToYoggGUID))
+                        go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
+             return true;
+        }
+
+        EncounterState GetBossState(uint32 type)
+        {
+            if(type > MAX_ENCOUNTER)
+                return NOT_STARTED;
+
+            return EncounterState(uiEncounter[type]);
+        }
+
+        void SetData(uint32 type, uint32 data)
+        {
+            switch(type)
+            {
                 case TYPE_COLOSSUS:
                     uiEncounter[TYPE_COLOSSUS] = data;
                     if (data == 2)
