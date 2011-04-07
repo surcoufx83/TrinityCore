@@ -8,7 +8,7 @@ INSERT INTO `gameobject` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`position_x`
 (188898,187987,571,1,1,3793.746,4805.559,-12.185,5.667,0,0,0,1,300,100,1),
 (188899,188109,571,1,1,3791.950,4804.803,-12.158,4.571,0,0,0,1,300,100,1);
 
-UPDATE `creature_template` SET `AIName`='SmartAI' WHERE `entry`=26048;
+UPDATE `creature_template` SET `AIName`='SmartAI', `npcflag`=`npcflag` | 16777216 WHERE `entry`=26048;
 UPDATE `creature_template` SET `unit_flags`=4, `AIName`='SmartAI' WHERE `entry`=26045;
 UPDATE `creature_template` SET `AIName`='SmartAI' WHERE `entry`=25752;
 UPDATE `creature_template` SET `AIName`='SmartAI' WHERE `entry`=25753;
