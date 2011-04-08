@@ -200,10 +200,10 @@ struct BuildingState
     TeamId GetTeam() const { return team; }
     void SetTeam(TeamId t)
     {
-        team = t;
-        if(graveTeam)
-            if (uint32 newTeam = TeamId2Team[t])
-                *graveTeam = newTeam;
+        //team = t;
+        //if(graveTeam)
+        //    if (uint32 newTeam = TeamId2Team[t])
+        //        *graveTeam = newTeam;
     }
 
     private:

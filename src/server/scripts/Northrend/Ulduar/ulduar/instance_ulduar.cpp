@@ -377,7 +377,7 @@ public:
                     break;
                 case NPC_LEVIATHAN_MKII: uiLeviathanMKIIGUID = creature->GetGUID(); break;
                 case NPC_VX_001: uiVX001GUID = creature->GetGUID(); break;
-                case NPC_AERIAL_UNIT: uiAerialUnitGUID = creature->GetGUID(); break;
+                case NPC_AERIAL_COMMAND_UNIT: uiAerialUnitGUID = creature->GetGUID(); break;
                 case NPC_MAGNETIC_CORE: uiMagneticCoreGUID = creature->GetGUID(); break;
 
                 case NPC_HODIR:

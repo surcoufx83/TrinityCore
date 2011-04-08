@@ -103,7 +103,7 @@ enum eNPCs
     NPC_RUBBLE                  = 33768,
     NPC_AURIAYA                 = 33515,
     NPC_MIMIRON                 = 33350,
-    NPC_AERIAL_UNIT             = 33670,
+    NPC_AERIAL_COMMAND_UNIT     = 33670,
     NPC_MAGNETIC_CORE           = 34068,
     NPC_LEVIATHAN_MKII          = 33432,
     NPC_VX_001                  = 33651,
@@ -119,9 +119,6 @@ enum eNPCs
     NPC_YOGGSARON               = 33288,
     NPC_SARA                    = 33134,
     NPC_ALGALON                 = 32871,
-    NPC_LEVIATHAN_MKII          = 33432,
-    NPC_VX_001                  = 33651,
-    NPC_AERIAL_COMMAND_UNIT     = 33670,
 };
 
 enum eGameObjects
