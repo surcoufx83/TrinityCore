@@ -1,5 +1,5 @@
 -- Fix Quest 'Forging the Keystone' #13285 
--- (Workaround - Missing Symboleffects and AreaGroupId bug of s#60963 in Spell.dbc instead of 923 (Stonesplinter Valley )it has to be 67 (The Storm Peaks) - commented out to make the fix working)
+-- (Workaround - Missing Symboleffects and AreaGroupId bug of s#60963 in Spell.dbc instead of 923 (Temple Of Invention)it has to be The Storm Peaks - commented out to make the fix working)
 SET @Brann  = 31810;
 SET @Voice  = 31814;
 SET @Quest  = 13285;
