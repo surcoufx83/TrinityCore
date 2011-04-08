@@ -2,14 +2,25 @@
 SET @Brann  = 31810;
 SET @Voice  = 31814;
 SET @Quest  = 13285;
+SET @PAura  = 60963; -- See Quest Brann Bronzebeard (TOI)
 -- creatures to spawn
 DELETE FROM `creature` WHERE `id` IN (@Voice,@Brann);
 INSERT INTO `creature`(`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`,`npcflag`,`unit_flags`,`dynamicflags`) VALUES
 (@Brann,571,1,1,0,0,7848.97,-1392.95,1534.06,6.02204,120,0,0,132,0,0,0,0,0,0),
 (@Voice,571,1,1,0,0,7859.68,-1396.07,1534.06,5.99062,300,0,0,42,0,0,0,0,0,0);
--- update
+-- update creature_template and quest_template
 UPDATE `creature_template` SET `AIName` = 'SmartAI', `flags_extra` = `flags_extra`| 128 WHERE `entry` = @Voice;
 UPDATE `creature_template` SET `minlevel` = 80, `maxlevel` = 80, `exp` = 2, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 7.5, `minrangedmg` = 345, `maxrangedmg` = 509, `rangedattackpower` = 103, `AIName` = 'SmartAI' WHERE `entry` = @Brann;
+
+UPDATE `quest_template` SET `SrcSpell` = @PAura WHERE `entry` = @Quest; -- Player get Aura 'See Quest Brann Bronzebeard (TOI)'
+/*DELETE FROM `spell_area` WHERE `spell` = @PAura;
+INSERT INTO `spell_area` (`spell`, `area`, `quest_start`, `quest_start_active`, `quest_end`, `aura_spell`, `racemask`, `gender`, `autocast`) VALUES 
+(60963, 67, 13285, 1, 13285, 0, 0, 2, 1);*/
+
+-- creature_template_addon
+DELETE FROM `creature_template_addon` WHERE `entry` = @Brann;
+INSERT INTO `creature_template_addon` (`entry`,`path_id`,`mount`,`bytes1`,`bytes2`,`emote`,`auras`) VALUES 
+(@Brann,0,0,0,4097,0,'49414 0'); -- Generic Quest Invisibility 1
 -- creature text
 DELETE FROM `creature_text` WHERE `entry` IN (@Voice,@Brann);
 INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`probability`,`emote`,`duration`,`sound`,`comment`) VALUES
@@ -40,7 +51,7 @@ INSERT INTO `waypoints` (`entry`, `pointid`, `position_x`, `position_y`, `positi
 (@Brann,2,7859.68,-1396.07,1534.06,'ToI Brann Bronzebeard wp2'),
 (@Brann,3,7800.47,-1409.72,1534.56,'ToI Brann Bronzebeard wp3');
 -- SmartAI
-DELETE FROM `smart_scripts` WHERE `source_type`=0 AND `entryorguid`= @Brann;
+DELETE FROM `smart_scripts` WHERE `source_type`=0 AND `entryorguid` = @Brann;
 DELETE FROM `smart_scripts` WHERE `source_type`=9 AND `entryorguid` IN (@Brann*100,@Brann*100+1);
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`) VALUES
 (@Brann,0,0,0,62,0,100,0,@Brann,0,0,0,80,@Brann*100,0,0,0,0,0,1,0,0,0,0,0,0,0,'on gossip select - start script1'),
