@@ -107,6 +107,13 @@ public:
         uint32 uiSupportKeeperFlag;
         uint32 uiPlayerDeathFlag;
         uint32 uiAlgalonKillCount;
+        uint32 uiCountdownTimer;
+
+        uint32 uiAlgalonCountdown;
+        //   62 - not ready to engage
+        //   61 - ready to engage, not engaged yet
+        // < 61 - engaged, timer running
+        //    0 - failed
 
         void Initialize()
         {
@@ -157,6 +164,8 @@ public:
             uiSupportKeeperFlag     = 0;
             uiPlayerDeathFlag      = 0;
             uiAlgalonKillCount = 0;
+            uiAlgalonCountdown = 62;
+            uiCountdownTimer = 1*MINUTE*IN_MILLISECONDS;
 
             memset(uiEncounter, 0, sizeof(uiEncounter));
             memset(uiAssemblyGUIDs, 0, sizeof(uiAssemblyGUIDs));
@@ -417,6 +426,8 @@ public:
 
                 case NPC_ALGALON:
                     uiAlgalonGUID = creature->GetGUID();
+                    if (uiAlgalonCountdown < 62)
+                        creature->setFaction(7);
                     break;
             }
 
@@ -549,14 +560,19 @@ public:
                     break;
                 case GO_ALGALON_DOOR_1:
                     uiAlgalonDoor1GUID = go->GetGUID();
-                    HandleGameObject(NULL, false, go);
+                    HandleGameObject(NULL, uiAlgalonCountdown < 62 ? true : false, go);
                     break;
                 case GO_ALGALON_DOOR_2:
                     uiAlgalonDoor2GUID = go->GetGUID();
-                    HandleGameObject(NULL, false, go);
+                    HandleGameObject(NULL, uiAlgalonCountdown < 62 ? true : false, go);
                     break;
                 case GO_ALGALON_ACCESS:
                     uiAlgalonAccessGUID = go->GetGUID();
+                    if (uiAlgalonCountdown < 62)
+                    {
+                        go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                        go->SetGoState(GO_STATE_ACTIVE);
+                    }
                     break;
             }
         }
@@ -659,6 +675,46 @@ public:
                     if (state == DONE)
                         if (GameObject* go = instance->GetGameObject(uiFreyaChestGUID))
                             go->SetRespawnTime(go->GetRespawnDelay());
+                    break;
+                case TYPE_ALGALON:
+                    switch (state)
+                    {
+                        case SPECIAL:
+                            if (Creature* algalon = instance->GetCreature(uiAlgalonGUID))
+                                algalon->setFaction(7);
+                            HandleGameObject(uiAlgalonDoor1GUID, true);
+                            HandleGameObject(uiAlgalonDoor2GUID, true);
+                            uiAlgalonCountdown = 61;
+                            SaveToDB();
+                            break;
+                        case NOT_STARTED:
+                            HandleGameObject(uiAlgalonGlobeGUID, false);
+                            HandleGameObject(uiAlgalonBridgeGUID, false);
+                            HandleGameObject(uiAlgalonBridgeVisualGUID, false);
+                            HandleGameObject(uiAlgalonBridgeDoorGUID, true);
+                            break;
+                        case IN_PROGRESS:
+                            if (uiAlgalonCountdown > 60)
+                            {
+                                uiAlgalonCountdown = 60;
+                                DoUpdateWorldState(WORLDSTATE_ALGALON_SHOW, 1);
+                                DoUpdateWorldState(WORLDSTATE_ALGALON_TIME, uiAlgalonCountdown);
+                                SaveToDB();
+                            }
+                            HandleGameObject(uiAlgalonGlobeGUID, true);
+                            HandleGameObject(uiAlgalonBridgeGUID, true);
+                            HandleGameObject(uiAlgalonBridgeVisualGUID, true);
+                            HandleGameObject(uiAlgalonBridgeDoorGUID, false);
+                            break;
+                        case DONE:
+                            //uiAlgalonCountdown = 1;
+                            //uiCountdownTimer = 0;
+                            HandleGameObject(uiAlgalonGlobeGUID, false);
+                            HandleGameObject(uiAlgalonBridgeGUID, false);
+                            HandleGameObject(uiAlgalonBridgeVisualGUID, false);
+                            HandleGameObject(uiAlgalonBridgeDoorGUID, true);
+                            break;
+                    }
                     break;
              }
 
@@ -767,13 +823,6 @@ public:
                 case TYPE_SARA:                 return uiSaraGUID;
                 // Algalon
                 case TYPE_ALGALON:              return uiAlgalonGUID;
-                //case GO_ALGALON_BRIDGE:         return uiAlgalonBridgeGUID;
-                //case GO_ALGALON_B_VISUAL:       return uiAlgalonBridgeVisualGUID;
-                //case GO_ALGALON_B_DOOR:         return uiAlgalonBridgeDoorGUID;
-                //case GO_ALGALON_GLOBE:          return uiAlgalonGlobeGUID;
-                case GO_ALGALON_DOOR_1:         return uiAlgalonDoor1GUID;
-                case GO_ALGALON_DOOR_2:         return uiAlgalonDoor2GUID;
-                //case GO_ALGALON_ACCESS:         return uiAlgalonAccessGUID;
                 // razorscale expedition commander
                 case DATA_EXP_COMMANDER:        return uiExpCommanderGUID;
                 case GO_RAZOR_HARPOON_1:        return uiRazorHarpoonGUIDs[0];
@@ -811,7 +860,7 @@ public:
             OUT_SAVE_INST_DATA;
 
             std::ostringstream saveStream;
-            saveStream << "U U " << GetBossSaveData() << GetData(TYPE_COLOSSUS) << " " << uiPlayerDeathFlag;
+            saveStream << "U U " << GetBossSaveData() << GetData(TYPE_COLOSSUS) << " " << uiPlayerDeathFlag << " " << uiAlgalonCountdown;
 
             OUT_SAVE_INST_DATA_COMPLETE;
             return saveStream.str();
@@ -846,12 +895,38 @@ public:
                     else
                         SetBossState(i, EncounterState(tmpState));
                 }
-                uint32 tmpState;
-                loadStream >> tmpState;
-                uiPlayerDeathFlag = tmpState;
+                uint32 tmpState, tmpState2, tmpState3;
+                loadStream >> tmpState >> tmpState2 >> tmpState3;
+                // tmpState == GetData(TYPE_COLOSSUS) (?)
+                uiPlayerDeathFlag = tmpState2;
+                uiAlgalonCountdown = tmpState3;
             }
 
             OUT_LOAD_INST_DATA_COMPLETE;
+        }
+
+        void Update(uint32 diff)
+        {
+            if (uiAlgalonCountdown && uiAlgalonCountdown < 61)
+            {
+                if (uiCountdownTimer < diff)
+                {
+                    uiAlgalonCountdown--;
+
+                    if (uiAlgalonCountdown)
+                    {
+                        DoUpdateWorldState(WORLDSTATE_ALGALON_SHOW, 1);
+                        DoUpdateWorldState(WORLDSTATE_ALGALON_TIME, uiAlgalonCountdown);
+                    }
+                    else
+                    {
+                        DoUpdateWorldState(WORLDSTATE_ALGALON_SHOW, 0);
+                    }
+                    SaveToDB();
+                    uiCountdownTimer += 1*MINUTE*IN_MILLISECONDS;
+                }
+                uiCountdownTimer -= diff;
+            }
         }
     };
 };

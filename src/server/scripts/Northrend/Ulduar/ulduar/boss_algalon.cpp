@@ -78,15 +78,12 @@ public:
         return new boss_algalonAI(pCreature);
     }
 
-    struct boss_algalonAI : public ScriptedAI
+    struct boss_algalonAI : public BossAI
     {
-        boss_algalonAI(Creature *c) : ScriptedAI(c)
+        boss_algalonAI(Creature* c) : BossAI(c, TYPE_ALGALON)
         {
-            pInstance = c->GetInstanceScript();
             Summon = false; // not in reset. intro speech done only once.
         }
-
-        InstanceScript* pInstance;
 
         std::list<uint64> m_lCollapsingStarGUIDList;
 
@@ -108,6 +105,8 @@ public:
 
         void EnterCombat(Unit* who)
         {
+            _EnterCombat();
+
             if (Summon)
             {
                 DoScriptText(SAY_AGGRO, me);
@@ -120,14 +119,11 @@ public:
                 me->SetReactState(REACT_PASSIVE);
                 uiStep = 1;
             }
-
-            if (pInstance)
-                pInstance->SetData(TYPE_ALGALON, IN_PROGRESS);
         }
 
         void FinishEncounter()
         {
-            pInstance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET,SPELL_BOSS_FINISHED);
+            instance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, SPELL_BOSS_FINISHED);
         }
 
         void KilledUnit(Unit * /*victim*/)
@@ -137,14 +133,12 @@ public:
 
         void Reset()
         {
-            Phase = 1;
+            _Reset();
 
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            if (pInstance)
-                pInstance->SetData(TYPE_ALGALON, NOT_STARTED);
 
+            Phase = 1;
             BlackHoleGUID = 0;
-
             uiPhase_timer = 0;
             Ascend_Timer = 480000; //8 minutes
             QuantumStrike_Timer = 4000 + rand()%10000;
@@ -198,7 +192,6 @@ public:
 
         void UpdateAI(const uint32 diff)
         {
-            //Return since we have no target
             if (!UpdateVictim())
                 return;
 
@@ -220,9 +213,7 @@ public:
                 DoScriptText(SAY_DEATH_5, me);
 
                 me->DisappearAndDie();
-
-                if (pInstance)
-                    pInstance->SetData(TYPE_ALGALON, DONE);
+                _JustDied();
 
                 return;
             }
@@ -382,11 +373,9 @@ public:
 
         if (player->HasItemCount(45796, 1) || player->HasItemCount(45798, 1))
         {
+            pInstance->SetBossState(TYPE_ALGALON, SPECIAL);
             go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
             go->SetGoState(GO_STATE_ACTIVE);
-            // TODO: move to instance
-            pInstance->HandleGameObject(pInstance->GetData64(GO_ALGALON_DOOR_1), true);
-            pInstance->HandleGameObject(pInstance->GetData64(GO_ALGALON_DOOR_2), true);
         }
         return true;
     }
