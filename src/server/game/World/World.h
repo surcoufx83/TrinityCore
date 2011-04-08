@@ -70,8 +70,6 @@ enum ShutdownExitCode
 /// Timers for different object refresh rates
 enum WorldTimers
 {
-    WUPDATE_OBJECTS,
-    WUPDATE_SESSIONS,
     WUPDATE_AUCTIONS,
     WUPDATE_WEATHERS,
     WUPDATE_UPTIME,
@@ -869,7 +867,7 @@ class World
 
     private:
         void ProcessQueryCallbacks();
-        QueryCallback<uint32> m_realmCharCallback;
+        QueryCallback<QueryResult, uint32> m_realmCharCallback;
 };
 
 extern uint32 realmID;
