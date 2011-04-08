@@ -5,12 +5,11 @@ SET @Quest  = 13285;
 -- creatures to spawn
 DELETE FROM `creature` WHERE `id` IN (@Voice,@Brann);
 INSERT INTO `creature`(`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`,`npcflag`,`unit_flags`,`dynamicflags`) VALUES
-(@Brann,571,1,1,0,0,7848.97,-1392.95,1534.06,6.02204,300,0,0,252,0,0,0,0,0,0),
+(@Brann,571,1,1,0,0,7848.97,-1392.95,1534.06,6.02204,120,0,0,132,0,0,0,0,0,0),
 (@Voice,571,1,1,0,0,7859.68,-1396.07,1534.06,5.99062,300,0,0,42,0,0,0,0,0,0);
 -- update
-UPDATE `creature_template` SET `AIName` = 'SmartAI', `npcflag` = `npcflag` | 1, `gossip_menu_id` = @Brann  WHERE `entry` = @Brann;
-UPDATE `creature_template` SET `AIName` = 'SmartAI', `flags_extra` = `flags_extra`| 128 WHERE `entry` = @Voice;(@Brann,571,1,1,0,0,7848.97,-1392.95,1534.06,6.02204,300,0,0,252,0,0,0,0,0,0);
-UPDATE `creature` SET `spawntimesecs` = 120 WHERE `id` = @Brann;
+UPDATE `creature_template` SET `AIName` = 'SmartAI', `flags_extra` = `flags_extra`| 128 WHERE `entry` = @Voice;
+UPDATE `creature_template` SET `minlevel` = 80, `maxlevel` = 80, `exp` = 2, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 7.5, `minrangedmg` = 345, `maxrangedmg` = 509, `rangedattackpower` = 103, `AIName` = 'SmartAI' WHERE `entry` = @Brann;
 -- creature text
 DELETE FROM `creature_text` WHERE `entry` IN (@Voice,@Brann);
 INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`probability`,`emote`,`duration`,`sound`,`comment`) VALUES
@@ -36,15 +35,16 @@ INSERT INTO `gossip_menu_option` (`menu_id`,`id`,`option_icon`,`option_text`,`op
 (@Brann,0,0,"I'm ready, Brann. Let's make the keystone.",1,1,0,0,0,0,0,'');
 -- waypoints
 DELETE FROM `waypoints` WHERE `entry` = @Brann;
-INSERT INTO `waypoints` (`entry`, `pointid`, `position_x`, `position_y`, `position_z`, `point_comment`) VALUES 
+INSERT INTO `waypoints` (`entry`, `pointid`, `position_x`, `position_y`, `position_z`, `point_comment`) VALUES
 (@Brann,1,7848.97,-1392.95,1534.06,'ToI Brann Bronzebeard wp1'),
 (@Brann,2,7859.68,-1396.07,1534.06,'ToI Brann Bronzebeard wp2'),
 (@Brann,3,7800.47,-1409.72,1534.56,'ToI Brann Bronzebeard wp3');
 -- SmartAI
-DELETE FROM `smart_scripts` WHERE `entryorguid` IN (@Brann,@Brann*100,@Brann*100+1,@Brann*100+2);
+DELETE FROM `smart_scripts` WHERE `source_type`=0 AND `entryorguid`= @Brann;
+DELETE FROM `smart_scripts` WHERE `source_type`=9 AND `entryorguid` IN (@Brann*100,@Brann*100+1);
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`) VALUES
 (@Brann,0,0,0,62,0,100,0,@Brann,0,0,0,80,@Brann*100,0,0,0,0,0,1,0,0,0,0,0,0,0,'on gossip select - start script1'),
-(@Brann,0,1,2,40,0,100,0,2,@Brann,0,0,55,0,0,0,0,0,0,1,0,0,0,0,0,0,0,'reached wp2 - stop'),
+(@Brann,0,1,2,40,0,100,0,2,@Brann,0,0,54,35000,0,0,0,0,0,1,0,0,0,0,0,0,0,'reached wp2 - pause'),
 (@Brann,0,2,0,61,0,100,0,0,0,0,0,80,@Brann*100+1,0,0,0,0,0,1,0,0,0,0,0,0,0,'start script2'),
 (@Brann,0,3,0,40,0,100,0,3,@Brann,0,0,55,3000,0,0,0,0,0,1,0,0,0,0,0,0,0,'stop at wp3 - after 3sec despawn'),
 -- script1
@@ -61,8 +61,8 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (@Brann*100+1,9,6,0,0,0,100,0,5000,5000,0,0,1,2,0,0,0,0,0,1,0,0,0,0,0,0,0,'Brann say text2'),
 (@Brann*100+1,9,7,0,0,0,100,0,0,0,0,0,33,@Brann,0,0,0,0,0,7,0,0,0,0,0,0,0,'give quest credit'),
 (@Brann*100+1,9,8,0,0,0,100,0,0,0,0,0,66,0,0,0,0,0,0,8,0,0,0,0,0,0,3.33754,'turn'),
-(@Brann*100+1,9,9,0,0,0,100,0,1000,1000,0,0,1,3,0,0,0,0,0,1,0,0,0,0,0,0,0,'Brann say text3'),
-(@Brann*100+1,9,10,0,0,0,100,0,3000,3000,0,0,53,1,@Brann,0,0,0,0,1,0,0,0,0,0,0,0,'wp resume');
+(@Brann*100+1,9,9,0,0,0,100,0,5000,5000,0,0,1,3,0,0,0,0,0,1,0,0,0,0,0,0,0,'Brann say text3'),
+(@Brann*100+1,9,10,0,0,0,100,0,0,0,0,0,59,1,0,0,0,0,0,1,0,0,0,0,0,0,0,'set run');
 -- conditions
 DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 15 AND `SourceGroup` = @Brann;
 INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry`, `ElseGroup`, `ConditionTypeOrReference`, `ConditionValue1`, `ConditionValue2`, `ConditionValue3`, `ErrorTextId`, `ScriptName`, `Comment`) VALUES
