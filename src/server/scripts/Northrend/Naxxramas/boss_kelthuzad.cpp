@@ -821,7 +821,7 @@ public:
 
         void JustDied(Unit *killer)
         {
-            if(!m_pInstance || m_pInstance->GetBossState(BOSS_KELTHUZAD) != IN_PROGRESS)
+            if(!m_pInstance || m_pInstance->GetData(BOSS_KELTHUZAD) != IN_PROGRESS)
                 return;
 
             if(Creature* kel = Creature::GetCreature((*me),m_pInstance->GetData64(DATA_KELTHUZAD)))

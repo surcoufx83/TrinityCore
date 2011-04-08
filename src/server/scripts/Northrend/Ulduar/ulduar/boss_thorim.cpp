@@ -628,28 +628,28 @@ public:
                 damage = 0;
         }
 
-        void EnterEvadeMode()
-        {
-            Map* pMap = me->GetMap();
-            if (pMap->IsDungeon())
-            {
-                Map::PlayerList const &PlayerList = pMap->GetPlayers();
-                if (!PlayerList.isEmpty())
-                {
-                    for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
-                    {
-                        if (i->getSource() && i->getSource()->isAlive() && isOnSameSide(i->getSource()))
-                        {
-                            AttackStart(i->getSource());
-                            return;
-                        }
-                    }
-                }
-            }
+        //void EnterEvadeMode()
+        //{
+        //    Map* pMap = me->GetMap();
+        //    if (pMap->IsDungeon())
+        //    {
+        //        Map::PlayerList const &PlayerList = pMap->GetPlayers();
+        //        if (!PlayerList.isEmpty())
+        //        {
+        //            for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+        //            {
+        //                if (i->getSource() && i->getSource()->isAlive() && isOnSameSide(i->getSource()))
+        //                {
+        //                    AttackStart(i->getSource());
+        //                    return;
+        //                }
+        //            }
+        //        }
+        //    }
 
-            me->StopMoving();
-            Reset();
-        }
+        //    me->StopMoving();
+        //    Reset();
+        //}
 
         void Reset()
         {
