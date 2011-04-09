@@ -1703,15 +1703,20 @@ void GameObject::TakenDamage(uint32 damage, Unit *who)
         if (!m_goValue->building.health)
         {
             RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_DAMAGED);
-
             SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_DESTROYED);
-            //SetUInt32Value(GAMEOBJECT_DISPLAYID, m_goInfo->building.destroyedDisplayId);
+
+            uint32 modelId = m_goInfo->building.destroyedDisplayId;
+            if (DestructibleModelDataEntry const* modelData = sDestructibleModelDataStore.LookupEntry(m_goInfo->building.destructibleData))
+                if (modelData->DestroyedDisplayId)
+                    modelId = modelData->DestroyedDisplayId;
+            SetUInt32Value(GAMEOBJECT_DISPLAYID, modelId);
+
             EventInform(m_goInfo->building.destroyedEvent);
             if (pwho)
                 if (Battleground* bg = pwho->GetBattleground())
                     bg->DestroyGate(pwho, this, m_goInfo->building.destroyedEvent);
             hitType = BG_OBJECT_DMG_HIT_TYPE_JUST_DESTROYED;
-            sScriptMgr->OnGameObjectDestroyed(pwho, this, m_goInfo->building.destroyedEvent);
+            sScriptMgr->OnGameObjectDestroyed(this, pwho, m_goInfo->building.destroyedEvent);
         }
         if (pwho)
             if (Battleground* bg = pwho->GetBattleground())
@@ -1731,8 +1736,15 @@ void GameObject::TakenDamage(uint32 damage, Unit *who)
                 m_goValue->building.health = 1;
 
             SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_DAMAGED);
-            //SetUInt32Value(GAMEOBJECT_DISPLAYID, m_goInfo->building.damagedDisplayId);
+
+            uint32 modelId = m_goInfo->building.damagedDisplayId;
+            if (DestructibleModelDataEntry const* modelData = sDestructibleModelDataStore.LookupEntry(m_goInfo->building.destructibleData))
+                if (modelData->DamagedDisplayId)
+                    modelId = modelData->DamagedDisplayId;
+            SetUInt32Value(GAMEOBJECT_DISPLAYID, modelId);
+
             EventInform(m_goInfo->building.damagedEvent);
+            sScriptMgr->OnGameObjectDamaged(this, pwho, m_goInfo->building.damagedEvent);
             hitType = BG_OBJECT_DMG_HIT_TYPE_JUST_HIGH_DAMAGED;
         }
         if (pwho)
@@ -1744,7 +1756,7 @@ void GameObject::TakenDamage(uint32 damage, Unit *who)
 
 void GameObject::Rebuild()
 {
-    RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_DAMAGED + GO_FLAG_DESTROYED);
+    RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_DAMAGED | GO_FLAG_DESTROYED);
     SetUInt32Value(GAMEOBJECT_DISPLAYID, m_goInfo->displayId);
     m_goValue->building.health = m_goInfo->building.intactNumHits + m_goInfo->building.damagedNumHits;
     EventInform(m_goInfo->building.rebuildingEvent);
