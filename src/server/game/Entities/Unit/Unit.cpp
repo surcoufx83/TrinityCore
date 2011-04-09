@@ -689,17 +689,9 @@ uint32 Unit::DealDamage(Unit *pVictim, uint32 damage, CleanDamage const* cleanDa
 
         // in bg, count dmg if victim is also a player
         if (pVictim->GetTypeId() == TYPEID_PLAYER)
-        {
             if (Battleground *bg = killer->GetBattleground())
-            {
                 bg->UpdatePlayerScore(killer, SCORE_DAMAGE_DONE, damage);
-                /** World of Warcraft Armory **/
-                if (sWorld->getBoolConfig(CONFIG_ARMORY_ENABLE))
-                    if (Battleground *bgV = ((Player*)pVictim)->GetBattleground())
-                        bgV->UpdatePlayerScore(((Player*)pVictim), SCORE_DAMAGE_TAKEN, damage);
-                /** World of Warcraft Armory **/
-            }
-        }
+
         killer->UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_DAMAGE_DONE, damage, 0, pVictim);
         killer->UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_HIGHEST_HIT_DEALT, damage);
     }
@@ -9892,11 +9884,6 @@ int32 Unit::DealHeal(Unit *pVictim, uint32 addhealth)
     {
         pVictim->ToPlayer()->GetAchievementMgr().UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_TOTAL_HEALING_RECEIVED, gain);
         pVictim->ToPlayer()->GetAchievementMgr().UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_HIGHEST_HEALING_RECEIVED, addhealth);
-        /** World of Warcraft Armory **/
-        if (sWorld->getBoolConfig(CONFIG_ARMORY_ENABLE))
-            if (Battleground *bgV = pVictim->ToPlayer()->GetBattleground())
-                bgV->UpdatePlayerScore((Player*)pVictim, SCORE_HEALING_TAKEN, gain);
-        /** World of Warcraft Armory **/
     }
 
     return gain;
@@ -15268,10 +15255,9 @@ void Unit::Kill(Unit *pVictim, bool durabilityLoss)
                     if (creature->GetCreatureInfo()->flags_extra & CREATURE_FLAG_EXTRA_INSTANCE_BIND)
                     {
                         ((InstanceMap *)m)->PermBindAllPlayers(creditedPlayer);
-                        /** World of Warcraft Armory **/
-                        if (sWorld->getBoolConfig(CONFIG_ARMORY_ENABLE))
-                            creditedPlayer->WriteWowArmoryDatabaseLog(3, creature->GetCreatureInfo()->Entry);
-                        /** World of Warcraft Armory **/
+                        /* World of Warcraft Armory */
+                        creditedPlayer->CreateWowarmoryFeed(3, creature->GetCreatureInfo()->Entry, 0, 0);
+                        /* World of Warcraft Armory */
                     }
                 }
                 else
