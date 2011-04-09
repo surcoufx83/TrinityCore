@@ -4,6 +4,7 @@
 UPDATE `gameobject_template` SET `data2`=300 WHERE `entry`=2744 LIMIT 1;
 UPDATE `gameobject_loot_template` SET `ChanceOrQuestChance`=65, `groupid`=0 WHERE `entry`=2264 AND `item`=4611 LIMIT 1;
 UPDATE `gameobject_loot_template` SET `ChanceOrQuestChance`=24, `groupid`=0 WHERE `entry`=2264 AND `item`=4655 LIMIT 1;
+DELETE FROM `gameobject_loot_template` WHERE `item` IN (5504,5503,5500,5498) AND `entry` = 2264;
 INSERT INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`)
 VALUES
 (2264, 5504,  22, 1, 0, 1, 3),
