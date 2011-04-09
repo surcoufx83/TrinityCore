@@ -1,4 +1,4 @@
---Fix for Quest 10852 Missing Friends
+-- Fix for Quest 10852 Missing Friends
 
 UPDATE `gameobject_template` SET `data2`=300000 WHERE `entry`=185202;
 UPDATE `gameobject` SET `id`=185202 WHERE `guid`=26089;
