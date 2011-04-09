@@ -1,5 +1,5 @@
 -- Workaround for Quest 12243 Fire on the Water
-
+DELETE FROM `spell_linked_spell` WHERE `spell_trigger` = 48455;
 INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `comment`) VALUES (48455, 50290, 'Apothecary\'s Burning Water');
 
 UPDATE `creature_template` SET `lootid`=27232 WHERE `entry`=27232 LIMIT 1;
