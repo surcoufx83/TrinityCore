@@ -11,16 +11,16 @@ INSERT INTO `creature`(`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_i
 (@Voice,571,1,1,0,0,7859.68,-1396.07,1534.06,5.99062,300,0,0,42,0,0,0,0,0,0);
 -- update creature_template and quest_template
 UPDATE `creature_template` SET `AIName` = 'SmartAI', `flags_extra` = `flags_extra`| 128 WHERE `entry` = @Voice;
-UPDATE `creature_template` SET `minlevel` = 80, `maxlevel` = 80, `exp` = 2, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 7.5, `minrangedmg` = 345, `maxrangedmg` = 509, `rangedattackpower` = 103, `AIName` = 'SmartAI' WHERE `entry` = @Brann;
-/* UPDATE `quest_template` SET `SrcSpell` = @PAura WHERE `entry` = @Quest; -- Player get Aura 'See Quest Brann Bronzebeard (TOI)' on quest accept
+UPDATE `creature_template` SET `npcflag` = 1, `minlevel` = 80, `maxlevel` = 80, `exp` = 2, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 7.5, `minrangedmg` = 345, `maxrangedmg` = 509, `rangedattackpower` = 103, `AIName` = 'SmartAI' WHERE `entry` = @Brann;
+-- UPDATE `quest_template` SET `SrcSpell` = @PAura WHERE `entry` = @Quest; -- Player get Aura 'See Quest Brann Bronzebeard (TOI)' on quest accept
 -- apply aura See Quest Brann Bronzebeard (TOI) in stormpeaks
-DELETE FROM `spell_area` WHERE `spell` = @PAura;
-INSERT INTO `spell_area` (`spell`,`area`,`quest_start`,`quest_start_active`,`quest_end`,`aura_spell`,`racemask`,`gender`,`autocast`) VALUES 
-(60963,67,13285,1,13285,0,0,2,1);
+-- DELETE FROM `spell_area` WHERE `spell` = @PAura;
+-- INSERT INTO `spell_area` (`spell`,`area`,`quest_start`,`quest_start_active`,`quest_end`,`aura_spell`,`racemask`,`gender`,`autocast`) VALUES 
+-- (60963,67,13285,1,13285,0,0,2,1);
 -- creature_template_addon
-DELETE FROM `creature_template_addon` WHERE `entry` = @Brann;
-INSERT INTO `creature_template_addon` (`entry`,`path_id`,`mount`,`bytes1`,`bytes2`,`emote`,`auras`) VALUES 
-(@Brann,0,0,0,4097,0,'49414 0'); -- Generic Quest Invisibility 1*/
+-- DELETE FROM `creature_template_addon` WHERE `entry` = @Brann;
+-- INSERT INTO `creature_template_addon` (`entry`,`path_id`,`mount`,`bytes1`,`bytes2`,`emote`,`auras`) VALUES 
+-- (@Brann,0,0,0,4097,0,'49414 0'); -- Generic Quest Invisibility 1*/
 -- creature text
 DELETE FROM `creature_text` WHERE `entry` IN (@Voice,@Brann);
 INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`probability`,`emote`,`duration`,`sound`,`comment`) VALUES
