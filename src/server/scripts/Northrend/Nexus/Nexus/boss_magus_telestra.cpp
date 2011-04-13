@@ -73,22 +73,6 @@ public:
         boss_magus_telestraAI(Creature* c) : ScriptedAI(c)
         {
             pInstance = c->GetInstanceScript();
-
-            //temporary, needs different target selection
-            SpellEntry *TempSpell;
-            TempSpell = GET_SPELL(SPELL_CRITTER);
-            if (TempSpell)
-            { 
-                TempSpell->EffectImplicitTargetA[0] = 6;
-                TempSpell->EffectImplicitTargetA[1] = 6;
-                TempSpell->EffectImplicitTargetA[2] = 6;
-                TempSpell->EffectImplicitTargetB[0] = 0;
-                TempSpell->EffectImplicitTargetB[1] = 0;
-                TempSpell->EffectImplicitTargetB[2] = 0;
-                TempSpell->EffectRadiusIndex[0] = 0;
-                TempSpell->EffectRadiusIndex[1] = 0;
-                TempSpell->EffectRadiusIndex[2] = 0;
-            }
         }
 
         InstanceScript* pInstance;
@@ -358,7 +342,7 @@ public:
 
         void Reset()
         {
-            uiCritterTimer = urand(2000, 5000);
+            uiCritterTimer = urand(3000, 6000);
             uiTimeStopTimer = urand(7000, 10000);
         }
 
@@ -369,11 +353,8 @@ public:
 
             if (uiCritterTimer<=diff)
             {
-                if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
-                {
-                    DoCast(pTarget, SPELL_CRITTER, false);
-                    uiCritterTimer = urand(5000, 8000);
-                }
+                DoCast(SPELL_CRITTER);
+                uiCritterTimer = urand(5000, 8000);
             }else uiCritterTimer-=diff;
 
             if (uiTimeStopTimer<=diff)
@@ -390,10 +371,46 @@ public:
     {
         return new boss_magus_telestra_arcaneAI(pCreature);
     }
-
 };
+
+class spell_nexus_critter_targeting : public SpellScriptLoader
+{
+    public:
+        spell_nexus_critter_targeting() : SpellScriptLoader("spell_nexus_critter_targeting") { }
+
+        class spell_nexus_critter_targeting_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_nexus_critter_targeting_SpellScript);
+
+            void FilterTargetsInitial(std::list<Unit*>& unitList)
+            {
+                sharedUnitList = unitList;
+            }
+
+            void FilterTargetsSubsequent(std::list<Unit*>& unitList)
+            {
+                unitList = sharedUnitList;
+            }
+
+            void Register()
+            {
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_nexus_critter_targeting_SpellScript::FilterTargetsInitial, EFFECT_0, TARGET_UNIT_AREA_ENEMY_SRC);
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_nexus_critter_targeting_SpellScript::FilterTargetsSubsequent, EFFECT_1, TARGET_UNIT_AREA_ENEMY_SRC);
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_nexus_critter_targeting_SpellScript::FilterTargetsSubsequent, EFFECT_2, TARGET_UNIT_AREA_ENEMY_SRC);
+            }
+
+            std::list<Unit*> sharedUnitList;
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_nexus_critter_targeting_SpellScript();
+        }
+};
+
 void AddSC_boss_magus_telestra()
 {
     new boss_magus_telestra();
     new boss_magus_telestra_arcane();
+    new spell_nexus_critter_targeting();
 }
