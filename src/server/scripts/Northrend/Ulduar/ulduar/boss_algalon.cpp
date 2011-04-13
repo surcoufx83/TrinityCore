@@ -30,8 +30,12 @@ enum Spells
     SPELL_PHASE_PUNCH_PHASE         = 64417,
     SPELL_QUANTUM_STRIKE_10         = 64395,
     SPELL_QUANTUM_STRIKE_25         = 64592,
-    SPELL_BLACK_HOLE_DOT            = 62169,
-    SPELL_BLACK_HOLE_EXPLOSION      = 64122,
+    SPELL_BLACK_HOLE_CREDIT         = 65312,
+    SPELL_BLACK_HOLE_EXPLOSION_10   = 64122,
+    SPELL_BLACK_HOLE_EXPLOSION_25   = 65108,
+    SPELL_BLACK_HOLE_SPAWN_VISUAL   = 62003,
+    SPELL_BLACK_HOLE_STATE          = 64135,
+    SPELL_BLACK_HOLE_TRIGGER        = 62185,
     SPELL_ARCANE_BARAGE_10          = 64599,
     SPELL_ARCANE_BARAGE_25          = 64607,
 
@@ -82,6 +86,12 @@ enum Events
     EVENT_COLLAPSINGSTAR,
 };
 
+static Position Locations[]=
+{
+    {1632.36f, -310.093f, 417.321f, 0.0f},  // room center
+    {1632.44f, -301.553f, 417.321f, 0.0f},  // azeroth
+};
+
 class boss_algalon : public CreatureScript
 {
 public:
@@ -99,8 +109,7 @@ public:
             summon = false;
         }
 
-        std::list<uint64> m_lCollapsingStarGUIDList;
-
+        uint8 starCount;
         uint32 phase;
         uint32 stepTimer;
         uint32 step;
@@ -114,13 +123,13 @@ public:
 
             phase = 1;
             stepTimer = 0;
+            starCount = 0;
             enrage = false;
         }
 
         void EnterCombat(Unit* who)
         {
             _EnterCombat();
-
             if (summon)
             {
                 me->InterruptSpell(CURRENT_CHANNELED_SPELL);
@@ -139,7 +148,7 @@ public:
             events.ScheduleEvent(EVENT_PHASEPUNCH, 15*IN_MILLISECONDS);
             events.ScheduleEvent(EVENT_QUANTUMSTRIKE, urand(4*IN_MILLISECONDS, 14*IN_MILLISECONDS));
             events.ScheduleEvent(EVENT_COSMICSMASH, 25*IN_MILLISECONDS);
-            events.ScheduleEvent(EVENT_COLLAPSINGSTAR, urand(15*IN_MILLISECONDS, 20*IN_MILLISECONDS));
+            events.ScheduleEvent(EVENT_COLLAPSINGSTAR, 15*IN_MILLISECONDS);
         }
 
         void FinishEncounter()
@@ -158,49 +167,61 @@ public:
             ++step;
         }
 
-        /*
-        void DespawnCollapsingStar()
-        {
-            if (m_lCollapsingStarGUIDList.empty())
-                return;
-
-            for (std::list<uint64>::const_iterator itr = m_lCollapsingStarGUIDList.begin(); itr != m_lCollapsingStarGUIDList.end(); ++itr)
-            {
-                if (Creature* pTemp = Unit::GetCreature(*me, *itr))
-                {
-                    if (pTemp->isAlive())
-                        pTemp->DespawnOrUnsummon();
-                }
-            }
-            m_lCollapsingStarGUIDList.clear();
-        }
-        void JustSummoned(Creature* pSummoned)
-        {
-            if (pSummoned->GetEntry() == CREATURE_COLLAPSING_STAR)
-            {
-                Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0);
-                if (me->getVictim())
-                    pSummoned->AI()->AttackStart(pTarget ? pTarget : me->getVictim());
-                m_lCollapsingStarGUIDList.push_back(pSummoned->GetGUID());
-            }
-        }
-        void SummonCollapsingStar(Unit* target)
+        void SummonCollapsingStars()
         {
             DoScriptText(SAY_SUMMON_COLLAPSING_STAR, me);
-            me->SummonCreature(CREATURE_COLLAPSING_STAR,target->GetPositionX()+15.0f,target->GetPositionY()+15.0f,target->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN, 100000);
-            //me->SummonCreature(CREATURE_BLACK_HOLE,target->GetPositionX()+15.0f,target->GetPositionY()+15.0f,target->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN, 27000);
-        }*/
+            for (uint8 i = starCount; i < 4; ++i)
+            {
+                float x, y, angle;
+                angle = float(2 * M_PI * rand_norm());
+                x = Locations[0].GetPositionX() + 15.0f * cos(angle);
+                y = Locations[0].GetPositionY() + 15.0f * sin(angle);
+
+                if (Creature* collapsingStar = me->SummonCreature(CREATURE_COLLAPSING_STAR, x, y, Locations[0].GetPositionZ(), 0,
+                    TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3*IN_MILLISECONDS))
+                {
+                    ++starCount;
+                    collapsingStar->SetReactState(REACT_PASSIVE);
+                    collapsingStar->GetMotionMaster()->MoveRandom(20.0f);
+                    collapsingStar->SetInCombatWithZone();
+                }
+            }
+        }
+
+        void JustSummoned(Creature* summon)
+        {
+            summons.Summon(summon);
+        }
+
+        void SummonedCreatureDies(Creature* summon, Unit* /*killer*/)
+        {
+            switch (summon->GetEntry())
+            {
+                case CREATURE_COLLAPSING_STAR:
+                    --starCount;
+                    if (Creature* blackHole = me->SummonCreature(CREATURE_BLACK_HOLE, summon->GetPositionX(), summon->GetPositionY(),
+                        summon->GetPositionZ()))
+                    {
+                        blackHole->CastSpell(blackHole, SPELL_BLACK_HOLE_SPAWN_VISUAL, true);
+                        blackHole->CastSpell(blackHole, SPELL_BLACK_HOLE_STATE, true);
+                        blackHole->CastSpell(blackHole, SPELL_BLACK_HOLE_TRIGGER, true);
+                        blackHole->setFaction(16);
+                        blackHole->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
+                        blackHole->SetReactState(REACT_PASSIVE);
+                        blackHole->SetInCombatWithZone();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
 
         void SpellHitTarget(Unit* target, const SpellEntry* spell)
         {
             if (spell->Id == SPELL_PHASE_PUNCH)
                 if (Aura* phasePunch = target->GetAura(SPELL_PHASE_PUNCH))
                     if (phasePunch->GetStackAmount() > 4)
-                    {
                         target->CastSpell(target, SPELL_PHASE_PUNCH_PHASE, true);
-                        target->CastSpell(target, SPELL_BLACK_HOLE_DOT, true);
-                        target->RemoveAurasDueToSpell(SPELL_PHASE_PUNCH);
-                    }
         }
 
         void UpdateAI(const uint32 diff)
@@ -297,8 +318,8 @@ public:
                             events.ScheduleEvent(EVENT_COSMICSMASH, 25*IN_MILLISECONDS);
                             break;
                         case EVENT_COLLAPSINGSTAR:
-                            //SummonCollapsingStar(Unit* target)
-                            events.ScheduleEvent(EVENT_COLLAPSINGSTAR, urand(15*IN_MILLISECONDS, 20*IN_MILLISECONDS));
+                            SummonCollapsingStars();
+                            events.ScheduleEvent(EVENT_COLLAPSINGSTAR, 45*IN_MILLISECONDS);
                             break;
                         default:
                             break;
@@ -328,7 +349,6 @@ public:
     };
 };
 
-//Collapsing Star
 class mob_collapsing_star : public CreatureScript
 {
 public:
@@ -347,24 +367,26 @@ public:
         }
 
         InstanceScript* pInstance;
-
-        uint32 BlackHoleExplosion_Timer;
+        uint32 loseHealthTimer;
 
         void Reset()
         {
-            BlackHoleExplosion_Timer = 0;
+            loseHealthTimer = 1*IN_MILLISECONDS;
+        }
+
+        void JustDied(Unit * /*killer*/)
+        {
+            DoCast(SPELL_BLACK_HOLE_CREDIT);
+            DoCast(me, RAID_MODE(SPELL_BLACK_HOLE_EXPLOSION_10, SPELL_BLACK_HOLE_EXPLOSION_25), true);
         }
 
         void UpdateAI(const uint32 diff)
         {
-            if (!UpdateVictim())
-                return;
-
-            if (BlackHoleExplosion_Timer <= diff)
+            if (loseHealthTimer <= diff)
             {
-                me->CastSpell(me, SPELL_BLACK_HOLE_EXPLOSION, false);
-                BlackHoleExplosion_Timer = 0;
-            } else BlackHoleExplosion_Timer -= diff;
+                me->DealDamage(me, me->CountPctFromMaxHealth(1)); 
+                loseHealthTimer = 1*IN_MILLISECONDS;
+            } else loseHealthTimer -= diff;
         }
     };
 };
