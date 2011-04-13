@@ -74,10 +74,10 @@ public:
             pInstance = pCreature->GetInstanceScript();
 
             // 100% too much?
-            SpellEntry* TempSpell;
-            TempSpell = GET_SPELL(SPELL_MORTAL_STRIKE);
-            if (TempSpell)
-                TempSpell->procChance = 50;
+            SpellEntry* tempSpell;
+            tempSpell = GET_SPELL(SPELL_MORTAL_STRIKE);
+            if (tempSpell)
+                tempSpell->procChance = 50;
         }
 
         InstanceScript* pInstance;
@@ -295,13 +295,10 @@ public:
         {
             pInstance = pCreature->GetInstanceScript();
             
-            SpellEntry* TempSpell;
-            TempSpell = GET_SPELL(DUNGEON_MODE(SPELL_MOJO_VOLLEY_TRIGGERED,H_SPELL_MOJO_VOLLEY_TRIGGERED));
-            if (TempSpell)
-            {
-                TempSpell->Effect[1] = NULL;
-                TempSpell->MaxAffectedTargets = 1;
-            }
+            SpellEntry* tempSpell;
+            tempSpell = GET_SPELL(DUNGEON_MODE(SPELL_MOJO_VOLLEY_TRIGGERED, H_SPELL_MOJO_VOLLEY_TRIGGERED));
+            if (tempSpell)
+                tempSpell->MaxAffectedTargets = 1;
         }
 
         InstanceScript* pInstance;
@@ -336,14 +333,6 @@ public:
             DoCast(me, DUNGEON_MODE(SPELL_MOJO_VOLLEY,H_SPELL_MOJO_VOLLEY));
         }
 
-        void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell) 
-        {
-            // emulate trigger puddle effect
-            if (pSpell->Id == H_SPELL_MOJO_VOLLEY_TRIGGERED)
-                if (uint64 originCastGUID = me->GetGUID())
-                    pTarget->CastSpell(pTarget, SPELL_MOJO_PUDDLE, true, NULL, NULL, originCastGUID);            
-        }
-    
         void UpdateAI(const uint32 diff)
         {
             //Return since we have no target
@@ -393,14 +382,14 @@ public:
                 }
             } else uiMojoWaveTimer -= diff;
             
-            // switch mojo volley max targets 1<->2
+            // switch mojo volley max targets
             if (uiSwitchTimer <= diff)
             {
-                uint32 maxtargets = urand(1,2);
-                SpellEntry* TempSpell;
-                TempSpell = GET_SPELL(DUNGEON_MODE(SPELL_MOJO_VOLLEY_TRIGGERED,H_SPELL_MOJO_VOLLEY_TRIGGERED));
-                if (TempSpell)
-                    TempSpell->MaxAffectedTargets = maxtargets;
+                uint8 maxTargets = urand(1, 2);
+                SpellEntry* tempSpell;
+                tempSpell = GET_SPELL(DUNGEON_MODE(SPELL_MOJO_VOLLEY_TRIGGERED, H_SPELL_MOJO_VOLLEY_TRIGGERED));
+                if (tempSpell)
+                    tempSpell->MaxAffectedTargets = maxTargets;
 
                 uiSwitchTimer = 2*IN_MILLISECONDS;
             } else uiSwitchTimer -= diff;
@@ -466,19 +455,47 @@ public:
 
             if (uiMojoPuddleTimer <= diff)
             {
-                if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                {
-                    if (uint64 originCastGUID = me->GetGUID())  //workaround
-                        pTarget->CastSpell(pTarget, SPELL_MOJO_PUDDLE, true, NULL, NULL, originCastGUID);
-
-                    uiMojoPuddleTimer = 15*IN_MILLISECONDS;
-                }
+                DoCast(H_SPELL_MOJO_VOLLEY_TRIGGERED);
+                uiMojoPuddleTimer = DUNGEON_MODE(20*IN_MILLISECONDS, 10*IN_MILLISECONDS);
             } else uiMojoPuddleTimer -= diff;
 
             DoMeleeAttackIfReady();
         }
     };
+};
 
+class spell_mojo_volley_targeting : public SpellScriptLoader
+{
+    public:
+        spell_mojo_volley_targeting() : SpellScriptLoader("spell_mojo_volley_targeting") { }
+
+        class spell_mojo_volley_targeting_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_mojo_volley_targeting_SpellScript);
+
+            void FilterTargetsInitial(std::list<Unit*>& unitList)
+            {
+                sharedUnitList = unitList;
+            }
+
+            void FilterTargetsSubsequent(std::list<Unit*>& unitList)
+            {
+                unitList = sharedUnitList;
+            }
+
+            void Register()
+            {
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_mojo_volley_targeting_SpellScript::FilterTargetsInitial, EFFECT_0, TARGET_UNIT_AREA_ENEMY_SRC);
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_mojo_volley_targeting_SpellScript::FilterTargetsSubsequent, EFFECT_1, TARGET_UNIT_AREA_ENEMY_SRC);
+            }
+
+            std::list<Unit*> sharedUnitList;
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_mojo_volley_targeting_SpellScript();
+        }
 };
 
 void AddSC_boss_drakkari_colossus()
@@ -486,4 +503,5 @@ void AddSC_boss_drakkari_colossus()
     new boss_drakkari_colossus();
     new boss_drakkari_elemental();
     new npc_living_mojo();
+    new spell_mojo_volley_targeting();
 }
