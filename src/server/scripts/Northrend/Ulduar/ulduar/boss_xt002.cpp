@@ -781,10 +781,11 @@ public:
         {
             if(boomed)
                 return;
+
             if((me->GetHealth() - amount) < (me->GetMaxHealth()/2))
             {
-                DoCast(SPELL_BOOM);
                 boomed = true;
+                DoCast(SPELL_BOOM);
             }
         }
 
