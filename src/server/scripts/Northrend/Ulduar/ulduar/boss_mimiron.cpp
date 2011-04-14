@@ -771,7 +771,7 @@ public:
             {
                 turret->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
                 turret->SetReactState(REACT_PASSIVE);
-                turret->AI()->EnterEvadeMode();
+                //turret->AI()->EnterEvadeMode();
             }
         }
 

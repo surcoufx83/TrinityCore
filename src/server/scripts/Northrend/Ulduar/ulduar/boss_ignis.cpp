@@ -35,6 +35,7 @@ enum Yells
 enum Spells
 {
     SPELL_FLAME_JETS                         = 62680,
+    SPELL_FLAME_JETS_TRIGGERED               = 62681,
     SPELL_SCORCH                             = 62546,
     SPELL_SLAG_POT                           = 62717,
     SPELL_SLAG_POT_DAMAGE                    = 65722,
@@ -139,6 +140,21 @@ public:
             _Reset();
             if (vehicle)
                 vehicle->RemoveAllPassengers();
+
+            std::list<Creature*> creatureList;
+            me->GetCreatureListWithEntryInGrid(creatureList,NPC_IRON_CONSTRUCT,500);
+            if(!creatureList.empty())
+            {
+                for (std::list<Creature*>::iterator itr = creatureList.begin(); itr != creatureList.end(); ++itr)
+                {
+                    if((*itr) && (*itr)->isDead())
+                    {
+                        (*itr)->Respawn(true);
+                        (*itr)->GetMotionMaster()->MoveTargetedHome();
+                    }
+                }
+            }
+
         }
 
         void EnterCombat(Unit* /*who*/)
@@ -174,6 +190,12 @@ public:
             }
         }
 
+        void SpellHitTarget(Unit *target, const SpellEntry *spell)
+        {
+            if(spell->Id == SPELL_FLAME_JETS)
+                target->CastSpell(target,SPELL_FLAME_JETS_TRIGGERED,true);
+        }
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim())
@@ -197,7 +219,7 @@ public:
                         events.RescheduleEvent(EVENT_JET,urand(35000,40000));
                         break;
                     case EVENT_SLAG_POT:
-                        if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                        if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1, 100, true))
                         {
                             DoScriptText(SAY_SLAG_POT, me);
                             SlagPotGUID = pTarget->GetGUID();
@@ -242,9 +264,16 @@ public:
                         break;
                     case EVENT_CONSTRUCT:
                         DoScriptText(SAY_SUMMON, me);
-                        DoSummon(NPC_IRON_CONSTRUCT, Pos[rand()%20], 30000, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT);
-                        DoCast(SPELL_STRENGHT);
-                        DoCast(me, SPELL_ACTIVATE_CONSTRUCT);
+                        //DoSummon(NPC_IRON_CONSTRUCT, Pos[rand()%20], 30000, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT);
+                        if(Creature *iron_construct = me->FindNearestCreature(NPC_IRON_CONSTRUCT,500.0f,true))
+                        {
+                            JustSummoned(iron_construct);
+
+                            DoCast(SPELL_STRENGHT);
+                            DoCast(me, SPELL_ACTIVATE_CONSTRUCT);
+
+                        }
+
                         events.RescheduleEvent(EVENT_CONSTRUCT,RAID_MODE(40000, 30000));
                         break;
                     case EVENT_BERSERK:
@@ -262,18 +291,18 @@ public:
                 DoScriptText(RAND(SAY_SLAY_1, SAY_SLAY_2), me);
         }
 
-        void JustSummoned(Creature *summon)
-        {
-            if (summon->GetEntry() == NPC_IRON_CONSTRUCT)
-            {
-                summon->setFaction(16);
-                summon->SetReactState(REACT_AGGRESSIVE);
-                summon->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED | UNIT_FLAG_STUNNED | UNIT_FLAG_DISABLE_MOVE);
-            }
-            summon->AI()->AttackStart(me->getVictim());
-            summon->AI()->DoZoneInCombat();
-            summons.Summon(summon);
-        }
+        //void JustSummoned(Creature *summon)
+        //{
+        //    if (summon->GetEntry() == NPC_IRON_CONSTRUCT)
+        //    {
+        //        summon->setFaction(16);
+        //        summon->SetReactState(REACT_AGGRESSIVE);
+        //        summon->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED | UNIT_FLAG_STUNNED | UNIT_FLAG_DISABLE_MOVE);
+        //    }
+        //    summon->AI()->AttackStart(me->getVictim());
+        //    summon->AI()->DoZoneInCombat();
+        //    //summons.Summon(summon);
+        //}
 
         void DoAction(const int32 action)
         {
@@ -308,6 +337,8 @@ public:
         {
             instance = pCreature->GetInstanceScript();
             pCreature->SetReactState(REACT_PASSIVE);
+            pCreature->setActive(true);
+            pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
         }
 
         InstanceScript* instance;
@@ -316,6 +347,28 @@ public:
         void Reset()
         {
             Brittled = false;
+        }
+
+        void JustRespawned()
+        {
+            me->SetReactState(REACT_PASSIVE);
+            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
+        }
+
+        void SpellHit(Unit *caster, const SpellEntry *spell)
+        {
+            if(spell->Id == SPELL_ACTIVATE_CONSTRUCT)
+            {
+                if (Creature *pIgnis = me->GetCreature(*me, instance->GetData64(TYPE_IGNIS)))
+                {
+                    me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
+                    me->SetReactState(REACT_AGGRESSIVE);
+                    me->setFaction(16);
+                    me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED | UNIT_FLAG_STUNNED | UNIT_FLAG_DISABLE_MOVE);
+                    AttackStart(pIgnis->getVictim());
+                    DoZoneInCombat();
+                }
+            }
         }
 
         void DamageTaken(Unit* /*attacker*/, uint32& damage)
@@ -378,24 +431,24 @@ public:
         uint32 HeatTimer;
         bool Heat;
 
-        void MoveInLineOfSight(Unit* pWho)
-        {
-            if (!Heat)
-            {
-                if (pWho->GetEntry() == NPC_IRON_CONSTRUCT)
-                {
-                    if (!pWho->HasAura(SPELL_HEAT) || !pWho->HasAura(SPELL_MOLTEN))
-                    {
-                        ConstructGUID = pWho->GetGUID();
-                        Heat=true;
-                    }
-                }
-            }
-        }
+        //void MoveInLineOfSight(Unit* pWho)
+        //{
+        //    if (!Heat)
+        //    {
+        //        if (pWho->GetEntry() == NPC_IRON_CONSTRUCT)
+        //        {
+        //            if (!pWho->HasAura(SPELL_HEAT) || !pWho->HasAura(SPELL_MOLTEN))
+        //            {
+        //                ConstructGUID = pWho->GetGUID();
+        //                Heat=true;
+        //            }
+        //        }
+        //    }
+        //}
 
         void Reset()
         {
-            Heat=false;
+            Heat=true;
             DoCast(me, SPELL_GROUND);
             ConstructGUID=0;
             HeatTimer=0;
@@ -407,12 +460,21 @@ public:
             {
                 if(HeatTimer <= uiDiff)
                 {
-                    Creature* Construct = me->GetCreature(*me ,ConstructGUID);
-                    if (Construct && !Construct->HasAura(SPELL_MOLTEN))
+                    std::list<Creature*> creatureList;
+                    GetCreatureListWithEntryInGrid(creatureList,me,NPC_IRON_CONSTRUCT,10);
+                    if(!creatureList.empty())
                     {
-                        me->AddAura(SPELL_HEAT,Construct);
-                        HeatTimer=1000;
+                        for (std::list<Creature*>::iterator itr = creatureList.begin(); itr != creatureList.end(); ++itr)
+                        {
+                            if(*itr && (*itr)->isAlive() && !(*itr)->HasAura(SPELL_MOLTEN))
+                            {
+                                if((*itr)->HasReactState(REACT_PASSIVE))
+                                    continue;
+                                me->AddAura(SPELL_HEAT,(*itr));
+                            }
+                        }
                     }
+                    HeatTimer=1000;
                 }
                 else
                     HeatTimer -= uiDiff;
@@ -463,6 +525,16 @@ class spell_ignis_slag_pot : public SpellScriptLoader
             return new spell_ignis_slag_pot_AuraScript();
         }
 };
+
+/*
+DELETE FROM conditions WHERE SourceEntry IN (62488);
+INSERT INTO conditions
+(SourceTypeOrReferenceId,SourceGroup,SourceEntry,ElseGroup,
+ ConditionTypeOrReference,ConditionValue1,ConditionValue2,ConditionValue3,
+ ErrorTextId,ScriptName,COMMENT)
+VALUES
+(13,0,62488,0,18,1,33121,0,0,'','Effekt on Constructs');
+*/
 
 void AddSC_boss_ignis()
 {

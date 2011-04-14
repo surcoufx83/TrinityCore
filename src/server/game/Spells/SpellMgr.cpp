@@ -4103,6 +4103,7 @@ void SpellMgr::LoadSpellCustomAttr()
             mSpellCustomAttr[i] |= SPELL_ATTR0_CU_IGNORE_LOS;
             count++;
             break;
+        case 62488: // Ignis Activate Construct (only visually)
         case 63024: // XT-002 Gravity Bomb
         case 64234: // XT-002 Gravity Bomb
         case 63018: // XT-002 Searing Light

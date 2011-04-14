@@ -473,7 +473,7 @@ public:
             if(pTarget->getClass() == CLASS_SHAMAN && pTarget->HasSpell(SPELL_SHAMANTIC_RAGE))
                 pTarget->CastSpell(pTarget,SPELL_CORRUPTED_RAGE,true);
 
-            //pTarget->CastSpell(pTarget,SPELL_AURA_OF_DESPAIR_EFFEKT_DESPAIR,true);
+            pTarget->CastSpell(pTarget,SPELL_AURA_OF_DESPAIR_EFFEKT_DESPAIR,true);
 
         }
 
@@ -485,7 +485,7 @@ public:
             Player* pTarget = GetTarget()->ToPlayer();
 
             pTarget->RemoveAurasDueToSpell(SPELL_CORRUPTED_RAGE);
-            //pTarget->RemoveAurasDueToSpell(SPELL_AURA_OF_DESPAIR_EFFEKT_DESPAIR);
+            pTarget->RemoveAurasDueToSpell(SPELL_AURA_OF_DESPAIR_EFFEKT_DESPAIR);
         }
 
         void Register()

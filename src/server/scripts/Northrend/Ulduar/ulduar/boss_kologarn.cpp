@@ -133,6 +133,8 @@ class boss_kologarn : public CreatureScript
                         arm->ToCreature()->SetInCombatWithZone();
 
                 _EnterCombat();
+
+                me->SetReactState(REACT_AGGRESSIVE);
             }
 
             void Reset()
@@ -143,6 +145,8 @@ class boss_kologarn : public CreatureScript
                     me->GetVehicleKit()->Reset();
 
                 eyebeamTarget = 0;
+
+                me->SetReactState(REACT_DEFENSIVE);
             }
 
             void JustDied(Unit * /*victim*/)
