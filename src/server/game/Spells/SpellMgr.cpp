@@ -3747,6 +3747,8 @@ void SpellMgr::LoadSpellCustomAttr()
         case 55927: // Sear Beam (nh)
         case 59509: // Sear Beam (hc)
         case 56397: // Arcane Barrage
+        case 64599: // Arcane Barrage
+        case 64607: // Arcane Barrage
         case 47731: // Critter
             spellInfo->MaxAffectedTargets = 1;
             count++;
