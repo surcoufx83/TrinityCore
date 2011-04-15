@@ -6146,9 +6146,14 @@ void AuraEffect::HandleAuraDummy(AuraApplication const * aurApp, uint8 mode, boo
                         }
                     }
                     break;
+                case SPELLFAMILY_ROGUE:
+                    // Tricks of the Trade
+                    if (GetId() == 59628)
+                        caster->SetReducedThreatPercent(0, 0);
+                    break;
                 case SPELLFAMILY_HUNTER:
                     // Misdirection
-                    if (GetId() == 34477)
+                    if (GetId() == 35079)
                         target->SetReducedThreatPercent(0, 0);
                     break;
                 case SPELLFAMILY_DEATHKNIGHT:
