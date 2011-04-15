@@ -353,13 +353,13 @@ public:
                     me->GetNearPoint2D(x, y, -2.5f, me->GetOrientation());
 
                     // summon the temp target relative to self instead of current victim, should prevent facing issues while casting
-                    if (Creature *pTempTarget = me->SummonCreature(CREATURE_IMPALE_TARGET, x, y, z, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 3500))
+                    if (Creature* tempTarget = me->SummonCreature(CREATURE_IMPALE_TARGET, x, y, z, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 5000))
                     {
-                        me->SetFacingToObject(pTempTarget);
-                        pTempTarget->SetReactState(REACT_PASSIVE);
-                        pTempTarget->SetDisplayId(DISPLAY_INVISIBLE);
-                        pTempTarget->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE|UNIT_FLAG_NON_ATTACKABLE |UNIT_FLAG_NOT_SELECTABLE);
-                        me->CastSpell(pTempTarget, DUNGEON_MODE(SPELL_POUND, SPELL_POUND_H), false);
+                        me->SetFacingToObject(tempTarget);
+                        tempTarget->SetReactState(REACT_PASSIVE);
+                        tempTarget->SetDisplayId(DISPLAY_INVISIBLE);
+                        tempTarget->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE|UNIT_FLAG_PASSIVE|UNIT_FLAG_NOT_SELECTABLE);
+                        me->CastSpell(tempTarget, DUNGEON_MODE(SPELL_POUND, SPELL_POUND_H), false);
                     }
                     uiPoundTimer = urand(17000, 20000);
                 } else uiPoundTimer -= diff;
