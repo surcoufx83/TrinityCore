@@ -421,23 +421,31 @@ public:
 
     struct mob_ingvar_throw_dummyAI : public ScriptedAI
     {
-        mob_ingvar_throw_dummyAI(Creature *c) : ScriptedAI(c)
-        {
-        }
+        mob_ingvar_throw_dummyAI(Creature *c) : ScriptedAI(c) { }
 
+        bool reachedTarget;
         uint32 uiDespawnTimer;
 
         void Reset()
         {
-            Unit *pTarget = me->FindNearestCreature(ENTRY_THROW_TARGET,50);
-            if (pTarget)
+            Unit* target = me->FindNearestCreature(ENTRY_THROW_TARGET, 50.0f);
+            if (target)
             {
-                DoCast(me, DUNGEON_MODE(SPELL_SHADOW_AXE_DAMAGE,H_SPELL_SHADOW_AXE_DAMAGE));
-                float x,y,z;
-                pTarget->GetPosition(x,y,z);
-                me->GetMotionMaster()->MovePoint(0,x,y,z);
+                float x, y, z;
+                target->GetPosition(x, y, z);
+                me->GetMotionMaster()->MovePoint(1, x, y, z);
             }
-            uiDespawnTimer = 7000;
+            reachedTarget = false;
+            uiDespawnTimer = 10000;
+        }
+
+        void MovementInform(uint32 type, uint32 id)
+        {
+            if (type != POINT_MOTION_TYPE)
+                return;
+
+            reachedTarget = true;
+            DoCast(me, DUNGEON_MODE(SPELL_SHADOW_AXE_DAMAGE, H_SPELL_SHADOW_AXE_DAMAGE));
         }
 
         void AttackStart(Unit* /*who*/) {}
@@ -446,15 +454,14 @@ public:
 
         void UpdateAI(const uint32 diff)
         {
-            if (uiDespawnTimer <= diff)
-            {
-                me->DealDamage(me,me->GetHealth());
-                me->RemoveCorpse();
-                uiDespawnTimer = 0;
-            } else uiDespawnTimer -= diff;
+            if (reachedTarget)
+                if (uiDespawnTimer <= diff)
+                {
+                    me->DealDamage(me, me->GetHealth());
+                    me->RemoveCorpse();
+                } else uiDespawnTimer -= diff;
         }
     };
-
 };
 
 void AddSC_boss_ingvar_the_plunderer()
