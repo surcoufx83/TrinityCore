@@ -2506,8 +2506,9 @@ void Player::Regenerate(Powers power)
     uint32 curValue = GetPower(power);
 
     // TODO: possible use of miscvalueb instead of amount
-    if (HasAuraTypeWithValue(SPELL_AURA_PREVENT_REGENERATE_POWER, power))
-        return;
+    // This Line makes no sense ... one spell has this effekt and the value is 1 but prevents mana regeneration (value 0)
+    //if (HasAuraTypeWithValue(SPELL_AURA_PREVENT_REGENERATE_POWER, power))
+    //    return;
 
     float addvalue = 0.0f;
 
@@ -2515,6 +2516,9 @@ void Player::Regenerate(Powers power)
     {
         case POWER_MANA:
         {
+            if(HasAuraType(SPELL_AURA_PREVENT_REGENERATE_POWER))
+                return;
+
             bool recentCast = IsUnderLastManaUseEffect();
             float ManaIncreaseRate = sWorld->getRate(RATE_POWER_MANA);
 
