@@ -198,9 +198,8 @@ enum Spells
     SPELL_FLUX_PLUS                             = 62251, // randomspell with flux
     SPELL_FLUX_MINUS                            = 62252, // randomspell with flux
     SPELL_UNSTABLE_SUN_BEAM_SUMMON              = 62207, // 62921, 62221, 64088
-    SPELL_UNSTABLE_SUN_BEAM_PERIODIC            = 62211, // Triggers the Beam, triggers 62243
+    SPELL_UNSTABLE_SUN_BEAM_PERIODIC            = 62211, // Triggers the Beam, triggers 62243 and 62216
     SPELL_UNSTABLE_SUN_BEAM_TRIGGERD            = 62243,
-    SPELL_UNSTABLE_SUN_BEAM_VISUAL              = 62216,
 
     //Elder Ironbranch
     //only impale is not triggered
@@ -1154,7 +1153,6 @@ public:
         uint32 Solar_Flare_Timer;
         uint32 Flux_Timer;
         uint32 Unstable_Sunbeam_Timer;
-        uint32 Unstable_Energy_Timer;
 
         void Reset()
         {
@@ -1194,15 +1192,7 @@ public:
 
             if (Unstable_Sunbeam_Timer <= diff)
             {
-                // Das gefaellt mir nicht
-                Unit* target[2];
-                target[0] = SelectTarget(SELECT_TARGET_RANDOM, 0);
-                target[1] = SelectTarget(SELECT_TARGET_RANDOM, 0);
-
-                if(target[0])
-                    me->SummonCreature(ENTRY_CREATURE_UNSTABLE_SUN_BEAM, target[0]->GetPositionX(), target[0]->GetPositionY(), target[0]->GetPositionZ());
-                if(target[1])
-                    me->SummonCreature(ENTRY_CREATURE_UNSTABLE_SUN_BEAM, target[1]->GetPositionX(), target[1]->GetPositionY(), target[1]->GetPositionZ());
+                DoCast(me, SPELL_UNSTABLE_SUN_BEAM_SUMMON,true);
                 Unstable_Sunbeam_Timer = 30000;
             }
             else {Unstable_Sunbeam_Timer -= diff;}
@@ -1246,63 +1236,59 @@ public:
     {
         mob_unstable_sunbeamAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) {}
 
-        //uint32 Despawn_Timer;
-        //uint16 Aura_Timer;
-        //uint32 Range_Check_Timer;
-        //Unit* sb_old;
-        //Unit* sb_new;
+        uint32 Unstable_Energy_Timer;
 
         void Reset()
         {
-            //sb_old = NULL;
-            //sb_new = NULL;
-            //me->AddAura(VISUAL_UNSTABLE_SUNBEAM, me);
-            //DoCast(SPELL_PHOTOSYNTHESIS);
-            //Despawn_Timer = 20000;
-            //Aura_Timer = 1000;
-            //Range_Check_Timer = 500;
-            //me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE );
-            //me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
-            //me->SetDisplayId(MODEL_INVISIBLE);
+            me->CastSpell(me, SPELL_UNSTABLE_SUN_BEAM_PERIODIC, true);
+            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE );
+            me->SetDisplayId(MODEL_INVISIBLE);
+
+            Unstable_Energy_Timer = urand(30000,45000);
+        }
+
+        void MoveInLineOfSight(Unit *mover)
+        {
+            //Dont know if correct
+            //if(mover && mover->ToPlayer())
+            //    if(!me->IsWithinDist2d(mover,4))
+            //    {
+            //        if(mover->HasAura(SPELL_UNSTABLE_SUN_BEAM_TRIGGERD))
+            //            mover->RemoveAurasDueToSpell(SPELL_UNSTABLE_SUN_BEAM_TRIGGERD);
+            //    }
+
+            if(mover && mover->ToCreature() && mover->GetEntry() == 32915)
+                if(me->IsWithinDist2d(mover,4))
+                {
+                    if(!mover->HasAura(SPELL_PHOTOSYNTHESIS))
+                        me->AddAura(SPELL_PHOTOSYNTHESIS,mover);
+                }else
+                {
+                    if(mover->HasAura(SPELL_PHOTOSYNTHESIS))
+                        mover->RemoveAurasDueToSpell(SPELL_PHOTOSYNTHESIS);
+                }
+        }
+
+        void SpellHitTarget(Unit *target, const SpellEntry *spell)
+        {
+            switch(spell->Id)
+            {
+            case SPELL_UNSTABLE_ENERGY_10:
+            case SPELL_UNSTABLE_ENERGY_25:
+                    target->RemoveAurasDueToSpell(SPELL_UNSTABLE_SUN_BEAM_TRIGGERD);
+                break;
+            }
         }
 
         void UpdateAI(const uint32 diff)
         {
-
-            //if(Despawn_Timer <= diff)
-            //{
-            // Aura_Timer = 5000;
-            // DoCast(RAID_MODE(SPELL_UNSTABLE_ENERGY_10, SPELL_UNSTABLE_ENERGY_25));
-            // me->RemoveAura(SPELL_UNSTABLE_SUN_BEAM_VISUAL);
-            // if(sb_new)
-            // sb_new->RemoveAura(AURA_UNSTABLE_SUNBEAM);
-            // me->ForcedDespawn();
-            //}
-            //else {Despawn_Timer -= diff;}
-
-            //if(Aura_Timer <= diff)
-            //{
-            // if(sb_new = me->SelectNearestTarget(1))
-            // {
-            // if(sb_old != NULL && sb_new != sb_old)
-            // {
-            // sb_old->RemoveAura(AURA_UNSTABLE_SUNBEAM);
-            // }
-            // sb_new->AddAura(AURA_UNSTABLE_SUNBEAM, sb_new);
-            // sb_old = sb_new;
-            // }
-            // Aura_Timer = 1000;
-            //} else Aura_Timer -= diff;
-
-            //if(Range_Check_Timer <= diff)
-            //{
-
-            // if(sb_new && !sb_new->IsInRange(me, 0, 1))
-            // {
-            // sb_new->RemoveAura(AURA_UNSTABLE_SUNBEAM);
-            // }
-            // Range_Check_Timer = 200;
-            //} else Range_Check_Timer -= diff;
+            if (Unstable_Energy_Timer <= diff)
+            {
+                DoCast(me, RAID_MODE(SPELL_UNSTABLE_ENERGY_10, SPELL_UNSTABLE_ENERGY_25),true);
+                me->DespawnOrUnsummon(2000);
+                Unstable_Energy_Timer = urand(30000,45000);
+            }
+            else {Unstable_Energy_Timer -= diff;}
         }
     };
 };
@@ -1568,7 +1554,7 @@ public:
 
         void Reset()
         {
-            Unstable_Energy_Timer = 2000;
+            Unstable_Energy_Timer = 1000;
             Despawn_Timer = 12000;
             me->SetReactState(REACT_PASSIVE);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE );
@@ -1587,7 +1573,7 @@ public:
             {
                 DoCast(RAID_MODE(SPELL_FREYA_UNSTABLE_ENERGY_10, SPELL_FREYA_UNSTABLE_ENERGY_25));
                 Unstable_Energy_Timer = 15000;
-                me->AddAura(SPELL_UNSTABLE_SUN_BEAM_VISUAL, me);
+                me->AddAura(62216, me);
             }
             else Unstable_Energy_Timer -= diff;
         }
