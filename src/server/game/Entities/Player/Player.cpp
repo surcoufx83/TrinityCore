@@ -2506,11 +2506,26 @@ void Player::Regenerate(Powers power)
     uint32 curValue = GetPower(power);
 
     // TODO: possible use of miscvalueb instead of amount
-    // This Line makes no sense ... one spell has this effekt and the value is 1 but prevents mana regeneration (value 0)
-    //if (HasAuraTypeWithValue(SPELL_AURA_PREVENT_REGENERATE_POWER, power))
-    //    return;
-    if(power == POWER_MANA && HasAuraType(SPELL_AURA_PREVENT_REGENERATE_POWER))
-     return;
+    if(HasAuraTypeWithValue(SPELL_AURA_PREVENT_REGENERATE_POWER, power))
+    {
+        // This is a hack
+        // Client regenerate mana but server not ... we must try to disable client regeneration
+        // I will force update the power and send it to the client ... it doesnt look good
+        SetStatInt32Value(UNIT_FIELD_POWER1 + power, curValue);
+
+        // Send Force Update to client ... because Client want to regenerate permanetly
+        WorldPacket data(SMSG_POWER_UPDATE);
+        data.append(GetPackGUID());
+        data << uint8(power);
+        data << uint32(curValue);
+        SendMessageToSet(&data, GetTypeId() == TYPEID_PLAYER ? true : false);
+
+        // group update
+        if (this->GetGroup())
+            this->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_CUR_POWER);
+
+        return;
+    }
 
     float addvalue = 0.0f;
 
