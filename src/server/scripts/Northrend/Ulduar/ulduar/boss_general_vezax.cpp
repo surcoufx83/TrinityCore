@@ -356,6 +356,7 @@ public:
         mob_saronit_varporAI(Creature *c) : ScriptedAI(c)
         {
             m_pInstance = c->GetInstanceScript();
+            once = false;
         }
 
         void Reset()
@@ -364,23 +365,34 @@ public:
         }
 
         InstanceScript* m_pInstance;
+        bool once;
 
-        void JustDied(Unit* killer)
+        void DamageTaken(Unit *attacker, uint32 &damage)
         {
-            if(killer->GetGUID() == me->GetGUID())
+            if(attacker->GetGUID() == me->GetGUID())
                 return;
 
-            if(m_pInstance)
-                if(Creature* vezax = Creature::GetCreature((*me),m_pInstance->GetData64(TYPE_VEZAX)))
+            if(damage > me->GetHealth())
+            {
+                damage = me->GetHealth() - 1;
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_NOT_SELECTABLE);
+                if(!once)
                 {
-                    vezax->AI()->DoAction(ACTION_VARPOR_KILLED);
-                    if(Creature* trigger = DoSummon(33500,me,0,35000,TEMPSUMMON_TIMED_DESPAWN))
-                    {
-                        trigger->setFaction(35);
-                        trigger->SetReactState(REACT_PASSIVE);
-                        trigger->CastSpell(trigger,SPELL_SARONIT_VARPOR,true,0,0,vezax->GetGUID());
-                    }
+                    if(m_pInstance)
+                        if(Creature* vezax = Creature::GetCreature((*me),m_pInstance->GetData64(TYPE_VEZAX)))
+                        {
+                            vezax->AI()->DoAction(ACTION_VARPOR_KILLED);
+                        }
+
+                    me->setFaction(35);
+                    me->SetDisplayId(16925);
+                    me->setRegeneratingHealth(false);
+                    me->DespawnOrUnsummon(30000);
+                    me->CastSpell(me,SPELL_SARONIT_VARPOR,true);
+                    once = true;
                 }
+            }
+
         }
 
         void UpdateAI(const uint32 diff)

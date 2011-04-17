@@ -501,11 +501,11 @@ public:
                     break;
                 case GO_WAY_TO_YOGG:
                     uiWayToYoggGUID = go->GetGUID();
-                    // DEBUG
-                    //if(GetBossState(TYPE_FREYA) == DONE &&
-                    //    GetBossState(TYPE_MIMIRON) == DONE &&
-                    //    GetBossState(TYPE_HODIR) == DONE &&
-                    //    GetBossState(TYPE_THORIM) == DONE)
+
+                    if(GetBossState(TYPE_FREYA) == DONE &&
+                        GetBossState(TYPE_MIMIRON) == DONE &&
+                        GetBossState(TYPE_HODIR) == DONE &&
+                        GetBossState(TYPE_THORIM) == DONE)
                         go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
                     break;
                 case GO_VEZAX_DOOR:

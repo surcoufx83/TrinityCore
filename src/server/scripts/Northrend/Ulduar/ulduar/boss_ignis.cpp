@@ -375,7 +375,7 @@ public:
         {
             if (me->HasAura(SPELL_BRITTLE) && damage >= 5000)
             {
-                DoCast(SPELL_SHATTER);
+                DoCast(me,SPELL_SHATTER,true);
                 if (Creature *pIgnis = me->GetCreature(*me, instance->GetData64(TYPE_IGNIS)))
                     if (pIgnis->AI())
                         pIgnis->AI()->DoAction(ACTION_REMOVE_BUFF);

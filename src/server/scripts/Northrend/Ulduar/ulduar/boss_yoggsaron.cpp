@@ -972,8 +972,11 @@ public:
             {
                 if(target && me->GetDistance2d(target) <= 100 && target->ToPlayer() && !target->ToPlayer()->isGameMaster() && me->IsWithinLOSInMap(target))
                 {
-                    SetPhase(PHASE_SARA);
-                    EnterCombat(target);
+                    if(m_pInstance && m_pInstance->GetBossState(TYPE_VEZAX) == DONE)
+                    {
+                        SetPhase(PHASE_SARA);
+                        EnterCombat(target);
+                    }
                 }
             }
         }
@@ -1339,11 +1342,12 @@ public:
 
         void UpdateAI(const uint32 diff)
         {
-            if(uiRandomYell_Timer <= diff)
-            {
-                SaraRandomYell();
-                uiRandomYell_Timer = urand(40000,60000);
-            }else uiRandomYell_Timer -= diff;
+            if(m_pInstance && m_pInstance->GetBossState(TYPE_VEZAX) == DONE)
+                if(uiRandomYell_Timer <= diff)
+                {
+                    SaraRandomYell();
+                    uiRandomYell_Timer = urand(40000,60000);
+                }else uiRandomYell_Timer -= diff;
 
             switch(m_Phase)
             {
@@ -1661,12 +1665,16 @@ public:
         npc_ominous_cloudAI(Creature *c) : ScriptedAI(c) 
         {
             SetImmuneToPushPullEffects(true);
+            m_pInstance = c->GetInstanceScript();
         }
+
+        InstanceScript* m_pInstance;
 
         void MoveInLineOfSight(Unit* target)
         {
-            if(target && me->GetDistance2d(target) <= 5 && target->ToPlayer() && !target->ToPlayer()->isGameMaster() && !target->HasAura(SPELL_FLASH_FREEZE))
-                TriggerGuardianSpawn();
+            if(m_pInstance && m_pInstance->GetBossState(TYPE_YOGGSARON) == IN_PROGRESS)
+                if(target && me->GetDistance2d(target) <= 5 && target->ToPlayer() && !target->ToPlayer()->isGameMaster() && !target->HasAura(SPELL_FLASH_FREEZE))
+                    TriggerGuardianSpawn();
         }
 
         void AttackStart(Unit* /*attacker*/) {}
@@ -3210,11 +3218,9 @@ public:
         npc_keeper_helpAI(Creature *c) : Scripted_NoMovementAI(c)
         {
             m_pInstance = c->GetInstanceScript();
-            debug = true;
         }
 
         InstanceScript* m_pInstance;
-        bool debug;
 
         void AttackStart(Unit *who) {}
 
@@ -3222,13 +3228,6 @@ public:
         {
             if(m_pInstance)
             {
-                if(debug)
-                {
-                    if(!me->IsVisible())
-                        me->SetVisible(true);
-                    return;
-                }
-
                 if(m_pInstance->GetBossState(TYPE_YOGGSARON) == IN_PROGRESS)
                 {
                     me->SetVisible(false);

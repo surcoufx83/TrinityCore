@@ -315,8 +315,7 @@ public:
             {
                 //m_Phase = PHASE_SPAWNING;
 
-                pInstance->SetData(TYPE_FREYA,NOT_STARTED);
-                InitSpawnWaves();
+                pInstance->SetBossState(TYPE_FREYA,NOT_STARTED);
 
                 WaveCount = 0;
                 uiWave_Timer = 60000;
@@ -411,7 +410,7 @@ public:
             EncounterFinished = true;
             DoScriptText(SAY_DEATH, me);
             if(pInstance)
-                pInstance->SetData(TYPE_FREYA,DONE);
+                pInstance->SetBossState(TYPE_FREYA,DONE);
 
             switch(GetElderCount())
             {
@@ -448,6 +447,7 @@ public:
 
             if(pInstance)
             {
+                InitSpawnWaves();
                 pInstance->SetBossState(TYPE_FREYA,IN_PROGRESS);
 
                 if(Creature* elder = Creature::GetCreature(*me,pInstance->GetData64(TYPE_ELDER_BRIGHTLEAF)))
@@ -543,7 +543,7 @@ public:
                 {
                     if(!me->IsNonMeleeSpellCasted(false))
                     {
-                        Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM,0);
+                        Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM,0,500,true);
                         pTarget->CastSpell(pTarget, RAID_MODE(SPELL_FREYA_IRON_ROOTS_10, SPELL_FREYA_IRON_ROOTS_25), false);
                         Iron_Roots_Timer = urand(25000,30000);
                     }
@@ -1611,10 +1611,16 @@ public:
 
         uint64 RootsGUID;
 
-        void EnterCombat(Unit* )
+        void Reset()
         {
-            Unit* pTarget = me->SelectNearestTarget(1);
-            RootsGUID = me->GetGUID();
+            std::list<Player*> plrList = me->GetNearestPlayersList(20);
+            for (std::list<Player*>::const_iterator itr = plrList.begin(); itr != plrList.end(); ++itr)
+            {
+                if((*itr) && ((*itr)->HasAura(RAID_MODE(SPELL_IRON_ROOTS_10, SPELL_IRON_ROOTS_25)) || (*itr)->HasAura(RAID_MODE(SPELL_FREYA_IRON_ROOTS_10, SPELL_FREYA_IRON_ROOTS_25))) )
+                {
+                    RootsGUID = (*itr)->GetGUID();
+                }
+            }
         }
 
         void JustDied(Unit* )
