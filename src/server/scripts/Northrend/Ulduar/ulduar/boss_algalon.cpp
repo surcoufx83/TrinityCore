@@ -41,6 +41,7 @@ enum Spells
     SPELL_ARCANE_BARAGE_10          = 64599,
     SPELL_ARCANE_BARAGE_25          = 64607,
 
+    SPELL_VOID_ZONE_VISUAL          = 64469,
     SPELL_DUAL_WIELD                = 42459,
     SPELL_BOSS_FINISHED             = 65184,
 };
@@ -491,6 +492,7 @@ public:
             DoCast(me, SPELL_BLACK_HOLE_SPAWN_VISUAL, true);
             DoCast(me, SPELL_BLACK_HOLE_STATE, true);
             DoCast(me, SPELL_BLACK_HOLE_TRIGGER, true);
+            DoCast(me, SPELL_VOID_ZONE_VISUAL, true);
             me->setFaction(14);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
             me->SetReactState(REACT_PASSIVE);
