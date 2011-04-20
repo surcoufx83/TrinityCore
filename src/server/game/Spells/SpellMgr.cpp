@@ -3750,6 +3750,7 @@ void SpellMgr::LoadSpellCustomAttr()
         case 64599: // Arcane Barrage
         case 64607: // Arcane Barrage
         case 47731: // Critter
+        case 62301: // Cosmic Smash
             spellInfo->MaxAffectedTargets = 1;
             count++;
             break;

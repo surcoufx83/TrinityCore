@@ -41,6 +41,7 @@ enum Spells
     SPELL_ARCANE_BARAGE_10          = 64599,
     SPELL_ARCANE_BARAGE_25          = 64607,
 
+    SPELL_DUAL_WIELD                = 42459,
     SPELL_BOSS_FINISHED             = 65184,
 };
 
@@ -50,7 +51,9 @@ enum Creatures
     CREATURE_BLACK_HOLE             = 32953,
     CREATURE_LIVING_CONSTELLATION   = 33052,
     CREATURE_DARK_MATTER            = 33089,
-    CREATURE_AZEROTH                = 34246
+    CREATURE_AZEROTH                = 34246,
+    CREATURE_COSMIC_SMASH_TRIGGER   = 33104,
+    CREATURE_COSMIC_SMASH_TARGET    = 33105
 };
 
 enum Yells
@@ -94,7 +97,11 @@ static Position Locations[]=
 {
     {1632.36f, -310.09f, 417.33f, 0.0f},  // room center
     {1632.44f, -301.55f, 417.33f, 0.0f},  // azeroth
+    {1632.36f, -310.09f, 385.0f, 0.0f}    // cosmic smash trigger
+};
 
+static Position constellationLocations[]=
+{
     {1649.30f, -295.34f, 458.13f, 0.0f},
     {1612.22f, -294.84f, 458.13f, 0.0f},
     {1629.95f, -327.90f, 458.13f, 0.0f}
@@ -115,6 +122,16 @@ public:
         boss_algalonAI(Creature* c) : BossAI(c, TYPE_ALGALON)
         {
             summon = false;
+
+            // spell gets triggered from caster, should be triggered from destination?
+            SpellEntry* tempSpell;
+            tempSpell = GET_SPELL(RAID_MODE(62311, 64596));
+            if (tempSpell)
+                tempSpell->rangeIndex = 13;
+
+            //tempSpell = GET_SPELL(64597);
+            //if (tempSpell)
+            //    tempSpell->EffectImplicitTargetA[0] = TARGET_UNIT_NEARBY_ENTRY;
         }
 
         uint8 starCount;
@@ -135,6 +152,8 @@ public:
             phase = 1;
             stepTimer = 0;
             starCount = 0;
+
+            DoCast(me, SPELL_DUAL_WIELD, true);
         }
 
         void EnterCombat(Unit* who)
@@ -205,8 +224,8 @@ public:
         {
             for (uint8 i = 0; i < 3; ++i)
             {
-                if (Creature* livingConstellation = me->SummonCreature(CREATURE_LIVING_CONSTELLATION, Locations[i + 2], TEMPSUMMON_CORPSE_TIMED_DESPAWN,
-                    1*IN_MILLISECONDS))
+                if (Creature* livingConstellation = me->SummonCreature(CREATURE_LIVING_CONSTELLATION, constellationLocations[i],
+                    TEMPSUMMON_CORPSE_TIMED_DESPAWN, 1*IN_MILLISECONDS))
                 {
                     livingConstellation->SetInCombatWithZone();
                     if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
@@ -425,7 +444,7 @@ public:
         void Reset()
         {
             me->SetFlying(true);
-            me->SetSpeed(MOVE_FLIGHT, 0.6f);
+            me->SetSpeed(MOVE_FLIGHT, 0.7f);
             arcaneBarrageTimer = urand(5*IN_MILLISECONDS, 10*IN_MILLISECONDS);
         }
 
@@ -508,6 +527,132 @@ public:
     }
 };
 
+// cast spell effects on same target
+class spell_cosmic_smash : public SpellScriptLoader
+{
+    public:
+        spell_cosmic_smash() : SpellScriptLoader("spell_cosmic_smash") { }
+
+        class spell_cosmic_smash_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_cosmic_smash_SpellScript);
+
+            void FilterTargetsInitial(std::list<Unit*>& unitList)
+            {
+                sharedUnitList = unitList;
+            }
+
+            void FilterTargetsSubsequent(std::list<Unit*>& unitList)
+            {
+                unitList = sharedUnitList;
+            }
+
+            void Register()
+            {
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_cosmic_smash_SpellScript::FilterTargetsInitial, EFFECT_0, TARGET_UNIT_AREA_ENEMY_SRC);
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_cosmic_smash_SpellScript::FilterTargetsSubsequent, EFFECT_1, TARGET_UNIT_AREA_ENEMY_SRC);
+            }
+
+            std::list<Unit*> sharedUnitList;
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_cosmic_smash_SpellScript();
+        }
+};
+
+// set trigger summon location
+class spell_cosmic_smash_summon_trigger : public SpellScriptLoader
+{
+    public:
+        spell_cosmic_smash_summon_trigger() : SpellScriptLoader("spell_cosmic_smash_summon_trigger") { }
+
+        class spell_cosmic_smash_summon_trigger_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_cosmic_smash_summon_trigger_SpellScript);
+
+            void HandleScript(SpellEffIndex effIndex)
+            {
+                PreventHitDefaultEffect(effIndex);
+                GetCaster()->SummonCreature(CREATURE_COSMIC_SMASH_TRIGGER, Locations[2], TEMPSUMMON_TIMED_DESPAWN, 7900);
+            }
+
+            void Register()
+            {
+                OnEffect += SpellEffectFn(spell_cosmic_smash_summon_trigger_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_SUMMON);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_cosmic_smash_summon_trigger_SpellScript();
+        }
+};
+
+// set target summon location
+class spell_cosmic_smash_summon_target : public SpellScriptLoader
+{
+    public:
+        spell_cosmic_smash_summon_target() : SpellScriptLoader("spell_cosmic_smash_summon_target") { }
+
+        class spell_cosmic_smash_summon_target_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_cosmic_smash_summon_target_SpellScript);
+
+            void HandleScript(SpellEffIndex effIndex)
+            {
+                PreventHitDefaultEffect(effIndex);
+                GetCaster()->SummonCreature(CREATURE_COSMIC_SMASH_TARGET, GetCaster()->GetPositionX(), GetCaster()->GetPositionY(),
+                    GetCaster()->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_DESPAWN, 10*IN_MILLISECONDS);
+            }
+
+            void Register()
+            {
+                OnEffect += SpellEffectFn(spell_cosmic_smash_summon_target_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_SUMMON);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_cosmic_smash_summon_target_SpellScript();
+        }
+};
+
+// set damage based on proximity
+class spell_cosmic_smash_dmg : public SpellScriptLoader
+{
+    public:
+        spell_cosmic_smash_dmg() : SpellScriptLoader("spell_cosmic_smash_dmg") { }
+
+        class spell_cosmic_smash_dmg_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_cosmic_smash_dmg_SpellScript);
+
+            void CalcDamage(SpellEffIndex /*effIndex*/)
+            {
+                if (!GetHitUnit() || !GetTargetDest())
+                    return;
+
+                float distance = GetHitUnit()->GetExactDist2d(GetTargetDest());
+                if (distance < 3.4f)
+                    return;
+
+                SetHitDamage(int32(GetHitDamage() * 10.0f / pow(distance, 1.9f)));
+            }
+
+            void Register()
+            {
+                OnEffect += SpellEffectFn(spell_cosmic_smash_dmg_SpellScript::CalcDamage, EFFECT_0, SPELL_EFFECT_SCHOOL_DAMAGE);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_cosmic_smash_dmg_SpellScript();
+        }
+};
+
 void AddSC_boss_algalon()
 {
     new boss_algalon();
@@ -515,4 +660,8 @@ void AddSC_boss_algalon()
     new npc_living_constellation();
     new npc_black_hole();
     new go_planetarium_access();
+    new spell_cosmic_smash();
+    new spell_cosmic_smash_summon_trigger();
+    new spell_cosmic_smash_summon_target();
+    new spell_cosmic_smash_dmg();
 }
