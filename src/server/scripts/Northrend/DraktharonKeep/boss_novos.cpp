@@ -35,6 +35,7 @@ enum Yells
     SAY_REUBBLE_1                                 = -1600004,
     SAY_REUBBLE_2                                 = -1600005
 };
+
 enum Creatures
 {
     CREATURE_RISEN_SHADOWCASTER                   = 27600,
@@ -42,12 +43,14 @@ enum Creatures
     CREATURE_HULKING_CORPSE                       = 27597,
     CREATURE_CRYSTAL_HANDLER                      = 26627
 };
+
 enum CombatPhase
 {
     IDLE,
     PHASE_1,
     PHASE_2
 };
+
 enum Achievements
 {
     ACHIEV_OH_NOVOS                               = 2057
@@ -62,14 +65,14 @@ enum Events
     EVENT_BLAST,
     EVENT_BOLT,
     EVENT_CURSE,
-    EVENT_HERO_SUMMON,
+    EVENT_HERO_SUMMON
 };
 
 #define MAX_SUMMONS                            5
 
-static Position AddSpawnPoint = { -379.20f, -816.76f, 59.70f };
-static Position CrystalHandlerSpawnPoint = { -326.626343f, -709.956604f, 27.813314f };
-static Position AddDestinyPoint = { -379.314545f, -772.577637f, 28.58837f };
+static Position AddSpawnPoint                = { -379.20f, -816.76f, 59.70f };
+static Position CrystalHandlerSpawnPoint     = { -326.626343f, -709.956604f, 27.813314f };
+static Position AddDestinyPoint              = { -379.314545f, -772.577637f, 28.58837f };
 
 class boss_novos : public CreatureScript
 {
@@ -83,29 +86,30 @@ public:
 
     struct boss_novosAI : public Scripted_NoMovementAI
     {
-        boss_novosAI(Creature *c) : Scripted_NoMovementAI(c), lSummons(me)
+        boss_novosAI(Creature* c) : Scripted_NoMovementAI(c), lSummons(me)
         {
             pInstance = c->GetInstanceScript();
         }
 
-        bool bAchiev;
+        InstanceScript* pInstance;
+
+        bool achiev;
+        uint8 crystalHandlerAmount;
 
         SummonList lSummons;
         EventMap events;
-
-        std::list<uint64> luiCrystals;
-
         CombatPhase Phase;
 
-        InstanceScript* pInstance;
+        std::list<uint64> luiCrystals;
 
         void Reset()
         {
             Phase = IDLE;
             luiCrystals.clear();
-            bAchiev = true;
+            achiev = true;
             me->CastStop();
             lSummons.DespawnAll();
+            crystalHandlerAmount = 0;
             events.Reset();
 
             if (me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE))
@@ -124,18 +128,18 @@ public:
                 luiCrystals.push_back(pInstance->GetData64(DATA_NOVOS_CRYSTAL_4));
                 for (std::list<uint64>::const_iterator itr = luiCrystals.begin(); itr != luiCrystals.end(); ++itr)
                 {
-                    if (GameObject* pTemp = pInstance->instance->GetGameObject(*itr))
-                        pTemp->SetGoState(GO_STATE_READY);
+                    if (GameObject* go = pInstance->instance->GetGameObject(*itr))
+                        go->SetGoState(GO_STATE_READY);
                 }
             }
         }
 
-        void EnterCombat(Unit* who)
+        void EnterCombat(Unit * /*who*/)
         {
             DoScriptText(SAY_AGGRO, me);
             Phase = PHASE_1;
-            events.ScheduleEvent(EVENT_CRYSTAL,30000);
-            events.ScheduleEvent(EVENT_SUMMON,1000);
+            events.ScheduleEvent(EVENT_CRYSTAL, 30*IN_MILLISECONDS);
+            events.ScheduleEvent(EVENT_SUMMON, 1*IN_MILLISECONDS);
 
             me->RemoveAllAuras();
             DoCast(SPELL_ARCANE_FIELD);
@@ -143,8 +147,8 @@ public:
             {
                 for (std::list<uint64>::const_iterator itr = luiCrystals.begin(); itr != luiCrystals.end(); ++itr)
                 {
-                    if (GameObject *pTemp = pInstance->instance->GetGameObject(*itr))
-                        pTemp->SetGoState(GO_STATE_ACTIVE);
+                    if (GameObject* go = pInstance->instance->GetGameObject(*itr))
+                        go->SetGoState(GO_STATE_ACTIVE);
                 }
                 pInstance->SetData(DATA_NOVOS_EVENT, IN_PROGRESS);
             }
@@ -152,7 +156,7 @@ public:
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
-            DoAttackerAreaInCombat(who,100);
+            DoAttackerAreaInCombat(me, 100.0f);
         }
 
         void UpdateAI(const uint32 diff)
@@ -162,96 +166,91 @@ public:
 
             events.Update(diff);
 
-            if (me->HasUnitState(UNIT_STAT_CASTING) && Phase!=PHASE_1)
+            if (me->HasUnitState(UNIT_STAT_CASTING) && Phase != PHASE_1)
                 return;
-
-            Creature *pCrystalHandler;
-            Creature *pSummon;
 
             while (uint32 eventId = events.ExecuteEvent())
             {
-                switch(eventId)
+                switch (eventId)
                 {
-                case EVENT_CRYSTAL:
-                    DoScriptText(SAY_NECRO_ADD, me);
-                    pCrystalHandler = me->SummonCreature(CREATURE_CRYSTAL_HANDLER, CrystalHandlerSpawnPoint, TEMPSUMMON_CORPSE_TIMED_DESPAWN,20*IN_MILLISECONDS);
-                    pCrystalHandler->GetMotionMaster()->MovePoint(0, AddDestinyPoint);
-                    events.ScheduleEvent(EVENT_CRYSTAL,20000);
-    //                events.ScheduleEvent(EVENT_CRYSTAL,urand(20000,30000));
-                    break;
-                case EVENT_SUMMON:
-                    pSummon = me->SummonCreature(RAND(CREATURE_FETID_TROLL_CORPSE,CREATURE_HULKING_CORPSE,CREATURE_RISEN_SHADOWCASTER), AddSpawnPoint, TEMPSUMMON_CORPSE_TIMED_DESPAWN,20*IN_MILLISECONDS);
-                    pSummon->GetMotionMaster()->MovePoint(0, AddDestinyPoint);
-                    events.ScheduleEvent(EVENT_SUMMON,4000);
-    //                events.ScheduleEvent(EVENT_SUMMON,DUNGEON_MODE(3000,2000));
-                    break;
-                case EVENT_HERO_SUMMON:
-                    for (int i=1;i<=MAX_SUMMONS;i++)
-                        me->SummonCreature(CREATURE_FETID_TROLL_CORPSE,me->GetPositionX(),me->GetPositionY(),me->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
-                    events.ScheduleEvent(EVENT_HERO_SUMMON,urand(20000,30000));
-    //                events.ScheduleEvent(EVENT_HERO_SUMMON,urand(5000,15000));
-                case EVENT_BLIZZARD:
-                    if (Unit *pTarget=SelectTarget(SELECT_TARGET_RANDOM,0,100,true))
-                        DoCast(pTarget,SPELL_BLIZZARD);
-                    events.ScheduleEvent(EVENT_BLIZZARD,15000);
-    //                events.ScheduleEvent(EVENT_BLIZZARD,7500);
-                    break;
-                case EVENT_BOLT:
-                    if (Unit *pTarget=SelectTarget(SELECT_TARGET_RANDOM,0,100,true))
-                        if (!me->HasUnitState(UNIT_STAT_CASTING))
-                            DoCast(pTarget,SPELL_FROSTBOLT);
-                        events.ScheduleEvent(EVENT_BOLT,2500);
-                    break;
-                case EVENT_CURSE:
-                    if (Unit *pTarget=SelectTarget(SELECT_TARGET_RANDOM,0,100,true))
-                        if (!me->HasUnitState(UNIT_STAT_CASTING))
-                            DoCast(pTarget,SPELL_WARTH_OF_MISERY);
-                        events.ScheduleEvent(EVENT_CURSE,9000);
-                    break;
-                case EVENT_BLAST:
-                    if (Unit *pTarget=SelectTarget(SELECT_TARGET_RANDOM,0,100,true))
-                        if (!me->HasUnitState(UNIT_STAT_CASTING))
-                            DoCast(pTarget,SPELL_ARCANE_BLAST);
-                        events.ScheduleEvent(EVENT_BLAST,urand(20000,30000));
-                    break;
+                    case EVENT_CRYSTAL:
+                        if (crystalHandlerAmount < 4)
+                        {
+                            DoScriptText(SAY_NECRO_ADD, me);
+                            me->SummonCreature(CREATURE_CRYSTAL_HANDLER, CrystalHandlerSpawnPoint, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20*IN_MILLISECONDS);
+                            events.ScheduleEvent(EVENT_CRYSTAL, 20*IN_MILLISECONDS);
+                        }
+                        break;
+                    case EVENT_SUMMON:
+                        me->SummonCreature(RAND(CREATURE_FETID_TROLL_CORPSE, CREATURE_HULKING_CORPSE, CREATURE_RISEN_SHADOWCASTER), AddSpawnPoint,
+                            TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20*IN_MILLISECONDS);
+                        events.ScheduleEvent(EVENT_SUMMON, 4*IN_MILLISECONDS);
+                        break;
+                    case EVENT_HERO_SUMMON:
+                        for (int i = 0; i < MAX_SUMMONS; i++)
+                            me->SummonCreature(CREATURE_FETID_TROLL_CORPSE, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0,
+                            TEMPSUMMON_CORPSE_TIMED_DESPAWN, 1*IN_MILLISECONDS);
+                        events.ScheduleEvent(EVENT_HERO_SUMMON, urand(20*IN_MILLISECONDS, 30*IN_MILLISECONDS));
+                        break;
+                    case EVENT_BLIZZARD:
+                        if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                            DoCast(target, SPELL_BLIZZARD);
+                        events.ScheduleEvent(EVENT_BLIZZARD, 15*IN_MILLISECONDS);
+                        break;
+                    case EVENT_BOLT:
+                        if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                            DoCast(target, SPELL_FROSTBOLT);
+                        events.ScheduleEvent(EVENT_BOLT, urand(3*IN_MILLISECONDS, 4*IN_MILLISECONDS));
+                        break;
+                    case EVENT_CURSE:
+                        if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                            DoCast(target, SPELL_WARTH_OF_MISERY);
+                        events.ScheduleEvent(EVENT_CURSE, 9*IN_MILLISECONDS);
+                        break;
+                    case EVENT_BLAST:
+                        DoCast(SPELL_ARCANE_BLAST);
+                        events.ScheduleEvent(EVENT_BLAST, urand(20*IN_MILLISECONDS, 30*IN_MILLISECONDS));
+                        break;
                 }
             }
-            
-            /*
-            if (!me->hasUnitState(UNIT_STAT_CASTING))
-            {
-                uint8 cast=(urand(0,100));
-                if (cast<=65)
-                    events.ScheduleEvent(EVENT_BOLT,0);
-                if (cast<90 && cast>65)
-                    events.ScheduleEvent(EVENT_CURSE,0);
-                if (cast>=90)
-                    events.ScheduleEvent(EVENT_BLAST,0);
-            } */
-
         }
-        void JustDied(Unit* /*killer*/)
+
+        void JustDied(Unit * /*killer*/)
         {
             DoScriptText(SAY_DEATH, me);
             if (pInstance)
             {
                 pInstance->SetData(DATA_NOVOS_EVENT, DONE);
 
-                if (IsHeroic() && bAchiev)
+                if (IsHeroic() && achiev)
                     pInstance->DoCompleteAchievement(ACHIEV_OH_NOVOS);
             }
             lSummons.DespawnAll();
         }
 
-        void KilledUnit(Unit * victim)
+        void KilledUnit(Unit* victim)
         {
             if (victim == me)
                 return;
             DoScriptText(SAY_KILL, me);
         }
 
-        void JustSummoned(Creature *summon)
+        void JustSummoned(Creature* summon)
         {
+            switch (summon->GetEntry())
+            {
+                case CREATURE_CRYSTAL_HANDLER:
+                    crystalHandlerAmount++;
+                    summon->GetMotionMaster()->MovePoint(0, AddDestinyPoint);
+                    break;
+                case CREATURE_FETID_TROLL_CORPSE:
+                case CREATURE_HULKING_CORPSE:
+                case CREATURE_RISEN_SHADOWCASTER:
+                    summon->GetMotionMaster()->MovePoint(0, AddDestinyPoint);
+                    break;
+                default:
+                    break;
+            }
             lSummons.Summon(summon);
         }
 
@@ -260,8 +259,8 @@ public:
             if (!luiCrystals.empty())
             {
                 if (pInstance)
-                    if (GameObject *pTemp = pInstance->instance->GetGameObject(luiCrystals.back()))
-                        pTemp->SetGoState(GO_STATE_READY);
+                    if (GameObject* go = pInstance->instance->GetGameObject(luiCrystals.back()))
+                        go->SetGoState(GO_STATE_READY);
                 luiCrystals.pop_back();
             }
             if (luiCrystals.empty())
@@ -272,13 +271,13 @@ public:
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 Phase = PHASE_2;
                 events.Reset();
-                events.ScheduleEvent(EVENT_BLIZZARD,0);
-                events.ScheduleEvent(EVENT_BLAST,urand(20000,30000));
-                events.ScheduleEvent(EVENT_CURSE,5000);
-                events.ScheduleEvent(EVENT_BOLT,2000);
+                events.ScheduleEvent(EVENT_BLIZZARD, 0);
+                events.ScheduleEvent(EVENT_BLAST, urand(20*IN_MILLISECONDS, 30*IN_MILLISECONDS));
+                events.ScheduleEvent(EVENT_CURSE, 5*IN_MILLISECONDS);
+                events.ScheduleEvent(EVENT_BOLT, 2*IN_MILLISECONDS);
 
                 if (IsHeroic())
-                    events.ScheduleEvent(EVENT_HERO_SUMMON,0);
+                    events.ScheduleEvent(EVENT_HERO_SUMMON, 0);
             }
         }
 
@@ -287,7 +286,6 @@ public:
             return SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
         }
     };
-
 };
 
 enum CrystalHandlerSpells
@@ -308,13 +306,12 @@ public:
 
     struct mob_crystal_handlerAI : public ScriptedAI
     {
-        mob_crystal_handlerAI(Creature *c) : ScriptedAI(c)
+        mob_crystal_handlerAI(Creature* c) : ScriptedAI(c)
         {
             pInstance = c->GetInstanceScript();
         }
 
         uint32 uiFlashOfDarknessTimer;
-
         InstanceScript* pInstance;
 
         void Reset()
@@ -322,10 +319,10 @@ public:
             uiFlashOfDarknessTimer = 5*IN_MILLISECONDS;
         }
 
-        void JustDied(Unit* /*killer*/)
+        void JustDied(Unit * /*killer*/)
         {
-            if (Creature* pNovos = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_NOVOS) : 0))
-                CAST_AI(boss_novos::boss_novosAI,pNovos->AI())->RemoveCrystal();
+            if (Creature* novos = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_NOVOS) : 0))
+                CAST_AI(boss_novos::boss_novosAI, novos->AI())->RemoveCrystal();
         }
 
         void UpdateAI(const uint32 diff)
@@ -335,7 +332,7 @@ public:
 
             if (uiFlashOfDarknessTimer <= diff)
             {
-                DoCast(me->getVictim(), DUNGEON_MODE(SPELL_FLASH_OF_DARKNESS,H_SPELL_FLASH_OF_DARKNESS));
+                DoCast(me->getVictim(), DUNGEON_MODE(SPELL_FLASH_OF_DARKNESS, H_SPELL_FLASH_OF_DARKNESS));
                 uiFlashOfDarknessTimer = 5*IN_MILLISECONDS;
             } else uiFlashOfDarknessTimer -= diff;
 
@@ -346,12 +343,12 @@ public:
         {
             if (type != POINT_MOTION_TYPE || id != 0)
                 return;
-            if (Creature *pNovos = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_NOVOS) : 0))
-                if (Unit *pTarget = CAST_AI(boss_novos::boss_novosAI, pNovos->AI())->GetRandomTarget())
-                    AttackStart(pTarget);
+
+            if (Creature* novos = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_NOVOS) : 0))
+                if (Unit* target = CAST_AI(boss_novos::boss_novosAI, novos->AI())->GetRandomTarget())
+                    AttackStart(target);
         }
     };
-
 };
 
 class mob_novos_minion : public CreatureScript
@@ -366,7 +363,7 @@ public:
 
     struct mob_novos_minionAI : public ScriptedAI
     {
-        mob_novos_minionAI(Creature *c) : ScriptedAI(c)
+        mob_novos_minionAI(Creature* c) : ScriptedAI(c)
         {
             pInstance = c->GetInstanceScript();
         }
@@ -375,17 +372,17 @@ public:
 
         void MovementInform(uint32 type, uint32 id)
         {
-            if (type != POINT_MOTION_TYPE || id !=0)
+            if (type != POINT_MOTION_TYPE || id != 0)
                 return;
-            if (Creature* pNovos = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_NOVOS) : 0))
+
+            if (Creature* novos = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_NOVOS) : 0))
             {
-                CAST_AI(boss_novos::boss_novosAI, pNovos->AI())->bAchiev = false;
-                if (Unit *pTarget = CAST_AI(boss_novos::boss_novosAI, pNovos->AI())->GetRandomTarget())
-                    AttackStart(pTarget);
+                CAST_AI(boss_novos::boss_novosAI, novos->AI())->achiev = false;
+                if (Unit* target = CAST_AI(boss_novos::boss_novosAI, novos->AI())->GetRandomTarget())
+                    AttackStart(target);
             }
         }
     };
-
 };
 
 void AddSC_boss_novos()
