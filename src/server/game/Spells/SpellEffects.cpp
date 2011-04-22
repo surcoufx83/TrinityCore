@@ -439,7 +439,6 @@ void Spell::SpellDamageSchoolDmg(SpellEffIndex effIndex)
                         damage = (m_caster->getLevel() - 60) * 4 + 60;
                         break;
                     }
-
                     // Loken Pulsing Shockwave
                     case 59837:
                     case 52942:
@@ -453,6 +452,18 @@ void Spell::SpellDamageSchoolDmg(SpellEffIndex effIndex)
                             return;
                         float distance = m_caster->GetDistance2d(unitTarget);
                         damage = (distance > radius) ? 0 : int32(SpellMgr::CalculateSpellEffectAmount(m_spellInfo, 0) * distance);
+                        break;
+                    }
+                    // Explode (Needed by Corpse Explosion spell)
+                    case 47496:
+                    {
+                        if (effIndex) // Second effect is supposed to kill the ghoul
+                        {
+                            unitTarget->Kill(unitTarget);
+                            // Set corpse look
+                            unitTarget->SetDisplayId(25537 + urand(0, 3));
+                            return;
+                        }
                         break;
                     }
                 }
