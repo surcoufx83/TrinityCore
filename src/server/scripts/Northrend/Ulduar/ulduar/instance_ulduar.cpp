@@ -36,19 +36,46 @@ public:
 
         std::string m_strInstData;
 
+        // Leviathan
         uint64 uiLeviathanGUID;
+        uint64 uiLeviathanDoor[7];
+        uint64 uiLeviathanGateGUID;
+
+        // Ignis
         uint64 uiIgnisGUID;
+
+        // Razorscale
         uint64 uiRazorscaleGUID;
         uint64 uiRazorscaleController;
         uint64 uiRazorHarpoonGUIDs[4];
         uint64 uiExpCommanderGUID;
+
+        // XT-002
         uint64 uiXT002GUID;
+
+        // Assembly of Iron
         uint64 uiAssemblyGUIDs[3];
+
+        // Kologarn
         uint64 uiKologarnGUID;
         uint64 uiLeftArmGUID;
         uint64 uiRightArmGUID;
+        uint64 uiKologarnChestGUID;
+        uint64 uiKologarnBridgeGUID;
+        uint64 uiKologarnDoorGUID;
+        std::set<uint64> mRubbleSpawns;
+
+        // Auriaya
         uint64 uiAuriayaGUID;
 
+        // Hodir
+        uint64 uiHodirGUID;
+        uint64 uiHodirIceDoorGUID;
+        uint64 uiHodirStoneDoorGUID;
+        uint64 uiHodirEntranceDoorGUID;
+        uint64 uiHodirChestGUID;
+
+        // Mimiron
         uint64 uiMimironTrainGUID;
         uint64 uiMimironGUID;
         uint64 uiLeviathanMKIIGUID;
@@ -58,26 +85,36 @@ public:
         uint64 uiMimironElevatorGUID;
         std::list<uint64> uiMimironDoorGUIDList;
 
-        uint64 uiHodirGUID;
-
+        // Thorim
         uint64 uiThorimGUID;
         uint64 uiThorimDoorGUID;
         uint64 uiRunicColossusGUID;
         uint64 uiRuneGiantGUID;
         uint64 uiRunicDoorGUID;
         uint64 uiStoneDoorGUID;
+        uint64 uiThorimChestGUID;
 
+        // Freya
         uint64 uiFreyaGUID;
         uint64 uiElderBrightleafGUID;
         uint64 uiElderIronbranchGUID;
         uint64 uiElderStonebarkGUID;
+        uint64 uiFreyaChestGUID;
 
+        // Vezax
         uint64 uiWayToYoggGUID;
         uint64 uiVezaxGUID;
+        uint64 uiVezaxDoorGUID;
 
+        // Yogg-Saron
         uint64 uiYoggSaronGUID;
         uint64 uiSaraGUID;
+        uint64 uiYoggSaronDoorGUID;
+        uint64 uiYoggSaronBrainDoor1GUID;
+        uint64 uiYoggSaronBrainDoor2GUID;
+        uint64 uiYoggSaronBrainDoor3GUID;
 
+        // Algalon
         uint64 uiAlgalonGUID;
         uint64 uiAlgalonBridgeGUID;
         uint64 uiAlgalonBridgeVisualGUID;
@@ -87,22 +124,8 @@ public:
         uint64 uiAlgalonDoor2GUID;
         uint64 uiAlgalonAccessGUID;
 
-        uint64 uiLeviathanDoor[7];
-        uint64 uiLeviathanGateGUID;
-        uint64 uiVezaxDoorGUID;
-        uint64 uiYoggSaronDoorGUID;
-        uint64 uiYoggSaronBrainDoor1GUID;
-        uint64 uiYoggSaronBrainDoor2GUID;
-        uint64 uiYoggSaronBrainDoor3GUID;
 
-        uint64 uiKologarnChestGUID;
-        uint64 uiKologarnBridgeGUID;
-        uint64 uiKologarnDoorGUID;
-        uint64 uiThorimChestGUID;
-        uint64 uiHodirChestGUID;
-        uint64 uiFreyaChestGUID;
 
-        std::set<uint64> mRubbleSpawns;
 
         uint32 uiSupportKeeperFlag;
         uint32 uiPlayerDeathFlag;
@@ -127,6 +150,9 @@ public:
             uiLeftArmGUID           = 0;
             uiRightArmGUID          = 0;
             uiAuriayaGUID           = 0;
+            uiHodirIceDoorGUID      = 0;
+            uiHodirStoneDoorGUID    = 0;
+            uiHodirEntranceDoorGUID = 0;
             uiMimironTrainGUID      = 0;
             uiMimironElevatorGUID   = 0;
             uiMimironGUID           = 0;
@@ -466,6 +492,19 @@ public:
                 case GO_HODIR_CHEST:
                     uiHodirChestGUID = go->GetGUID();
                     break;
+                case GO_HODIR_OUT_DOOR_ICE:
+                    uiHodirIceDoorGUID = go->GetGUID();
+                    if(GetBossState(TYPE_HODIR) == DONE)
+                        HandleGameObject(uiHodirIceDoorGUID, true);
+                    break;
+                case GO_HODIR_OUT_DOOR_STONE:
+                    uiHodirStoneDoorGUID = go->GetGUID();
+                    if(GetBossState(TYPE_HODIR) == DONE)
+                        HandleGameObject(uiHodirIceDoorGUID, true);
+                    break;
+                case GO_HODIR_IN_DOOR_STONE:
+                    uiHodirEntranceDoorGUID = go->GetGUID();
+                    break;
                 case GO_FREYA_CHEST_HERO:
                 case GO_FREYA_CHEST:
                     uiFreyaChestGUID = go->GetGUID();
@@ -661,6 +700,17 @@ public:
                     if (state == DONE)
                         if (GameObject* go = instance->GetGameObject(uiHodirChestGUID))
                             go->SetRespawnTime(go->GetRespawnDelay());
+
+                    if (state == DONE)
+                    {
+                        HandleGameObject(uiHodirIceDoorGUID, true);
+                        HandleGameObject(uiHodirStoneDoorGUID, true);
+                        HandleGameObject(uiHodirEntranceDoorGUID, true);
+                    }
+
+                    if (state == IN_PROGRESS)
+                        HandleGameObject(uiHodirEntranceDoorGUID, false);
+                    
                     break;
                 case TYPE_THORIM:
                     if (state == DONE)
@@ -760,6 +810,10 @@ public:
                     break;
                 case DATA_RUNIC_DOOR:
                     if (GameObject* go = instance->GetGameObject(uiRunicDoorGUID))
+                        go->SetGoState(GOState(data));
+                    break;
+                case DATA_STONE_DOOR:
+                    if (GameObject* go = instance->GetGameObject(uiStoneDoorGUID))
                         go->SetGoState(GOState(data));
                     break;
                 case DATA_ADD_HELP_FLAG:

@@ -764,13 +764,12 @@ public:
 
         void UpdateAI(const uint32 diff)
         {
-            // I cannot find the real spell
+            if (!UpdateVictim() || me->HasUnitState(UNIT_STAT_CASTING))
+                return;
+
             if (!me->IsWithinMeleeRange(me->getVictim()))
                 DoCast(me, SPELL_SMASH);
     
-            if (!UpdateVictim() || me->HasUnitState(UNIT_STAT_CASTING))
-                return;
-            
             if (BarrierTimer <= diff)
             {
                 me->MonsterTextEmote(EMOTE_MIGHT, 0, true);

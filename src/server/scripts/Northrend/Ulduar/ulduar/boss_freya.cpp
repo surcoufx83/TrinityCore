@@ -313,8 +313,8 @@ public:
             }else
             {
                 //m_Phase = PHASE_SPAWNING;
-
-                pInstance->SetBossState(TYPE_FREYA,NOT_STARTED);
+                if(pInstance)
+                    pInstance->SetBossState(TYPE_FREYA,NOT_STARTED);
 
                 WaveCount = 0;
                 uiWave_Timer = 60000;
@@ -588,18 +588,19 @@ public:
         return new mob_natural_bombAI(pCreature);
     }
 
-    struct mob_natural_bombAI : public ScriptedAI
+    struct mob_natural_bombAI : public Scripted_NoMovementAI
     {
-        mob_natural_bombAI(Creature* pCreature) : ScriptedAI(pCreature)
+        mob_natural_bombAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
         {
+            me->SetReactState(REACT_PASSIVE);
+            me->SetDisplayId(23258);
+            me->setFaction(14);
         }
 
         uint32 uiExplosion_Timer;
 
         void Reset()
         {
-            me->SetReactState(REACT_PASSIVE);
-            me->setFaction(14);
             DoCast(SPELL_NATURE_BOMB_VISUAL_OBJECT);
             uiExplosion_Timer = 10000;
         }
@@ -609,11 +610,14 @@ public:
             if(uiExplosion_Timer < diff)
             {
                 if (GameObject *go_bomb = me->FindNearestGameObject(ENTRY_GAMEOBJECT_NATURE_BOMB, 20.0f))
+                {
                     go_bomb->Use(me);
+                    go_bomb->SetOwnerGUID(me->GetGUID()); //Very important ... else Delete Crash Server
+                    go_bomb->Delete();
+                }
 
-                    DoCast(RAID_MODE(SPELL_NATURE_BOMB_EXPLOSION,SPELL_NATURE_BOMB_EXPLOSION_H));
-                    me->DealDamage(me,me->GetHealth());
-                    me->RemoveCorpse();
+                DoCast(RAID_MODE(SPELL_NATURE_BOMB_EXPLOSION,SPELL_NATURE_BOMB_EXPLOSION_H));
+                me->DespawnOrUnsummon(2000);
                 uiExplosion_Timer = 10000;
             }else uiExplosion_Timer -= diff;
         }
@@ -631,7 +635,8 @@ public:
 
         void OnHitEffect()
         {
-            if (Player* target = GetHitPlayer())
+            //if (Player* target = GetHitPlayer())
+            if (Unit* target = GetHitUnit())
             {
                 target->CastSpell(target,SPELL_NATURE_BOMB_SUMMON,true);
             }
@@ -743,7 +748,7 @@ public:
         {
             if(Unit* target = me->SelectNearbyTarget(100))
                 me->AI()->AttackStart(target);
-            Flame_Lash_Timer = urand(6000,10000);
+            Flame_Lash_Timer = 2000;
         }
 
         void JustDied(Unit* )
@@ -751,20 +756,14 @@ public:
             DoCast(me,RAID_MODE(SPELL_DETONATE_10, SPELL_DETONATE_25),true);
             if (Creature* freya = me->FindNearestCreature(ENTRY_CREATURE_FREYA, 10000))
                 DoCast(freya, SPELL_ATTUNED_TO_NATURE_REMOVE_2,true);
+
+            me->DespawnOrUnsummon(2000);
         }
 
-        void JustSummoned(Unit* )
-        {
-            me->CombatStart(me->SelectNearestTarget(), true);
-        }
-
-        void updateAI(const uint32 diff)
+        void UpdateAI(const uint32 diff)
         {
             if(m_pInstance && m_pInstance->GetBossState(TYPE_FREYA) != IN_PROGRESS)
-            {
-                me->DealDamage(me,me->GetMaxHealth());
-                me->RemoveCorpse();
-            }
+                me->DespawnOrUnsummon(2000);
 
             if (!UpdateVictim())
                 return;
@@ -772,7 +771,7 @@ public:
             if(Flame_Lash_Timer <= diff)
             {
                 DoCast(me->getVictim(),SPELL_FLAME_LASH);
-                Flame_Lash_Timer = urand(6000,10000);
+                Flame_Lash_Timer = 2000;
             }
             else Flame_Lash_Timer -= diff;
         }
@@ -818,15 +817,14 @@ public:
                 alreadyKilled = true;
                 Freya->AI()->DoAction(ACTION_ELEMENTAL_DEAD);
             }
+
+            me->DespawnOrUnsummon(2000);
         }
 
         void UpdateAI(const uint32 diff)
         {
             if(m_pInstance && m_pInstance->GetBossState(TYPE_FREYA) != IN_PROGRESS)
-            {
-                me->DealDamage(me,me->GetMaxHealth());
-                me->RemoveCorpse();
-            }
+                me->DespawnOrUnsummon(2000);
 
             if (!UpdateVictim())
                 return;
@@ -884,15 +882,14 @@ public:
                 alreadyKilled = true;
                 Freya->AI()->DoAction(ACTION_ELEMENTAL_DEAD);
             }
+
+            me->DespawnOrUnsummon(2000);
         }
 
         void UpdateAI(const uint32 diff)
         {
             if(m_pInstance && m_pInstance->GetBossState(TYPE_FREYA) != IN_PROGRESS)
-            {
-                me->DealDamage(me,me->GetMaxHealth());
-                me->RemoveCorpse();
-            }
+                me->DespawnOrUnsummon(2000);
 
             if (!UpdateVictim())
                 return;
@@ -956,6 +953,8 @@ public:
                 alreadyKilled = true;
                 Freya->AI()->DoAction(ACTION_ELEMENTAL_DEAD);
             }
+
+            me->DespawnOrUnsummon(2000);
         }
 
         void JustSummoned(Unit* )
@@ -966,10 +965,7 @@ public:
         void UpdateAI(const uint32 diff)
         {
             if(m_pInstance && m_pInstance->GetBossState(TYPE_FREYA) != IN_PROGRESS)
-            {
-                me->DealDamage(me,me->GetMaxHealth());
-                me->RemoveCorpse();
-            }
+                me->DespawnOrUnsummon(2000);
 
             if (!UpdateVictim())
                 return;
@@ -1026,6 +1022,8 @@ public:
         {
             if (Creature* freya = me->FindNearestCreature(ENTRY_CREATURE_FREYA, 10000))
                 DoCast(freya, SPELL_ATTUNED_TO_NATURE_REMOVE_25,true);
+
+            me->DespawnOrUnsummon(2000);
         }
 
         void JustSummoned(Unit* )
@@ -1036,10 +1034,7 @@ public:
         void UpdateAI(const uint32 diff)
         {
             if(m_pInstance && m_pInstance->GetBossState(TYPE_FREYA) != IN_PROGRESS)
-            {
-                me->DealDamage(me,me->GetMaxHealth());
-                me->RemoveCorpse();
-            }
+                me->DespawnOrUnsummon(2000);
 
             if (!UpdateVictim())
                 return;
@@ -1618,6 +1613,8 @@ public:
                 if(Roots->HasAura(RAID_MODE(SPELL_FREYA_IRON_ROOTS_10, SPELL_FREYA_IRON_ROOTS_25)))
                     Roots->RemoveAura(RAID_MODE(SPELL_FREYA_IRON_ROOTS_10, SPELL_FREYA_IRON_ROOTS_25));
             }
+
+            me->DespawnOrUnsummon(2000);
         }
     };
 };
@@ -1637,7 +1634,7 @@ UPDATE creature_template SET ScriptName = "mob_elder_ironbranch" WHERE Entry = 3
 UPDATE creature_template SET ScriptName = "mob_elder_stonebark" WHERE Entry = 32914;
 UPDATE creature_template SET ScriptName = "mob_unstable_sunbeam" WHERE Entry = 33050;
 UPDATE creature_template SET ScriptName = "mob_eonars_gift" WHERE Entry = 33228;
-UPDATE gameobject_template SET ScriptName = "mob_natural_bomb" WHERE ENTRY = 194902;
+UPDATE creature_template SET ScriptName = "mob_natural_bomb" WHERE ENTRY = 34129;
 UPDATE creature_template SET ScriptName = "mob_iron_roots" WHERE Entry = 33168;
 UPDATE creature_template SET ScriptName = "mob_iron_roots" WHERE Entry = 33088;
 UPDATE creature_template SET ScriptName = "mob_freya_sunbeam" WHERE Entry = 33170;
