@@ -698,7 +698,7 @@ uint32 Unit::DealDamage(Unit *pVictim, uint32 damage, CleanDamage const* cleanDa
 
     if (pVictim->GetTypeId() == TYPEID_PLAYER)
         pVictim->ToPlayer()->UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_HIGHEST_HIT_RECEIVED, damage);
-    else if (!pVictim->IsControlledByPlayer())
+    else if (!pVictim->IsControlledByPlayer() || pVictim->IsVehicle())
     {
         if (!pVictim->ToCreature()->hasLootRecipient())
             pVictim->ToCreature()->SetLootRecipient(this);
@@ -4042,6 +4042,27 @@ void Unit::RemoveAllAurasRequiringDeadTarget()
     {
         Aura * aura = iter->second;
         if (!aura->IsPassive() && IsRequiringDeadTargetSpell(aura->GetSpellProto()))
+            RemoveOwnedAura(iter, AURA_REMOVE_BY_DEFAULT);
+        else
+            ++iter;
+    }
+}
+
+void Unit::RemoveAllAurasExceptVehicle()
+{
+    for (AuraApplicationMap::iterator iter = m_appliedAuras.begin(); iter != m_appliedAuras.end();)
+    {
+        Aura const* aura = iter->second->GetBase();
+        if (!IsSpellHaveAura(aura->GetSpellProto(), SPELL_AURA_CONTROL_VEHICLE))
+            _UnapplyAura(iter, AURA_REMOVE_BY_DEFAULT);
+        else
+            ++iter;
+    }
+
+    for (AuraMap::iterator iter = m_ownedAuras.begin(); iter != m_ownedAuras.end();)
+    {
+        Aura* aura = iter->second;
+        if (!IsSpellHaveAura(aura->GetSpellProto(), SPELL_AURA_CONTROL_VEHICLE))
             RemoveOwnedAura(iter, AURA_REMOVE_BY_DEFAULT);
         else
             ++iter;
@@ -11844,7 +11865,7 @@ void Unit::Mount(uint32 mount, uint32 VehicleId, uint32 creatureEntry)
                 plr->GetSession()->SendPacket(&data);
 
                 // mounts can also have accessories
-                GetVehicleKit()->InstallAllAccessories();
+                GetVehicleKit()->InstallAllAccessories(false);
             }
         }
     }
@@ -11981,6 +12002,9 @@ void Unit::SetInCombatState(bool PvP, Unit* enemy)
             UpdateSpeed(MOVE_SWIM, true);
             UpdateSpeed(MOVE_FLIGHT, true);
         }
+
+        if (!(ToCreature()->GetCreatureInfo()->type_flags & CREATURE_TYPEFLAGS_MOUNTED_COMBAT))
+            Unmount();
     }
 
     for (Unit::ControlList::iterator itr = m_Controlled.begin(); itr != m_Controlled.end(); ++itr)

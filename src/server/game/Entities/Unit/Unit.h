@@ -1664,6 +1664,7 @@ class Unit : public WorldObject
         void RemoveArenaAuras(bool onleave = false);
         void RemoveAllAurasOnDeath();
         void RemoveAllAurasRequiringDeadTarget();
+        void RemoveAllAurasExceptVehicle();
         void DelayOwnedAuras(uint32 spellId, uint64 caster, int32 delaytime);
 
         void _RemoveAllAuraStatMods();
@@ -1769,7 +1770,15 @@ class Unit : public WorldObject
         uint64 m_ObjectSlot[4];
 
         ShapeshiftForm GetShapeshiftForm() const { return ShapeshiftForm(GetByteValue(UNIT_FIELD_BYTES_2, 3)); }
-        void SetShapeshiftForm(ShapeshiftForm form) { SetByteValue(UNIT_FIELD_BYTES_2, 3, form); }
+        void SetShapeshiftForm(ShapeshiftForm form)
+        {
+            SetByteValue(UNIT_FIELD_BYTES_2, 3, form);
+
+            // force update as too quick shapeshifting and back
+            // causes the value to stay the same serverside
+            // causes issues clientside (player gets stuck)
+            ForceValuesUpdateAtIndex(UNIT_FIELD_BYTES_2);
+        }
 
         inline bool IsInFeralForm() const
         {
