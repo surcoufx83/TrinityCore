@@ -4,8 +4,8 @@ SET @BoK    = 20217; -- Blessing of Kings
 SET @GBoK   = 25898; -- Greater Blessing of Kings
 SET @GBoS   = 25899; -- Greater Blessing of Sanctuary
 SET @BoFK   = 72586; -- Blessing of Forgotten Kings 
-DELETE FROM `spell_group` WHERE `id` IN (1006,5000);
-DELETE FROM `spell_group_stack_rules` WHERE `group_id` IN (1006,5000);
+DELETE FROM `spell_group` WHERE `id` = 5000;
+DELETE FROM `spell_group_stack_rules` WHERE `group_id` = 5000;
 DELETE FROM `spell_linked_spell` WHERE `spell_effect` IN (-@BoS,-@BoK,-@GBoK,-@GBoS,-@BoFK);
 INSERT INTO `spell_linked_spell` (`spell_trigger`,`spell_effect`,`type`,`comment`) VALUES
 -- Remove BoS
