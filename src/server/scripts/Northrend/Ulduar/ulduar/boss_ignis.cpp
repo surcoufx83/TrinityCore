@@ -266,13 +266,7 @@ public:
                         DoScriptText(SAY_SUMMON, me);
                         //DoSummon(NPC_IRON_CONSTRUCT, Pos[rand()%20], 30000, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT);
                         if(Creature *iron_construct = me->FindNearestCreature(NPC_IRON_CONSTRUCT,500.0f,true))
-                        {
-                            JustSummoned(iron_construct);
-
-                            DoCast(SPELL_STRENGHT);
                             DoCast(me, SPELL_ACTIVATE_CONSTRUCT);
-
-                        }
 
                         events.RescheduleEvent(EVENT_CONSTRUCT,RAID_MODE(40000, 30000));
                         break;
@@ -367,6 +361,7 @@ public:
                     me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED | UNIT_FLAG_STUNNED | UNIT_FLAG_DISABLE_MOVE);
                     AttackStart(pIgnis->getVictim());
                     DoZoneInCombat();
+                    pIgnis->CastSpell(pIgnis, SPELL_STRENGHT, true);
                 }
             }
         }
