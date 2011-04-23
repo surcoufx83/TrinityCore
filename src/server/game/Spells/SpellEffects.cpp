@@ -3175,7 +3175,7 @@ void Spell::EffectSummonType(SpellEffIndex effIndex)
                 return;
 
             // The spell that this effect will trigger. It has SPELL_AURA_CONTROL_VEHICLE
-            uint32 spell = m_spellInfo->EffectBasePoints[effIndex];
+            uint32 spell = m_spellInfo->EffectBasePoints[effIndex] + 1;
             if (spell)
             {
                 SpellEntry const *spellProto = sSpellStore.LookupEntry(SpellMgr::CalculateSpellEffectAmount(m_spellInfo, effIndex));
