@@ -1,5 +1,5 @@
 -- Fix Quest 'Forging the Keystone' #13285 
--- (Workaround - Missing Symboleffects and AreaGroupId bug of s#60963 in Spell.dbc instead of 923 (Temple Of Invention)it has to be The Storm Peaks - commented out to make the fix working)
+-- (Workaround - Missing Symboleffects)
 SET @Brann  = 31810;
 SET @Voice  = 31814;
 SET @Quest  = 13285;
@@ -9,18 +9,17 @@ DELETE FROM `creature` WHERE `id` IN (@Voice,@Brann);
 INSERT INTO `creature`(`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`,`npcflag`,`unit_flags`,`dynamicflags`) VALUES
 (@Brann,571,1,1,0,0,7848.97,-1392.95,1534.06,6.02204,120,0,0,132,0,0,0,0,0,0),
 (@Voice,571,1,1,0,0,7859.68,-1396.07,1534.06,5.99062,300,0,0,42,0,0,0,0,0,0);
--- update creature_template and quest_template
+-- update creature_template
 UPDATE `creature_template` SET `AIName` = 'SmartAI', `flags_extra` = `flags_extra`| 128 WHERE `entry` = @Voice;
 UPDATE `creature_template` SET `npcflag` = 1, `minlevel` = 80, `maxlevel` = 80, `exp` = 2, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 7.5, `minrangedmg` = 345, `maxrangedmg` = 509, `rangedattackpower` = 103, `AIName` = 'SmartAI' WHERE `entry` = @Brann;
--- UPDATE `quest_template` SET `SrcSpell` = @PAura WHERE `entry` = @Quest; -- Player get Aura 'See Quest Brann Bronzebeard (TOI)' on quest accept
--- apply aura See Quest Brann Bronzebeard (TOI) in stormpeaks
--- DELETE FROM `spell_area` WHERE `spell` = @PAura;
--- INSERT INTO `spell_area` (`spell`,`area`,`quest_start`,`quest_start_active`,`quest_end`,`aura_spell`,`racemask`,`gender`,`autocast`) VALUES 
--- (60963,67,13285,1,13285,0,0,2,1);
--- creature_template_addon
--- DELETE FROM `creature_template_addon` WHERE `entry` = @Brann;
--- INSERT INTO `creature_template_addon` (`entry`,`path_id`,`mount`,`bytes1`,`bytes2`,`emote`,`auras`) VALUES 
--- (@Brann,0,0,0,4097,0,'49414 0'); -- Generic Quest Invisibility 1*/
+-- set Brann invisible without questactivity
+DELETE FROM `creature_template_addon` WHERE `entry` = @Brann;
+INSERT INTO `creature_template_addon` (`entry`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `auras`) VALUES 
+(@Brann,0,0,0,4097,0, '49414 0'); -- add Aura: Generic Quest Invisibility 1
+-- on quest #13285 active - player see Brann at Temple of Invention
+DELETE FROM `spell_area` WHERE `spell` = @PAura;
+INSERT INTO `spell_area` (`spell`, `area`, `quest_start`, `quest_start_active`, `quest_end`, `aura_spell`, `racemask`, `gender`, `autocast`) VALUES 
+(@PAura,4466,13285,1,13285,0,0,2,1);
 -- creature text
 DELETE FROM `creature_text` WHERE `entry` IN (@Voice,@Brann);
 INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`probability`,`emote`,`duration`,`sound`,`comment`) VALUES

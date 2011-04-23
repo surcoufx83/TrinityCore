@@ -509,8 +509,6 @@ public:
                             break;
                         //After waypoint 0
                         case 1:
-                            if (pInstance)
-                                pInstance->SetData(DATA_ARTHAS_EVENT, IN_PROGRESS);
                             me->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
                             if (Unit* pUther = me->SummonCreature(NPC_UTHER,1794.357f,1272.183f,140.558f,1.37f,TEMPSUMMON_DEAD_DESPAWN,180000))
                             {
@@ -1331,6 +1329,10 @@ public:
 
                             if (pAI)
                             {
+                                if (pInstance->GetData(DATA_ARTHAS_EVENT) != NOT_STARTED)
+                                    return false;
+
+                                pInstance->SetData(DATA_ARTHAS_EVENT, IN_PROGRESS);
                                 pAI->Start(true,true,pPlayer->GetGUID(),0,false,false);
                                 pAI->SetDespawnAtFar(false);
                                 pAI->SetDespawnAtEnd(false);

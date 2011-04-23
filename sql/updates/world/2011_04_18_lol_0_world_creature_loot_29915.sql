@@ -1,5 +1,5 @@
 -- Instructor Hroegar Flag and Loot Fix
-UPDATE `creature_template` SET `mingold` = 1111, `maxgold` = 3333 , `faction_A` = 14 , `faction_H` = 14 WHERE `entry` = 29915;
+UPDATE `creature_template` SET `mingold` = 1111, `maxgold` = 3333 , `faction_A` = 14 , `faction_H` = 14, `lootid` = 29915 WHERE `entry` = 29915;
 -- Loot
 DELETE FROM `creature_loot_template` WHERE `entry` = 29915;
 INSERT INTO `creature_loot_template` VALUES

@@ -760,6 +760,8 @@ bool SpellMgr::_isPositiveEffect(uint32 spellId, uint32 effIndex, bool deep) con
                 case 61988: // Divine Shield exclude aura
                     return false;
                 case 30877: // Tag Murloc
+                case 61716: // Rabbit Costume
+                case 61734: // Noblegarden Bunny
                     return true;
                 default:
                     break;
@@ -3750,6 +3752,7 @@ void SpellMgr::LoadSpellCustomAttr()
         case 64599: // Arcane Barrage
         case 64607: // Arcane Barrage
         case 47731: // Critter
+        case 62301: // Cosmic Smash
             spellInfo->MaxAffectedTargets = 1;
             count++;
             break;
