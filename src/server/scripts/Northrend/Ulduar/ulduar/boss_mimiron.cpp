@@ -709,7 +709,7 @@ public:
         return new boss_leviathan_mkAI(pCreature);
     }
 
-    struct boss_leviathan_mkAI : public BossAI
+    struct boss_leviathan_mkAI : public BossAI 
     {
         boss_leviathan_mkAI(Creature *pCreature) : BossAI(pCreature, TYPE_MIMIRON), phase(PHASE_NULL), vehicle(pCreature->GetVehicleKit())
         {
@@ -721,37 +721,6 @@ public:
         Phases phase;
         EventMap events;
 
-        void RemoveAllAurasButNotPassenger()
-        {
-            while (!me->GetAppliedAuras().empty() || !me->GetOwnedAuras().empty())
-            {
-                uint8 aurasremoved = 0; // Brauche wir nun um Schleife zu beenden
-
-                Unit::AuraApplicationMap::iterator aurAppIter;
-                for (aurAppIter = me->GetAppliedAuras().begin(); aurAppIter != me->GetAppliedAuras().end(); aurAppIter++)
-                {
-                    Aura const * aura = aurAppIter->second->GetBase();
-                    if(aura && aura->GetId() == VEHICLE_SPELL_RIDE_HARDCODED)
-                        continue;
-
-                    me->_UnapplyAura(aurAppIter, AURA_REMOVE_BY_DEFAULT);
-                    aurasremoved++;
-                }
-
-                Unit::AuraMap::iterator aurIter;
-                for (aurIter = me->GetOwnedAuras().begin(); aurIter != me->GetOwnedAuras().end(); aurIter++)
-                {
-                    Aura const * aura = aurIter->second;
-                    if(aura && aura->GetId() == VEHICLE_SPELL_RIDE_HARDCODED)
-                        continue;
-
-                    me->RemoveOwnedAura(aurIter);
-                    aurasremoved++;
-                }
-                if(aurasremoved == 0) break; // Beende Schleife wenn keine Auren mehr entfernt wurden 
-            }
-        }
-
         void Reset()
         {
             events.Reset();
@@ -760,7 +729,7 @@ public:
             me->SetStandState(UNIT_STAND_STATE_STAND);
             me->SetReactState(REACT_PASSIVE);
             //me->RemoveAllAuras();
-            RemoveAllAurasButNotPassenger();
+            me->RemoveAllAurasExceptVehicle();
             phase = PHASE_NULL;
             events.SetPhase(PHASE_NULL);
 
@@ -797,7 +766,7 @@ public:
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
                     me->AttackStop();
                     me->SetReactState(REACT_PASSIVE);
-                    RemoveAllAurasButNotPassenger();
+                    me->RemoveAllAurasExceptVehicle();
                     //me->RemoveAllAuras();
                     me->SetHealth(me->GetMaxHealth());
                     events.SetPhase(PHASE_NULL);
@@ -817,7 +786,7 @@ public:
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
                     me->AttackStop();
                     me->SetReactState(REACT_PASSIVE);
-                    RemoveAllAurasButNotPassenger();
+                    me->RemoveAllAurasExceptVehicle();
                     //me->RemoveAllAuras();
                     me->SetHealth(me->GetMaxHealth());
                     me->SetStandState(UNIT_STAND_STATE_DEAD);
