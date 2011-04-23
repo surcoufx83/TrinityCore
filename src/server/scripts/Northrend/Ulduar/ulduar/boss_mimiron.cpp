@@ -729,7 +729,7 @@ public:
             me->SetStandState(UNIT_STAND_STATE_STAND);
             me->SetReactState(REACT_PASSIVE);
             //me->RemoveAllAuras();
-            me->RemoveAllAurasExceptVehicle();
+            me->RemoveAllAurasExceptType(SPELL_AURA_CONTROL_VEHICLE);
             phase = PHASE_NULL;
             events.SetPhase(PHASE_NULL);
 
@@ -766,7 +766,7 @@ public:
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
                     me->AttackStop();
                     me->SetReactState(REACT_PASSIVE);
-                    me->RemoveAllAurasExceptVehicle();
+                    me->RemoveAllAurasExceptType(SPELL_AURA_CONTROL_VEHICLE);
                     //me->RemoveAllAuras();
                     me->SetHealth(me->GetMaxHealth());
                     events.SetPhase(PHASE_NULL);
@@ -786,7 +786,7 @@ public:
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
                     me->AttackStop();
                     me->SetReactState(REACT_PASSIVE);
-                    me->RemoveAllAurasExceptVehicle();
+                    me->RemoveAllAurasExceptType(SPELL_AURA_CONTROL_VEHICLE);
                     //me->RemoveAllAuras();
                     me->SetHealth(me->GetMaxHealth());
                     me->SetStandState(UNIT_STAND_STATE_DEAD);
@@ -1017,37 +1017,6 @@ public:
         Phases phase;
         EventMap events;
 
-        void RemoveAllAurasButNotPassenger()
-        {
-            while (!me->GetAppliedAuras().empty() || !me->GetOwnedAuras().empty())
-            {
-                uint8 aurasremoved = 0; // Brauche wir nun um Schleife zu beenden
-
-                Unit::AuraApplicationMap::iterator aurAppIter;
-                for (aurAppIter = me->GetAppliedAuras().begin(); aurAppIter != me->GetAppliedAuras().end(); aurAppIter++)
-                {
-                    Aura const * aura = aurAppIter->second->GetBase();
-                    if(aura && aura->GetId() == VEHICLE_SPELL_RIDE_HARDCODED)
-                        continue;
-
-                    me->_UnapplyAura(aurAppIter, AURA_REMOVE_BY_DEFAULT);
-                    aurasremoved++;
-                }
-
-                Unit::AuraMap::iterator aurIter;
-                for (aurIter = me->GetOwnedAuras().begin(); aurIter != me->GetOwnedAuras().end(); aurIter++)
-                {
-                    Aura const * aura = aurIter->second;
-                    if(aura && aura->GetId() == VEHICLE_SPELL_RIDE_HARDCODED)
-                        continue;
-
-                    me->RemoveOwnedAura(aurIter);
-                    aurasremoved++;
-                }
-                if(aurasremoved == 0) break; // Beende Schleife wenn keine Auren mehr entfernt wurden 
-            }
-        }
-
         void Reset()
         {
             events.Reset();
@@ -1056,7 +1025,7 @@ public:
             me->SetStandState(UNIT_STAND_STATE_STAND);
             //me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STAND);
             me->SetVisible(false);
-            me->RemoveAllAuras();
+            me->RemoveAllAurasExceptType(SPELL_AURA_CONTROL_VEHICLE);
             phase = PHASE_NULL;
             events.SetPhase(PHASE_NULL);
         }
@@ -1129,7 +1098,7 @@ public:
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
                     me->AttackStop();
                     me->GetMotionMaster()->Initialize();
-                    RemoveAllAurasButNotPassenger();
+                    me->RemoveAllAurasExceptType(SPELL_AURA_CONTROL_VEHICLE);
                     //me->RemoveAllAuras();
                     me->SetHealth(me->GetMaxHealth());
                     me->SetStandState(UNIT_STAND_STATE_DEAD);
@@ -1145,7 +1114,7 @@ public:
                     damage = 0;
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
                     me->AttackStop();
-                    RemoveAllAurasButNotPassenger();
+                    me->RemoveAllAurasExceptType(SPELL_AURA_CONTROL_VEHICLE);
                     //me->RemoveAllAuras();
                     me->SetHealth(me->GetMaxHealth());
                     me->SetStandState(UNIT_STAND_STATE_DEAD);
@@ -1268,37 +1237,6 @@ public:
         EventMap events;
         uint8 spawnedAdds;
 
-        void RemoveAllAurasButNotPassenger()
-        {
-            while (!me->GetAppliedAuras().empty() || !me->GetOwnedAuras().empty())
-            {
-                uint8 aurasremoved = 0; // Brauche wir nun um Schleife zu beenden
-
-                Unit::AuraApplicationMap::iterator aurAppIter;
-                for (aurAppIter = me->GetAppliedAuras().begin(); aurAppIter != me->GetAppliedAuras().end(); aurAppIter++)
-                {
-                    Aura const * aura = aurAppIter->second->GetBase();
-                    if(aura && aura->GetId() == VEHICLE_SPELL_RIDE_HARDCODED)
-                        continue;
-
-                    me->_UnapplyAura(aurAppIter, AURA_REMOVE_BY_DEFAULT);
-                    aurasremoved++;
-                }
-
-                Unit::AuraMap::iterator aurIter;
-                for (aurIter = me->GetOwnedAuras().begin(); aurIter != me->GetOwnedAuras().end(); aurIter++)
-                {
-                    Aura const * aura = aurIter->second;
-                    if(aura && aura->GetId() == VEHICLE_SPELL_RIDE_HARDCODED)
-                        continue;
-
-                    me->RemoveOwnedAura(aurIter);
-                    aurasremoved++;
-                }
-                if(aurasremoved == 0) break; // Beende Schleife wenn keine Auren mehr entfernt wurden 
-            }
-        }
-
         void Reset()
         {
             events.Reset();
@@ -1306,7 +1244,7 @@ public:
             me->SetReactState(REACT_PASSIVE);
             me->SetStandState(UNIT_STAND_STATE_STAND);
             me->SetVisible(false);
-            me->RemoveAllAuras();
+            me->RemoveAllAurasExceptType(SPELL_AURA_CONTROL_VEHICLE);
             me->SetFlying(true);
             phase = PHASE_NULL;
             events.SetPhase(PHASE_NULL);
@@ -1481,7 +1419,7 @@ public:
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
                     me->SetReactState(REACT_PASSIVE);
                     me->AttackStop();
-                    RemoveAllAurasButNotPassenger();
+                    me->RemoveAllAurasExceptType(SPELL_AURA_CONTROL_VEHICLE);
                     //me->RemoveAllAuras();
                     me->SetHealth(me->GetMaxHealth());
                     events.CancelEvent(EVENT_SUMMON_BOTS);
@@ -1498,7 +1436,7 @@ public:
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
                     me->AttackStop();
                     me->SetReactState(REACT_PASSIVE);
-                    RemoveAllAurasButNotPassenger();
+                    me->RemoveAllAurasExceptType(SPELL_AURA_CONTROL_VEHICLE);
                     //me->RemoveAllAuras();
                     me->SetHealth(me->GetMaxHealth());
                     me->SetStandState(UNIT_STAND_STATE_DEAD);
