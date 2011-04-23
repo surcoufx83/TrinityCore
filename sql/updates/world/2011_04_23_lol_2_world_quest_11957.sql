@@ -1,4 +1,4 @@
--- Fix Multiple Spawn of Saragosa (26231) on ItemUse (35690- spell 46793) 
+-- Fix Multiple Spawn of Saragosa (26231) -> Remove Item (35690) on summon Saragosa 
 UPDATE creature_template SET AIName = 'SmartAI' WHERE entry = 26231;
 -- remove item on summon creature
 DELETE FROM `smart_scripts` WHERE `source_type` = 0 AND `entryorguid` = 26231;
