@@ -88,6 +88,8 @@ public:
                 // TODO: use a script text
                 me->MonsterTextEmote(EMOTE_NEARBY, 0, true);
             }
+            else if (!me->isInCombat() && who->ToPlayer() && who->GetPositionZ() < me->GetPositionZ() + 10.0f && me->IsWithinLOSInMap(who))
+                AttackStart(who);
             else
                 BossAI::MoveInLineOfSight(who);
         }
