@@ -2327,7 +2327,17 @@ void Spell::SelectEffectTargets(uint32 i, uint32 cur)
                     if (modOwner) modOwner->ApplySpellMod(m_spellInfo->Id, SPELLMOD_RANGE, range, this);
 
                     if (WorldObject *target = SearchNearbyTarget(range, SPELL_TARGETS_ENTRY, SpellEffIndex(i)))
+                    {
                         m_targets.setDst(*target);
+
+                        // Cosmic Smash Hack
+                        if (Unit* _target = target->ToUnit())
+                        {
+                            std::list<Unit*> unitList;
+                            unitList.push_back(_target);
+                            CallScriptAfterUnitTargetSelectHandlers(unitList, SpellEffIndex(i));
+                        }
+                    }
                     break;
                 }
             }

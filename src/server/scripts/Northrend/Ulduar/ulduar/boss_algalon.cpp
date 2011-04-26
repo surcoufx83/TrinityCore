@@ -129,10 +129,6 @@ public:
             tempSpell = GET_SPELL(RAID_MODE(62311, 64596));
             if (tempSpell)
                 tempSpell->rangeIndex = 13;
-
-            //tempSpell = GET_SPELL(64597);
-            //if (tempSpell)
-            //    tempSpell->EffectImplicitTargetA[0] = TARGET_UNIT_NEARBY_ENTRY;
         }
 
         uint8 starCount;
@@ -655,6 +651,37 @@ class spell_cosmic_smash_dmg : public SpellScriptLoader
         }
 };
 
+// prevent target gets selected twice after spell destination is set
+class spell_cosmic_smash_missile_target : public SpellScriptLoader
+{
+    public:
+        spell_cosmic_smash_missile_target() : SpellScriptLoader("spell_cosmic_smash_missile_target") { }
+
+        class spell_cosmic_smash_missile_target_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_cosmic_smash_missile_target_SpellScript);
+
+            void FilterTarget(std::list<Unit*>& unitList)
+            {
+                for (std::list<Unit*>::iterator itr = unitList.begin() ; itr != unitList.end(); ++itr)
+                {
+                    if ((*itr)->isAlive())
+                        (*itr)->Kill(*itr);
+                }
+            }
+
+            void Register()
+            {
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_cosmic_smash_missile_target_SpellScript::FilterTarget, EFFECT_0, TARGET_DST_NEARBY_ENTRY);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_cosmic_smash_missile_target_SpellScript();
+        }
+};
+
 void AddSC_boss_algalon()
 {
     new boss_algalon();
@@ -666,4 +693,5 @@ void AddSC_boss_algalon()
     new spell_cosmic_smash_summon_trigger();
     new spell_cosmic_smash_summon_target();
     new spell_cosmic_smash_dmg();
+    new spell_cosmic_smash_missile_target();
 }

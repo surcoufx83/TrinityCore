@@ -3811,6 +3811,7 @@ void SpellMgr::LoadSpellCustomAttr()
         case 54171: // Divine Storm
         case 60939: // Surge of Power
         case 61693: // Arcane Storm
+        case 64598: // Cosmic Smash
             spellInfo->MaxAffectedTargets = 3;
             count++;
             break;
