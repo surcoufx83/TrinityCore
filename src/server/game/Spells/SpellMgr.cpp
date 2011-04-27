@@ -3756,6 +3756,8 @@ void SpellMgr::LoadSpellCustomAttr()
         case 64607: // Arcane Barrage
         case 47731: // Critter
         case 62301: // Cosmic Smash
+        case 61916: // Lightning Whirl 10
+        case 63482: // Lightning Whirl 25
             spellInfo->MaxAffectedTargets = 1;
             count++;
             break;

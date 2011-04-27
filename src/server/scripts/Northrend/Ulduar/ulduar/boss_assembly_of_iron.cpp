@@ -214,6 +214,7 @@ public:
             events.Reset();
             phase = 0;
             me->RemoveAllAuras();
+            me->RemoveLootMode(1);
             if (pInstance)
             {
                 pInstance->SetBossState(TYPE_ASSEMBLY, NOT_STARTED);
@@ -255,6 +256,7 @@ public:
             if (damage >= me->GetHealth())
             {
                 bool has_supercharge = false;
+                bool allowLoot = true;
 
                 if (Creature* Brundir = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_BRUNDIR) : 0))
                 {
@@ -262,8 +264,11 @@ public:
                     {
                         Brundir->SetFullHealth();
                         has_supercharge = UpdateSupercharge(Brundir);
+                        allowLoot = false;
                     }
                 }
+                else
+                    allowLoot = false;
 
                 if (Creature* Molgeim = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_MOLGEIM) : 0))
                 {
@@ -271,11 +276,17 @@ public:
                     {
                         Molgeim->SetFullHealth();
                         has_supercharge = UpdateSupercharge(Molgeim);
+                        allowLoot = false;
                     }
                 }
+                else
+                    allowLoot = false;
 
                 if (!has_supercharge)
                     DoCast(SPELL_SUPERCHARGE);
+
+                if (allowLoot)
+                    me->ResetLootMode();
             }
         }
 
@@ -365,6 +376,7 @@ public:
 
             events.Reset();
             me->RemoveAllAuras();
+            me->RemoveLootMode(1);
             phase = 0;
         }
 
@@ -402,6 +414,7 @@ public:
             if (damage >= me->GetHealth())
             {
                 bool has_supercharge = false;
+                bool allowLoot = true;
 
                 if (Creature* Steelbreaker = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_STEELBREAKER) : 0))
                 {
@@ -409,8 +422,11 @@ public:
                     {
                         Steelbreaker->SetFullHealth();
                         has_supercharge = UpdateSupercharge(Steelbreaker);
+                        allowLoot = false;
                     }
                 }
+                else
+                    allowLoot = false;
 
                 if (Creature* Brundir = Unit::GetCreature((*me), pInstance ? pInstance->GetData64(DATA_BRUNDIR) : 0))
                 {
@@ -418,11 +434,17 @@ public:
                     {
                         Brundir->SetFullHealth();
                         has_supercharge = UpdateSupercharge(Brundir);
+                        allowLoot = false;
                     }
                 }
+                else
+                    allowLoot = false;
 
                 if (!has_supercharge)
                     DoCast(me, SPELL_SUPERCHARGE);
+
+                if (allowLoot)
+                    me->ResetLootMode();
             }
         }
 
@@ -605,6 +627,7 @@ public:
             }
 
             me->RemoveAllAuras();
+            me->RemoveLootMode(1);
             events.Reset();
             phase = 0;
         }
@@ -647,6 +670,7 @@ public:
             if (damage >= me->GetHealth())
             {
                 bool has_supercharge = false;
+                bool allowLoot = true;
 
                 if (Creature* Steelbreaker = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_STEELBREAKER) : 0))
                 {
@@ -654,8 +678,11 @@ public:
                     {
                         Steelbreaker->SetFullHealth();
                         has_supercharge = UpdateSupercharge(Steelbreaker);
+                        allowLoot = false;
                     }
                 }
+                else
+                    allowLoot = false;
 
                 if (Creature* Molgeim = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_MOLGEIM) : 0))
                 {
@@ -663,11 +690,17 @@ public:
                     {
                         Molgeim->SetFullHealth();
                         has_supercharge = UpdateSupercharge(Molgeim);
+                        allowLoot = false;
                     }
                 }
+                else
+                    allowLoot = false;
 
                 if (!has_supercharge)
                     DoCast(SPELL_SUPERCHARGE);
+
+                if (allowLoot)
+                    me->ResetLootMode();
             }
         }
 
