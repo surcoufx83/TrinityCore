@@ -2794,7 +2794,10 @@ DiminishingGroup GetDiminishingReturnsGroupForSpell(SpellEntry const* spellproto
             return DIMINISHING_NONE;
         case SPELLFAMILY_GENERIC:
             // some generic arena related spells have by some strange reason MECHANIC_TURN
-            if  (spellproto->Mechanic == MECHANIC_TURN)
+            if (spellproto->Mechanic == MECHANIC_TURN)
+                return DIMINISHING_NONE;
+            // Screams of the Dead
+            if (spellproto->Id == 51750)
                 return DIMINISHING_NONE;
             break;
         case SPELLFAMILY_MAGE:
