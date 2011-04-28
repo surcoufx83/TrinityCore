@@ -54,7 +54,8 @@ enum Creatures
     CREATURE_DARK_MATTER            = 33089,
     CREATURE_AZEROTH                = 34246,
     CREATURE_COSMIC_SMASH_TRIGGER   = 33104,
-    CREATURE_COSMIC_SMASH_TARGET    = 33105
+    CREATURE_COSMIC_SMASH_TARGET    = 33105,
+    CREATURE_UNLEASHED_DARK_MATTER  = 34097
 };
 
 enum Yells
@@ -91,7 +92,8 @@ enum Events
     EVENT_PHASEPUNCH,
     EVENT_QUANTUMSTRIKE,
     EVENT_COLLAPSINGSTAR,
-    EVENT_LIVINGCONSTELLATION
+    EVENT_LIVINGCONSTELLATION,
+    EVENT_DARKMATTER
 };
 
 static Position Locations[]=
@@ -99,6 +101,14 @@ static Position Locations[]=
     {1632.36f, -310.09f, 417.33f, 0.0f},  // room center
     {1632.44f, -301.55f, 417.33f, 0.0f},  // azeroth
     {1632.36f, -310.09f, 385.0f, 0.0f}    // cosmic smash trigger
+};
+
+static Position collapsingLocations[]=
+{
+    {1616.25f, -293.081f, 417.321f, 5.51543f},
+    {1647.26f, -292.592f, 417.322f, 3.93168f},
+    {1617.38f, -324.447f, 417.321f, 0.81718f},
+    {1647.45f, -323.651f, 417.321f, 2.39740f}
 };
 
 static Position constellationLocations[]=
@@ -151,6 +161,9 @@ public:
             starCount = 0;
 
             DoCast(me, SPELL_DUAL_WIELD, true);
+            me->SetAttackTime(OFF_ATTACK, 1400);
+            me->SetStatFloatValue(UNIT_FIELD_MINOFFHANDDAMAGE, float(RAID_MODE(15000, 30000)));
+            me->SetStatFloatValue(UNIT_FIELD_MAXOFFHANDDAMAGE, float(RAID_MODE(18000, 35000)));
         }
 
         void EnterCombat(Unit* who)
@@ -201,17 +214,12 @@ public:
             DoScriptText(SAY_SUMMON_COLLAPSING_STAR, me);
             for (uint8 i = starCount; i < 4; ++i)
             {
-                float x, y, angle;
-                angle = float(2 * M_PI * rand_norm());
-                x = Locations[0].GetPositionX() + 15.0f * cos(angle);
-                y = Locations[0].GetPositionY() + 15.0f * sin(angle);
-
-                if (Creature* collapsingStar = me->SummonCreature(CREATURE_COLLAPSING_STAR, x, y, Locations[0].GetPositionZ(), 0,
+                if (Creature* collapsingStar = me->SummonCreature(CREATURE_COLLAPSING_STAR, collapsingLocations[i],
                     TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3*IN_MILLISECONDS))
                 {
                     ++starCount;
                     collapsingStar->SetReactState(REACT_PASSIVE);
-                    collapsingStar->GetMotionMaster()->MoveRandom(20.0f);
+                    collapsingStar->GetMotionMaster()->MoveRandom(15.0f);
                     collapsingStar->SetInCombatWithZone();
                 }
             }
@@ -227,6 +235,19 @@ public:
                     livingConstellation->SetInCombatWithZone();
                     if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
                         livingConstellation->AI()->AttackStart(target);
+                }
+            }
+        }
+
+        void SummonUnleashedDarkMatter()
+        {
+            for (uint8 i = 0; i < 4; ++i)
+            {
+                if (Creature* darkMatter = me->SummonCreature(CREATURE_UNLEASHED_DARK_MATTER, collapsingLocations[i],
+                    TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3*IN_MILLISECONDS))
+                {
+                    if (Unit* target = SelectTarget(SELECT_TARGET_TOPAGGRO, 0))
+                        darkMatter->AI()->AttackStart(target);
                 }
             }
         }
@@ -273,7 +294,11 @@ public:
                 summons.DespawnAll();
                 events.CancelEvent(EVENT_COLLAPSINGSTAR);
                 events.CancelEvent(EVENT_LIVINGCONSTELLATION);
-                //SummonUnstableBlackHoles();
+                events.ScheduleEvent(EVENT_DARKMATTER, 5*IN_MILLISECONDS);
+
+                // summon 4 unstable black holes
+                for (uint8 i = 0; i < 4; ++i)
+                    me->SummonCreature(CREATURE_BLACK_HOLE, collapsingLocations[i]);
             }
 
             if (HealthBelowPct(2))
@@ -364,6 +389,10 @@ public:
                         SummonLivingConstallations();
                         events.ScheduleEvent(EVENT_LIVINGCONSTELLATION, 50*IN_MILLISECONDS);
                         break;
+                    case EVENT_DARKMATTER:
+                        SummonUnleashedDarkMatter();
+                        events.ScheduleEvent(EVENT_DARKMATTER, 20*IN_MILLISECONDS);
+                        break;
                     case EVENT_BERSERK:
                         DoScriptText(SAY_BERSERK, me);
                         DoCast(me, SPELL_BERSERK, true);
@@ -379,7 +408,7 @@ public:
             }
 
             DoMeleeAttackIfReady();
-            EnterEvadeIfOutOfCombatArea(diff);
+            //EnterEvadeIfOutOfCombatArea(diff);
         }
     };
 };
