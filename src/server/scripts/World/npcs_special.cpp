@@ -2735,7 +2735,6 @@ void AddSC_npcs_special()
     new npc_injured_patient();
     new npc_garments_of_quests();
     new npc_guardian();
-    new npc_kingdom_of_dalaran_quests();
     new npc_mount_vendor();
     new npc_rogue_trainer();
     new npc_sayge();
