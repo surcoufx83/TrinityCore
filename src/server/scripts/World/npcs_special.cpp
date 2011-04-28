@@ -1119,50 +1119,6 @@ public:
 };
 
 /*######
-## npc_kingdom_of_dalaran_quests
-######*/
-
-enum eKingdomDalaran
-{
-    SPELL_TELEPORT_DALARAN  = 53360,
-    ITEM_KT_SIGNET          = 39740,
-    QUEST_MAGICAL_KINGDOM_A = 12794,
-    QUEST_MAGICAL_KINGDOM_H = 12791,
-    QUEST_MAGICAL_KINGDOM_N = 12796
-};
-
-#define GOSSIP_ITEM_TELEPORT_TO "I am ready to be teleported to Dalaran."
-
-class npc_kingdom_of_dalaran_quests : public CreatureScript
-{
-public:
-    npc_kingdom_of_dalaran_quests() : CreatureScript("npc_kingdom_of_dalaran_quests") { }
-    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
-    {
-        if (pCreature->isQuestGiver())
-            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
-
-        if (pPlayer->HasItemCount(ITEM_KT_SIGNET,1) && (!pPlayer->GetQuestRewardStatus(QUEST_MAGICAL_KINGDOM_A) ||
-            !pPlayer->GetQuestRewardStatus(QUEST_MAGICAL_KINGDOM_H) || !pPlayer->GetQuestRewardStatus(QUEST_MAGICAL_KINGDOM_N)))
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TELEPORT_TO, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-
-        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
-        return true;
-    }
-
-    bool OnGossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
-    {
-        pPlayer->PlayerTalkClass->ClearMenus();
-        if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-        {
-            pPlayer->CLOSE_GOSSIP_MENU();
-            pPlayer->CastSpell(pPlayer,SPELL_TELEPORT_DALARAN,false);
-        }
-        return true;
-    }
-};
-
-/*######
 ## npc_mount_vendor
 ######*/
 
