@@ -97,13 +97,32 @@ enum PreAdds
     MERCENARY_SOLDIER_H
 };
 
+enum  PreAddSpells
+{
+    SPELL_ACID_BREATH               = 62315,
+    SPELL_ACID_BREATH_H             = 62415,
+    SPELL_SWEEP                     = 62316,
+    SPELL_SWEEP_H                   = 62417,
+
+    SPELL_DEVASTATE                 = 62317,
+    SPELL_HEROIC_SWIPE              = 62444,
+
+    SPELL_BARBED_SHOT               = 62318,
+    SPELL_SHOOT                     = 16496,
+
+    SPELL_RENEW                     = 62333,
+    SPELL_RENEW_H                   = 62441,
+    SPELL_GREATER_HEAL              = 62334,
+    SPELL_GREATER_HEAL_H            = 62442,
+};
+
 const uint32 PRE_PHASE_ADD[]                    = {32882, 32908, 32885, 32886, 32907, 32883};
 #define SPELL_PRE_PRIMARY(i)                    RAID_MODE(SPELL_PRE_PRIMARY_N[i],SPELL_PRE_PRIMARY_H[i])
-const uint32 SPELL_PRE_PRIMARY_N[]              = {62315, 62317, 62318, 62333, 62317, 62318};
-const uint32 SPELL_PRE_PRIMARY_H[]              = {62415, 62317, 62318, 62441, 62317, 62318};
+const uint32 SPELL_PRE_PRIMARY_N[]              = {SPELL_ACID_BREATH,   SPELL_DEVASTATE,    SPELL_BARBED_SHOT, SPELL_RENEW,    SPELL_DEVASTATE, SPELL_BARBED_SHOT};
+const uint32 SPELL_PRE_PRIMARY_H[]              = {SPELL_ACID_BREATH_H, SPELL_DEVASTATE,    SPELL_BARBED_SHOT, SPELL_RENEW_H,  SPELL_DEVASTATE, SPELL_BARBED_SHOT};
 #define SPELL_PRE_SECONDARY(i)                  RAID_MODE(SPELL_PRE_SECONDARY_N[i],SPELL_PRE_SECONDARY_H[i])
-const uint32 SPELL_PRE_SECONDARY_N[]            = {62316, 62444, 16496, 62334, 62444, 62318};
-const uint32 SPELL_PRE_SECONDARY_H[]            = {62417, 62444, 16496, 62442, 62444, 62318};
+const uint32 SPELL_PRE_SECONDARY_N[]            = {SPELL_SWEEP,     SPELL_HEROIC_SWIPE,     SPELL_SHOOT,    SPELL_GREATER_HEAL,     SPELL_HEROIC_SWIPE, SPELL_SHOOT};
+const uint32 SPELL_PRE_SECONDARY_H[]            = {SPELL_SWEEP_H,   SPELL_HEROIC_SWIPE,     SPELL_SHOOT,    SPELL_GREATER_HEAL_H,   SPELL_HEROIC_SWIPE, SPELL_SHOOT};
 #define SPELL_HOLY_SMITE                        RAID_MODE(62335, 62443)
 
 #define INCREASE_PREADDS_COUNT                  1
