@@ -2359,7 +2359,7 @@ public:
             
             if(!itemName.size())
             {   
-                const ItemPrototype *item = sObjectMgr->GetItemPrototype(itemid);
+                const ItemTemplate *item = sObjectMgr->GetItemTemplate(itemid);
                 if(!item)
                     continue;
                 

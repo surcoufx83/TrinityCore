@@ -63,7 +63,7 @@ public:
             Spawn = false; 
         }
 
-        void SpellHit(Unit * /*Hitter*/, const SpellEntry *Spellkind)
+        void SpellHit(Unit * Hitter, const SpellEntry *Spellkind)
         {
             if (Spellkind->Id == 32001 && !Spawn)
             {
