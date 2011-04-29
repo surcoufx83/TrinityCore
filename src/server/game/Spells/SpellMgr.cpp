@@ -2793,14 +2793,10 @@ DiminishingGroup GetDiminishingReturnsGroupForSpell(SpellEntry const* spellproto
             // some generic arena related spells have by some strange reason MECHANIC_TURN
             if (spellproto->Mechanic == MECHANIC_TURN)
                 return DIMINISHING_NONE;
-            // Screams of the Dead
-            if (spellproto->Id == 51750)
-                return DIMINISHING_NONE;
             switch (spellproto->Id)
             {
-                // Noblegarden Bunny transforms
-                case 61716:
-                case 61734:
+                // Screams of the Dead
+                case 51750:
                     return DIMINISHING_NONE;
                 default:
                     break;
