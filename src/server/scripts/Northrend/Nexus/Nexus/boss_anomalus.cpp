@@ -171,7 +171,7 @@ public:
                 ++uiHealthAmountModifier;
                 DoScriptText(SAY_SHIELD, me);
                 DoCast(me, SPELL_RIFT_SHIELD);
-                Creature* Rift = me->SummonCreature(MOB_CHAOTIC_RIFT, RiftLocation[urand(0,5)], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1*IN_MILLISECONDS);
+                Creature* Rift = me->SummonCreature(MOB_CHAOTIC_RIFT, RiftLocation[urand(0, 5)], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1*IN_MILLISECONDS);
                 if (Rift)
                 {
                     me->AddAura(SPELL_CHARGE_RIFT,Rift);

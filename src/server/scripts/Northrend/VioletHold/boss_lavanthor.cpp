@@ -130,7 +130,7 @@ public:
                 if (uiCauterizingFlamesTimer <= diff)
                 {
                     DoCast(me->getVictim(), SPELL_CAUTERIZING_FLAMES);
-                    uiCauterizingFlamesTimer = urand(10000,16000);
+                    uiCauterizingFlamesTimer = urand(10000, 16000);
                 } else uiCauterizingFlamesTimer -= diff;
             }
 

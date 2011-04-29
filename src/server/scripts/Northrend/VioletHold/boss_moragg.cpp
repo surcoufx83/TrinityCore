@@ -166,7 +166,7 @@ public:
                         me->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
 
                     pInstance->SetData(DATA_2ND_BOSS_EVENT, DONE);
-                    pInstance->SetData(DATA_WAVE_COUNT,13);
+                    pInstance->SetData(DATA_WAVE_COUNT, 13);
                 }
             }
         }

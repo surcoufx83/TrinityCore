@@ -142,7 +142,7 @@ public:
                 bEventInProgress = true;
                 bIsUndead = true;
 
-                DoScriptText(YELL_DEAD_1,me);
+                DoScriptText(YELL_DEAD_1, me);
             }
 
             if (bEventInProgress)
@@ -160,12 +160,12 @@ public:
             me->SetInCombatWith(me->getVictim());
             me->GetMotionMaster()->MoveChase(me->getVictim());
 
-            DoScriptText(YELL_AGGRO_2,me);
+            DoScriptText(YELL_AGGRO_2, me);
         }
 
         void EnterCombat(Unit * /*who*/)
         {
-            DoScriptText(YELL_AGGRO_1,me);
+            DoScriptText(YELL_AGGRO_1, me);
 
             if (pInstance)
                 pInstance->SetData(DATA_INGVAR_EVENT, IN_PROGRESS);
@@ -173,7 +173,7 @@ public:
 
         void JustDied(Unit* /*killer*/)
         {
-            DoScriptText(YELL_DEAD_2,me);
+            DoScriptText(YELL_DEAD_2, me);
 
             if (pInstance)
                 pInstance->SetData(DATA_INGVAR_EVENT, DONE);
@@ -182,9 +182,9 @@ public:
         void KilledUnit(Unit * /*victim*/)
         {
             if (bIsUndead)
-                DoScriptText(YELL_KILL_1,me);
+                DoScriptText(YELL_KILL_1, me);
             else
-                DoScriptText(YELL_KILL_2,me);
+                DoScriptText(YELL_KILL_2, me);
         }
 
         void UpdateAI(const uint32 diff)
@@ -257,7 +257,7 @@ public:
                         Unit *pTarget = SelectTarget(SELECT_TARGET_TOPAGGRO, 1);
                         if (pTarget)
                         {
-                            me->SummonCreature(ENTRY_THROW_TARGET,pTarget->GetPositionX(),pTarget->GetPositionY(),pTarget->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN,2000);
+                            me->SummonCreature(ENTRY_THROW_TARGET, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 2000);
 
                             DoCast(me, SPELL_SHADOW_AXE_SUMMON);
                         }
@@ -313,7 +313,7 @@ public:
             pInstance = c->GetInstanceScript();
         }
 
-        float x,y,z;
+        float x, y, z;
         InstanceScript* pInstance;
         uint32 uiResurectTimer;
         uint32 uiResurectPhase;
@@ -326,13 +326,13 @@ public:
             me->SetSpeed(MOVE_WALK , 1.0f);
             // me->SetSpeed(MOVE_FLIGHT , 1.0f);
 
-            me->GetPosition(x,y,z);
-            DoTeleportTo(x+1,y,z+30);
+            me->GetPosition(x, y, z);
+            DoTeleportTo(x+1, y, z+30);
 
             Unit* ingvar = Unit::GetUnit(*me, pInstance ? pInstance->GetData64(DATA_INGVAR) : 0);
             if (ingvar)
             {
-                me->GetMotionMaster()->MovePoint(1,x,y,z+15);
+                me->GetMotionMaster()->MovePoint(1, x, y, z+15);
                 // DoScriptText(YELL_RESSURECT,me);
             }
         }
@@ -348,14 +348,14 @@ public:
                 {
                 case 1:
                     ingvar->RemoveAura(SPELL_SUMMON_BANSHEE);
-                    ingvar->CastSpell(ingvar,SPELL_SCOURG_RESURRECTION_DUMMY,true);
+                    ingvar->CastSpell(ingvar, SPELL_SCOURG_RESURRECTION_DUMMY, true);
                     DoCast(ingvar, SPELL_SCOURG_RESURRECTION_BEAM);
                     uiResurectTimer = 8000;
                     uiResurectPhase = 1;
                     break;
                 case 2:
                     me->SetVisible(false);
-                    me->DealDamage(me,me->GetHealth());
+                    me->DealDamage(me, me->GetHealth());
                     me->RemoveCorpse();
                     break;
                 }
@@ -378,7 +378,7 @@ public:
                         if (ingvar)
                         {
                             ingvar->SetStandState(UNIT_STAND_STATE_STAND);
-                            ingvar->CastSpell(ingvar,SPELL_SCOURG_RESURRECTION_HEAL,false);
+                            ingvar->CastSpell(ingvar, SPELL_SCOURG_RESURRECTION_HEAL, false);
                         }
                         uiResurectTimer = 3000;
                         uiResurectPhase = 2;
@@ -392,7 +392,7 @@ public:
                             if (boss_ingvar_the_plunderer::boss_ingvar_the_plundererAI* pAI = CAST_AI(boss_ingvar_the_plunderer::boss_ingvar_the_plundererAI, ingvar->AI()))
                                 pAI->StartZombiePhase();
 
-                            me->GetMotionMaster()->MovePoint(2,x+1,y,z+30);
+                            me->GetMotionMaster()->MovePoint(2, x+1, y, z+30);
                             ++uiResurectPhase;
                             uiResurectTimer = 0;
                         }

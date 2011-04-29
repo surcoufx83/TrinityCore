@@ -77,7 +77,7 @@ public:
         {
             pInstance = c->GetInstanceScript();
             if (pInstance)
-                DoScriptText(SAY_SPAWN,me);
+                DoScriptText(SAY_SPAWN, me);
         }
 
         uint32 uiCurseFleshTimer;

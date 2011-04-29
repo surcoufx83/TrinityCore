@@ -110,7 +110,7 @@ public:
             _EnterCombat();
             Enraged = false;
             EncounterTime = 0;
-            DoScriptText(RAND(SAY_AGGRO_1,SAY_AGGRO_2), me);
+            DoScriptText(RAND(SAY_AGGRO_1, SAY_AGGRO_2), me);
             events.ScheduleEvent(EVENT_HATEFUL, 1200);
             events.ScheduleEvent(EVENT_BERSERK, 360000);
             if (instance)

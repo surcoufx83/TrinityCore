@@ -62,7 +62,7 @@ EndScriptData */
 
 struct Locations
 {
-    float x,y,z;
+    float x, y, z;
 };
 
 static Locations TeleportPoint[]=

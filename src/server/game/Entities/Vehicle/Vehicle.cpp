@@ -295,7 +295,7 @@ bool Vehicle::AddPassenger(Unit *unit, int8 seatId)
             if (Unit* passenger = ObjectAccessor::GetUnit(*GetBase(), seat->second.passenger))
                 passenger->ExitVehicle();
             else
-                seat->second.passenger = NULL;
+                seat->second.passenger = 0;
         }
 
         ASSERT(!seat->second.passenger);

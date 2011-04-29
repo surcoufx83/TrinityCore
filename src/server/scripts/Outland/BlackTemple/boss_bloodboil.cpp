@@ -157,7 +157,7 @@ public:
             DoCast(me,SPELL_ACIDIC_WOUND,true);
 
             me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, false);
-            me->ApplySpellImmune(0, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, false);
+            me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, false);
         }
 
         void EnterCombat(Unit * /*who*/)
@@ -408,7 +408,7 @@ public:
                         me->AddThreat(target, 50000000.0f);
                         target->CastSpell(me, SPELL_TAUNT_GURTOGG, true);
                         me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
-                        me->ApplySpellImmune(0, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, true);
+                        me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, true);
 
                         // If VMaps are disabled, this spell can call the whole instance
                         DoCast(me, SPELL_INSIGNIFIGANCE, true);
@@ -444,7 +444,7 @@ public:
                     EjectTimer += 2000;
                     PhaseChangeTimer = 65000;
                     me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, false);
-                    me->ApplySpellImmune(0, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, false);
+                    me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, false);
                 }
             }else PhaseChangeTimer -= diff;
 

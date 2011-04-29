@@ -88,7 +88,7 @@ EndScriptData */
 
 struct Position2d
 {
-    float x,y;
+    float x, y;
 };
 
 static Position2d Coords[]=
@@ -412,7 +412,7 @@ public:
                         DoScriptText(DESI_SAY_AFTER, Essence);
                     }
                     Essence->DespawnOrUnsummon();
-                    me->SetUInt32Value(UNIT_NPC_EMOTESTATE,0);
+                    me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 0);
                     EssenceGUID = 0;
                     SoulCount = 0;
                     SoulDeathCount = 0;

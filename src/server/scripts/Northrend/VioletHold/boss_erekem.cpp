@@ -73,8 +73,8 @@ public:
         {
             uiBloodlustTimer = 15000;
             uiChainHealTimer = 0;
-            uiEarthShockTimer = urand(2000,8000);
-            uiLightningBoltTimer = urand(5000,10000);
+            uiEarthShockTimer = urand(2000, 8000);
+            uiLightningBoltTimer = urand(5000, 10000);
             uiEarthShieldTimer = 20000;
             uiBreakBoundsTimer = urand(10000,20000);
 
@@ -259,7 +259,7 @@ public:
         {
             if (victim == me)
                 return;
-            DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2,SAY_SLAY_3), me);
+            DoScriptText(RAND(SAY_SLAY_1, SAY_SLAY_2, SAY_SLAY_3), me);
         }
 
         uint64 GetChainHealTargetGUID()
@@ -313,9 +313,9 @@ public:
 
         void Reset()
         {
-            uiStrikeTimer = urand(4000,8000);
-            uiHowlingScreechTimer = urand(8000,13000);
-            uiGushingWoundTimer = urand(1000,3000);
+            uiStrikeTimer = urand(4000, 8000);
+            uiHowlingScreechTimer = urand(8000, 13000);
+            uiGushingWoundTimer = urand(1000, 3000);
         }
 
         void AttackStart(Unit* pWho)
@@ -344,19 +344,19 @@ public:
             if (uiStrikeTimer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_STRIKE);
-                uiStrikeTimer = urand(4000,8000);
+                uiStrikeTimer = urand(4000, 8000);
             } else uiStrikeTimer -= diff;
 
             if (uiHowlingScreechTimer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_HOWLING_SCREECH);
-                uiHowlingScreechTimer = urand(8000,13000);
+                uiHowlingScreechTimer = urand(8000, 13000);
             } else uiHowlingScreechTimer -= diff;
 
             if (uiGushingWoundTimer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_GUSHING_WOUND);
-                uiGushingWoundTimer = urand(7000,12000);
+                uiGushingWoundTimer = urand(7000, 12000);
             } else uiGushingWoundTimer -= diff;
         }
     };

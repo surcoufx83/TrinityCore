@@ -511,7 +511,7 @@ class spell_pvp_trinket_wotf_shared_cd : public SpellScriptLoader
                     return;
                 SpellEntry const* spellInfo = GetSpellInfo();
 
-                caster->AddSpellCooldown(spellInfo->Id, NULL, time(NULL) + GetSpellRecoveryTime(sSpellStore.LookupEntry(SPELL_WILL_OF_THE_FORSAKEN_COOLDOWN_TRIGGER)) / IN_MILLISECONDS);
+                caster->AddSpellCooldown(spellInfo->Id, 0, time(NULL) + GetSpellRecoveryTime(sSpellStore.LookupEntry(SPELL_WILL_OF_THE_FORSAKEN_COOLDOWN_TRIGGER)) / IN_MILLISECONDS);
                 WorldPacket data(SMSG_SPELL_COOLDOWN, 8+1+4);
                 data << uint64(caster->GetGUID());
                 data << uint8(0);
@@ -711,7 +711,7 @@ class spell_gen_parachute_ic : public SpellScriptLoader
                     return;
 
                 if (target->ToPlayer()->m_movementInfo.fallTime > 2000)
-                    target->CastSpell(target,SPELL_PARACHUTE_IC,true);
+                    target->CastSpell(target, SPELL_PARACHUTE_IC, true);
             }
 
             void Register()

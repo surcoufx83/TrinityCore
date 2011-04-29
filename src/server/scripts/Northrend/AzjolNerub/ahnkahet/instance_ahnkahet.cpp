@@ -193,7 +193,7 @@ public:
                     break;
                 case DATA_PRINCE_TALDARAM_EVENT:
                     if (data == DONE)
-                        HandleGameObject(Prince_TaldaramGate,true);
+                        HandleGameObject(Prince_TaldaramGate, true);
                     m_auiEncounter[1] = data;
                     break;
                 case DATA_JEDOGA_SHADOWSEEKER_EVENT:

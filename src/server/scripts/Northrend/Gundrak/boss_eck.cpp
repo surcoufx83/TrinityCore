@@ -60,7 +60,7 @@ public:
 
         void Reset()
         {
-            uiBerserkTimer = urand(60*IN_MILLISECONDS,90*IN_MILLISECONDS); //60-90 secs according to wowwiki
+            uiBerserkTimer = urand(60*IN_MILLISECONDS, 90*IN_MILLISECONDS); //60-90 secs according to wowwiki
             uiBiteTimer = 5*IN_MILLISECONDS;
             uiSpitTimer = 7*IN_MILLISECONDS;
             uiSpringTimer = 12*IN_MILLISECONDS;
@@ -109,7 +109,7 @@ public:
             if (uiBiteTimer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_ECK_BITE);
-                uiBiteTimer = urand(8*IN_MILLISECONDS,12*IN_MILLISECONDS);
+                uiBiteTimer = urand(8*IN_MILLISECONDS, 12*IN_MILLISECONDS);
             } else uiBiteTimer -= diff;
 
             if (uiSpitTimer <= diff)
@@ -120,7 +120,7 @@ public:
 
             if (uiSpringTimer <= diff)
             {
-                Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM,1);
+                Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1);
                 if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER)
                 {
                     if (me->GetExactDist(pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ()) < 35)
@@ -219,7 +219,7 @@ public:
         {
           /*  if (pInstance)
             {
-                pInstance->SetData64(DATA_RUIN_DWELLER_DIED,me->GetGUID());
+                pInstance->SetData64(DATA_RUIN_DWELLER_DIED, me->GetGUID());
                 if (pInstance->GetData(DATA_ALIVE_RUIN_DWELLERS) == 0)
                     me->SummonCreature(CREATURE_ECK, EckSpawnPoint, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 300*IN_MILLISECONDS);
             } */

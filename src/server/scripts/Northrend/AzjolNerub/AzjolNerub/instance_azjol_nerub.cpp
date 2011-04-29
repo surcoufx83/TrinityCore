@@ -118,7 +118,7 @@ public:
                 case 192395:
                     uiKrikthirDoor = go->GetGUID();
                     if (auiEncounter[0] == DONE)
-                        HandleGameObject(NULL,true,go);
+                        HandleGameObject(0, true, go);
                     break;
                 case 192396:
                     uiAnubarakDoor[0] = go->GetGUID();
@@ -234,7 +234,7 @@ public:
             OUT_LOAD_INST_DATA(in);
 
             char dataHead1, dataHead2;
-            uint16 data0,data1,data2;
+            uint16 data0, data1, data2;
 
             std::istringstream loadStream(in);
             loadStream >> dataHead1 >> dataHead2 >> data0 >> data1 >> data2;

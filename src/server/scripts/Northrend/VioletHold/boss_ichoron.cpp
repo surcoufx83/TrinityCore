@@ -332,7 +332,7 @@ public:
                 pSummoned->SetSpeed(MOVE_RUN, 0.3f);
                 pSummoned->GetMotionMaster()->MoveFollow(me, 0, 0);
                 m_waterElements.push_back(pSummoned->GetGUID());
-                pInstance->SetData64(DATA_ADD_TRASH_MOB,pSummoned->GetGUID());
+                pInstance->SetData64(DATA_ADD_TRASH_MOB, pSummoned->GetGUID());
             }
         }
 
@@ -341,7 +341,7 @@ public:
             if (pSummoned)
             {
                 m_waterElements.remove(pSummoned->GetGUID());
-                pInstance->SetData64(DATA_DEL_TRASH_MOB,pSummoned->GetGUID());
+                pInstance->SetData64(DATA_DEL_TRASH_MOB, pSummoned->GetGUID());
             }
         }
 
@@ -349,7 +349,7 @@ public:
         {
             if (victim == me)
                 return;
-            DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2,SAY_SLAY_3), me);
+            DoScriptText(RAND(SAY_SLAY_1, SAY_SLAY_2, SAY_SLAY_3), me);
         }
     };
 
@@ -379,7 +379,7 @@ public:
         void Reset()
         {
             uiRangeCheck_Timer = 1000;
-            DoCast(me,SPELL_WATER_GLOBULE);
+            DoCast(me, SPELL_WATER_GLOBULE);
         }
 
         void AttackStart(Unit* /*pWho*/)

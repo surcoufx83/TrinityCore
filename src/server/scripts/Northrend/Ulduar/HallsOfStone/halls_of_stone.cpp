@@ -209,10 +209,10 @@ public:
 
             if (pInstance)
             {
-                pInstance->HandleGameObject(pInstance->GetData64(DATA_GO_KADDRAK),false);
-                pInstance->HandleGameObject(pInstance->GetData64(DATA_GO_MARNAK),false);
-                pInstance->HandleGameObject(pInstance->GetData64(DATA_GO_ABEDNEUM),false);
-                pInstance->HandleGameObject(pInstance->GetData64(DATA_GO_SKY_FLOOR),false);
+                pInstance->HandleGameObject(pInstance->GetData64(DATA_GO_KADDRAK), false);
+                pInstance->HandleGameObject(pInstance->GetData64(DATA_GO_MARNAK), false);
+                pInstance->HandleGameObject(pInstance->GetData64(DATA_GO_ABEDNEUM), false);
+                pInstance->HandleGameObject(pInstance->GetData64(DATA_GO_SKY_FLOOR), false);
             }
 
             KaddrakGUIDList.clear();

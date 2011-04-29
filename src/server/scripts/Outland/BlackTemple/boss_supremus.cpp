@@ -57,7 +57,7 @@ public:
         molten_flameAI(Creature *c) : NullCreatureAI(c)
         {
             float x, y, z;
-            me->CastSpell(me,SPELL_MOLTEN_FLAME,true);
+            me->CastSpell(me, SPELL_MOLTEN_FLAME, true);
             me->GetNearPoint(me, x, y, z, 1.0f, 50.0f, float(M_PI*2*rand_norm()));
             me->GetMotionMaster()->MovePoint(0, x, y, z);
         }

@@ -108,7 +108,7 @@ public:
             {
                 DoCast(me->getVictim(), SPELL_WINGBUFFET);
                 if (DoGetThreat(me->getVictim()))
-                    DoModifyThreatPercent(me->getVictim(),-75);
+                    DoModifyThreatPercent(me->getVictim(), -75);
 
                 WingBuffet_Timer = 25000;
             } else WingBuffet_Timer -= diff;

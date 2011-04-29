@@ -182,7 +182,7 @@ public:
                                 {
                                     if (Creature* frenzy = pPlayer->SummonCreature(MOB_COILFANG_FRENZY,pPlayer->GetPositionX(),pPlayer->GetPositionY(),pPlayer->GetPositionZ(),pPlayer->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,2000))
                                     {
-                                        frenzy->Attack(pPlayer,false);
+                                            frenzy->Attack(pPlayer, false);
                                         frenzy->AddUnitMovementFlag(MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_LEVITATING);
                                     }
                                     DoSpawnFrenzy = false;

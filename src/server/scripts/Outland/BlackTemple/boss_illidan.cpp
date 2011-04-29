@@ -264,8 +264,8 @@ static Yells Conversation[]=
     {11491, "Their fury pales before mine, Illidan. We have some unsettled business between us.", MAIEV_SHADOWSONG, 8000, 5, true},
     {11477, "Maiev... How is this even possible?", ILLIDAN_STORMRAGE, 5000, 1, true},
     {11492, "Ah... my long hunt is finally over. Today, Justice will be done!", MAIEV_SHADOWSONG, 8000, 15, true},
-    {11470, "Feel the hatred of ten thousand years!", ILLIDAN_STORMRAGE, 1000, 0, false},//14
-    {11496, "Ahh... It is finished. You are beaten.", MAIEV_SHADOWSONG, 6000, 0, true},//15
+    {11470, "Feel the hatred of ten thousand years!", ILLIDAN_STORMRAGE, 1000, 0, false}, //14
+    {11496, "Ahh... It is finished. You are beaten.", MAIEV_SHADOWSONG, 6000, 0, true}, //15
     {11478, "You have won... Maiev...but the huntress... is nothing...without the hunt... you... are nothing... without me..", ILLIDAN_STORMRAGE, 30000, 65, true}, // Emote dead for now. Kill him later
     {11497, "He is right. I feel nothing... I am nothing... Farewell, champions.", MAIEV_SHADOWSONG, 9000, 0, true},
     {11498, NULL, MAIEV_SHADOWSONG, 5000, 0, true},
@@ -306,14 +306,14 @@ static Locations HoverPosition[]=
 static Locations GlaivePosition[]=
 {
     {695.105f, 305.303f, 354.256f},
-    {659.338f, 305.303f, 354.256f},//the distance between two glaives is 36
+    {659.338f, 305.303f, 354.256f}, //the distance between two glaives is 36
     {700.105f, 305.303f, 354.256f},
     {664.338f, 305.303f, 354.256f}
 };
 
 static Locations EyeBlast[]=
 {
-    {677.0f, 350.0f, 354.0f},//start point, pass through glaive point
+    {677.0f, 350.0f, 354.0f}, //start point, pass through glaive point
     {677.0f, 260.0f, 354.0f}
 };
 
@@ -350,7 +350,7 @@ static Animation DemonTransformation[]=
 {
     {SPELL_DEMON_TRANSFORM_1, 0, 1000, 0, 0, 6, true},
     {SPELL_DEMON_TRANSFORM_2, SPELL_DEMON_TRANSFORM_1, 4000, 0, 0, 6, true},
-    {0, 0, 3000, 1073741824, 21322, 6, false},//stunned, cannot cast demon form
+    {0, 0, 3000, 1073741824, 21322, 6, false}, //stunned, cannot cast demon form
     {SPELL_DEMON_TRANSFORM_3, SPELL_DEMON_TRANSFORM_2, 3500, 0, 0, 6, false},
     {SPELL_DEMON_FORM, SPELL_DEMON_TRANSFORM_3, 0, 0, 0, 4, false},
     {SPELL_DEMON_TRANSFORM_1, 0, 1000, 0, 0, 6, false},
@@ -1346,8 +1346,8 @@ public:
                 break;
             case 2: // spirit help
                 DoCast(Channel, SPELL_AKAMA_DOOR_CHANNEL);
-                Spirit[0]->CastSpell(Channel, SPELL_DEATHSWORN_DOOR_CHANNEL,false);
-                Spirit[1]->CastSpell(Channel, SPELL_DEATHSWORN_DOOR_CHANNEL,false);
+                Spirit[0]->CastSpell(Channel, SPELL_DEATHSWORN_DOOR_CHANNEL, false);
+                Spirit[1]->CastSpell(Channel, SPELL_DEATHSWORN_DOOR_CHANNEL, false);
                 Timer = 5000;
                 break;
             case 3: //open the gate

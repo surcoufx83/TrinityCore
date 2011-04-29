@@ -18,8 +18,8 @@
 #include "ScriptPCH.h"
 #include "naxxramas.h"
 
-#define SAY_GREET           RAND(-1533000,-1533004,-1533005,-1533006,-1533007)
-#define SAY_AGGRO           RAND(-1533001,-1533002,-1533003)
+#define SAY_GREET           RAND(-1533000, -1533004, -1533005, -1533006, -1533007)
+#define SAY_AGGRO           RAND(-1533001, -1533002, -1533003)
 #define SAY_SLAY            -1533008
 
 #define MOB_CRYPT_GUARD     16573

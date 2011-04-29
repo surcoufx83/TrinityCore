@@ -22,7 +22,7 @@
 
 #define SPELL_POISON_CLOUD          28240
 #define SPELL_MUTATING_INJECTION    28169
-#define SPELL_SLIME_SPRAY           RAID_MODE(28157,54364)
+#define SPELL_SLIME_SPRAY           RAID_MODE(28157, 54364)
 #define SPELL_BERSERK               26662
 #define SPELL_POISON_CLOUD_ADD      28158  // not correct spell, correct spells: 28158, 54362 have no visuals
 #define SPELL_SLIME_STREAM          28137

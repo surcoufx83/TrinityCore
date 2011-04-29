@@ -1416,9 +1416,9 @@ DROP TABLE IF EXISTS `creature_equip_template`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `creature_equip_template` (
   `entry` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'Unique entry',
-  `equipentry1` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `equipentry2` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `equipentry3` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `itemEntry1` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `itemEntry2` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `itemEntry3` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Creature System (Equipment)';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -2846,11 +2846,7 @@ DROP TABLE IF EXISTS `instance_template`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `instance_template` (
   `map` smallint(5) unsigned NOT NULL,
-  `parent` int(10) unsigned NOT NULL,
-  `startLocX` float DEFAULT NULL,
-  `startLocY` float DEFAULT NULL,
-  `startLocZ` float DEFAULT NULL,
-  `startLocO` float DEFAULT NULL,
+  `parent` smallint(5) unsigned NOT NULL,
   `script` varchar(128) NOT NULL DEFAULT '',
   `allowMount` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`map`)
@@ -18106,6 +18102,8 @@ INSERT INTO `spell_linked_spell` (`spell_trigger`,`spell_effect`,`type`,`comment
 ( 55501, 55475, 0, 'Lifeblood (Rank 4)'),
 ( 55502, 55475, 0, 'Lifeblood (Rank 5)'),
 ( 55503, 55475, 0, 'Lifeblood (Rank 6)'),
+( 61716, 61719, 2, 'Rabbit Costume: Lay Egg periodic'),
+( 61734, 61719, 2, 'Noblegarden Bunny: Lay Egg periodic'),
 -- Quest
 ( 26286, 44430, 0, 'Small Red Rocket - questcredit'),
 ( 26292, 44430, 0, 'Small Green Rocket - questcredit'),

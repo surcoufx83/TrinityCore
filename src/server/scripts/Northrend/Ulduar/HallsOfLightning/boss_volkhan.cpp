@@ -181,7 +181,7 @@ public:
 
         void KilledUnit(Unit* /*pVictim*/)
         {
-            DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2,SAY_SLAY_3), me);
+            DoScriptText(RAND(SAY_SLAY_1, SAY_SLAY_2, SAY_SLAY_3), me);
         }
 
         void DespawnGolem()
@@ -277,7 +277,7 @@ public:
             {
                 if (m_uiShatteringStomp_Timer <= uiDiff)
                 {
-                    DoScriptText(RAND(SAY_STOMP_1,SAY_STOMP_2), me);
+                    DoScriptText(RAND(SAY_STOMP_1, SAY_STOMP_2), me);
 
                     DoCast(me, DUNGEON_MODE(SPELL_SHATTERING_STOMP_N,SPELL_SHATTERING_STOMP_H));
 
@@ -319,7 +319,7 @@ public:
                 if (me->IsNonMeleeSpellCasted(false))
                     me->InterruptNonMeleeSpells(false);
 
-                DoScriptText(RAND(SAY_FORGE_1,SAY_FORGE_2), me);
+                DoScriptText(RAND(SAY_FORGE_1, SAY_FORGE_2), me);
 
 
                 if (me->GetDistance(pAnvil) > 5)

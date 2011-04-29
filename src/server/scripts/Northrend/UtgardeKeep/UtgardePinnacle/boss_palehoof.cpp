@@ -63,12 +63,12 @@ struct Locations
  
 struct Locations moveLocs[]=
 {
-    {261.6f,-449.3f,109.5f},
-    {263.3f,-454.0f,109.5f},
-    {291.5f,-450.4f,109.5f},
-    {291.5f,-454.0f,109.5f},
-    {310.0f,-453.4f,109.5f},
-    {238.6f,-460.7f,109.5f}
+    {261.6f, -449.3f, 109.5f},
+    {263.3f, -454.0f, 109.5f},
+    {291.5f, -450.4f, 109.5f},
+    {291.5f, -454.0f, 109.5f},
+    {310.0f, -453.4f, 109.5f},
+    {238.6f, -460.7f, 109.5f}
 };
  
 enum Phase
@@ -671,7 +671,7 @@ public:
             {
                 Creature *pPalehoof = Unit::GetCreature((*me), pInstance ? pInstance->GetData64(DATA_GORTOK_PALEHOOF) : 0);
                 if (pPalehoof)
-                    CAST_AI(boss_palehoof::boss_palehoofAI,pPalehoof->AI())->NextPhase();
+                    CAST_AI(boss_palehoof::boss_palehoofAI, pPalehoof->AI())->NextPhase();
             }
         }
     };

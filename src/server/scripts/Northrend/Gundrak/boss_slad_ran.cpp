@@ -161,13 +161,13 @@ public:
 
             if (uiPhase == 0 && HealthBelowPct(90))
             {
-                DoScriptText(SAY_SUMMON_SNAKES,me);
+                DoScriptText(SAY_SUMMON_SNAKES, me);
                 uiPhase = 1;
             }
 
             if (uiPhase == 1 && HealthBelowPct(75))
             {
-                DoScriptText(SAY_SUMMON_CONSTRICTORS,me);
+                DoScriptText(SAY_SUMMON_CONSTRICTORS, me);
                 uiPhase = 2;
             }
 
@@ -218,12 +218,12 @@ public:
 
         void KilledUnit(Unit * /*victim*/)
         {
-            DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2,SAY_SLAY_3), me);
+            DoScriptText(RAND(SAY_SLAY_1, SAY_SLAY_2, SAY_SLAY_3), me);
         }
 
         void JustSummoned(Creature* summoned)
         {
-            summoned->GetMotionMaster()->MovePoint(0,me->GetPositionX(),me->GetPositionY(),me->GetPositionZ());
+            summoned->GetMotionMaster()->MovePoint(0, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
             lSummons.Summon(summoned);
         }
     };

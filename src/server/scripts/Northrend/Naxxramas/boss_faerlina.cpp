@@ -81,10 +81,10 @@ public:
         void EnterCombat(Unit * /*who*/)
         {
             _EnterCombat();
-            DoScriptText(RAND(SAY_AGGRO_1,SAY_AGGRO_2,SAY_AGGRO_3,SAY_AGGRO_4), me);
-            events.ScheduleEvent(EVENT_POISON, urand(10000,15000));
-            events.ScheduleEvent(EVENT_FIRE, urand(6000,18000));
-            events.ScheduleEvent(EVENT_FRENZY, urand(60000,80000));
+            DoScriptText(RAND(SAY_AGGRO_1, SAY_AGGRO_2, SAY_AGGRO_3, SAY_AGGRO_4), me);
+            events.ScheduleEvent(EVENT_POISON, urand(10000, 15000));
+            events.ScheduleEvent(EVENT_FIRE, urand(6000, 18000));
+            events.ScheduleEvent(EVENT_FRENZY, urand(60000, 80000));
         }
 
         void Reset()
@@ -117,7 +117,7 @@ public:
             DoScriptText(SAY_DEATH, me);
 
             if (instance && bAchievement)
-                instance->DoCompleteAchievement(RAID_MODE(ACHIEVEMENT_MOMMA_SAID_KNOCK_YOU_OUT_10,ACHIEVEMENT_MOMMA_SAID_KNOCK_YOU_OUT_25));
+                instance->DoCompleteAchievement(RAID_MODE(ACHIEVEMENT_MOMMA_SAID_KNOCK_YOU_OUT_10, ACHIEVEMENT_MOMMA_SAID_KNOCK_YOU_OUT_25));
         }
 
         void UpdateAI(const uint32 diff)

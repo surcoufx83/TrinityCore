@@ -553,9 +553,9 @@ public:
 
         void SpawnMobs()
         {
-            for (uint8 i = 0; i < DUNGEON_MODE(5,6); ++i)
+            for (uint8 i = 0; i < DUNGEON_MODE(5, 6); ++i)
             {
-                switch (urand(0,2))
+                switch (urand(0, 2))
                 {
                     case 0: me->SummonCreature(CREATURE_YMIRJAR_WARRIOR, SpawnLoc.GetPositionX()+rand()%5, SpawnLoc.GetPositionY()+rand()%5, SpawnLoc.GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000); break;
                     case 1: me->SummonCreature(CREATURE_YMIRJAR_WITCH_DOCTOR, SpawnLoc.GetPositionX()+rand()%5, SpawnLoc.GetPositionY()+rand()%5, SpawnLoc.GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000); break;
@@ -567,7 +567,7 @@ public:
         void SpawnTrigger()
         {
             uint8 iStart = 0, iEnd = 0;
-            switch (urand(0,1))
+            switch (urand(0, 1))
             {
                 case 0:
                     iStart = 8;
@@ -597,9 +597,9 @@ public:
         InstanceScript* m_pInstance = pGO->GetInstanceScript();
         if (!m_pInstance) return false;
 
-        if (Creature* pSkadi = Unit::GetCreature((*pGO),m_pInstance->GetData64(DATA_SKADI_THE_RUTHLESS)))
+        if (Creature* pSkadi = Unit::GetCreature((*pGO), m_pInstance->GetData64(DATA_SKADI_THE_RUTHLESS)))
         {
-            pPlayer->CastSpell(pSkadi,SPELL_RAPID_FIRE, true);
+            pPlayer->CastSpell(pSkadi, SPELL_RAPID_FIRE, true);
         }
         return false;
     }

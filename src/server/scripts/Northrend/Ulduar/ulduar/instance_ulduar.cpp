@@ -557,7 +557,6 @@ public:
                     break;
                 case GO_YOGGBRAIN_DOOR_1:
                     uiYoggSaronBrainDoor1GUID = go->GetGUID();
-                    HandleGameObject(NULL, false, go);
                     break;
                 case GO_YOGGBRAIN_DOOR_2:
                     uiYoggSaronBrainDoor2GUID = go->GetGUID();
