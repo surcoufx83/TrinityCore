@@ -87,7 +87,10 @@ enum eSpells
     SPELL_FLAME                                 = 64561,
     SPELL_FROST_BOMB                            = 64624,
     SPELL_WATER_SPRAY                           = 64619,
-    SPELL_SIREN                                 = 64616
+    SPELL_SIREN                                 = 64616,
+
+    // NPCs
+    SPELL_BOMB_BOT                              = 63767,
 };
 
 enum eEvents
@@ -1074,7 +1077,7 @@ public:
                     me->SetStandState(UNIT_STAND_STATE_STAND);
                     phase = PHASE_VX001_ASSEMBLED;
                     events.SetPhase(PHASE_VX001_ASSEMBLED);
-                    events.RescheduleEvent(EVENT_PRE_LASER_BARRAGE, urand(35000, 40000), 0, PHASE_VX001_SOLO); // not works in phase 4
+                    events.RescheduleEvent(EVENT_PRE_LASER_BARRAGE, urand(35000, 40000)); // not works in phase 4
                     events.RescheduleEvent(EVENT_ROCKET_STRIKE, 20000);
                     events.RescheduleEvent(EVENT_HAND_PULSE, 15000, 0, PHASE_VX001_ASSEMBLED);
                     if (MimironHardMode)
@@ -1152,7 +1155,7 @@ public:
                             DoCast(SPELL_SPINNING_UP);
                             me->GetMotionMaster()->MoveRotate(40000, rand()%2 ? ROTATE_DIRECTION_LEFT : ROTATE_DIRECTION_RIGHT);
                             events.DelayEvents(14000);
-                            events.RescheduleEvent(EVENT_PRE_LASER_BARRAGE, 40000, 0, PHASE_VX001_SOLO);
+                            events.RescheduleEvent(EVENT_PRE_LASER_BARRAGE, 40000);
                             events.RescheduleEvent(EVENT_LASER_BARRAGE, 3000);
                             break;
                         case EVENT_LASER_BARRAGE:
@@ -1571,6 +1574,46 @@ public:
 
 };
 
+class npc_mimiron_bomb_bot : public CreatureScript
+{
+public:
+    npc_mimiron_bomb_bot() : CreatureScript("npc_mimiron_bomb_bot") { }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_mimiron_bomb_botAI(pCreature);
+    }
+
+    struct mob_mimiron_bomb_botAI : public ScriptedAI
+    {
+        mob_mimiron_bomb_botAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+
+        Unit* SelectPlayerTargetInRange(float range)
+        {
+            Player *target = NULL;
+            Trinity::AnyPlayerInObjectRangeCheck u_check(me, range, true);
+            Trinity::PlayerSearcher<Trinity::AnyPlayerInObjectRangeCheck> searcher(me, target, u_check);
+            me->VisitNearbyObject(range, searcher);
+            return target;
+        }
+
+        void Reset()
+        {
+            if(Unit* target = SelectPlayerTargetInRange(500.0f))
+                AttackStart(target);
+
+            me->CastSpell(me,SPELL_BOMB_BOT,true);
+        }
+
+        void UpdateAI(const uint32 /*diff*/)
+        {
+            if (!UpdateVictim())
+                return;
+
+            //DoMeleeAttackIfReady();
+        }
+    };
+};
 
 /*---------------------------------------------*
  *           DO NOT PUSH THIS BUTTON!          *
@@ -1760,6 +1803,7 @@ UPDATE `gameobject_template` SET `flags` = 32, `ScriptName` = 'go_not_push_butto
 UPDATE `creature_template` SET `difficulty_entry_1` = 34361, `ScriptName` = 'npc_frost_bomb' WHERE `entry` = 34149;
 UPDATE `creature_template` SET `speed_walk` = 0.15, `speed_run` = 0.15, `ScriptName` = 'npc_mimiron_flame_trigger' WHERE `entry` = 34363;
 UPDATE `creature_template` SET `ScriptName` = 'npc_mimiron_flame_spread' WHERE `entry` = 34121;
+UPDATE `creature_template` SET `ScriptName` = 'npc_mimiron_bomb_bot' WHERE `entry` = 33836;
 
 -- CleanUp
 DELETE FROM creature WHERE id IN (34071, 33856);
@@ -1778,6 +1822,7 @@ void AddSC_boss_mimiron()
     new npc_magnetic_core();
     new npc_assault_bot();
     new npc_emergency_bot();
+    new npc_mimiron_bomb_bot();
     new go_not_push_button();
     new npc_mimiron_flame_trigger();
     new npc_mimiron_flame_spread();
