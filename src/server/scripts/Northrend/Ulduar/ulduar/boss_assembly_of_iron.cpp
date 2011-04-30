@@ -85,7 +85,9 @@ enum Events
     EVENT_CHAIN_LIGHTNING,
     EVENT_OVERLOAD,
     EVENT_LIGHTNING_WHIRL,
-    EVENT_LIGHTNING_TENDRILS,
+    EVENT_LIGHTNING_TENDRILS_START,
+    EVENT_LIGHTNING_TENDRILS_END,
+    EVENT_THREAT_WIPE,
     EVENT_STORMSHIELD,
 };
 
@@ -652,13 +654,13 @@ public:
                 case EVENT_UPDATEPHASE:
                     events.SetPhase(++phase);
                     events.RescheduleEvent(EVENT_CHAIN_LIGHTNING, urand(9000, 17000));
-                    events.RescheduleEvent(EVENT_OVERLOAD, urand(60000, 125000));
+                    events.RescheduleEvent(EVENT_OVERLOAD, urand(60000, 80000));
                     if (phase >= 2)
                         events.RescheduleEvent(EVENT_LIGHTNING_WHIRL, urand(20000, 40000));
                     if (phase >= 3)
                     {
                         DoCast(me, SPELL_STORMSHIELD);
-                        events.RescheduleEvent(EVENT_LIGHTNING_TENDRILS, urand(40000, 80000));
+                        events.RescheduleEvent(EVENT_LIGHTNING_TENDRILS_START, urand(40000, 80000));
                     }
                 break;
 
@@ -729,6 +731,9 @@ public:
 
             events.Update(diff);
 
+            if (me->HasUnitState(UNIT_STAT_CASTING))
+                return;
+
             while (uint32 eventId = events.ExecuteEvent())
             {
                 switch(eventId)
@@ -739,21 +744,35 @@ public:
                         break;
                     case EVENT_CHAIN_LIGHTNING:
                         if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
-                            DoCast(pTarget, RAID_MODE(SPELL_CHAIN_LIGHTNING_N , SPELL_CHAIN_LIGHTNING_H));
-                        events.ScheduleEvent(EVENT_CHAIN_LIGHTNING, urand(9000, 17000));
+                            DoCast(pTarget, RAID_MODE(SPELL_CHAIN_LIGHTNING_N, SPELL_CHAIN_LIGHTNING_H));
+                        events.ScheduleEvent(EVENT_CHAIN_LIGHTNING, urand(3000, 5000));
                         break;
                     case EVENT_OVERLOAD:
                         DoCast(RAID_MODE(SPELL_OVERLOAD , SPELL_OVERLOAD_H));
-                        events.ScheduleEvent(EVENT_OVERLOAD, urand(60000, 125000));
+                        events.ScheduleEvent(EVENT_OVERLOAD, urand(60000, 80000));
                         break;
                     case EVENT_LIGHTNING_WHIRL:
-                        DoCast(RAID_MODE(SPELL_LIGHTNING_WHIRL , SPELL_LIGHTNING_WHIRL_H));
+                        DoCast(RAID_MODE(SPELL_LIGHTNING_WHIRL, SPELL_LIGHTNING_WHIRL_H));
                         events.ScheduleEvent(EVENT_LIGHTNING_WHIRL, urand(20000, 40000));
                         break;
-                    case EVENT_LIGHTNING_TENDRILS:
-                        DoCast(RAID_MODE(SPELL_LIGHTNING_TENDRILS, SPELL_LIGHTNING_TENDRILS_H));
-                        events.DelayEvents(15000, 5000);
+                    case EVENT_THREAT_WIPE:
                         DoResetThreat();
+                        events.ScheduleEvent(EVENT_THREAT_WIPE, 5000);
+                        break;
+                    case EVENT_LIGHTNING_TENDRILS_START:
+                        DoCast(RAID_MODE(SPELL_LIGHTNING_TENDRILS, SPELL_LIGHTNING_TENDRILS_H));
+                        me->AddUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
+                        me->SendMovementFlagUpdate();
+                        events.DelayEvents(35000);
+                        events.ScheduleEvent(EVENT_LIGHTNING_TENDRILS_END, 30000);
+                        events.ScheduleEvent(EVENT_THREAT_WIPE, 0);
+                        break;
+                    case EVENT_LIGHTNING_TENDRILS_END:
+                        me->RemoveUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
+                        me->SendMovementFlagUpdate();
+                        me->RemoveAurasDueToSpell(RAID_MODE(SPELL_LIGHTNING_TENDRILS, SPELL_LIGHTNING_TENDRILS_H));
+                        events.ScheduleEvent(EVENT_LIGHTNING_TENDRILS_START, urand(40000, 80000));
+                        events.CancelEvent(EVENT_THREAT_WIPE);
                         break;
                 }
             }

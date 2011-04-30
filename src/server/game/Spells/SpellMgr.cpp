@@ -3743,17 +3743,15 @@ void SpellMgr::LoadSpellCustomAttr()
         case 45761: // Shoot
         case 42611: // Shoot
         case 62374: // Pursued
-        case 50988: // Glare of the Tribunal (nh)
-        case 59870: // Glare of the Tribunal (hc)
-        case 55927: // Sear Beam (nh)
-        case 59509: // Sear Beam (hc)
+        case 50988: // Glare of the Tribunal (N)
+        case 59870: // Glare of the Tribunal (H)
+        case 55927: // Sear Beam (N)
+        case 59509: // Sear Beam (H)
         case 56397: // Arcane Barrage
         case 64599: // Arcane Barrage
         case 64607: // Arcane Barrage
         case 47731: // Critter
         case 62301: // Cosmic Smash
-        case 61916: // Lightning Whirl 10
-        case 63482: // Lightning Whirl 25
             spellInfo->MaxAffectedTargets = 1;
             ++count;
             break;
@@ -3813,6 +3811,7 @@ void SpellMgr::LoadSpellCustomAttr()
         case 60939: // Surge of Power
         case 61693: // Arcane Storm
         case 64598: // Cosmic Smash
+        case 61916: // Lightning Whirl (10N)
             spellInfo->MaxAffectedTargets = 3;
             ++count;
             break;
@@ -3839,6 +3838,7 @@ void SpellMgr::LoadSpellCustomAttr()
         case 54835: // Curse of the Plaguebringer - Noth (H)
         case 54098: // Poison Bolt Volly - Faerlina (H)
         case 61694: // Arcane Storm
+        case 63482: // Lightning Whirl (25N)
             spellInfo->MaxAffectedTargets = 10;
             ++count;
             break;
