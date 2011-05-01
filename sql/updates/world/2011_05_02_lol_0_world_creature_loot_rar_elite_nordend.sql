@@ -1,5 +1,33 @@
 -- Fix Creature Loot of Rar Elite Mobs in Nordend
 -- source: www.old.wowhead.de
+UPDATE `creature_template` SET `lootid` = 32357 WHERE `entry` = 32357;  -- Old Crystalbark
+UPDATE `creature_template` SET `lootid` = 32358 WHERE `entry` = 32358;  -- Fumblub Gearwind
+UPDATE `creature_template` SET `lootid` = 32361 WHERE `entry` = 32361;  -- Icehorn
+UPDATE `creature_template` SET `lootid` = 32400 WHERE `entry` = 32400;  -- Tukemuth
+UPDATE `creature_template` SET `lootid` = 32409 WHERE `entry` = 32409;  -- Crazed Indu'le Survivor
+UPDATE `creature_template` SET `lootid` = 32417 WHERE `entry` = 32417;  -- Scarlet Highlord Daion
+UPDATE `creature_template` SET `lootid` = 32517 WHERE `entry` = 32517;  -- Loque'nahak
+UPDATE `creature_template` SET `lootid` = 32485 WHERE `entry` = 32485;  -- King Krush
+UPDATE `creature_template` SET `lootid` = 32481 WHERE `entry` = 32481;  -- Aotona
+UPDATE `creature_template` SET `lootid` = 32377 WHERE `entry` = 32377;  -- Perobas the Bloodthirster
+UPDATE `creature_template` SET `lootid` = 32386 WHERE `entry` = 32386;  -- Vigdis die Kriegsmaid
+UPDATE `creature_template` SET `lootid` = 32398 WHERE `entry` = 32398;  -- King Ping
+UPDATE `creature_template` SET `lootid` = 32422 WHERE `entry` = 32422;  -- Grocklar
+UPDATE `creature_template` SET `lootid` = 32429 WHERE `entry` = 32429;  -- Seething Hate
+UPDATE `creature_template` SET `lootid` = 32438 WHERE `entry` = 32438;  -- Syreian the Bonecarver
+UPDATE `creature_template` SET `lootid` = 38453 WHERE `entry` = 38453;  -- Arcturis
+UPDATE `creature_template` SET `lootid` = 32447 WHERE `entry` = 32447;  -- Zul'drak Sentinel
+UPDATE `creature_template` SET `lootid` = 32471 WHERE `entry` = 32471;  -- Griegen
+UPDATE `creature_template` SET `lootid` = 32475 WHERE `entry` = 32475;  -- Terror Spinner
+UPDATE `creature_template` SET `lootid` = 33776 WHERE `entry` = 33776;  -- Gondria
+UPDATE `creature_template` SET `lootid` = 32630 WHERE `entry` = 32630;  -- Vyragosa
+UPDATE `creature_template` SET `lootid` = 32500 WHERE `entry` = 32500;  -- Dirkee
+UPDATE `creature_template` SET `lootid` = 32491 WHERE `entry` = 32491;  -- Time-Lost Proto Drake
+UPDATE `creature_template` SET `lootid` = 35189 WHERE `entry` = 35189;  -- Skoll
+UPDATE `creature_template` SET `lootid` = 32501 WHERE `entry` = 32501;  -- High Thane Jorfus
+UPDATE `creature_template` SET `lootid` = 32495 WHERE `entry` = 32495;  -- Hildana Deathstealer
+UPDATE `creature_template` SET `lootid` = 32487 WHERE `entry` = 32487;  -- Putridus the Ancient
+-- Loot
 DELETE FROM `creature_loot_template` WHERE `entry` IN 
 (32357,32358,32361,32400,32409,32417,32517,32485,32481,32377,32386,32398,32422,32429,32438,38453,32447,32471,32475,33776,32630,32500,32491,35189,32501,32495,32487);
 INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
