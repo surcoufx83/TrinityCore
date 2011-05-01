@@ -94,9 +94,10 @@ enum Timers
 
     // Pummeller
     // Timers may be off
-    TIMER_ARCING_SMASH                          = 27000,
-    TIMER_TRAMPLE                               = 22000,
-    TIMER_UPPERCUT                              = 17000,
+    // Timers where completely off
+    TIMER_ARCING_SMASH                          = 7000,
+    TIMER_TRAMPLE                               = 2000,
+    TIMER_UPPERCUT                              = 10000,
 
     TIMER_SPAWN_ADD                             = 12000,
 };

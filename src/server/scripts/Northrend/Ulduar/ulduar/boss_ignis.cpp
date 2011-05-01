@@ -381,6 +381,12 @@ public:
 
         void UpdateAI(const uint32 /*uiDiff*/)
         {
+            if(me->GetReactState() == REACT_AGGRESSIVE)
+            {
+                if(instance->GetBossState(TYPE_IGNIS) != IN_PROGRESS)
+                    me->DealDamage(me,me->GetHealth());
+            }
+
             if (!UpdateVictim())
                 return;
 

@@ -230,6 +230,7 @@ const Position PosCharge[7] =
 #define POS_Y_ARENA  -299.12f
 
 #define IN_ARENA(who) (who->GetPositionX() < POS_X_ARENA && who->GetPositionY() > POS_Y_ARENA)
+#define IS_HEALER(who) (who->GetEntry() == 32886 || who->GetEntry() == 32878 || who->GetEntry() ==  33110)
 
 struct SummonLocation
 {
@@ -558,12 +559,15 @@ public:
             for (uint8 i = 0; i < 6; ++i)
                 if (me->GetEntry() == PRE_PHASE_ADD[i])
                     id = PreAdds(i);
+
+            healer = IS_HEALER(me);
         }
 
         InstanceScript* pInstance;
         PreAdds id;
         uint32 PrimaryTimer;
         uint32 SecondaryTimer;
+        bool healer;
 
         void Reset()
         {
@@ -584,15 +588,41 @@ public:
             
             if (PrimaryTimer <= diff)
             {
-                DoCast(SPELL_PRE_PRIMARY(id));
-                PrimaryTimer = urand(15000, 20000);
+                Unit* target = NULL;
+                if(healer)
+                {
+                    if(!(target = DoSelectLowestHpFriendly(30)))
+                        target = me;
+                }else
+                {
+                    target = me->getVictim();
+                }
+
+                if(target)
+                {
+                    DoCast(target,SPELL_PRE_PRIMARY(id));
+                    PrimaryTimer = urand(15000, 20000);
+                }
             }
             else PrimaryTimer -= diff;
         
             if (SecondaryTimer <= diff)
             {
-                DoCast(SPELL_PRE_SECONDARY(id));
-                SecondaryTimer = urand(4000, 8000);
+                Unit* target = NULL;
+                if(healer)
+                {
+                    if(!(target = DoSelectLowestHpFriendly(30)))
+                        target = me;
+                }else
+                {
+                    target = me->getVictim();
+                }
+
+                if(target)
+                {
+                    DoCast(SPELL_PRE_SECONDARY(id));
+                    SecondaryTimer = urand(4000, 8000);
+                }
             }
             else SecondaryTimer -= diff;
 
@@ -602,9 +632,7 @@ public:
                 DoMeleeAttackIfReady();
         }
     };
-
 };
-
 
 class npc_thorim_arena_phase : public CreatureScript
 {
@@ -625,8 +653,9 @@ public:
             for (uint8 i = 0; i < 7; ++i)
                 if (me->GetEntry() == ARENA_PHASE_ADD[i])
                     id = ArenaAdds(i);
-                
+
             IsInArena = IN_ARENA(me);
+            healer = IS_HEALER(me);
         }
 
         InstanceScript* pInstance;
@@ -635,6 +664,7 @@ public:
         uint32 SecondaryTimer;
         uint32 ChargeTimer;
         bool IsInArena;
+        bool healer;
 
         bool isOnSameSide(const Unit* pWho)
         {
@@ -696,6 +726,16 @@ public:
             
             if (PrimaryTimer <= diff)
             {
+                Unit* target = NULL;
+                if(healer && id != 32878)
+                {
+                    if(!(target = DoSelectLowestHpFriendly(30)))
+                        target = me;
+                }else
+                {
+                    target = me->getVictim();
+                }
+
                 DoCast(SPELL_ARENA_PRIMARY(id));
                 PrimaryTimer = urand(3000, 6000);
             }
@@ -703,8 +743,21 @@ public:
         
             if (SecondaryTimer <= diff)
             {
-                DoCast(SPELL_ARENA_SECONDARY(id));
-                SecondaryTimer = urand(12000, 16000);
+                Unit* target = NULL;
+                if(healer)
+                {
+                    if(!(target = DoSelectLowestHpFriendly(30)))
+                        target = me;
+                }else
+                {
+                    target = me->getVictim();
+                }
+
+                if(target)
+                {
+                    DoCast(SPELL_ARENA_SECONDARY(id));
+                    SecondaryTimer = urand(12000, 16000);
+                }
             }
             else SecondaryTimer -= diff;
         
