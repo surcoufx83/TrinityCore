@@ -173,7 +173,19 @@ namespace Trinity
                 {
                     // Elites in instances have a 2.75x XP bonus instead of the regular 2x world bonus.
                     if (u->GetMap() && u->GetMap()->IsDungeon())
-                       gain = uint32(gain * 2.75);
+                    {
+                        float modVal = 1.0f;
+
+                        if (CreatureTemplate const* ci = sObjectMgr->GetCreatureTemplate(u->GetEntry()))
+                            modVal = ci->ModHealth;
+
+                        if (modVal < 1.2f)
+                            gain = uint32(gain * 0.9);
+                        else if (modVal < 2.2f)
+                            gain = uint32(gain * 1.75);
+                        else
+                            gain = uint32(gain * 2.75);
+                    }
                     else
                         gain *= 2;
                 }
