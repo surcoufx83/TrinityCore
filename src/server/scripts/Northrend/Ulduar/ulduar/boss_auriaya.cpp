@@ -89,55 +89,6 @@ enum Events
     EVENT_BERSERK
 };
 
-class mob_feral_defender: public CreatureScript
-{
-public:
-    mob_feral_defender() : CreatureScript("mob_feral_defender") { }
-
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return new mob_feral_defenderAI(creature);
-    }
-
-    struct mob_feral_defenderAI : public ScriptedAI
-    {
-        mob_feral_defenderAI(Creature* creature) : ScriptedAI(creature) { }
-
-        uint32 feralRushTimer;
-        uint32 feralPounceTimer;
-
-        void Reset()
-        {
-            feralRushTimer = 4000;
-            feralPounceTimer = 6000;
-        }
-
-        void UpdateAI(const uint32 diff)
-        {
-            if (!UpdateVictim())
-                return;
-
-            if (feralRushTimer <= diff)
-            {
-                if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
-                    DoCast(target, RAID_MODE(SPELL_FERAL_RUSH_10, SPELL_FERAL_RUSH_25));
-                feralRushTimer = 5000;
-            }
-            else feralRushTimer -= diff;
-
-            if (feralPounceTimer <= diff)
-            {
-                if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
-                    DoCast(target, RAID_MODE(SPELL_FERAL_POUNCE_10, SPELL_FERAL_POUNCE_25));
-                feralPounceTimer = 5000;
-            }
-            else feralPounceTimer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
-    };
-};
-
 class boss_auriaya : public CreatureScript
 {
 public:
@@ -173,8 +124,12 @@ public:
 
             while (Creature* sentry = me->FindNearestCreature(ENTRY_CREATURE_SANCTUM_SENTRY, 50000, false))
                 sentry->Respawn();
-        }
 
+            if (GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL)
+                for (uint8 i = 0; i < 2; ++i)
+                    if (Creature* sentry = me->SummonCreature(ENTRY_CREATURE_SANCTUM_SENTRY, *me, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000))
+                        sentry->GetMotionMaster()->MoveFollow(me, 1.0f, M_PI*(i + 0.5f));
+        }
 
         void EnterCombat(Unit * /*who*/)
         {
@@ -290,6 +245,54 @@ public:
     };
 };
 
+class mob_feral_defender: public CreatureScript
+{
+public:
+    mob_feral_defender() : CreatureScript("mob_feral_defender") { }
+
+    CreatureAI* GetAI(Creature* creature) const
+    {
+        return new mob_feral_defenderAI(creature);
+    }
+
+    struct mob_feral_defenderAI : public ScriptedAI
+    {
+        mob_feral_defenderAI(Creature* creature) : ScriptedAI(creature) { }
+
+        uint32 feralRushTimer;
+        uint32 feralPounceTimer;
+
+        void Reset()
+        {
+            feralRushTimer = 4000;
+            feralPounceTimer = 6000;
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            if (feralRushTimer <= diff)
+            {
+                if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                    DoCast(target, RAID_MODE(SPELL_FERAL_RUSH_10, SPELL_FERAL_RUSH_25));
+                feralRushTimer = 5000;
+            }
+            else feralRushTimer -= diff;
+
+            if (feralPounceTimer <= diff)
+            {
+                if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                    DoCast(target, RAID_MODE(SPELL_FERAL_POUNCE_10, SPELL_FERAL_POUNCE_25));
+                feralPounceTimer = 5000;
+            }
+            else feralPounceTimer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
+};
 
 class mob_sanctum_sentry: public CreatureScript
 {
@@ -371,6 +374,17 @@ public:
     };
 };
 
+class SentryIsDead
+{
+    public:
+        SentryIsDead() { }
+
+        bool operator()(Creature* creature)
+        {
+            return !creature->isAlive();
+        }
+};
+
 class spell_strength_of_the_pack : public SpellScriptLoader
 {
 public:
@@ -397,6 +411,7 @@ public:
                     else
                     {
                         (*iter)->GetCreatureListWithEntryInGrid(sentryList, ENTRY_CREATURE_SANCTUM_SENTRY, 10.0f);
+                        sentryList.remove_if(SentryIsDead());
 
                         if (sentryList.size() < 2)
                             (*iter)->RemoveAurasDueToSpell(GetId());
