@@ -110,7 +110,7 @@ class boss_kologarn : public CreatureScript
 
                 DoCast(SPELL_KOLOGARN_REDUCE_PARRY);
                 SetCombatMovement(false);
-                //Reset();
+                Reset();
 
                 /* should be triggered on caster? */
                 SpellEntry* tempSpell;
@@ -139,7 +139,6 @@ class boss_kologarn : public CreatureScript
                         arm->ToCreature()->SetInCombatWithZone();
 
                 _EnterCombat();
-
                 me->SetReactState(REACT_AGGRESSIVE);
             }
 
@@ -147,11 +146,10 @@ class boss_kologarn : public CreatureScript
             {
                 _Reset();
 
-                if (me->GetVehicleKit())
-                    me->GetVehicleKit()->Reset();
+                //if (me->GetVehicleKit())
+                //    me->GetVehicleKit()->Reset();
 
                 eyebeamTarget = 0;
-
                 me->SetReactState(REACT_DEFENSIVE);
             }
 
