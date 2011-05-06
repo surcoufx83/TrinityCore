@@ -272,6 +272,7 @@ public:
 
                         // Enter hard mode
                         enterHardMode = true;
+                        uiEnrageTimer = TIMER_ENRAGE;
 
                         // set max health
                         me->SetFullHealth();
