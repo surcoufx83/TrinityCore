@@ -960,7 +960,7 @@ public:
 
         void Update(uint32 diff)
         {
-            if (uiAlgalonCountdown && uiAlgalonCountdown < 61)
+            if (uiAlgalonCountdown > 0 && uiAlgalonCountdown < 61)
             {
                 if (uiCountdownTimer < diff)
                 {

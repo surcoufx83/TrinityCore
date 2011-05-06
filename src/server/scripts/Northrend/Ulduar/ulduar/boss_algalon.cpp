@@ -118,6 +118,9 @@ static Position constellationLocations[]=
     {1629.95f, -327.90f, 458.13f, 0.0f}
 };
 
+#define EQUIP_ID_MAIN_HAND  45620
+#define EQUIP_ID_OFF_HAND   45607
+
 class boss_algalon : public CreatureScript
 {
 public:
@@ -175,6 +178,7 @@ public:
             {
                 me->InterruptSpell(CURRENT_CHANNELED_SPELL);
                 DoZoneInCombat();
+                SetEquipmentSlots(false, EQUIP_ID_MAIN_HAND, EQUIP_ID_OFF_HAND, EQUIP_NO_CHANGE);
             }
             else
             {
@@ -347,6 +351,7 @@ public:
                         case 6:
                             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                             me->SetReactState(REACT_AGGRESSIVE);
+                            SetEquipmentSlots(false, EQUIP_ID_MAIN_HAND, EQUIP_ID_OFF_HAND, EQUIP_NO_CHANGE);
                             summon = true;
                             break;
                     }
