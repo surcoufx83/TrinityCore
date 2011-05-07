@@ -149,6 +149,7 @@ public:
         uint32 stepTimer;
         uint32 step;
         bool summon;
+        bool wipeRaid;
 
         void Reset()
         {
@@ -162,6 +163,7 @@ public:
             phase = 1;
             stepTimer = 0;
             starCount = 0;
+            wipeRaid = false;
 
             DoCast(me, SPELL_DUAL_WIELD, true);
             me->SetAttackTime(OFF_ATTACK, 1400);
@@ -213,52 +215,30 @@ public:
             ++step;
         }
 
-        void SummonCollapsingStars()
-        {
-            DoScriptText(SAY_SUMMON_COLLAPSING_STAR, me);
-            for (uint8 i = starCount; i < 4; ++i)
-            {
-                if (Creature* collapsingStar = me->SummonCreature(CREATURE_COLLAPSING_STAR, collapsingLocations[i],
-                    TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3*IN_MILLISECONDS))
-                {
-                    ++starCount;
-                    collapsingStar->SetReactState(REACT_PASSIVE);
-                    collapsingStar->GetMotionMaster()->MoveRandom(15.0f);
-                    collapsingStar->SetInCombatWithZone();
-                }
-            }
-        }
-
-        void SummonLivingConstallations()
-        {
-            for (uint8 i = 0; i < 3; ++i)
-            {
-                if (Creature* livingConstellation = me->SummonCreature(CREATURE_LIVING_CONSTELLATION, constellationLocations[i],
-                    TEMPSUMMON_CORPSE_TIMED_DESPAWN, 1*IN_MILLISECONDS))
-                {
-                    livingConstellation->SetInCombatWithZone();
-                    if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
-                        livingConstellation->AI()->AttackStart(target);
-                }
-            }
-        }
-
-        void SummonUnleashedDarkMatter()
-        {
-            for (uint8 i = 0; i < 4; ++i)
-            {
-                if (Creature* darkMatter = me->SummonCreature(CREATURE_UNLEASHED_DARK_MATTER, collapsingLocations[i],
-                    TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3*IN_MILLISECONDS))
-                {
-                    if (Unit* target = SelectTarget(SELECT_TARGET_TOPAGGRO, 0))
-                        darkMatter->AI()->AttackStart(target);
-                }
-            }
-        }
-
         void JustSummoned(Creature* summon)
         {
             summons.Summon(summon);
+
+            switch (summon->GetEntry())
+            {
+                case CREATURE_COLLAPSING_STAR:
+                    ++starCount;
+                    summon->SetReactState(REACT_PASSIVE);
+                    summon->GetMotionMaster()->MoveRandom(15.0f);
+                    summon->SetInCombatWithZone();
+                    break;
+                case CREATURE_LIVING_CONSTELLATION:
+                    summon->SetInCombatWithZone();
+                    if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                        summon->AI()->AttackStart(target);
+                    break;
+                case CREATURE_UNLEASHED_DARK_MATTER:
+                    if (Unit* target = SelectTarget(SELECT_TARGET_TOPAGGRO, 0))
+                        summon->AI()->AttackStart(target);
+                    break;
+                default:
+                    break;
+            }
         }
 
         void SummonedCreatureDies(Creature* summon, Unit* /*killer*/)
@@ -284,6 +264,30 @@ public:
                         target->CombatStop();
                         target->getHostileRefManager().deleteReferences();
                     }
+        }
+
+        void EnterEvadeMode()
+        {
+            if (!wipeRaid)
+            {
+                summons.DespawnAll();
+
+                // remove players from phase
+                instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_PHASE_PUNCH_PHASE);
+                instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_BLACK_HOLE_PHASE);
+
+                wipeRaid = true;
+                me->InterruptNonMeleeSpells(true);
+                DoCast(SPELL_ASCEND);
+                return;
+            }
+
+            if (me->HasUnitState(UNIT_STAT_CASTING))
+                return;
+
+            _EnterEvadeMode();
+            me->GetMotionMaster()->MoveTargetedHome();
+            Reset();
         }
 
         void UpdateAI(const uint32 diff)
@@ -318,7 +322,6 @@ public:
 
                 me->DisappearAndDie();
                 _JustDied();
-
                 return;
             }
 
@@ -371,7 +374,7 @@ public:
                 {
                     case EVENT_BIGBANG:
                         DoScriptText(RAND(SAY_BIG_BANG_1, SAY_BIG_BANG_2), me);
-                        DoCast(me->getVictim(), RAID_MODE(SPELL_BIG_BANG_10, SPELL_BIG_BANG_25));
+                        DoCast(RAID_MODE(SPELL_BIG_BANG_10, SPELL_BIG_BANG_25));
                         events.ScheduleEvent(EVENT_BIGBANG, 90*IN_MILLISECONDS);
                         break;
                     case EVENT_PHASEPUNCH:
@@ -387,15 +390,19 @@ public:
                         events.ScheduleEvent(EVENT_COSMICSMASH, 25*IN_MILLISECONDS);
                         break;
                     case EVENT_COLLAPSINGSTAR:
-                        SummonCollapsingStars();
+                        DoScriptText(SAY_SUMMON_COLLAPSING_STAR, me);
+                        for (uint8 i = starCount; i < 4; ++i)
+                            me->SummonCreature(CREATURE_COLLAPSING_STAR, collapsingLocations[i], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3*IN_MILLISECONDS);
                         events.ScheduleEvent(EVENT_COLLAPSINGSTAR, 45*IN_MILLISECONDS);
                         break;
                     case EVENT_LIVINGCONSTELLATION:
-                        SummonLivingConstallations();
+                        for (uint8 i = 0; i < 3; ++i)
+                            me->SummonCreature(CREATURE_LIVING_CONSTELLATION, constellationLocations[i], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 1*IN_MILLISECONDS);
                         events.ScheduleEvent(EVENT_LIVINGCONSTELLATION, 50*IN_MILLISECONDS);
                         break;
                     case EVENT_DARKMATTER:
-                        SummonUnleashedDarkMatter();
+                        for (uint8 i = 0; i < 4; ++i)
+                            me->SummonCreature(CREATURE_UNLEASHED_DARK_MATTER, collapsingLocations[i], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3*IN_MILLISECONDS);
                         events.ScheduleEvent(EVENT_DARKMATTER, 20*IN_MILLISECONDS);
                         break;
                     case EVENT_BERSERK:
@@ -404,7 +411,7 @@ public:
                         events.ScheduleEvent(EVENT_ASCEND, 3*IN_MILLISECONDS);
                         break;
                     case EVENT_ASCEND:
-                        DoCast(me, SPELL_ASCEND);
+                        DoCast(SPELL_ASCEND);
                         events.ScheduleEvent(EVENT_ASCEND, 10*IN_MILLISECONDS);
                         break;
                     default:
@@ -423,14 +430,14 @@ class mob_collapsing_star : public CreatureScript
 public:
     mob_collapsing_star() : CreatureScript("mob_collapsing_star") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new mob_collapsing_starAI(pCreature);
+        return new mob_collapsing_starAI(creature);
     }
 
     struct mob_collapsing_starAI : public ScriptedAI
     {
-        mob_collapsing_starAI(Creature* pCreature) : ScriptedAI(pCreature) { }
+        mob_collapsing_starAI(Creature* creature) : ScriptedAI(creature) { }
 
         uint32 loseHealthTimer;
 
@@ -461,14 +468,14 @@ class npc_living_constellation : public CreatureScript
 public:
     npc_living_constellation() : CreatureScript("npc_living_constellation") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new npc_living_constellationAI(pCreature);
+        return new npc_living_constellationAI(creature);
     }
 
     struct npc_living_constellationAI : public ScriptedAI
     {
-        npc_living_constellationAI(Creature* pCreature) : ScriptedAI(pCreature) { }
+        npc_living_constellationAI(Creature* creature) : ScriptedAI(creature) { }
 
         uint32 arcaneBarrageTimer;
 
@@ -489,7 +496,7 @@ public:
             if (who->GetEntry() == CREATURE_BLACK_HOLE && who->GetDistance(me) < 5.0f)
             {
                 who->ToCreature()->CastSpell(who, SPELL_DESPAWN_BLACK_HOLE, true);
-                who->ToCreature()->ForcedDespawn(1*IN_MILLISECONDS);
+                who->ToCreature()->ForcedDespawn();
                 me->DealDamage(me, me->GetHealth());
             }
         }
@@ -510,14 +517,14 @@ class npc_black_hole : public CreatureScript
 public:
     npc_black_hole() : CreatureScript("npc_black_hole") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new npc_black_holeAI(pCreature);
+        return new npc_black_holeAI(creature);
     }
 
     struct npc_black_holeAI : public Scripted_NoMovementAI
     {
-        npc_black_holeAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+        npc_black_holeAI(Creature* creature) : Scripted_NoMovementAI(creature)
         {
             DoCast(me, SPELL_BLACK_HOLE_SPAWN_VISUAL, true);
             DoCast(me, SPELL_BLACK_HOLE_STATE, true);
@@ -547,11 +554,11 @@ public:
 
     bool OnGossipHello(Player* player, GameObject* go)
     {
-        InstanceScript* pInstance = go->GetInstanceScript();
+        InstanceScript* _instance = go->GetInstanceScript();
 
         if (player->HasItemCount(45796, 1) || player->HasItemCount(45798, 1))
         {
-            pInstance->SetBossState(TYPE_ALGALON, SPECIAL);
+            _instance->SetBossState(TYPE_ALGALON, SPECIAL);
             go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
             go->SetGoState(GO_STATE_ACTIVE);
         }
