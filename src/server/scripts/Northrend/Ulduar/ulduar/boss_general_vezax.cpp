@@ -109,10 +109,12 @@ public:
         bool AnimusKilled;
         bool VarporKilled;
         bool HitByShadowCrash;
+        bool ImmunityToReset;
         uint32 uiSummonVarpor_Timer;
         uint32 uiSurgeOfDarkness_Timer;
         uint32 uiShadowCrash_Timer;
         uint32 uiSearingFlames_Timer;
+        uint32 uiResetImmunity_Timer;
         uint32 uiMarkOfTheFaceless;
 
         void Reset()
@@ -121,6 +123,7 @@ public:
             HitByShadowCrash = false;
             AnimusKilled = false;
             VarporKilled = false;
+            ImmunityToReset = false;
             DespawnVarpors();
             DespawnAnimus();
 
@@ -129,9 +132,12 @@ public:
             uiShadowCrash_Timer = 10000;
             uiSearingFlames_Timer = urand(5000,10000);
             uiMarkOfTheFaceless = urand(15000,25000);
+            uiResetImmunity_Timer = 0;
 
             if(m_pInstance)
                 m_pInstance->SetBossState(TYPE_VEZAX,NOT_STARTED);
+
+            me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
         }
 
         void DespawnVarpors()
@@ -319,9 +325,20 @@ public:
                     if(!me->IsNonMeleeSpellCasted(false))
                     {
                          DoCast(SPELL_SEARING_FLAMES);
+                         me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, false);
                          uiSearingFlames_Timer = urand(10000,15000);
+                         ImmunityToReset = true;
+                         uiResetImmunity_Timer = 2000;
                     }
                 }else uiSearingFlames_Timer -= diff;
+
+            if(ImmunityToReset)
+            if(uiResetImmunity_Timer < diff)
+            {
+                me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
+                uiResetImmunity_Timer = 0;
+                ImmunityToReset = false;
+            }else uiResetImmunity_Timer -= diff;
 
             if(uiMarkOfTheFaceless < diff)
             {
