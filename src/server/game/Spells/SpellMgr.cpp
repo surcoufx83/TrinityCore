@@ -487,14 +487,19 @@ AuraState GetSpellAuraState(SpellEntry const* spellInfo)
         return AURA_STATE_BLEEDING;
 
     if (GetSpellSchoolMask(spellInfo) & SPELL_SCHOOL_MASK_FROST)
-    {
         for (uint8 i = 0; i<MAX_SPELL_EFFECTS; ++i)
-        {
             if (spellInfo->EffectApplyAuraName[i] == SPELL_AURA_MOD_STUN
                 || spellInfo->EffectApplyAuraName[i] == SPELL_AURA_MOD_ROOT)
                 return AURA_STATE_FROZEN;
-        }
+
+    switch (spellInfo->Id)
+    {
+        case 71465: // Divine Surge
+            return AURA_STATE_UNKNOWN22;
+        default:
+            break;
     }
+
     return AURA_STATE_NONE;
 }
 
@@ -4159,7 +4164,10 @@ void SpellMgr::LoadSpellCustomAttr()
         case 72864: // Death Plague (Rotting Frost Giant)
         case 72378: // Blood Nova (Deathbringer Saurfang)
         case 73058: // Blood Nova (Deathbringer Saurfang)
-            spellInfo->EffectRadiusIndex[0] = 12;
+        case 71160: // Plague Stench (Stinky)
+        case 71161: // Plague Stench (Stinky)
+        case 71123: // Decimate (Stinky & Precious)
+            spellInfo->EffectRadiusIndex[0] = 12;   // 100yd
             ++count;
             break;
         case 72385: // Boiling Blood (Deathbringer Saurfang)

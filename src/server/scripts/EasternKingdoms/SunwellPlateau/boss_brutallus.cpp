@@ -161,11 +161,11 @@ public:
             Madrigosa = Unit::GetUnit(*me, pInstance->GetData64(DATA_MADRIGOSA));
             if(Madrigosa)
             {
-                 sLog->outError("Starte das Intro");
+                 //sLog->outError("Starte das Intro");
 
                  if(!Madrigosa->isAlive())
                  {
-                     sLog->outError("Madrigosa is Tod");
+                     //sLog->outError("Madrigosa is Tod");
                      EndIntro();
                      return;
                  }
@@ -176,7 +176,7 @@ public:
         
             }else
             {
-                sLog->outError("Madrigosa nicht gefunden");
+                //sLog->outError("Madrigosa nicht gefunden");
                 EndIntro();
             }
        
@@ -184,7 +184,7 @@ public:
 
         void EndIntro()
         {
-            sLog->outError("Beende das Intro");
+            //sLog->outError("Beende das Intro");
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             Intro = false;
             IsIntro = false;

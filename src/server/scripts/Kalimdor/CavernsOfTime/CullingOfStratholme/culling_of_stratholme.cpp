@@ -114,6 +114,7 @@ enum Spells
     SPELL_EXORCISM_N                           = 52445,
     SPELL_EXORCISM_H                           = 58822,
     SPELL_HOLY_LIGHT                           = 52444,
+    SPELL_ARCANE_DISRUPTION                    = 49590,
 };
 
 enum GossipMenuArthas
@@ -125,7 +126,7 @@ enum GossipMenuArthas
    GOSSIP_MENU_ARTHAS_5                        = 100005
 };
 
-enum
+enum EncounterData
 {
     ENCOUNTER_WAVES_NUMBER                      = 8,
     ENCOUNTER_WAVES_MAX_SPAWNS                  = 5,

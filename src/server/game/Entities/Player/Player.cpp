@@ -42,6 +42,9 @@
 #include "GridNotifiersImpl.h"
 #include "CellImpl.h"
 #include "ObjectMgr.h"
+#include "ArenaTeamMgr.h"
+#include "GuildMgr.h"
+#include "GroupMgr.h"
 #include "ObjectAccessor.h"
 #include "CreatureAI.h"
 #include "Formulas.h"
@@ -4784,7 +4787,7 @@ void Player::DeleteFromDB(uint64 playerguid, uint32 accountId, bool updateRealmC
     sObjectAccessor->ConvertCorpseForPlayer(playerguid);
 
     if (uint32 guildId = GetGuildIdFromDB(playerguid))
-        if (Guild* pGuild = sObjectMgr->GetGuildById(guildId))
+        if (Guild* pGuild = sGuildMgr->GetGuildById(guildId))
             pGuild->DeleteMember(guid);
 
     // remove from arena teams
@@ -4793,7 +4796,7 @@ void Player::DeleteFromDB(uint64 playerguid, uint32 accountId, bool updateRealmC
     // the player was uninvited already on logout so just remove from group
     QueryResult resultGroup = CharacterDatabase.PQuery("SELECT guid FROM group_member WHERE memberGuid=%u", guid);
     if (resultGroup)
-        if (Group* group = sObjectMgr->GetGroupByStorageId((*resultGroup)[0].GetUInt32()))
+        if (Group* group = sGroupMgr->GetGroupByDbStoreId((*resultGroup)[0].GetUInt32()))
             RemoveFromGroup(group, playerguid);
 
     // Remove signs from petitions (also remove petitions if owner);
@@ -5474,7 +5477,7 @@ uint32 Player::DurabilityRepair(uint16 pos, bool cost, float discountMod, bool g
                     return TotalCost;
                 }
 
-                Guild *pGuild = sObjectMgr->GetGuildById(GetGuildId());
+                Guild *pGuild = sGuildMgr->GetGuildById(GetGuildId());
                 if (!pGuild)
                     return TotalCost;
 
@@ -9097,9 +9100,11 @@ void Player::SendInitWorldStates(uint32 zoneid, uint32 areaid)
         case 4710:
             NumberOfFields = 28;
             break;
-        case 4812:
+        case 4812:  // Icecrown Citadel
             NumberOfFields = 13;
             break;
+        case 4100:  // The Culling of Stratholme
+            NumberOfFields = 13;
          default:
             NumberOfFields = 12;
             break;
@@ -9636,6 +9641,19 @@ void Player::SendInitWorldStates(uint32 zoneid, uint32 areaid)
                 data << uint32(4940) << uint32(0);              // 11 WORLDSTATE_SHOW_ATTEMPTS
                 data << uint32(4941) << uint32(50);             // 12 WORLDSTATE_ATTEMPTS_REMAINING
                 data << uint32(4942) << uint32(50);             // 13 WORLDSTATE_ATTEMPTS_MAX
+            }
+            break;
+        // The Culling of Stratholme
+        case 4100:
+            if (instance && mapid == 595)
+                instance->FillInitialWorldStates(data);
+            else
+            {
+                data << uint32(3479) << uint32(0);              // 9  WORLDSTATE_SHOW_CRATES
+                data << uint32(3480) << uint32(0);              // 10 WORLDSTATE_CRATES_REVEALED
+                data << uint32(3504) << uint32(0);              // 11 WORLDSTATE_WAVE_COUNT
+                data << uint32(3931) << uint32(25);             // 12 WORLDSTATE_TIME_GUARDIAN
+                data << uint32(3932) << uint32(0);              // 13 WORLDSTATE_TIME_GUARDIAN_SHOW
             }
             break;
         default:
@@ -16283,7 +16301,7 @@ void Player::_LoadArenaTeamInfo(PreparedQueryResult result)
 
             uint32 arenaTeamId = fields[0].GetUInt32();
 
-            ArenaTeam* arenaTeam = sObjectMgr->GetArenaTeamById(arenaTeamId);
+            ArenaTeam* arenaTeam = sArenaTeamMgr->GetArenaTeamById(arenaTeamId);
             if (!arenaTeam)
             {
                 sLog->outError("Player::_LoadArenaTeamInfo: couldn't load arenateam %u", arenaTeamId);
@@ -16575,7 +16593,7 @@ bool Player::LoadFromDB(uint32 guid, SQLQueryHolder *holder)
         if (!arena_team_id)
             continue;
 
-        if (ArenaTeam * at = sObjectMgr->GetArenaTeamById(arena_team_id))
+        if (ArenaTeam * at = sArenaTeamMgr->GetArenaTeamById(arena_team_id))
             if (at->IsMember(GetGUID()))
                 continue;
 
@@ -17794,7 +17812,7 @@ void Player::_LoadGroup(PreparedQueryResult result)
     //QueryResult *result = CharacterDatabase.PQuery("SELECT guid FROM group_member WHERE memberGuid=%u", GetGUIDLow());
     if (result)
     {
-        if (Group* group = sObjectMgr->GetGroupByStorageId((*result)[0].GetUInt32()))
+        if (Group* group = sGroupMgr->GetGroupByDbStoreId((*result)[0].GetUInt32()))
         {
             uint8 subgroup = group->GetMemberGroup(GetGUID());
             SetGroup(group, subgroup);
@@ -19823,7 +19841,7 @@ void Player::LeaveAllArenaTeams(uint64 guid)
         uint32 arenaTeamId = fields[0].GetUInt32();
         if (arenaTeamId != 0)
         {
-            ArenaTeam* arenaTeam = sObjectMgr->GetArenaTeamById(arenaTeamId);
+            ArenaTeam* arenaTeam = sArenaTeamMgr->GetArenaTeamById(arenaTeamId);
             if (arenaTeam)
                 arenaTeam->DelMember(guid, true);
         }
@@ -20462,7 +20480,7 @@ uint32 Player::GetMaxPersonalArenaRatingRequirement(uint32 minarenaslot) const
     uint32 max_personal_rating = 0;
     for (uint8 i = minarenaslot; i < MAX_ARENA_SLOT; ++i)
     {
-        if (ArenaTeam * at = sObjectMgr->GetArenaTeamById(GetArenaTeamId(i)))
+        if (ArenaTeam * at = sArenaTeamMgr->GetArenaTeamById(GetArenaTeamId(i)))
         {
             uint32 p_rating = GetArenaPersonalRating(i);
             uint32 t_rating = at->GetRating();
@@ -24461,7 +24479,7 @@ uint32 Player::GetReputation(uint32 factionentry)
 
 std::string Player::GetGuildName()
 {
-    return sObjectMgr->GetGuildById(GetGuildId())->GetName();
+    return sGuildMgr->GetGuildById(GetGuildId())->GetName();
 }
 
 void Player::SendDuelCountdown(uint32 counter)

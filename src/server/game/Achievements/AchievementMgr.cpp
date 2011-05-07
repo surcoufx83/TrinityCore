@@ -19,6 +19,8 @@
 #include "Common.h"
 #include "DBCEnums.h"
 #include "ObjectMgr.h"
+#include "ArenaTeamMgr.h"
+#include "GuildMgr.h"
 #include "World.h"
 #include "WorldPacket.h"
 #include "DatabaseEnv.h"
@@ -82,7 +84,7 @@ bool AchievementCriteriaData::IsValid(AchievementCriteriaEntry const* criteria)
         case ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE:
         case ACHIEVEMENT_CRITERIA_TYPE_WIN_BG:
         case ACHIEVEMENT_CRITERIA_TYPE_FALL_WITHOUT_DYING:
-        case ACHIEVEMENT_CRITERIA_TYPE_COMPLETE_QUEST:      // only hardcoded list
+        case ACHIEVEMENT_CRITERIA_TYPE_COMPLETE_QUEST:          // only hardcoded list
         case ACHIEVEMENT_CRITERIA_TYPE_CAST_SPELL:
         case ACHIEVEMENT_CRITERIA_TYPE_WIN_RATED_ARENA:
         case ACHIEVEMENT_CRITERIA_TYPE_DO_EMOTE:
@@ -97,6 +99,8 @@ bool AchievementCriteriaData::IsValid(AchievementCriteriaEntry const* criteria)
         case ACHIEVEMENT_CRITERIA_TYPE_ROLL_GREED_ON_LOOT:
         case ACHIEVEMENT_CRITERIA_TYPE_BG_OBJECTIVE_CAPTURE:
         case ACHIEVEMENT_CRITERIA_TYPE_HONORABLE_KILL:
+        case ACHIEVEMENT_CRITERIA_TYPE_COMPLETE_DAILY_QUEST:    // only Children's Week achievements
+        case ACHIEVEMENT_CRITERIA_TYPE_USE_ITEM:                // only Children's Week achievements
             break;
         default:
             sLog->outErrorDb("Table `achievement_criteria_data` has data for non-supported criteria type (Entry: %u Type: %u), ignored.", criteria->ID, criteria->requiredType);
@@ -635,7 +639,7 @@ void AchievementMgr::SendAchievementEarned(AchievementEntry const* achievement) 
         sLog->outDebug(LOG_FILTER_ACHIEVEMENTSYS, "AchievementMgr::SendAchievementEarned(%u)", achievement->ID);
     #endif
 
-    if (Guild* guild = sObjectMgr->GetGuildById(GetPlayer()->GetGuildId()))
+    if (Guild* guild = sGuildMgr->GetGuildById(GetPlayer()->GetGuildId()))
     {
         Trinity::AchievementChatBuilder say_builder(*GetPlayer(), CHAT_MSG_GUILD_ACHIEVEMENT, LANG_ACHIEVEMENT_EARNED, achievement->ID);
         Trinity::LocalizedPacketDo<Trinity::AchievementChatBuilder> say_do(say_builder);
@@ -741,7 +745,6 @@ void AchievementMgr::UpdateAchievementCriteria(AchievementCriteriaTypes type, ui
         switch (type)
         {
             // std. case: increment at 1
-            case ACHIEVEMENT_CRITERIA_TYPE_COMPLETE_DAILY_QUEST:
             case ACHIEVEMENT_CRITERIA_TYPE_NUMBER_OF_TALENT_RESETS:
             case ACHIEVEMENT_CRITERIA_TYPE_LOSE_DUEL:
             case ACHIEVEMENT_CRITERIA_TYPE_CREATE_AUCTION:
@@ -787,7 +790,22 @@ void AchievementMgr::UpdateAchievementCriteria(AchievementCriteriaTypes type, ui
                 break;
 
             // specialized cases
+            case ACHIEVEMENT_CRITERIA_TYPE_COMPLETE_DAILY_QUEST:
+            {
+                // AchievementMgr::UpdateAchievementCriteria might also be called on login - skip in this case
+                if (!miscValue1)
+                    continue;
 
+                if (achievement->categoryId == CATEGORY_CHILDRENS_WEEK)
+                {
+                    AchievementCriteriaDataSet const* data = sAchievementMgr->GetCriteriaDataSet(achievementCriteria);
+                    if (!data || !data->Meets(GetPlayer(), NULL))
+                        continue;
+                }
+
+                SetCriteriaProgress(achievementCriteria, 1, PROGRESS_ACCUMULATE);
+                break;
+            }
             case ACHIEVEMENT_CRITERIA_TYPE_WIN_BG:
             {
                 // AchievementMgr::UpdateAchievementCriteria might also be called on login - skip in this case
@@ -1153,8 +1171,18 @@ void AchievementMgr::UpdateAchievementCriteria(AchievementCriteriaTypes type, ui
                 // AchievementMgr::UpdateAchievementCriteria might also be called on login - skip in this case
                 if (!miscValue1)
                     continue;
+
                 if (achievementCriteria->use_item.itemID != miscValue1)
                     continue;
+
+                // Children's Week achievements have extra requirements
+                if (achievement->categoryId == CATEGORY_CHILDRENS_WEEK)
+                {
+                    AchievementCriteriaDataSet const* data = sAchievementMgr->GetCriteriaDataSet(achievementCriteria);
+                    if (!data || !data->Meets(GetPlayer(), NULL))
+                        continue;
+                }
+
                 SetCriteriaProgress(achievementCriteria, 1, PROGRESS_ACCUMULATE);
                 break;
             case ACHIEVEMENT_CRITERIA_TYPE_LOOT_ITEM:
@@ -1489,7 +1517,7 @@ void AchievementMgr::UpdateAchievementCriteria(AchievementCriteriaTypes type, ui
                 {
                     for (uint32 arena_slot = 0; arena_slot < MAX_ARENA_SLOT; ++arena_slot)
                         if (uint32 arena_team_id = GetPlayer()->GetArenaTeamId(arena_slot))
-                            if (ArenaTeam * at = sObjectMgr->GetArenaTeamById(arena_team_id))
+                            if (ArenaTeam * at = sArenaTeamMgr->GetArenaTeamById(arena_team_id))
                                 if (at->GetType() == reqTeamType)
                                 {
                                     SetCriteriaProgress(achievementCriteria, at->GetStats().Rating, PROGRESS_HIGHEST);
@@ -2268,7 +2296,6 @@ void AchievementGlobalMgr::LoadAchievementCriteriaData()
                     case 1276:
                     case 1277:
                     case 1282:
-                    case 1789:
                         break;
                     default:
                         continue;
@@ -2312,6 +2339,16 @@ void AchievementGlobalMgr::LoadAchievementCriteriaData()
                 break;                                      // any cases
             case ACHIEVEMENT_CRITERIA_TYPE_HONORABLE_KILL:  // any cases
                 break;
+            case ACHIEVEMENT_CRITERIA_TYPE_COMPLETE_DAILY_QUEST:
+            case ACHIEVEMENT_CRITERIA_TYPE_USE_ITEM:        // only Children's Week achievements
+            {
+                AchievementEntry const* achievement = sAchievementStore.LookupEntry(criteria->referredAchievement);
+                if (!achievement)
+                    continue;
+                if (achievement->categoryId != CATEGORY_CHILDRENS_WEEK)
+                    continue;
+                break;
+            }
             default:                                        // type not use DB data, ignore
                 continue;
         }
