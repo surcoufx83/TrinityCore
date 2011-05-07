@@ -846,9 +846,9 @@ public:
             if (me->GetEntry() == ENTRY_NPC_FLASH_FREEZE_PRE)
             {
                 if (pKiller && pKiller->GetTypeId() == TYPEID_PLAYER)
-                    if (Creature* pHodir = me->FindNearestCreature(NPC_HODIR, 40, true))
+                    if (Creature* pHodir = me->FindNearestCreature(NPC_HODIR, 80, true))
                         if (!pHodir->isInCombat())
-                            pHodir->AI()->DoZoneInCombat();
+                            pHodir->AI()->AttackStart(pKiller);
             }
         }
 
