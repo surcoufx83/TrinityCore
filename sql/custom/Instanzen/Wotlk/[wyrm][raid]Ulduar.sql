@@ -65,6 +65,40 @@ INSERT INTO `spell_linked_spell` (`spell_trigger`,`spell_effect`,`type`,`comment
 (67114,-65667,2, 'Iron Construct - immune to Heat when Brittle');
 
 -- ##########################################################
+-- Assembly of Iron
+-- ##########################################################
+
+-- Loot
+DELETE FROM `reference_loot_template` WHERE `entry`=34122 AND `lootmode`=4;
+DELETE FROM `creature_loot_template` WHERE `entry`=32867 AND `lootmode`=4;
+
+UPDATE `creature_loot_template` SET `lootmode`=1 WHERE `entry` IN (32867,32927) AND `lootmode`=2;
+
+DELETE FROM `creature_loot_template` WHERE `entry`=32867 AND `groupid`=1;
+INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
+(32867,45447,0,1,1,1,1),
+(32867,45448,0,1,1,1,1),
+(32867,45449,0,1,1,1,1),
+(32867,45455,0,1,1,1,1),
+(32867,45456,0,1,1,1,1);
+
+UPDATE `creature_loot_template` SET `item`=45857, `lootmode`=1 WHERE `entry` IN (33692,33693) AND `lootmode`=2;
+UPDATE `creature_loot_template` SET `lootmode`=1 WHERE `entry`=33693 AND `lootmode`=4;
+
+-- Limit Supercharge targets
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry`=61920;
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`) VALUES
+(13,61920,18,1,32857),
+(13,61920,18,1,32867),
+(13,61920,18,1,32927);
+
+-- Lightning Tendrils Visual
+DELETE FROM `spell_linked_spell` WHERE `spell_trigger` IN (61887,63486);
+INSERT INTO `spell_linked_spell` (`spell_trigger`,`spell_effect`,`type`,`comment`) VALUES
+(61887,61883,2, 'Lightning Tendrils - Visual'),
+(63486,61883,2, 'Lightning Tendrils - Visual');
+
+-- ##########################################################
 -- Kologarn
 -- ##########################################################
 DELETE FROM `npc_spellclick_spells` WHERE `npc_entry` IN (32930);
@@ -78,6 +112,11 @@ UPDATE creature_template SET ScriptName = "boss_auriaya" WHERE Entry = 33515;
 UPDATE creature_template SET ScriptName = "mob_feral_defender" WHERE Entry = 34035;
 UPDATE creature_template SET ScriptName = "mob_sanctum_sentry" WHERE Entry = 34014;
 UPDATE creature_template SET ScriptName = "mob_seeping_essence_stalker" WHERE Entry = 34098;
+
+-- Strength of the Pack
+DELETE FROM `spell_script_names` WHERE `spell_id`=64381;
+INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
+(64381, 'spell_strength_of_the_pack');
 
 -- ##########################################################
 -- Hodir
