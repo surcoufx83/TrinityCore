@@ -16,45 +16,45 @@ DELETE FROM `smart_scripts` WHERE `entryorguid` IN (26471,29155,29159,29160,2916
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`) VALUES
 -- HORDE --
 -- Image of Archmage Aethas Sunreaver
-(26471,0,0,1,62,0,100,0,9513,0,0,0,11,54620,2,0,0,0,0,7,0,0,0,0,0,0,0,'on Gossip Select - Cast Teleport Dalaran'),
+(26471,0,0,1,62,0,100,0,9513,0,0,0,85,53360,2,0,0,0,0,7,0,0,0,0,0,0,0,'on Gossip Select - Cast Teleport Dalaran'),
 (26471,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'close Gossip'),
 (26471,0,2,0,20,0,100,0,12066,0,0,0,28,47391,0,0,0,0,0,7,0,0,0,0,0,0,0,'on QuestReward 12066 - Remove:Ley Line Information'),
 (26471,0,3,0,20,0,100,0,12084,0,0,0,28,47473,0,0,0,0,0,7,0,0,0,0,0,0,0,'on QuestReward 12084 - Remove:Ley Line Information'),
 (26471,0,4,0,20,0,100,0,12110,0,0,0,28,47636,0,0,0,0,0,7,0,0,0,0,0,0,0,'on QuestReward 12110 - Remove:Ley Line Information'),
 -- Magistrix Kaelana
-(29155,0,0,1,62,0,100,0,9513,0,0,0,11,54620,2,0,0,0,0,7,0,0,0,0,0,0,0,'on Gossip Select - Cast Teleport Dalaran'),
+(29155,0,0,1,62,0,100,0,9513,0,0,0,85,53360,2,0,0,0,0,7,0,0,0,0,0,0,0,'on Gossip Select - Cast Teleport Dalaran'),
 (29155,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'close Gossip'),
 -- Magister Varenthas
-(29159,0,0,1,62,0,100,0,9513,0,0,0,11,54620,2,0,0,0,0,7,0,0,0,0,0,0,0,'on Gossip Select - Cast Teleport Dalaran'),
+(29159,0,0,1,62,0,100,0,9513,0,0,0,85,53360,2,0,0,0,0,7,0,0,0,0,0,0,0,'on Gossip Select - Cast Teleport Dalaran'),
 (29159,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'close Gossip'),
 -- Magistrix Phaelista
-(29160,0,0,1,62,0,100,0,9513,0,0,0,11,54620,2,0,0,0,0,7,0,0,0,0,0,0,0,'on Gossip Select - Cast Teleport Dalaran'),
+(29160,0,0,1,62,0,100,0,9513,0,0,0,85,53360,2,0,0,0,0,7,0,0,0,0,0,0,0,'on Gossip Select - Cast Teleport Dalaran'),
 (29160,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'close Gossip'),
 -- Magister Tyr'ganal
-(29162,0,0,1,62,0,100,0,9513,0,0,0,11,54620,2,0,0,0,0,7,0,0,0,0,0,0,0,'on Gossip Select - Cast Teleport Dalaran'),
+(29162,0,0,1,62,0,100,0,9513,0,0,0,85,53360,2,0,0,0,0,7,0,0,0,0,0,0,0,'on Gossip Select - Cast Teleport Dalaran'),
 (29162,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'close Gossip'),
 -- ALLIANCE --
 -- Image of Archmage Modera
-(26673,0,0,1,62,0,100,0,9511,0,0,0,11,54620,2,0,0,0,0,7,0,0,0,0,0,0,0,'on Gossip Select - Cast Teleport Dalaran'),
+(26673,0,0,1,62,0,100,0,9511,0,0,0,85,53360,2,0,0,0,0,7,0,0,0,0,0,0,0,'on Gossip Select - Cast Teleport Dalaran'),
 (26673,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'close Gossip'),
 (26673,0,2,0,20,0,100,0,12065,0,0,0,28,47391,0,0,0,0,0,7,0,0,0,0,0,0,0,'on QuestReward 12065 - Remove:Ley Line Information'),
 (26673,0,3,0,20,0,100,0,12083,0,0,0,28,47473,0,0,0,0,0,7,0,0,0,0,0,0,0,'on QuestReward 12083 - Remove:Ley Line Information'),
 (26673,0,4,0,20,0,100,0,12107,0,0,0,28,47636,0,0,0,0,0,7,0,0,0,0,0,0,0,'on QuestReward 12107 - Remove:Ley Line Information'),
 -- Baron Ulrik von Stromhearth
-(23729,0,0,1,62,0,100,0,9511,0,0,0,11,54620,2,0,0,0,0,7,0,0,0,0,0,0,0,'on Gossip Select - Cast Teleport Dalaran'),
+(23729,0,0,1,62,0,100,0,9511,0,0,0,85,53360,2,0,0,0,0,7,0,0,0,0,0,0,0,'on Gossip Select - Cast Teleport Dalaran'),
 (23729,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'close Gossip'),
 -- Vas the Unstable
-(27158,0,0,1,62,0,100,0,9511,0,0,0,11,54620,2,0,0,0,0,7,0,0,0,0,0,0,0,'on Gossip Select - Cast Teleport Dalaran'),
+(27158,0,0,1,62,0,100,0,9511,0,0,0,85,53360,2,0,0,0,0,7,0,0,0,0,0,0,0,'on Gossip Select - Cast Teleport Dalaran'),
 (27158,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'close Gossip'),
 -- Magister Dath'omere
-(29158,0,0,1,62,0,100,0,9511,0,0,0,11,54620,2,0,0,0,0,7,0,0,0,0,0,0,0,'on Gossip Select - Cast Teleport Dalaran'),
+(29158,0,0,1,62,0,100,0,9511,0,0,0,85,53360,2,0,0,0,0,7,0,0,0,0,0,0,0,'on Gossip Select - Cast Teleport Dalaran'),
 (29158,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'close Gossip'),
 -- Magistrix Haelenai
-(29161,0,0,1,62,0,100,0,9511,0,0,0,11,54620,2,0,0,0,0,7,0,0,0,0,0,0,0,'on Gossip Select - Cast Teleport Dalaran'),
+(29161,0,0,1,62,0,100,0,9511,0,0,0,85,53360,2,0,0,0,0,7,0,0,0,0,0,0,0,'on Gossip Select - Cast Teleport Dalaran'),
 (29161,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'close Gossip'),
 -- NEUTRAL --
 -- Magister Teronus III
-(29169,0,0,1,62,0,100,0,9780,0,0,0,11,54620,2,0,0,0,0,7,0,0,0,0,0,0,0,'on Gossip Select - Cast Teleport Dalaran'),
+(29169,0,0,1,62,0,100,0,9780,0,0,0,85,53360,2,0,0,0,0,7,0,0,0,0,0,0,0,'on Gossip Select - Cast Teleport Dalaran'),
 (29169,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'close Gossip');
 -- Conditions
 DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 15 AND `SourceGroup` IN (9513,9511,9780);
