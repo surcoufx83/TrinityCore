@@ -509,6 +509,7 @@ public:
             {
                 heart->EnterVehicle(me, 1);
                 heart->ClearUnitState(UNIT_STAT_ONVEHICLE); // Hack
+                heart->SetInCombatWithZone();
                 heart->CastSpell(heart, SPELL_EXPOSED_HEART, false);
             }
 
@@ -644,7 +645,7 @@ public:
                         // TODO Send raid message
                         casted = true;
                         // Increase health with 1 percent
-                        pXT002->CastSpell(me, SPELL_HEAL_XT002, true);
+                        pXT002->CastSpell(pXT002, SPELL_HEAL_XT002, true);
                         //pXT002->ModifyHealth(int32(pXT002->CountPctFromMaxHealth(1)));
                         pXT002->AI()->DoAction(ACTION_XT002_REACHED);
                         // Despawns the scrapbot
