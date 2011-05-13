@@ -304,7 +304,7 @@ public:
             DoScriptText(RAND(SAY_STEELBREAKER_SLAY_1, SAY_STEELBREAKER_SLAY_2), me);
 
             if (phase == 3)
-                DoCast(me, SPELL_ELECTRICAL_CHARGE);
+                DoCast(me, SPELL_ELECTRICAL_CHARGE, true);
         }
 
         void SpellHit(Unit * /*from*/, const SpellEntry *spell)
@@ -349,6 +349,42 @@ public:
         }
     };
 
+};
+
+class spell_meltdown : public SpellScriptLoader
+{
+    public:
+        spell_meltdown() : SpellScriptLoader("spell_meltdown") { }
+
+        class spell_meltdown_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_meltdown_SpellScript);
+
+            bool Validate(SpellEntry const* /*spell*/)
+            {
+                if (!sSpellStore.LookupEntry(SPELL_ELECTRICAL_CHARGE))
+                    return false;
+                return true;
+            }
+
+            void TriggerElectricalCharge(SpellEffIndex /*effIndex*/)
+            {
+                if (Unit* target = GetHitUnit())
+                    if (InstanceScript* _instance = target->GetInstanceScript())
+                        if (Creature* steelbreaker = ObjectAccessor::GetCreature(*target, _instance->GetData64(DATA_STEELBREAKER)))
+                            steelbreaker->CastSpell(steelbreaker, SPELL_ELECTRICAL_CHARGE, true);
+            }
+
+            void Register()
+            {
+                OnEffect += SpellEffectFn(spell_meltdown_SpellScript::TriggerElectricalCharge, EFFECT_1, SPELL_EFFECT_INSTAKILL);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_meltdown_SpellScript();
+        }
 };
 
 class boss_runemaster_molgeim : public CreatureScript
@@ -787,6 +823,7 @@ public:
 void AddSC_boss_assembly_of_iron()
 {
     new boss_steelbreaker();
+    new spell_meltdown();
     new boss_runemaster_molgeim();
     new boss_stormcaller_brundir();
     new mob_lightning_elemental();
