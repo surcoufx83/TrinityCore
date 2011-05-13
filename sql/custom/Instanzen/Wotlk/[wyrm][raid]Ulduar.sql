@@ -110,6 +110,12 @@ DELETE FROM `npc_spellclick_spells` WHERE `npc_entry` IN (32930);
 INSERT INTO `npc_spellclick_spells` (`npc_entry`,`spell_id`,`quest_start`,`quest_start_active`,`quest_end`,`cast_flags`,`aura_required`,`aura_forbidden`,`user_type`) VALUES
 (32930,46598,0,0,0,1,0,0,0); -- Kologarn - Arm - Ride Vehicle Hardcoded
 
+-- Stone Grip Absorb - target condition
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry` IN (64224,64225);
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`) VALUES
+(13,64224,18,1,32934),
+(13,64225,18,1,32934);
+
 -- ##########################################################
 -- Auriaya
 -- ##########################################################
