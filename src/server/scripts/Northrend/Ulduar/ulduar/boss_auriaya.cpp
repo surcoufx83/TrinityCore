@@ -80,6 +80,7 @@ enum Achievements
 
 enum Events
 {
+    EVENT_NONE,
     EVENT_TERRIFYING_SCREECH,
     EVENT_SONIC_SCREECH,
     EVENT_GUARDIAN_SWARM,
