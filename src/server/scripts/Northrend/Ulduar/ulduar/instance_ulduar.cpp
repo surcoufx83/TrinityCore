@@ -15,7 +15,10 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ScriptPCH.h"
+#include "ScriptMgr.h"
+#include "ScriptedCreature.h"
+#include "InstanceScript.h"
+#include "ObjectMgr.h"
 #include "ulduar.h"
 
 class instance_ulduar : public InstanceMapScript
@@ -577,6 +580,10 @@ public:
                     uiYoggSaronBrainDoor3GUID = go->GetGUID();
                     HandleGameObject(NULL, false, go);
                     break;
+                case GO_MOLE_MACHINE:
+                    if (GetBossState(TYPE_RAZORSCALE) == IN_PROGRESS)
+                        go->SetGoState(GO_STATE_ACTIVE);
+                    break;
                 case GO_ALGALON_PLATFORM:
                     HandleGameObject(NULL, false, go);
                     break;
@@ -615,6 +622,17 @@ public:
             }
         }
 
+        void OnGameObjectRemove(GameObject* go)
+        {
+            switch (go->GetEntry())
+            {
+                case GO_LEVIATHAN_DOOR:
+                    AddDoor(go, false);
+                    break;
+            }
+        }
+
+        
         void ProcessEvent(GameObject* /*go*/, uint32 eventId)
         {
             // Flame Leviathan's Tower Event triggers

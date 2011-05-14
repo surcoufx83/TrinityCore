@@ -77,12 +77,6 @@ if( WIN32 )
   endif()
 endif( WIN32 )
 
-if( WITH_SQL )
-  message("* Install SQL-files      : Yes")
-else()
-  message("* Install SQL-files      : No  (default)")
-endif()
-
 if( UNIX )
   if( WITH_AUTOBACKTRACE )
     message("* With autobacktrace     : Yes")

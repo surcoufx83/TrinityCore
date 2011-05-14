@@ -50,6 +50,7 @@ public:
         }
 
         bool IsEncounterInProgress() const
+                else if (state == DONE)
         {
             for (int i = 0; i < MAX_ENCOUNTER; ++i)
                 if (auiEncounter[i] == IN_PROGRESS)
@@ -102,6 +103,11 @@ public:
                         {
                             pFocusingIris->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
                             pFocusingIris->SetPhaseMask(1, true);
+        }
+
+        // eliminate compile warning
+        void ProcessEvent(Unit* /*unit*/, uint32 /*eventId*/)
+        {
                         }
                         if (GameObject* pExitPortal = instance->GetGameObject(uiExitPortalGUID))
                             pExitPortal->SetPhaseMask(1, true);
