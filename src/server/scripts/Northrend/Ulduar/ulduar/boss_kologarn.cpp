@@ -57,6 +57,8 @@ EndScriptData */
 #define NPC_RUBBLE_STALKER      33809
 #define NPC_ARM_SWEEP_STALKER   33661
 
+#define EMOTE_EYEBEAM           "Kologarn fokussiert seinen Blick auf Euch!"
+
 enum Events
 {
     EVENT_NONE = 0,
@@ -285,7 +287,7 @@ class boss_kologarn : public CreatureScript
                             DoCastVictim(SPELL_TWO_ARM_SMASH);
                         else if (left || right)
                             DoCastVictim(SPELL_ONE_ARM_SMASH);
-                        events.RepeatEvent(15000);
+                        events.RepeatEvent(urand(8000, 10000));
                         break;
                     case EVENT_STONE_SHOUT:
                         DoCast(SPELL_STONE_SHOUT);
@@ -323,6 +325,7 @@ class boss_kologarn : public CreatureScript
                         if (eyebeamTargetUnit)
                         {
                             eyebeamTarget = eyebeamTargetUnit->GetGUID();
+                            me->MonsterWhisper(EMOTE_EYEBEAM, eyebeamTarget, true);
                             DoCast(SPELL_SUMMON_FOCUSED_EYEBEAM);
                         }
                         events.RepeatEvent(urand(15000, 35000));
