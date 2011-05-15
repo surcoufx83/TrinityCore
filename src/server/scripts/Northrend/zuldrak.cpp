@@ -1386,7 +1386,7 @@ public:
 };
 
 /*######
-## npc_captain_brandon
+## npc_captain_brandon_zuldrak
 ######*/
 
 #define QUEST_SOMETHING_FOR_THE_PAIN                12597
@@ -1396,10 +1396,10 @@ public:
 
 #define TROLL_PATROL_KILL_CREDIT                    28042
 
-class npc_captain_brandon : public CreatureScript
+class npc_captain_brandon_zuldrak : public CreatureScript
 {
 public:
-    npc_captain_brandon() : CreatureScript("npc_captain_brandon") { }
+    npc_captain_brandon_zuldrak() : CreatureScript("npc_captain_brandon_zuldrak") { }
 
     bool OnQuestReward(Player *player, Creature *_Creature, Quest const *_Quest, uint32 /*item*/)
     {
@@ -1414,7 +1414,6 @@ public:
         }
         return true;
     }
-
 };
 
 /*######
@@ -2050,7 +2049,7 @@ void AddSC_zuldrak()
     new npc_crusade_recruit();
     new npc_elemental_lord();
     new npc_fiend_elemental();
-    new npc_captain_brandon();
+    new npc_captain_brandon_zuldrak();
     new npc_alchemist_finklestein();
     new npc_argent_soldier_12504();
     new go_scourge_enclosure();
