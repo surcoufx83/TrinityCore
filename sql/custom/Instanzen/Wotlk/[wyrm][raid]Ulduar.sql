@@ -65,9 +65,16 @@ INSERT INTO `spell_linked_spell` (`spell_trigger`,`spell_effect`,`type`,`comment
 (67114,-65667,2, 'Iron Construct - immune to Heat when Brittle');
 
 -- ##########################################################
+-- Razorscale
+-- ##########################################################
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `ConditionValue2`=0 AND `SourceEntry` IN (63317,64021);
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`Comment`) VALUES
+(13,63317,18,1,0,'Flame Breath - Players'),
+(13,64021,18,1,0,'Flame Breath - Players');
+
+-- ##########################################################
 -- Assembly of Iron
 -- ##########################################################
-
 -- Loot
 DELETE FROM `reference_loot_template` WHERE `entry`=34122 AND `lootmode`=4;
 DELETE FROM `creature_loot_template` WHERE `entry`=32867 AND `lootmode`=4;
@@ -115,6 +122,9 @@ DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry` IN
 INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`) VALUES
 (13,64224,18,1,32934),
 (13,64225,18,1,32934);
+
+UPDATE `creature_template` SET `ScriptName`='npc_kologarn_arm' WHERE `entry` IN (32933,32934);
+UPDATE `creature_template` SET `flags_extra`='flags_extra'|2 WHERE `entry`=33661;
 
 -- ##########################################################
 -- Auriaya
