@@ -184,7 +184,7 @@ UPDATE creature_template SET ScriptName = "mob_elder_ironbranch" WHERE Entry = 3
 UPDATE creature_template SET ScriptName = "mob_elder_stonebark" WHERE Entry = 32914;
 UPDATE creature_template SET ScriptName = "mob_unstable_sunbeam" WHERE Entry = 33050;
 UPDATE creature_template SET ScriptName = "mob_eonars_gift" WHERE Entry = 33228;
-UPDATE gameobject_template SET ScriptName = "mob_natural_bomb" WHERE ENTRY = 194902;
+UPDATE creature_template SET ScriptName = "mob_natural_bomb" WHERE entry = 34129;
 UPDATE creature_template SET ScriptName = "mob_iron_roots" WHERE Entry = 33168;
 UPDATE creature_template SET ScriptName = "mob_iron_roots" WHERE Entry = 33088;
 UPDATE creature_template SET ScriptName = "mob_freya_sunbeam" WHERE Entry = 33170;
