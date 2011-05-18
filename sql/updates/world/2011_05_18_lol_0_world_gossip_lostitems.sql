@@ -14,7 +14,7 @@ UPDATE creature_template SET gossip_menu_id =  8918, npcflag = npcflag | 1 WHERE
 UPDATE creature_template SET gossip_menu_id = 22127, npcflag = npcflag | 1 WHERE entry = 22127;       -- Wildlord Antelarion
 UPDATE creature_template SET gossip_menu_id = 28138, npcflag = npcflag | 1 WHERE entry = 28138;       -- Elder Harkek
 UPDATE creature_template SET gossip_menu_id = 29937, npcflag = npcflag | 1 WHERE entry = 29937;       -- Moteha Windkind
-UPDATE creature_template SET gossip_menu_id = 9929, npcflag = npcflag | 1 WHERE entry = 29650;        -- Archaeologist Andorin
+UPDATE creature_template SET gossip_menu_id = 9929, npcflag = npcflag | 1 WHERE entry = 29650;        -- Archaeologist Andorin 
 -- +-----------+
 -- |gossip_menu|
 -- +-----------+
@@ -71,44 +71,44 @@ INSERT INTO gossip_menu_option VALUES
 -- +---------+
 -- | SmartAI |
 -- +---------+
-DELETE FROM smart_scripts WHERE entryorguid IN (21772,21774,21769,21773,28518,26117,24186,24273,22127,28138,29937,29650);
+DELETE FROM smart_scripts WHERE source_type= 0 AND id IN (100,101) AND entryorguid IN (21772,21774,21769,21773,28518,26117,24186,24273,22127,28138,29937,29650);
 INSERT INTO smart_scripts VALUES
 -- Spectrecles (H)
-(21772,0,0,1,62,0,100,0,21772,0,0,0,11,37700,0x02,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - cast create Spectrecles to invoker'),
-(21772,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
+(21772,0,100,1,62,0,100,0,21772,0,0,0,11,37700,0x02,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - cast create Spectrecles to invoker'),
+(21772,0,101,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
 -- Spectrecles (A)
-(21774,0,0,1,62,0,100,0,21774,0,0,0,11,37700,0x02,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - cast create Spectrecles to invoker'),
-(21774,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
+(21774,0,100,1,62,0,100,0,21774,0,0,0,11,37700,0x02,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - cast create Spectrecles to invoker'),
+(21774,0,101,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
 -- Kor큝ron Flare Gun
-(21769,0,0,1,62,0,100,0,21769,0,0,0,56,31108,1,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - add Kor큝ron Flare Gun to invoker'),
-(21769,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
+(21769,0,100,1,62,0,100,0,21769,0,0,0,56,31108,1,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - add Kor큝ron Flare Gun to invoker'),
+(21769,0,101,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
 -- Wildhammer Flare Gun
-(21773,0,0,1,62,0,100,0,21773,0,0,0,56,31310,1,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - add Wildhammer Flare Gun to invoker'),
-(21773,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
+(21773,0,100,1,62,0,100,0,21773,0,0,0,56,31310,1,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - add Wildhammer Flare Gun to invoker'),
+(21773,0,101,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
 -- Ensorcelled Choker
-(28518,0,0,1,62,0,100,0,9709,0,0,0,56,38699,1,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - add Ensorcelled Choker to invoker'),
-(28518,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
+(28518,0,100,1,62,0,100,0,9709,0,0,0,56,38699,1,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - add Ensorcelled Choker to invoker'),
+(28518,0,101,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
 -- Augmented Arcane Prison
-(26117,0,0,1,62,0,100,0,9253,1,0,0,11,46764,0x02,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - cast create Augmented Arcane Prison to invoker'),
-(26117,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
+(26117,0,100,1,62,0,100,0,9253,1,0,0,11,46764,0x02,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - cast create Augmented Arcane Prison to invoker'),
+(26117,0,101,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
 -- Worg Disguise (H)
-(24186,0,0,1,62,0,100,0,8908,0,0,0,11,43379,0x02,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - cast create Worg Disguise to invoker'),
-(24186,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
+(24186,0,100,1,62,0,100,0,8908,0,0,0,11,43379,0x02,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - cast create Worg Disguise to invoker'),
+(24186,0,101,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
 -- Worg Disguise (A)
-(24273,0,0,1,62,0,100,0,8918,0,0,0,11,43379,0x02,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - cast create Worg Disguise to invoker'),
-(24273,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
+(24273,0,100,1,62,0,100,0,8918,0,0,0,11,43379,0x02,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - cast create Worg Disguise to invoker'),
+(24273,0,101,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
 -- Felsworn Gas Mask
-(22127,0,0,1,62,0,100,0,22127,0,0,0,11,39101,0x02,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - cast create Felsworn Gas Mask to invoker'),
-(22127,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
+(22127,0,100,1,62,0,100,0,22127,0,0,0,11,39101,0x02,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - cast create Felsworn Gas Mask to invoker'),
+(22127,0,101,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
 -- Goregek's Shackles
-(28138,0,0,1,62,0,100,0,28138,0,0,0,11,52542,0x02,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - cast create Goregek큦 Shackles to invoker'),
-(28138,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
+(28138,0,100,1,62,0,100,0,28138,0,0,0,11,52542,0x02,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - cast create Goregek큦 Shackles to invoker'),
+(28138,0,101,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
 -- Brann's Communicator(H)
-(29937,0,0,1,62,0,100,0,29937,0,0,0,56,40971,1,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - add Brann큦 Communicator to invoker'),
-(29937,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
+(29937,0,100,1,62,0,100,0,29937,0,0,0,56,40971,1,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - add Brann큦 Communicator to invoker'),
+(29937,0,101,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip'),
 -- Brann's Communicator(A)
-(29650,0,0,1,62,0,100,0,9929,0,0,0,56,40971,1,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - add Brann큦 Communicator to invoker'),
-(29650,0,1,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip');
+(29650,0,100,1,62,0,100,0,9929,0,0,0,56,40971,1,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - add Brann큦 Communicator to invoker'),
+(29650,0,101,0,61,0,100,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'on gossip select - close gossip');
 -- +----------+
 -- |Conditions|
 -- +----------+
@@ -116,7 +116,7 @@ DELETE FROM conditions WHERE SourceTypeOrReferenceId = 15 AND SourceGroup IN (21
 INSERT INTO conditions VALUES
 -- Augmented Arcane Prison
 (15,9253,1,0,8,11943,0,0,0,'','show gossip menu option if player has quest 11943 rewarded'),
--- Kor'kron Flare Gun
+-- Kor큝ron Flare Gun
 (15,21769,0,0,8,10750,0,0,0,'','show gossip menu option if player has quest 10750 rewarded'),
 -- Spectrecles (Horde)
 (15,21772,0,0,8,10625,0,0,0,'','show gossip menu option if player has quest 10625 rewarded'),
@@ -139,7 +139,7 @@ INSERT INTO conditions VALUES
 -- Felsworn Gas Mask
 (15,22127,0,0,28,10819,0,0,0,'','show gossip menu option if player has quest completed 10819'),
 (15,22127,1,0,8,10819,0,0,0,'','show gossip menu option if player has quest 10819 rewarded'),
--- Goregek's Shackles
+-- Goregek큦 Shackles
 (15,28138,0,0,8,12528,0,0,0,'','show gossip menu option if player has quest 12528 rewarded'),
 -- Brann's Communicator
 (15,29937,0,0,8,12910,0,0,0,'','show gossip menu option if player has quest 12910 rewarded'),
