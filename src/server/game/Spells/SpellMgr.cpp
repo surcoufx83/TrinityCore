@@ -3221,20 +3221,22 @@ bool SpellMgr::CanAurasStack(Aura const *aura1, Aura const *aura2, bool sameCast
     // same spell
     if (spellId_1 == spellId_2)
     {
-        // Hack for Incanter's Absorption
-        if (spellId_1 == 44413)
-            return true;
-        // Power Spark
-        if (spellId_1 == 55849)
-            return true;
-        // Harpoon Shot
-        if (spellId_1 == 62505)
-            return true;
         if (aura1->GetCastItemGUID() && aura2->GetCastItemGUID())
             if (aura1->GetCastItemGUID() != aura2->GetCastItemGUID() && (GetSpellCustomAttr(spellId_1) & SPELL_ATTR0_CU_ENCHANT_PROC))
                 return true;
-        // same spell with same caster should not stack
-        return false;
+
+        switch (spellId_1)
+        {
+            case 30166: // Shadow Grasp
+            case 30207: // Shadow Grasp
+            case 30531: // Soul Transfer
+            case 44413: // Hack for Incanter's Absorption
+            case 55849: // Power Spark
+            case 62505: // Harpoon Shot
+                return true;
+            default:
+                return false; // same spell with same caster should not stack
+        }
     }
 
     return true;
