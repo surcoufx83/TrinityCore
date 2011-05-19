@@ -160,6 +160,10 @@ class boss_kologarn : public CreatureScript
                 DoCast(SPELL_KOLOGARN_PACIFY);
                 me->GetMotionMaster()->MoveTargetedHome();
 
+                for (uint8 i = 0; i < 2; ++i)
+                    if (Unit* arm = vehicle->GetPassenger(i))
+                        arm->ExitVehicle();
+
                 _JustDied();
             }
 
