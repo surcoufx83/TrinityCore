@@ -479,8 +479,7 @@ public:
                 } else Debris_Timer -= diff;
             }
 
-            if (Phase > 1)
-                DoMeleeAttackIfReady();
+            DoMeleeAttackIfReady();
         }
     };
 };
