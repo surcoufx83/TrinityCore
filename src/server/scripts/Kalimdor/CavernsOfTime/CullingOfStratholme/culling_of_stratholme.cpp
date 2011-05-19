@@ -1353,51 +1353,47 @@ public:
     }
 };
 
-#define ENTRY_SPELL_ARCANE_DISRUPTOR                49590
-
-class npc_cos_arcane_disruptor_target : public CreatureScript
+class npc_crate_helper : public CreatureScript
 {
-public:
-    npc_cos_arcane_disruptor_target() : CreatureScript("npc_cos_arcane_disruptor_target") {}
+   public:
+       npc_crate_helper() : CreatureScript("npc_create_helper_cot") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_cos_arcane_disruptor_targetAI (pCreature);
-    }
+       struct npc_crate_helperAI : public NullCreatureAI
+       {
+           npc_crate_helperAI(Creature* creature) : NullCreatureAI(creature)
+           {
+               _marked = false;
+           }
 
-    struct npc_cos_arcane_disruptor_targetAI : public Scripted_NoMovementAI
-    {
-        npc_cos_arcane_disruptor_targetAI(Creature *c) : Scripted_NoMovementAI(c) {}
+           void SpellHit(Unit* caster, SpellEntry const* spell)
+           {
+               if (spell->Id == SPELL_ARCANE_DISRUPTION && !_marked)
+               {
+                   _marked = true;
+                   if (InstanceScript* instance = me->GetInstanceScript())
+                       instance->SetData(DATA_CRATES_EVENT, 1);
+                   if (GameObject* crate = me->FindNearestGameObject(GO_SUSPICIOUS_CRATE, 5.0f))
+                   {
+                       crate->SummonGameObject(GO_PLAGUED_CRATE, crate->GetPositionX(), crate->GetPositionY(), crate->GetPositionZ(), crate->GetOrientation(), 0.0f, 0.0f, 0.0f, 0.0f, DAY);
+                       crate->Delete();
+                   }
+               }
+           }
 
-        void Reset()
-        {
-        }
+       private:
+           bool _marked;
+       };
 
-        void SpellHit(Unit *caster, const SpellEntry *spell)
-        {
-            if(caster->ToPlayer() && spell->Id == ENTRY_SPELL_ARCANE_DISRUPTOR)
-            {
-                InstanceScript* pInstance = me->GetInstanceScript();
-
-                pInstance->SetData(DATA_CRATES_EVENT,1);
-
-                me->DealDamage(me,me->GetHealth());
-            }
-        }
-
-        void UpdateAI(const uint32 diff)
-        {
-        }
-    };
+       CreatureAI* GetAI(Creature* creature) const
+       {
+           return new npc_crate_helperAI(creature);
+       }
 };
-
 
 void AddSC_culling_of_stratholme()
 {
     new npc_arthas();
     new npc_cos_chromie();
     //UPDATE creature_template SET scriptname = 'npc_cos_chromie' where entry in (27915,26527);
-    new npc_cos_arcane_disruptor_target();
-    //UPDATE creature_template SET scriptname = 'npc_cos_arcane_disruptor_target' where entry = 30996;
-
+    new npc_crate_helper();
 }

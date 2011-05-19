@@ -253,7 +253,7 @@ public:
             BlastNova_Timer = 60000;
             Cleave_Timer = 15000;
             RandChat_Timer = 90000;
-            Release_Timer = 20000;
+            Release_Timer = 120000;
 
             Phase = 1;
             NeedCheckCube = false;
