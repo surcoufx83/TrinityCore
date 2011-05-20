@@ -4069,11 +4069,11 @@ void SpellMgr::LoadSpellCustomAttr()
             break;
         case 61367: // Windfury, TODO: remove this when spell 32910 works as supposed
             spellInfo->EffectTriggerSpell[0] = 65976;
-            count++;
+            ++count;
             break;
         case 56278: // Read Pronouncement, missing EffectApplyAuraName
             spellInfo->Effect[0] = SPELL_EFFECT_DUMMY;
-            count++;
+            ++count;
             break;
         case 53241: // Marked for Death (Rank 1)
         case 53243: // Marked for Death (Rank 2)
@@ -4118,18 +4118,23 @@ void SpellMgr::LoadSpellCustomAttr()
             break;
         // ULDUAR SPELLS
         //
+        case 62016: // Thorim - Charge Orb
+            mSpellCustomAttr[i] |= SPELL_ATTR0_CU_IGNORE_LOS;
+            spellInfo->MaxAffectedTargets = 1;
+            ++count;
+            break;
         case 62039: // Hodir - Biting Cold - Remove on Move
             spellInfo->AuraInterruptFlags |= AURA_INTERRUPT_FLAG_MOVE;
-            count++;
+            ++count;
             break;
         case 62775: // XT-002 - Tympanic Tantrum
             mSpellCustomAttr[i] |= SPELL_ATTR0_CU_IGNORE_ARMOR;
-            count++;
+            ++count;
             break;
-        case 65210: // Keeper Mimiron Destabilization Matrix
-            // Ignore LoS (because Mimiron stands in a Tube and is out of LoS)
+        case 65210: // Keeper Mimiron Destabilization Matrix - Ignore LoS (because Mimiron stands in a Tube and is out of LoS)
+        case 62042: // Thorim - Stormhammer
             mSpellCustomAttr[i] |= SPELL_ATTR0_CU_IGNORE_LOS;
-            count++;
+            ++count;
             break;
         case 62488: // Ignis Activate Construct (only visually)
         case 63024: // XT-002 Gravity Bomb
@@ -4145,7 +4150,7 @@ void SpellMgr::LoadSpellCustomAttr()
             break;
         case 63802: // Sara Brain Link
             spellInfo->MaxAffectedTargets = 2;
-            count++;
+            ++count;
             break;
         // ENDOF ULDUAR SPELLS
         //

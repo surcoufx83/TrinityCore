@@ -839,12 +839,12 @@ public:
             if (!UpdateVictim() || me->HasUnitState(UNIT_STAT_CASTING))
                 return;
 
-            if (!me->IsWithinMeleeRange(me->getVictim()))
-                DoCast(me, SPELL_SMASH);
+            // TODO: should do some skadi-like shockwave until aggroed
+            // npc 33140, 33141
     
             if (BarrierTimer <= diff)
             {
-                me->MonsterTextEmote(EMOTE_MIGHT, 0, true);
+                me->MonsterTextEmote(EMOTE_BARRIER, 0, true);
                 DoCast(me, SPELL_RUNIC_BARRIER);
                 BarrierTimer = urand(35000, 45000);
             }
@@ -859,8 +859,8 @@ public:
         
             if (ChargeTimer <= diff)
             {
-                if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 30, true))
-                    DoCast(pTarget, SPELL_RUNIC_CHARGE);
+                if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, -8, true))
+                    DoCast(target, SPELL_RUNIC_CHARGE);
                 ChargeTimer = 20000;
             }
             else ChargeTimer -= diff;
@@ -921,7 +921,7 @@ public:
         void EnterCombat(Unit* /*pWho*/)
         {
             me->MonsterTextEmote(EMOTE_MIGHT, 0, true);
-            DoCast(me, SPELL_RUNIC_FORTIFICATION);
+            DoCast(me, SPELL_RUNIC_FORTIFICATION, true);
         }
 
         void JustDied(Unit* /*victim*/)

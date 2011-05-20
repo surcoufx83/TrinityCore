@@ -319,6 +319,14 @@ INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `e
 ('136059','0','0','0','1','0','40775 0'),
 ('136816','0','0','0','1','0','40775 0');
 
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry` IN (62942,62466);
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`) VALUES
+(13, 62942, 18, 1, 33110),
+(13, 62942, 18, 1, 32874),
+(13, 62942, 18, 1, 32872),
+(13, 62942, 18, 1, 32875),
+(13, 62466, 18, 1, 32780);
+
 -- ##########################################################
 -- General Vezax
 -- ##########################################################
