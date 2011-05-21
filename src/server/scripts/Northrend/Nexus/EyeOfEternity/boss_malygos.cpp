@@ -1474,6 +1474,20 @@ class spell_surge_of_power_targeting : public SpellScriptLoader
         }
 };
 
+class achievement_denyin_the_scion : public AchievementCriteriaScript
+{
+    public:
+        achievement_denyin_the_scion() : AchievementCriteriaScript("achievement_denyin_the_scion") { }
+
+        bool OnCheck(Player* source, Unit* /*target*/)
+        {
+            if (Unit* disk = source->GetVehicleBase())
+                if (disk->GetEntry() == NPC_HOVER_DISK_CASTER || disk->GetEntry() == NPC_HOVER_DISK_MELEE)
+                    return true;
+            return false;
+        }
+};
+
 void AddSC_boss_malygos()
 {
     new boss_malygos();
@@ -1485,4 +1499,5 @@ void AddSC_boss_malygos()
     new npc_hover_disc();
     new go_focusing_iris();
     new spell_surge_of_power_targeting();
+    new achievement_denyin_the_scion();
 }

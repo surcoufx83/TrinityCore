@@ -33,7 +33,7 @@ public:
 
     struct instance_ulduar_InstanceMapScript : public InstanceScript
     {
-        instance_ulduar_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {};
+        instance_ulduar_InstanceMapScript(InstanceMap* map) : InstanceScript(map) { }
 
         uint32 uiEncounter[MAX_ENCOUNTER];
 
@@ -343,7 +343,15 @@ public:
 
         void OnCreatureCreate(Creature* creature)
         {
-            switch(creature->GetEntry())
+            if (!TeamInInstance)
+            {
+                Map::PlayerList const& Players = instance->GetPlayers();
+                if (!Players.isEmpty())
+                    if (Player* player = Players.begin()->getSource())
+                        TeamInInstance = player->GetTeam();
+            }
+
+            switch (creature->GetEntry())
             {
                 case NPC_LEVIATHAN:
                     uiLeviathanGUID = creature->GetGUID();
@@ -458,13 +466,46 @@ public:
                     if (uiAlgalonCountdown < 62)
                         creature->setFaction(7);
                     break;
+                // Hodir's Helper NPCs
+                case NPC_EIVI_NIGHTFEATHER:
+                    if (TeamInInstance == HORDE)
+                        creature->UpdateEntry(NPC_TOR_GREYCLOUD, HORDE);
+                    break;
+                case NPC_ELLIE_NIGHTFEATHER:
+                    if (TeamInInstance == HORDE)
+                        creature->UpdateEntry(NPC_KAR_GREYCLOUD, HORDE);
+                    break;
+                case NPC_ELEMENTALIST_MAHFUUN:
+                    if (TeamInInstance == HORDE)
+                        creature->UpdateEntry(NPC_SPIRITWALKER_TARA, HORDE);
+                    break;
+                case NPC_ELEMENTALIST_AVUUN:
+                    if (TeamInInstance == HORDE)
+                        creature->UpdateEntry(NPC_SPIRITWALKER_YONA, HORDE);
+                    break;
+                case NPC_MISSY_FLAMECUFFS:
+                    if (TeamInInstance == HORDE)
+                        creature->UpdateEntry(NPC_AMIRA_BLAZEWEAVER, HORDE);
+                    break;
+                case NPC_SISSY_FLAMECUFFS:
+                    if (TeamInInstance == HORDE)
+                        creature->UpdateEntry(NPC_VEESHA_BLAZEWEAVER, HORDE);
+                    break;
+                case NPC_FIELD_MEDIC_PENNY:
+                    if (TeamInInstance == HORDE)
+                        creature->UpdateEntry(NPC_BATTLE_PRIEST_ELIZA, HORDE);
+                    break;
+                case NPC_FIELD_MEDIC_JESSI:
+                    if (TeamInInstance == HORDE)
+                        creature->UpdateEntry(NPC_BATTLE_PRIEST_GINA, HORDE);
+                    break;
             }
 
          }
 
         void OnGameObjectCreate(GameObject* go)
         {
-            switch(go->GetEntry())
+            switch (go->GetEntry())
             {
                 case GO_KOLOGARN_CHEST_HERO:
                 case GO_KOLOGARN_CHEST:
@@ -636,22 +677,22 @@ public:
         void ProcessEvent(GameObject* /*go*/, uint32 eventId)
         {
             // Flame Leviathan's Tower Event triggers
-           Creature* pFlameLeviathan = instance->GetCreature(uiLeviathanGUID);
+            Creature* FlameLeviathan = instance->GetCreature(uiLeviathanGUID);
 
-            if (pFlameLeviathan && pFlameLeviathan->isAlive()) //No leviathan, no event triggering ;)
-                switch(eventId)
+            if (FlameLeviathan && FlameLeviathan->isAlive()) //No leviathan, no event triggering ;)
+                switch (eventId)
                 {
                     case EVENT_TOWER_OF_STORM_DESTROYED:
-                        pFlameLeviathan->AI()->DoAction(1);
+                        FlameLeviathan->AI()->DoAction(1);
                         break;
                     case EVENT_TOWER_OF_FROST_DESTROYED:
-                        pFlameLeviathan->AI()->DoAction(2);
+                        FlameLeviathan->AI()->DoAction(2);
                         break;
                     case EVENT_TOWER_OF_FLAMES_DESTROYED:
-                        pFlameLeviathan->AI()->DoAction(3);
+                        FlameLeviathan->AI()->DoAction(3);
                         break;
                     case EVENT_TOWER_OF_LIFE_DESTROYED:
-                        pFlameLeviathan->AI()->DoAction(4);
+                        FlameLeviathan->AI()->DoAction(4);
                         break;
                 }
         }
