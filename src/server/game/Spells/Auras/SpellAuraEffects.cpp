@@ -6269,11 +6269,8 @@ void AuraEffect::HandleAuraDummy(AuraApplication const * aurApp, uint8 mode, boo
                 case 57723: // Exhaustion
                 case 57724: // Sated
                 {
-                    switch(GetId())
-                    {
-                        case 57723: target->ApplySpellImmune(GetId(), IMMUNITY_ID, 32182, apply); break; // Heroism
-                        case 57724: target->ApplySpellImmune(GetId(), IMMUNITY_ID, 2825, apply);  break; // Bloodlust
-                    }
+                    target->ApplySpellImmune(GetId(), IMMUNITY_ID, 32182, apply); // Heroism
+                    target->ApplySpellImmune(GetId(), IMMUNITY_ID, 2825, apply); // Bloodlust
                     break;
                 }
                 case 57819: // Argent Champion
