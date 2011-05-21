@@ -293,7 +293,7 @@ public:
                     break;
                 case NPC_NEXUS_LORD:
                 case NPC_SCION_OF_ETERNITY:
-                    if (Creature* pDisc = me->SummonCreature(NPC_DISC_PLAYER, summon->GetPositionX(), summon->GetPositionY(), FLOOR_Z, 0.0f))
+                    if (Creature* pDisc = me->SummonCreature(NPC_HOVER_DISK_CASTER, summon->GetPositionX(), summon->GetPositionY(), FLOOR_Z, 0.0f))
                     {
                         pDisc->ApplySpellImmune(0, IMMUNITY_ID, SPELL_ARCANE_BOMB_KNOCKBACK, true);
                         pDisc->SetSpeed(MOVE_FLIGHT, 3.0f);
@@ -440,7 +440,7 @@ public:
                         if (Creature* pLord = me->SummonCreature(NPC_NEXUS_LORD, Locations[1], TEMPSUMMON_CORPSE_DESPAWN))
                         {
                             pLord->SetReactState(REACT_PASSIVE);
-                            if (Creature* pTemp = me->SummonCreature(NPC_DISC_NPC, Locations[1], TEMPSUMMON_CORPSE_DESPAWN))
+                            if (Creature* pTemp = me->SummonCreature(NPC_HOVER_DISK_MELEE, Locations[1], TEMPSUMMON_CORPSE_DESPAWN))
                             {
                                 pLord->EnterVehicle(pTemp, 0);
                                 pTemp->SetReactState(REACT_PASSIVE);
@@ -454,7 +454,7 @@ public:
                         if (Creature* pScion = me->SummonCreature(NPC_SCION_OF_ETERNITY, Locations[1], TEMPSUMMON_CORPSE_DESPAWN))
                         {
                             pScion->SetInCombatWithZone();
-                            if (Creature* pTemp = me->SummonCreature(NPC_DISC_NPC, Locations[1], TEMPSUMMON_CORPSE_DESPAWN))
+                            if (Creature* pTemp = me->SummonCreature(NPC_HOVER_DISK_MELEE, Locations[1], TEMPSUMMON_CORPSE_DESPAWN))
                             {
                                 pScion->EnterVehicle(pTemp, 0);
                                 pTemp->SetFlying(true);

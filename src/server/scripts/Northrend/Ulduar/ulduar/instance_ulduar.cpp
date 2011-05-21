@@ -343,14 +343,6 @@ public:
 
         void OnCreatureCreate(Creature* creature)
         {
-            if (!TeamInInstance)
-            {
-                Map::PlayerList const& Players = instance->GetPlayers();
-                if (!Players.isEmpty())
-                    if (Player* player = Players.begin()->getSource())
-                        TeamInInstance = player->GetTeam();
-            }
-
             switch (creature->GetEntry())
             {
                 case NPC_LEVIATHAN:
@@ -465,39 +457,6 @@ public:
                     uiAlgalonGUID = creature->GetGUID();
                     if (uiAlgalonCountdown < 62)
                         creature->setFaction(7);
-                    break;
-                // Hodir's Helper NPCs
-                case NPC_EIVI_NIGHTFEATHER:
-                    if (TeamInInstance == HORDE)
-                        creature->UpdateEntry(NPC_TOR_GREYCLOUD, HORDE);
-                    break;
-                case NPC_ELLIE_NIGHTFEATHER:
-                    if (TeamInInstance == HORDE)
-                        creature->UpdateEntry(NPC_KAR_GREYCLOUD, HORDE);
-                    break;
-                case NPC_ELEMENTALIST_MAHFUUN:
-                    if (TeamInInstance == HORDE)
-                        creature->UpdateEntry(NPC_SPIRITWALKER_TARA, HORDE);
-                    break;
-                case NPC_ELEMENTALIST_AVUUN:
-                    if (TeamInInstance == HORDE)
-                        creature->UpdateEntry(NPC_SPIRITWALKER_YONA, HORDE);
-                    break;
-                case NPC_MISSY_FLAMECUFFS:
-                    if (TeamInInstance == HORDE)
-                        creature->UpdateEntry(NPC_AMIRA_BLAZEWEAVER, HORDE);
-                    break;
-                case NPC_SISSY_FLAMECUFFS:
-                    if (TeamInInstance == HORDE)
-                        creature->UpdateEntry(NPC_VEESHA_BLAZEWEAVER, HORDE);
-                    break;
-                case NPC_FIELD_MEDIC_PENNY:
-                    if (TeamInInstance == HORDE)
-                        creature->UpdateEntry(NPC_BATTLE_PRIEST_ELIZA, HORDE);
-                    break;
-                case NPC_FIELD_MEDIC_JESSI:
-                    if (TeamInInstance == HORDE)
-                        creature->UpdateEntry(NPC_BATTLE_PRIEST_GINA, HORDE);
                     break;
             }
 

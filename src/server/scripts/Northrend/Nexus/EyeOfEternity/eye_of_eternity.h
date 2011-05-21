@@ -39,12 +39,12 @@ enum eCreatures
     NPC_SURGE_OF_POWER          = 30334,
     NPC_NEXUS_LORD              = 30245,
     NPC_SCION_OF_ETERNITY       = 30249,
-    NPC_DISC_PLAYER             = 30234,
-    NPC_DISC_NPC                = 30248,
     NPC_STATIC_FIELD            = 30592,
     NPC_WYRMREST_SKYTALON       = 30161,
     NPC_ALEXSTRASZA             = 32295,
-    NPC_ALEXSTRASZAS_GIFT       = 32448
+    NPC_ALEXSTRASZAS_GIFT       = 32448,
+    NPC_HOVER_DISK_CASTER       = 30234,
+    NPC_HOVER_DISK_MELEE        = 30248
 };
 
 enum eGameObjects

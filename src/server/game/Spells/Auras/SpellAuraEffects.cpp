@@ -1995,8 +1995,8 @@ void AuraEffect::PeriodicDummyTick(Unit * target, Unit * caster) const
                 else
                     trigger_spell_id = 41409;
 
-                Unit* triggertarget = GetTriggerTarget(target);
-                target->CastSpell(triggertarget, trigger_spell_id, true, 0, this, GetCasterGUID());
+                // Must be Tested
+                target->CastSpell(target, trigger_spell_id, true, 0, this, GetCasterGUID());
             }break;
             case 47407: // Direbrew's Disarm (precast)
                 caster->CastSpell(caster, 47409, true);

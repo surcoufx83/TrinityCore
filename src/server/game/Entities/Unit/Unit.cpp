@@ -15377,8 +15377,8 @@ void Unit::Kill(Unit* victim, bool durabilityLoss)
     // clean InHateListOf
     if (Player* plrVictim = victim->ToPlayer())
     {
-        if(pVictim->GetMap()->IsDungeon() && pVictim->GetInstanceScript())
-            pVictim->GetInstanceScript()->OnPlayerKilled(pVictim->ToPlayer());
+        if(plrVictim->GetMap()->IsDungeon() && plrVictim->GetInstanceScript())
+            plrVictim->GetInstanceScript()->OnPlayerKilled(plrVictim->ToPlayer());
 
         // remember victim PvP death for corpse type and corpse reclaim delay
         // at original death (not at SpiritOfRedemtionTalent timeout)
