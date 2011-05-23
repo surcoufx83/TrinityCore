@@ -4060,19 +4060,11 @@ void SpellMgr::LoadSpellCustomAttr()
         case 74439: // Machine Gun
         case 63278: // Mark of the Faceless
             mSpellCustomAttr[i] |= SPELL_ATTR0_CU_IGNORE_ARMOR;
-<<<<<<< HEAD
             ++count;
             break;
         case 28299:
             spellInfo->Attributes |= SPELL_ATTR0_UNAFFECTED_BY_INVULNERABILITY;
             count++;
-            break;
-        // Strength of the Pack
-        case 64381:
-            spellInfo->StackAmount = 4;
-=======
->>>>>>> refs/remotes/upstream/master
-            ++count;
             break;
         case 63675: // Improved Devouring Plague
             spellInfo->AttributesEx3 |= SPELL_ATTR3_NO_DONE_BONUS;
