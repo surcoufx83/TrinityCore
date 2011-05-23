@@ -4060,6 +4060,7 @@ void SpellMgr::LoadSpellCustomAttr()
         case 74439: // Machine Gun
         case 63278: // Mark of the Faceless
             mSpellCustomAttr[i] |= SPELL_ATTR0_CU_IGNORE_ARMOR;
+<<<<<<< HEAD
             ++count;
             break;
         case 28299:
@@ -4069,6 +4070,8 @@ void SpellMgr::LoadSpellCustomAttr()
         // Strength of the Pack
         case 64381:
             spellInfo->StackAmount = 4;
+=======
+>>>>>>> refs/remotes/upstream/master
             ++count;
             break;
         case 63675: // Improved Devouring Plague
@@ -4167,6 +4170,15 @@ void SpellMgr::LoadSpellCustomAttr()
             break;
         case 63802: // Sara Brain Link
             spellInfo->MaxAffectedTargets = 2;
+            ++count;
+            break;
+        case 62716: // Growth of Nature
+        case 65584: // Growth of Nature
+            spellInfo->AttributesEx3 |= SPELL_ATTR3_STACK_FOR_DIFF_CASTERS;
+            ++count;
+            break;
+        case 64381: // Strength of the Pack
+            spellInfo->StackAmount = 4;
             ++count;
             break;
         // ENDOF ULDUAR SPELLS

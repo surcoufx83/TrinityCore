@@ -435,6 +435,7 @@ void AddSC_boss_hodir();
 void AddSC_boss_general_vezax();
 void AddSC_ulduar_teleporter();
 void AddSC_boss_hodir();
+void AddSC_boss_freya();
 void AddSC_instance_ulduar();
 void AddSC_boss_yoggsaron();
 void AddSC_boss_algalon();
