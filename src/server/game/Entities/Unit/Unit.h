@@ -1484,7 +1484,7 @@ class Unit : public WorldObject
         Aura * AddAura(SpellEntry const *spellInfo, uint8 effMask, Unit *target);
         void SetAuraStack(uint32 spellId, Unit *target, uint32 stack);
 
-        bool IsDamageToThreatSpell(SpellEntry const * spellInfo) const;
+        float GetSpellThreatMod(SpellEntry const * spellInfo) const;
 
         void DeMorph();
 
