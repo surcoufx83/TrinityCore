@@ -264,6 +264,17 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_mimiron_bomb_bot' WHERE `entr
 DELETE FROM creature WHERE id IN (34071, 33856);
 UPDATE `creature_template` SET `flags_extra` = 2 WHERE `entry` = 34143;
 
+-- Leviathan Hitpoints
+UPDATE `creature_template` SET `exp`=0 WHERE `entry` IN (33432,34071,34106);
+
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry`=63414;
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`) VALUES
+(13,63414,18,1,33651);
+
+DELETE FROM `spell_script_names` WHERE `spell_id`=63382;
+INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
+(63382, 'spell_rapid_burst');
+
 -- ##########################################################
 -- Thorim
 -- ##########################################################
