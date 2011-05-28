@@ -432,10 +432,10 @@ public:
         switch(uiAction)
         {
             case GOSSIP_ACTION_TRADE:
-                pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
+                pPlayer->GetSession()->SendListInventory(pCreature->GetGUID());
                 break;
             case GOSSIP_ACTION_TRAIN:
-                pPlayer->SEND_TRAINERLIST(pCreature->GetGUID());
+                pPlayer->GetSession()->SendTrainerList(pCreature->GetGUID());
                 break;
                 //Learn Alchemy
             case GOSSIP_ACTION_INFO_DEF + 1:
@@ -650,10 +650,10 @@ public:
         switch(uiAction)
         {
             case GOSSIP_ACTION_TRADE:
-                pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
+                pPlayer->GetSession()->SendListInventory(pCreature->GetGUID());
                 break;
             case GOSSIP_ACTION_TRAIN:
-                pPlayer->SEND_TRAINERLIST(pCreature->GetGUID());
+                pPlayer->GetSession()->SendTrainerList(pCreature->GetGUID());
                 break;
                 //Learn Armor/Weapon
             case GOSSIP_ACTION_INFO_DEF + 1:
@@ -1037,10 +1037,10 @@ public:
         switch(uiAction)
         {
             case GOSSIP_ACTION_TRADE:
-                pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
+                pPlayer->GetSession()->SendListInventory(pCreature->GetGUID());
                 break;
             case GOSSIP_ACTION_TRAIN:
-                pPlayer->SEND_TRAINERLIST(pCreature->GetGUID());
+                pPlayer->GetSession()->SendTrainerList(pCreature->GetGUID());
                 break;
                 //Unlearn Leather
             case GOSSIP_ACTION_INFO_DEF + 1:
@@ -1203,10 +1203,10 @@ public:
         switch(uiAction)
         {
             case GOSSIP_ACTION_TRADE:
-                pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
+                pPlayer->GetSession()->SendListInventory(pCreature->GetGUID());
                 break;
             case GOSSIP_ACTION_TRAIN:
-                pPlayer->SEND_TRAINERLIST(pCreature->GetGUID());
+                pPlayer->GetSession()->SendTrainerList(pCreature->GetGUID());
                 break;
                 //Learn Tailor
             case GOSSIP_ACTION_INFO_DEF + 1:

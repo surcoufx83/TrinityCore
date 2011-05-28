@@ -63,7 +63,7 @@ private:
             {
                 Player *plr = NULL;
                 if (me->isSummon())
-                    if (Unit *summoner = CAST_SUM(me)->GetSummoner())
+                    if (Unit *summoner = me->ToTempSummon()->GetSummoner())
                         if (summoner->GetTypeId() == TYPEID_PLAYER)
                             plr = CAST_PLR(summoner);
 
