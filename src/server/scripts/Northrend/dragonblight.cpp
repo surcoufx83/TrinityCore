@@ -68,7 +68,7 @@ public:
         return true;
     }
 };
-
+/*####
 ## npc_denouncement_target
 ######*/
 
@@ -289,9 +289,7 @@ public:
                 }else check_Timer -= diff;
             }
         }
-
     };
-
 };
 
 /*######
@@ -362,9 +360,7 @@ public:
                 part_Timer = 58000;
             }else part_Timer -= diff;
         }
-
     };
-
 };
 
 /*######
@@ -389,7 +385,6 @@ public:
         pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
         return true;
     }
-
 };
 
 /*######
@@ -1062,7 +1057,8 @@ public:
 ## npc_woodlands_walker
 ######*/
 
-enum woodwalkerQuests {
+enum woodwalkerQuests
+{
     QUEST_ANCIENTS_ALLINACE  = 12092,
     QUEST_ANCIENTS_HORDE     = 12096
 };
@@ -1082,6 +1078,7 @@ public:
         player->CLOSE_GOSSIP_MENU();
         return true;
     }
+};
 
 void AddSC_dragonblight()
 {

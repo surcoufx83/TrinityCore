@@ -398,7 +398,10 @@ public:
 
         void UpdateAI(const uint32 /*diff*/)
         {
-            if (Unit* pSummoner = CAST_SUM(me)->GetSummoner())
+            if(!me->ToTempSummon())
+                return;
+
+            if (Unit* pSummoner = me->ToTempSummon()->GetSummoner())
                 WrapTargetGUID = pSummoner->GetGUID();
 
             Unit* temp = Unit::GetUnit((*me), WrapTargetGUID);

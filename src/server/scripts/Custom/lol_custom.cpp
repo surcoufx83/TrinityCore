@@ -901,10 +901,10 @@ public:
             }
             break;
         case GOSSIP_ACTION_TRAIN:
-            player->SEND_TRAINERLIST( _Creature->GetGUID() );
+            player->GetSession()->SendTrainerList(_Creature->GetGUID());
             break;
         case GOSSIP_ACTION_TRADE:
-            player->SEND_VENDORLIST( _Creature->GetGUID() );
+            player->GetSession()->SendListInventory(_Creature->GetGUID());
             break;
         }
         return true;

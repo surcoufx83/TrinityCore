@@ -558,8 +558,11 @@ public:
 
         void UpdateAI(const uint32 /*diff*/)
         {
+            if(!me->ToTempSummon())
+                return;
+
             // should not be here?
-            if (Unit* pSummoner = CAST_SUM(me)->GetSummoner())
+            if (Unit* pSummoner = me->ToTempSummon()->GetSummoner())
                 uiWrapTargetGUID = pSummoner->GetGUID();
 
             Unit* temp = Unit::GetUnit((*me), uiWrapTargetGUID);
