@@ -2414,7 +2414,7 @@ public:
         {
             std::string stripped = message;   // create private copy
             
-            stripLinks(stripped);
+            //stripLinks(stripped);
             
             PreparedStatement *stmt = CharacterDatabase.GetPreparedStatement(CHAR_ADD_CHATTICKER_MESSAGE);
             stmt->setString(0, player->GetName());
