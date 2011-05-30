@@ -4176,6 +4176,10 @@ void SpellMgr::LoadSpellCustomAttr()
             mSpellCustomAttr[i] |= SPELL_ATTR0_CU_CONE_LINE;
             ++count;
             break;
+        case 64600: // Freya - Nature Bomb (GO Visual)
+            spellInfo->DurationIndex = 38;
+            ++count;
+            break;
         // ENDOF ULDUAR SPELLS
         //
         // ICECROWN CITADEL SPELLS

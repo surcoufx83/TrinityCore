@@ -192,6 +192,8 @@ UPDATE creature_template SET unit_flags = 4 WHERE ENTRY = 33168;
 UPDATE creature_template SET unit_flags = 4 WHERE ENTRY = 33088;
 UPDATE creature_template SET faction_A = 16 WHERE Entry = 33168;
 UPDATE creature_template SET faction_H = 16 WHERE Entry = 33168;
+UPDATE `creature_template` SET `dmg_multiplier`=3.2 WHERE `entry`=32918;
+UPDATE `creature_template` SET `dmg_multiplier`=6.4 WHERE `entry`=33399;
 
 DELETE FROM spell_script_names WHERE spell_id IN (62623,62872);
 INSERT INTO spell_script_names (spell_id,ScriptName) VALUES
