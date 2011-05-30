@@ -1128,13 +1128,13 @@ public:
                     if (Creature* leviathan = me->GetVehicleCreatureBase())
                     {
                         float orient = leviathan->GetOrientation();
-                        leviathan->SetFacing(orient + (direction ? M_PI/30 : -M_PI/30));
-                        me->SetOrientation(orient + (direction ? M_PI/30 : -M_PI/30));
+                        leviathan->SetFacing(orient + (direction ? M_PI/60 : -M_PI/60));
+                        me->SetOrientation(orient + (direction ? M_PI/60 : -M_PI/60));
                     }
                     else
                     {
                         float orient = me->GetOrientation();
-                        me->SetFacing(orient + (direction ? M_PI/30 : -M_PI/30));
+                        me->SetFacing(orient + (direction ? M_PI/60 : -M_PI/60));
                     }
                     spinTimer = 250;
                 }
@@ -1196,7 +1196,7 @@ public:
                         case EVENT_HAND_PULSE:
                             if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
                                 DoCast(target, SPELL_HAND_PULSE);
-                            events.RescheduleEvent(EVENT_HAND_PULSE, urand(5000, 8000));
+                            events.RescheduleEvent(EVENT_HAND_PULSE, urand(4000, 5000));
                             break;
                         case EVENT_FROST_BOMB:
                             me->SummonCreature(NPC_FROST_BOMB, SummonPos[rand()%9], TEMPSUMMON_TIMED_DESPAWN, 11000);

@@ -66,7 +66,7 @@ enum Spells
     SPELL_SARONIT_VARPOR                        = 63323, // Casted on Death trigger 63322
     SPELL_SARONIT_VARPOR_AURA                   = 63322, // Unknown Aura Dummy needs Scripting ?
     // Player Shaman
-    SPELL_SHAMANTIC_RAGE                         = 30823,
+    SPELL_SHAMANTIC_RAGE                        = 30823,
 };
 
 enum NPCs
@@ -94,7 +94,7 @@ public:
 
     struct boss_general_vezaxAI : public ScriptedAI
     {
-        boss_general_vezaxAI(Creature *c) : ScriptedAI(c)
+        boss_general_vezaxAI(Creature* c) : ScriptedAI(c)
         {
             m_pInstance = c->GetInstanceScript();
             VarporList = std::list<uint64>();
@@ -355,7 +355,7 @@ public:
                     else if(Unit* target = SelectTarget(SELECT_TARGET_RANDOM,0,100,true))
                         DoCast(target,SPELL_MARK_OF_THE_FACELESS,false);
 
-                        uiMarkOfTheFaceless = urand(15000,25000);
+                    uiMarkOfTheFaceless = urand(15000,25000);
                 }
             }else uiMarkOfTheFaceless -= diff;
 

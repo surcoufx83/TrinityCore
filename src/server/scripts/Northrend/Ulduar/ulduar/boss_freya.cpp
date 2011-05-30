@@ -26,8 +26,6 @@ DoTo:
 Freya:
     Spawn Trunk at the End of the Fight
     Nature bombs spawnen(phase 2)
-Adds:
-    Elemental Adds Revive if not killed in the same timeframe
 
 Elders:
 Elder Brightleaf: - finished

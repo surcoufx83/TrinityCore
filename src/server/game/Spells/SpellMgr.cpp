@@ -4172,6 +4172,10 @@ void SpellMgr::LoadSpellCustomAttr()
             spellInfo->StackAmount = 4;
             ++count;
             break;
+        case 63293: // Mimiron - P3Wx2 Laser Barrage
+            mSpellCustomAttr[i] |= SPELL_ATTR0_CU_CONE_LINE;
+            ++count;
+            break;
         // ENDOF ULDUAR SPELLS
         //
         // ICECROWN CITADEL SPELLS
