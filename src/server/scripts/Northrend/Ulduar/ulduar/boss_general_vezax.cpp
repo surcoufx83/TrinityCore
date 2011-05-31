@@ -140,10 +140,8 @@ public:
             uiMarkOfTheFaceless = urand(15000,25000);
             uiResetImmunity_Timer = 0;
 
-            if(m_pInstance)
-                m_pInstance->SetBossState(TYPE_VEZAX,NOT_STARTED);
-
-            me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
+            if (m_pInstance)
+                m_pInstance->SetBossState(TYPE_VEZAX, NOT_STARTED);
         }
 
         void DespawnVarpors()
@@ -176,8 +174,8 @@ public:
             DoCast(SPELL_AURA_OF_DESPAIR);
             DoScriptText(SAY_AGGRO,me);
 
-            if(m_pInstance)
-                m_pInstance->SetBossState(TYPE_VEZAX,IN_PROGRESS);
+            if (m_pInstance)
+                m_pInstance->SetBossState(TYPE_VEZAX, IN_PROGRESS);
         }
 
         void SpellHitTarget(Unit* target, const SpellEntry* spell)
@@ -228,18 +226,18 @@ public:
 
             if(!VarporKilled && AnimusSummoned && AnimusKilled)
             {
-                if(m_pInstance)
-                    m_pInstance->DoCompleteAchievement(RAID_MODE(ACHIEVEMENTS_SMELL_OF_SARONIT_IN_THE_MORNING_10,ACHIEVEMENTS_SMELL_OF_SARONIT_IN_THE_MORNING_25));
+                if (m_pInstance)
+                    m_pInstance->DoCompleteAchievement(RAID_MODE(ACHIEVEMENTS_SMELL_OF_SARONIT_IN_THE_MORNING_10, ACHIEVEMENTS_SMELL_OF_SARONIT_IN_THE_MORNING_25));
             }
 
             if(!HitByShadowCrash)
             {
-                if(m_pInstance)
-                    m_pInstance->DoCompleteAchievement(RAID_MODE(ACHIEVEMENTS_SHADOWDODGER_10,ACHIEVEMENTS_SHADOWDODGER_25));
+                if (m_pInstance)
+                    m_pInstance->DoCompleteAchievement(RAID_MODE(ACHIEVEMENTS_SHADOWDODGER_10, ACHIEVEMENTS_SHADOWDODGER_25));
             }
 
-            if(m_pInstance)
-                m_pInstance->SetBossState(TYPE_VEZAX,DONE);
+            if (m_pInstance)
+                m_pInstance->SetBossState(TYPE_VEZAX, DONE);
         }
 
         void DoAction(const int32 action)
@@ -330,8 +328,8 @@ public:
                 {
                     if(!me->IsNonMeleeSpellCasted(false))
                     {
-                         DoCast(SPELL_SEARING_FLAMES);
                          me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, false);
+                         DoCast(SPELL_SEARING_FLAMES);
                          uiSearingFlames_Timer = urand(10000,15000);
                          ImmunityToReset = true;
                          uiResetImmunity_Timer = 2000;
