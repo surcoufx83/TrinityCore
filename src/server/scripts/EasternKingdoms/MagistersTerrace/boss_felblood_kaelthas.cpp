@@ -67,6 +67,8 @@ EndScriptData */
 #define CREATURE_PHOENIX_EGG          24675
 #define CREATURE_ARCANE_SPHERE        24708
 
+#define GO_ESCAPE_ORB                 188173
+
 /** Locations **/
 float KaelLocations[3][2]=
 {
@@ -160,6 +162,9 @@ public:
             pInstance->SetData(DATA_KAELTHAS_EVENT, DONE);
             pInstance->HandleGameObject(pInstance->GetData64(DATA_KAEL_DOOR), true); //TODO: move all door handling to instance
             // Open the encounter door
+
+            if (GameObject* go = me->FindNearestGameObject(GO_ESCAPE_ORB, 150.0f))
+                go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
         }
 
         void JustSummoned(Creature *summon)
