@@ -317,7 +317,7 @@ INSERT INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalon
 (55194, 0, 11, 34155, 15, '0', 0, 0, 0, 0);
 DELETE FROM `gameobject_template` WHERE `entry`=194265;
 INSERT INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`, `WDBVerified`) VALUES
-('194265','1','295','Lever','','','','35','32','3','0','0','0','0','0','0','0','0','6000','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0');
+('194265','1','295','Lever','','','','35','48','3','0','0','0','0','0','0','0','0','6000','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0');
 UPDATE `gameobject` SET `id` = 194265, `rotation2` = 1, `rotation3` = 0, `spawntimesecs` = 7200, `animprogress` = 100 WHERE `guid` = 55194;
 
 -- Cleanup
@@ -358,6 +358,10 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionType
 (13, 62976, 18, 1, 34055);
 
 UPDATE `creature_template` SET `faction_A`=35, `faction_H`=35 WHERE `entry`=34055;
+
+DELETE FROM `spell_script_names` WHERE `spell_id`=62042;
+INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
+(62042, 'spell_stormhammer_targeting');
 
 -- ##########################################################
 -- General Vezax
