@@ -101,7 +101,7 @@ enum Archievments
 enum Spells
 {
     // Freya
-    SPELL_BERSERK                               = 82395,
+    SPELL_BERSERK                               = 47008,
     SPELL_TOUCH_OF_EONAR_10                     = 62528,
     SPELL_TOUCH_OF_EONAR_25                     = 62892,
     SPELL_ATTUNED_TO_NATURE                     = 62519,
@@ -590,10 +590,10 @@ public:
                 }else uiNaturalBomb_Timer -= diff;
             }
 
-            if(Berserk_Timer <= diff)
+            if (Berserk_Timer <= diff)
             {
-                if(!me->HasAura(SPELL_BERSERK))
-                    DoCast(me,SPELL_BERSERK,true);
+                if (!me->HasAura(SPELL_BERSERK))
+                    DoCast(me, SPELL_BERSERK, true);
             } else Berserk_Timer -= diff;
 
             //Hardmode Elder Stonebark
