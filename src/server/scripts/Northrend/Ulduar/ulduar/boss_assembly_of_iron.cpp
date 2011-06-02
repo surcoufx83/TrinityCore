@@ -596,7 +596,7 @@ public:
         mob_lightning_elementalAI(Creature *c) : ScriptedAI(c)
         {
             me->SetInCombatWithZone();
-            me->AddAura( RAID_MODE(SPELL_LIGHTNING_ELEMENTAL_PASSIVE, SPELL_LIGHTNING_ELEMENTAL_PASSIVE_H), me);
+            me->AddAura(RAID_MODE(SPELL_LIGHTNING_ELEMENTAL_PASSIVE, SPELL_LIGHTNING_ELEMENTAL_PASSIVE_H), me);
         }
 
         // Nothing to do here, just let the creature chase players and procflags == 2 on the applied aura will trigger explosion

@@ -4145,6 +4145,8 @@ void SpellMgr::LoadSpellCustomAttr()
             ++count;
             break;
         case 62775: // XT-002 - Tympanic Tantrum
+        case 64443: // Algalon - Big Bang
+        case 64584: // Algalon - Big Bang
             mSpellCustomAttr[i] |= SPELL_ATTR0_CU_IGNORE_ARMOR;
             ++count;
             break;
