@@ -117,14 +117,25 @@ DELETE FROM `npc_spellclick_spells` WHERE `npc_entry` IN (32930);
 INSERT INTO `npc_spellclick_spells` (`npc_entry`,`spell_id`,`quest_start`,`quest_start_active`,`quest_end`,`cast_flags`,`aura_required`,`aura_forbidden`,`user_type`) VALUES
 (32930,46598,0,0,0,1,0,0,0); -- Kologarn - Arm - Ride Vehicle Hardcoded
 
--- Stone Grip Absorb - target condition
-DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry` IN (64224,64225);
-INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`) VALUES
-(13,64224,18,1,32934),
-(13,64225,18,1,32934);
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry` IN (64224,64225,63766,63983);
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`Comment`) VALUES
+(13,64224,18,1,32934, 'Stone Grip Absorb'),
+(13,64225,18,1,32934, 'Stone Grip Absorb'),
+(13,63766,18,1,32933, 'Arm Sweep (10N) Target'),
+(13,63983,18,1,32933, 'Arm Sweep (25N) Target');
 
 UPDATE `creature_template` SET `ScriptName`='npc_kologarn_arm' WHERE `entry` IN (32933,32934);
 UPDATE `creature_template` SET `flags_extra`='flags_extra'|2 WHERE `entry`=33661;
+
+-- Swap trigger model ids
+UPDATE `creature_template` SET `modelid1`=1126, `modelid2`=11686 WHERE `entry` IN (33906,33907);
+
+-- Rubble AI
+UPDATE `creature_template` SET `AIName`='SmartAI' WHERE `entry`=33768;
+DELETE FROM `smart_scripts` WHERE `entryorguid`=33768;
+INSERT INTO `smart_scripts` VALUES 
+(33768,0,0,0,0,0,100,0x02,5000,15000,5000,15000,11,63818,0,0,0,0,0,1,0,0,0,0,0,0,0, 'Rubble - Cast Rumble (10N)'),
+(33768,0,1,0,0,0,100,0x04,5000,15000,5000,15000,11,63978,0,0,0,0,0,1,0,0,0,0,0,0,0, 'Rubble - Cast Stone Nova (25N)');
 
 -- ##########################################################
 -- Auriaya
