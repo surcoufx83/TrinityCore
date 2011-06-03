@@ -52,12 +52,14 @@ EndScriptData */
 #define SPELL_KOLOGARN_PACIFY       63726
 #define SPELL_KOLOGARN_UNK_0        65219   // Not found in DBC
 
-#define SPELL_BERSERK           47008 // guess
+#define SPELL_BERSERK               47008 // guess
 
-#define NPC_RUBBLE_STALKER      33809
-#define NPC_ARM_SWEEP_STALKER   33661
+#define NPC_RUBBLE_STALKER          33809
 
 #define EMOTE_EYEBEAM           "Kologarn fokussiert seinen Blick auf Euch!"
+#define EMOTE_LEFT              "The Left Arm has regrown!"
+#define EMOTE_RIGHT             "The Right Arm has regrown!"
+#define EMOTE_STONE             "Kologarn casts Stone Grip!"
 
 enum Events
 {
@@ -283,7 +285,10 @@ class boss_kologarn : public CreatureScript
                         break;
                     case EVENT_SWEEP:
                         if (left)
-                            DoCast(me->FindNearestCreature(NPC_ARM_SWEEP_STALKER, 500.0f, true), SPELL_ARM_SWEEP, true);
+                        {
+                            DoCast(SPELL_ARM_SWEEP);
+                            DoScriptText(SAY_SHOCKWAVE, me);
+                        }
                         events.RepeatEvent(25000);
                         break;
                     case EVENT_SMASH:
@@ -305,12 +310,14 @@ class boss_kologarn : public CreatureScript
                     case EVENT_RESPAWN_LEFT_ARM:
                     {
                         RespawnArm(NPC_LEFT_ARM);
+                        me->MonsterTextEmote(EMOTE_LEFT, 0, true);
                         events.CancelEvent(EVENT_RESPAWN_LEFT_ARM);
                         break;
                     }
                     case EVENT_RESPAWN_RIGHT_ARM:
                     {
                         RespawnArm(NPC_RIGHT_ARM);
+                        me->MonsterTextEmote(EMOTE_RIGHT, 0, true);
                         events.CancelEvent(EVENT_RESPAWN_RIGHT_ARM);
                         break;
                     }
@@ -319,6 +326,7 @@ class boss_kologarn : public CreatureScript
                         if (right)
                         {
                             DoCast(SPELL_STONE_GRIP);
+                            me->MonsterTextEmote(EMOTE_STONE, 0, true);
                             DoScriptText(SAY_GRAB_PLAYER, me);
                         }
                         events.RepeatEvent(25000);

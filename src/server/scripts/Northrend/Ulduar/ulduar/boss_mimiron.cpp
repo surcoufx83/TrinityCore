@@ -172,11 +172,6 @@ enum Npcs
     NPC_MKII_TURRET                             = 34071,
 };
 
-enum Objects
-{
-    GAMEOBJECT_DO_NOT_THIS_BUTTON               = 194739,
-};
-
 bool MimironHardMode;
 
 // Achievements
@@ -282,10 +277,11 @@ public:
                 DespawnCreatures(34362, 100);
                 DespawnCreatures(NPC_ROCKET, 100);
 
-                if (GameObject* go = me->FindNearestGameObject(GAMEOBJECT_DO_NOT_THIS_BUTTON, 200))
+                if (GameObject* go = me->FindNearestGameObject(GO_BIG_RED_BUTTON, 200))
                 {
                     go->SetGoState(GO_STATE_READY);
                     go->SetLootState(GO_JUST_DEACTIVATED);
+                    go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
                 }
             }
         }
@@ -326,6 +322,9 @@ public:
             else
                 EnrageTimer = 15*60*1000; // Enrage in 15 min
             JumpToNextStep(100);
+
+            if (GameObject* go = me->FindNearestGameObject(GO_BIG_RED_BUTTON, 200))
+                go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
         }
 
         void JumpToNextStep(uint32 uiTimer)
