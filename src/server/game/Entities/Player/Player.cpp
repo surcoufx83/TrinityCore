@@ -2705,6 +2705,24 @@ void Player::ResetAllPowers()
     }
 }
 
+bool Player::CanInteractWithQuestGiver(Object* questGiver)
+{
+    switch (questGiver->GetTypeId())
+    {
+        case TYPEID_UNIT:
+            return GetNPCIfCanInteractWith(questGiver->GetGUID(), UNIT_NPC_FLAG_QUESTGIVER) != NULL;
+        case TYPEID_GAMEOBJECT:
+            return GetGameObjectIfCanInteractWith(questGiver->GetGUID(), GAMEOBJECT_TYPE_QUESTGIVER) != NULL;
+        case TYPEID_PLAYER:
+            return isAlive() && questGiver->ToPlayer()->isAlive();
+        case TYPEID_ITEM:
+            return isAlive();
+        default:
+            break;
+    }
+    return false;
+}
+
 Creature* Player::GetNPCIfCanInteractWith(uint64 guid, uint32 npcflagmask)
 {
     // unit checks
@@ -3025,10 +3043,9 @@ void Player::GiveXP(uint32 xp, Unit *victim, float group_rate)
 // Current player experience not update (must be update by caller)
 void Player::GiveLevel(uint8 level)
 {
-    if (level == getLevel())
+    uint8 oldLevel = getLevel();
+    if (level == oldLevel)
         return;
-
-    sScriptMgr->OnPlayerLevelChanged(this, level);
 
     PlayerLevelInfo info;
     sObjectMgr->GetPlayerLevelInfo(getRace(), getClass(), level, &info);
@@ -3105,6 +3122,8 @@ void Player::GiveLevel(uint8 level)
     }
 
     GetAchievementMgr().UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_REACH_LEVEL);
+
+    sScriptMgr->OnPlayerLevelChanged(this, oldLevel);
 }
 
 void Player::InitTalentForLevel()
@@ -5204,7 +5223,7 @@ void Player::KillPlayer()
     setDeathState(CORPSE);
     //SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_IN_PVP);
 
-    SetFlag(UNIT_DYNAMIC_FLAGS, 0x00);
+    SetUInt32Value(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_NONE);
     ApplyModFlag(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTE_RELEASE_TIMER, !sMapStore.LookupEntry(GetMapId())->Instanceable());
 
     // 6 minutes until repop at graveyard
@@ -14225,6 +14244,14 @@ void Player::OnGossipSelect(WorldObject* source, uint32 gossipListId, uint32 men
     if (!menuItemData)
         return;
 
+    int32 cost = int32(item->BoxMoney);
+    if (!HasEnoughMoney(cost))
+    {
+        SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, 0, 0, 0);
+        PlayerTalkClass->SendCloseGossip();
+        return;
+    }
+
     switch (gossipOptionId)
     {
         case GOSSIP_OPTION_GOSSIP:
@@ -14271,24 +14298,13 @@ void Player::OnGossipSelect(WorldObject* source, uint32 gossipListId, uint32 men
         case GOSSIP_OPTION_LEARNDUALSPEC:
             if (GetSpecsCount() == 1 && getLevel() >= sWorld->getIntConfig(CONFIG_MIN_DUALSPEC_LEVEL))
             {
-                if (!HasEnoughMoney(10000000))
-                {
-                    SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, 0, 0, 0);
-                    PlayerTalkClass->SendCloseGossip();
-                    break;
-                }
-                else
-                {
-                    ModifyMoney(-10000000);
+                // Cast spells that teach dual spec
+                // Both are also ImplicitTarget self and must be cast by player
+                CastSpell(this, 63680, true, NULL, NULL, GetGUID());
+                CastSpell(this, 63624, true, NULL, NULL, GetGUID());
 
-                    // Cast spells that teach dual spec
-                    // Both are also ImplicitTarget self and must be cast by player
-                    CastSpell(this, 63680, true, NULL, NULL, GetGUID());
-                    CastSpell(this, 63624, true, NULL, NULL, GetGUID());
-
-                    // Should show another Gossip text with "Congratulations..."
-                    PlayerTalkClass->SendCloseGossip();
-                }
+                // Should show another Gossip text with "Congratulations..."
+                PlayerTalkClass->SendCloseGossip();
             }
             break;
         case GOSSIP_OPTION_UNLEARNTALENTS:
@@ -14338,6 +14354,8 @@ void Player::OnGossipSelect(WorldObject* source, uint32 gossipListId, uint32 men
             break;
         }
     }
+
+    ModifyMoney(-cost);
 }
 
 uint32 Player::GetGossipTextId(WorldObject *pSource)
@@ -17199,19 +17217,22 @@ void Player::_LoadAuras(PreparedQueryResult result, uint32 timediff)
             // prevent wrong values of remaincharges
             if (spellproto->procCharges)
             {
-                if (remaincharges <= 0 || remaincharges > spellproto->procCharges)
+                // we have no control over the order of applying auras and modifiers allow auras
+                // to have more charges than value in SpellEntry
+                if (remaincharges <= 0/* || remaincharges > spellproto->procCharges*/)
                     remaincharges = spellproto->procCharges;
             }
             else
                 remaincharges = 0;
 
-            if (Aura * aura = Aura::TryCreate(spellproto, effmask, this, NULL, &baseDamage[0], NULL, caster_guid))
+            if (Aura* aura = Aura::TryCreate(spellproto, effmask, this, NULL, &baseDamage[0], NULL, caster_guid))
             {
                 if (!aura->CanBeSaved())
                 {
                     aura->Remove();
                     continue;
                 }
+
                 aura->SetLoadedState(maxduration, remaintime, remaincharges, stackcount, recalculatemask, &damage[0]);
                 aura->ApplyForTargets();
                 sLog->outDetail("Added aura spellid %u, effectmask %u", spellproto->Id, effmask);
@@ -19551,7 +19572,7 @@ void Player::VehicleSpellInitialize()
     /*if (v23 > 0)
     {
         for (uint32 i = 0; i < v23; ++i)
-            data << uint32(v16);    // Some spellid?     
+            data << uint32(v16);    // Some spellid?
     }*/
 
     // Cooldowns
