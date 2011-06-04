@@ -106,12 +106,8 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
 
-
-            DoCastAOE(SPELL_FUNGAL_CREEP, true); //A Little bit hacky ... but it works now (without triggered no cast on death)
-};
 class spell_fungal_creep_targeting : public SpellScriptLoader
 {
     public:
@@ -145,8 +141,37 @@ class spell_fungal_creep_targeting : public SpellScriptLoader
         {
             return new spell_fungal_creep_targeting_SpellScript();
         }
+};
+
+enum SporeSpells
+{
+   SPELL_FUNGAL_CREEP                                     = 29232
+};
+
+class mob_loatheb_spore : public CreatureScript
+{
+public:
+   mob_loatheb_spore() : CreatureScript("mob_loatheb_spore") { }
+
+   CreatureAI* GetAI(Creature* pCreature) const
+   {
+       return new mob_loatheb_sporeAI (pCreature);
+   }
+
+   struct mob_loatheb_sporeAI : public ScriptedAI
+   {
+       mob_loatheb_sporeAI(Creature *c) : ScriptedAI(c) {}
+
+       void JustDied(Unit* killer)
+       {
+            DoCastAOE(SPELL_FUNGAL_CREEP, true); //A Little bit hacky ... but it works now (without triggered no cast on death)
+       }
+   };
+};
+
 void AddSC_boss_loatheb()
 {
     new boss_loatheb();
     new spell_fungal_creep_targeting();
+    new mob_loatheb_spore();
 }

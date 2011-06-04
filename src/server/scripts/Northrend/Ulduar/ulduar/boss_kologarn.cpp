@@ -101,7 +101,7 @@ class boss_kologarn : public CreatureScript
 
         CreatureAI* GetAI(Creature* pCreature) const
         {
-            return GetUlduarAI<boss_kologarnAI>(pCreature);
+            return new boss_kologarnAI(pCreature);
         }
 
         struct boss_kologarnAI : public BossAI

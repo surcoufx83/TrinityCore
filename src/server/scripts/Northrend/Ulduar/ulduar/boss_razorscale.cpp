@@ -570,7 +570,7 @@ class boss_razorscale : public CreatureScript
 
         CreatureAI* GetAI(Creature* creature) const
         {
-            return GetUlduarAI<boss_razorscaleAI>(creature);
+            return new boss_razorscaleAI(creature);
         }
 };
 

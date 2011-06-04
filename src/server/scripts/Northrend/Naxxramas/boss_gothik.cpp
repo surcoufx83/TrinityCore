@@ -312,15 +312,15 @@ class boss_gothik : public CreatureScript
                         case MOB_LIVE_TRAINEE:
                         {
                         if (Creature *LiveTrigger0 = Unit::GetCreature(*me, LiveTriggerGUID[1]))
-                                DoSummon(MOB_LIVE_TRAINEE, liveTrigger, 1);
+                                DoSummon(MOB_LIVE_TRAINEE, LiveTrigger0, 1);
                         if (Creature *LiveTrigger1 = Unit::GetCreature(*me, LiveTriggerGUID[2]))
-                                DoSummon(MOB_LIVE_TRAINEE, liveTrigger2, 1);
+                                DoSummon(MOB_LIVE_TRAINEE, LiveTrigger1, 1);
                             break;
                         }
                         case MOB_LIVE_KNIGHT:
                         {
                         if (Creature *LiveTrigger5 = Unit::GetCreature(*me, LiveTriggerGUID[3]))
-                                DoSummon(MOB_LIVE_KNIGHT, liveTrigger5, 1);
+                                DoSummon(MOB_LIVE_KNIGHT, LiveTrigger5, 1);
                             break;
                         }
                         case MOB_LIVE_RIDER:

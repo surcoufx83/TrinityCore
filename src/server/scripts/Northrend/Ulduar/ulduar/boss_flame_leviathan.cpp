@@ -573,7 +573,7 @@ class boss_flame_leviathan : public CreatureScript
 
         CreatureAI* GetAI(Creature* creature) const
         {
-            return GetUlduarAI<boss_flame_leviathanAI>(creature);
+            return new boss_flame_leviathanAI(creature);
         }
 };
 

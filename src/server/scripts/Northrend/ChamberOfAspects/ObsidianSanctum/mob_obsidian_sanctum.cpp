@@ -1,10 +1,3 @@
-/* ScriptData
-SDName: Naxxramas
-SD%Complete: ??
-SDComment: Trash Scripts
-SDCategory: Naxxramas
-EndScriptData */
-
 #include "ScriptPCH.h"
 #include "obsidian_sanctum.h"
 
