@@ -2680,7 +2680,7 @@ bool HasItemInMail(Player *pPlayer, uint32 item)
 {
     QueryResult result;
     uint32 item_id = item;
-    result = CharacterDatabase.PQuery("SELECT `item_guid` FROM mail_items WHERE `item_template` = '%i' AND `receiver` = '%i' LIMIT 1", item_id, pPlayer->GetGUID());
+    result = CharacterDatabase.PQuery("SELECT `mail_items`.`item_guid` FROM `mail_items` INNER JOIN `item_instance` ON item_instance.guid = mail_items.item_guid WHERE item_instance.itemEntry = '%i' AND `mail_items`.`receiver` = '%i' LIMIT 1", item_id, pPlayer->GetGUID());
     if(result)
         return true;
     else 
@@ -2705,7 +2705,7 @@ bool HasItemInMail(Player *pPlayer, uint32 item)
 
 #define EVENT_GIFT_PET_BLIZZBEAR           210
 //insert ignore into `custom_texts` (`entry`, `content_default`) values('-2000000','Im Februar ist LoL 2 Jahre alt geworden. Dieses war für uns ein Grund zum Feiern. Und damit auch ihr etwas Freude daran habt, schenken wir euch etwas : Das Haustier Welpling von Onyxia. $B$B Wir danken damit auch allen Spielern, die uns unterstütz und motviert haben.$B$B Wir wünschen euch und uns noch weitere schöne Spielzeit hier auf LoL. Seht es locker, nehmt nicht alles sauernst, WoW ist und bleibt nur ein Spiel. $B$B Euer LoL-Team.');
-//insert ignore into `game_event` (`entry`, `start_time`, `end_time`, `occurence`, `length`, `holiday`, `description`, `world_event`) values('300','2010-03-27 15:00:00','2010-04-03 15:00:00','14400','14400','0','Onyxia Welpling Verteilung','0');
+//INSERT IGNORE INTO `game_event` (`eventEntry`, `start_time`, `end_time`, `occurence`, `length`, `holiday`, `description`, `world_event`) VALUES('203','2011-06-04 10:00:00','2011-06-11 10:00:00','14400','14400','0','Treuebaer Verteilung','0');
 
 //OnLogin not implemented yet
 class SurprisePlayerScript : public PlayerScript
