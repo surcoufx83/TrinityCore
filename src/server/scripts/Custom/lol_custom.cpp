@@ -2713,11 +2713,11 @@ class SurprisePlayerScript : public PlayerScript
 public:
     SurprisePlayerScript() : PlayerScript("SurprisePlayerScript") { }
 
-    void OnPlayerLogin (Player * pPlayer)
+    void OnLogin(Player * pPlayer)
     {
         if(IsEventActive(EVENT_GIFT_PET_BLIZZBEAR))
         {
-            if(!pPlayer->HasItemCount(44819,1,true) && !HasItemInMail(pPlayer,49362) && !pPlayer->HasSpell(61855))
+            if(!pPlayer->HasItemCount(44819,1,true) && !HasItemInMail(pPlayer,44819) && !pPlayer->HasSpell(61855))
             {
                 std::string subject = "Ein kleines Treuegeschaenk!";
                 //uint32 itemTextId = objmgr.CreateItemText( objmgr.GetTrinityString(-2000000,0) );

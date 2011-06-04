@@ -787,7 +787,7 @@ class AFallFromGracePlayerScript : public PlayerScript
 public:
     AFallFromGracePlayerScript() : PlayerScript("AFallFromGracePlayerScript") { }
 
-    void OnPlayerLogin (Player * pPlayer)
+    void OnLogin(Player * pPlayer)
     {
         if(pPlayer->GetQuestStatus(QUEST_A_FALL_FROM_GRACE) == QUEST_STATUS_INCOMPLETE)
             pPlayer->FailQuest(QUEST_A_FALL_FROM_GRACE);
