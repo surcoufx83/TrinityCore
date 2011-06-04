@@ -2675,6 +2675,74 @@ public:
     }
 };
 
+//Helper for Events
+bool HasItemInMail(Player *pPlayer, uint32 item)
+{
+    QueryResult result;
+    uint32 item_id = item;
+    result = CharacterDatabase.PQuery("SELECT `item_guid` FROM mail_items WHERE `item_template` = '%i' AND `receiver` = '%i' LIMIT 1", item_id, pPlayer->GetGUID());
+    if(result)
+        return true;
+    else 
+        return false;
+
+    //for (PlayerMails::iterator itr = pPlayer->GetMailBegin(); itr != pPlayer->GetMailEnd(); ++itr)
+    //{
+    //    error_log("Has Mail");
+    //    uint8 item_count = (*itr)->items.size();
+    //    for (uint8 i = 0; i < item_count; ++i)
+    //    {
+    //        Item *item = pPlayer->GetMItem((*itr)->items[i].item_guid);
+    //        error_log("Has Item in Mail %d", item->GetEntry());
+    //        if(item->GetEntry() == ItemEntry)
+    //            return true;
+    //    }
+    //}
+    //return false;
+}
+
+
+
+#define EVENT_GIFT_PET_BLIZZBEAR           210
+//insert ignore into `custom_texts` (`entry`, `content_default`) values('-2000000','Im Februar ist LoL 2 Jahre alt geworden. Dieses war für uns ein Grund zum Feiern. Und damit auch ihr etwas Freude daran habt, schenken wir euch etwas : Das Haustier Welpling von Onyxia. $B$B Wir danken damit auch allen Spielern, die uns unterstütz und motviert haben.$B$B Wir wünschen euch und uns noch weitere schöne Spielzeit hier auf LoL. Seht es locker, nehmt nicht alles sauernst, WoW ist und bleibt nur ein Spiel. $B$B Euer LoL-Team.');
+//insert ignore into `game_event` (`entry`, `start_time`, `end_time`, `occurence`, `length`, `holiday`, `description`, `world_event`) values('300','2010-03-27 15:00:00','2010-04-03 15:00:00','14400','14400','0','Onyxia Welpling Verteilung','0');
+
+//OnLogin not implemented yet
+class SurprisePlayerScript : public PlayerScript
+{
+public:
+    SurprisePlayerScript() : PlayerScript("SurprisePlayerScript") { }
+
+    void OnPlayerLogin (Player * pPlayer)
+    {
+        if(IsEventActive(EVENT_GIFT_PET_BLIZZBEAR))
+        {
+            if(!pPlayer->HasItemCount(44819,1,true) && !HasItemInMail(pPlayer,49362) && !pPlayer->HasSpell(61855))
+            {
+                std::string subject = "Ein kleines Treuegeschaenk!";
+                //uint32 itemTextId = objmgr.CreateItemText( objmgr.GetTrinityString(-2000000,0) );
+                MailSender sender(MAIL_CREATURE,16474);
+                MailDraft draft(subject, sObjectMgr->GetTrinityString(-2000001,LOCALE_enUS));
+
+
+                SQLTransaction trans = CharacterDatabase.BeginTransaction();
+                if(Item* item = Item::CreateItem(44819,1,pPlayer))
+                {
+                    // save new item before send
+                    item->SaveToDB(trans);                               // save for prevent lost at next mail load, if send fail then item will deleted
+
+                    // item
+                    draft.AddItem(item);
+                }
+
+                draft.SendMailTo(trans, pPlayer, MailSender(sender));
+                CharacterDatabase.CommitTransaction(trans);
+
+            }
+        }
+    }
+};
+
 void AddSC_lol_custom()
 {
     new mob_arcane_sentries();
@@ -2716,6 +2784,7 @@ void AddSC_lol_custom()
     new vehicle_wyrm_default();
     new npc_item_quest_giver();
     new npc_wyrm_debug_repairbot();
+    new SurprisePlayerScript();
 
     if(sConfig->GetBoolDefault("Chatticker.Enabled", false))
         new global_chatticker_playerscript();
