@@ -337,7 +337,7 @@ public:
             }
         }
 
-        void KilledUnit(Unit * /*victim*/)
+        void KilledUnit(Unit* /*victim*/)
         {
             DoScriptText(RAND(SAY_SLAY_1, SAY_SLAY_2), me);
         }
@@ -467,9 +467,9 @@ public:
         uint32 GetElderCount()
         {
             uint32 i = 0;
-            if(bIsElderBrightleafAlive) i++;
-            if(bIsElderIronbranchAlive) i++;
-            if(bIsElderStonebarkAlive) i++;
+            if (bIsElderBrightleafAlive) i++;
+            if (bIsElderIronbranchAlive) i++;
+            if (bIsElderStonebarkAlive) i++;
             return i;
         }
 
@@ -477,24 +477,43 @@ public:
         {
             EncounterFinished = true;
             DoScriptText(SAY_DEATH, me);
-            if(pInstance)
-                pInstance->SetBossState(TYPE_FREYA,DONE);
+            if (pInstance)
+                pInstance->SetBossState(TYPE_FREYA, DONE);
 
-            switch(GetElderCount())
+            switch (GetElderCount())
             {
-            case 3:
-                pInstance->DoCompleteAchievement(RAID_MODE(ACHIEVMENT_KNOCK_KNOCK_KNOCK_ON_THE_WOOD_10, ACHIEVMENT_KNOCK_KNOCK_KNOCK_ON_THE_WOOD_25));
-            case 2:
-                pInstance->DoCompleteAchievement(RAID_MODE(ACHIEVMENT_KNOCK_KNOCK_ON_THE_WOOD_10, ACHIEVMENT_KNOCK_KNOCK_ON_THE_WOOD_25));
-            case 1:
-                pInstance->DoCompleteAchievement(RAID_MODE(ACHIEVMENT_KNOCK_ON_THE_WOOD_10, ACHIEVMENT_KNOCK_ON_THE_WOOD_25));
-                break;
+                case 3:
+                    pInstance->DoCompleteAchievement(RAID_MODE(ACHIEVMENT_KNOCK_KNOCK_KNOCK_ON_THE_WOOD_10, ACHIEVMENT_KNOCK_KNOCK_KNOCK_ON_THE_WOOD_25));
+                case 2:
+                    pInstance->DoCompleteAchievement(RAID_MODE(ACHIEVMENT_KNOCK_KNOCK_ON_THE_WOOD_10, ACHIEVMENT_KNOCK_KNOCK_ON_THE_WOOD_25));
+                case 1:
+                    pInstance->DoCompleteAchievement(RAID_MODE(ACHIEVMENT_KNOCK_ON_THE_WOOD_10, ACHIEVMENT_KNOCK_ON_THE_WOOD_25));
+                    break;
             }
 
-            if(me->GetAuraCount(SPELL_ATTUNED_TO_NATURE) >= 25)
+            if (GetElderCount() == 3)
+            {
+                me->SummonGameObject(RAID_MODE(GO_FREYA_CHEST_HARD, GO_FREYA_CHEST_HERO_HARD), 2353.18f, -54.5f, 425.86f, 3.14159f, 0, 0, 0, 0, 604800);
+            }
+            else
+            {
+                if (GameObject* chest = me->SummonGameObject(RAID_MODE(GO_FREYA_CHEST, GO_FREYA_CHEST_HERO), 2353.18f, -54.5f, 425.86f, 3.14159f, 0, 0, 0, 0, 604800))
+                {
+                    switch (GetElderCount())
+                    {
+                        case 2:
+                            chest->AddLootMode(4);
+                        case 1:
+                            chest->AddLootMode(2);
+                            break;
+                    }
+                }
+            }
+
+            if (me->GetAuraCount(SPELL_ATTUNED_TO_NATURE) >= 25)
                 pInstance->DoCompleteAchievement(RAID_MODE(ACHIEVMENT_GETTING_BACK_TO_NATURE_10, ACHIEVMENT_GETTING_BACK_TO_NATURE_25));
 
-            me->AI()->EnterEvadeMode();
+            EnterEvadeMode();
             // cast is not rewarding the achievement.
             // DoCast(SPELL_ACHIEVEMENT_CHECK);
             pInstance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, SPELL_ACHIEVEMENT_CHECK);
@@ -502,12 +521,12 @@ public:
 
         void SetAttunedToNatureAura()
         {
-            DoCast(RAID_MODE(SPELL_TOUCH_OF_EONAR_10,SPELL_TOUCH_OF_EONAR_25));
-            me->AddAura(SPELL_ATTUNED_TO_NATURE,me);
-            me->SetAuraStack(SPELL_ATTUNED_TO_NATURE,me,150);
+            DoCast(RAID_MODE(SPELL_TOUCH_OF_EONAR_10, SPELL_TOUCH_OF_EONAR_25));
+            me->AddAura(SPELL_ATTUNED_TO_NATURE, me);
+            me->SetAuraStack(SPELL_ATTUNED_TO_NATURE, me, 150);
         }
 
-        void EnterCombat(Unit* /*pWho*/)
+        void EnterCombat(Unit* /*who*/)
         {
             DoScriptText(SAY_AGGRO, me);
 
@@ -574,7 +593,7 @@ public:
                 if(uiNaturalBomb_Timer <= diff)
                 {
                     std::list<Player*> plrList = me->GetNearestPlayersList(500);
-                    int max = urand(10,15);
+                    int max = RAID_MODE(urand(4, 6), urand(10, 15));
                     for (std::list<Player*>::const_iterator itr = plrList.begin(); itr != plrList.end(); ++itr)
                     {
                         if((*itr))
