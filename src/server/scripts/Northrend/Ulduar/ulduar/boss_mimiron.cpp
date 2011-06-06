@@ -1087,6 +1087,7 @@ public:
                 if (damage >= me->GetHealth())
                 {
                     damage = 0;
+                    spinning = false;
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
                     me->AttackStop();
                     me->GetMotionMaster()->Initialize();
@@ -1103,6 +1104,7 @@ public:
                 if (damage >= me->GetHealth())
                 {
                     damage = 0;
+                    spinning = false;
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
                     me->AttackStop();
                     me->RemoveAllAurasExceptType(SPELL_AURA_CONTROL_VEHICLE);
@@ -1162,7 +1164,7 @@ public:
                             if (Creature* leviathan = me->GetVehicleCreatureBase())
                             {
                                 float orient = leviathan->GetOrientation();
-                                leviathan->CastSpell(leviathan, 14821, true); // use a self stun as it prevents combat turning
+                                leviathan->CastSpell(leviathan, 14821, true); // temporary, to prevent turning
                                 leviathan->SetFacing(orient);
                                 me->SetOrientation(orient);
                             }
