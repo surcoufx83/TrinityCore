@@ -384,6 +384,11 @@ DELETE FROM spell_script_names WHERE spell_id = 62692;
 INSERT INTO spell_script_names VALUE (62692,'spell_general_vezax_aura_of_despair_aura');
 DELETE FROM spell_script_names WHERE spell_id = 63276;
 INSERT INTO spell_script_names VALUE (63276,'spell_general_vezax_mark_of_the_faceless_aura');
+
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry`=63322;
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`) VALUES
+(13,63322,18,1,0);
+
 -- DELETE FROM spell_script_names WHERE spell_id = 63278;
 -- INSERT INTO spell_script_names VALUE (63278,'spell_general_vezax_mark_of_the_faceless_spell');
 
