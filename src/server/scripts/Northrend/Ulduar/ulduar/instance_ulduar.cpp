@@ -686,11 +686,8 @@ public:
                 case TYPE_IGNIS:
                 case TYPE_RAZORSCALE:
                 case TYPE_XT002:
-                    if (state == IN_PROGRESS)
-                        HandleGameObject(uiXT002DoorGUID, false);
-                    else
-                        HandleGameObject(uiXT002DoorGUID, true);
-                        break;
+                    HandleGameObject(uiXT002DoorGUID, state != IN_PROGRESS);
+                    break;
                 case TYPE_ASSEMBLY:
                 case TYPE_AURIAYA:
                     break;
@@ -718,8 +715,6 @@ public:
                             go->SetRespawnTime(go->GetRespawnDelay());
                         HandleGameObject(uiKologarnBridgeGUID, false);
                     }
-
-                    HandleGameObject(uiKologarnDoorGUID, state != IN_PROGRESS);
                     break;
                 case TYPE_HODIR:
                     if (state == DONE)
@@ -733,9 +728,7 @@ public:
                         HandleGameObject(uiHodirEntranceDoorGUID, true);
                     }
 
-                    if (state == IN_PROGRESS)
-                        HandleGameObject(uiHodirEntranceDoorGUID, false);
-                    
+                    HandleGameObject(uiHodirEntranceDoorGUID, state != IN_PROGRESS);
                     break;
                 case TYPE_THORIM:
                     if (state == DONE)

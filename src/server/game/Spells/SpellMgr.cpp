@@ -4194,6 +4194,13 @@ void SpellMgr::LoadSpellCustomAttr()
             spellInfo->DurationIndex = 38;
             ++count;
             break;
+        case 62056: // Kologarn - some Stone Grip related Spells that have SPELL_ATTR1_IGNORE_IMMUNITY (NYI?)
+        case 63985:
+        case 64224:
+        case 64225:
+            spellInfo->Attributes |= SPELL_ATTR0_UNAFFECTED_BY_INVULNERABILITY;
+            ++count;
+            break;
         // ENDOF ULDUAR SPELLS
         //
         // ICECROWN CITADEL SPELLS

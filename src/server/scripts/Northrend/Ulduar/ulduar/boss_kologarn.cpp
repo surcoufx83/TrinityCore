@@ -50,7 +50,7 @@ EndScriptData */
 // Passive
 #define SPELL_KOLOGARN_REDUCE_PARRY 64651
 #define SPELL_KOLOGARN_PACIFY       63726
-#define SPELL_KOLOGARN_UNK_0        65219   // Not found in DBC
+#define SPELL_KOLOGARN_UNK_0        65219 // Not found in DBC
 
 #define SPELL_BERSERK               47008 // guess
 
@@ -91,7 +91,7 @@ enum Yells
 
 enum
 {
-    ACHIEV_DISARMED_START_EVENT                   = 21687,
+    ACHIEV_DISARMED_START_EVENT                 = 21687,
 };
 
 class boss_kologarn : public CreatureScript
@@ -99,14 +99,14 @@ class boss_kologarn : public CreatureScript
     public:
         boss_kologarn() : CreatureScript("boss_kologarn") { }
 
-        CreatureAI* GetAI(Creature* pCreature) const
+        CreatureAI* GetAI(Creature* creature) const
         {
-            return new boss_kologarnAI(pCreature);
+            return new boss_kologarnAI(creature);
         }
 
         struct boss_kologarnAI : public BossAI
         {
-            boss_kologarnAI(Creature *pCreature) : BossAI(pCreature, TYPE_KOLOGARN), vehicle(pCreature->GetVehicleKit()),
+            boss_kologarnAI(Creature* creature) : BossAI(creature, TYPE_KOLOGARN), vehicle(creature->GetVehicleKit()),
                 left(false), right(false)
             {
                 ASSERT(vehicle);
@@ -118,7 +118,7 @@ class boss_kologarn : public CreatureScript
                 SetCombatMovement(false);
                 Reset();
 
-                /* should be triggered on caster? */
+                // should be triggered on caster?
                 SpellEntry* tempSpell;
                 tempSpell = GET_SPELL(SPELL_STONE_SHOUT);
                 if (tempSpell)
@@ -230,6 +230,37 @@ class boss_kologarn : public CreatureScript
                 }
             }
 
+            // try to get ranged target, not too far away
+            Unit* GetEyeBeamTarget()
+            {
+                Map* map = me->GetMap();
+                if (map && map->IsDungeon())
+                {
+                    std::list<Player*> PlayerList;
+                    Map::PlayerList const& Players = map->GetPlayers();
+                    for (Map::PlayerList::const_iterator itr = Players.begin(); itr != Players.end(); ++itr)
+                    {
+                        if (Player* player = itr->getSource())
+                        {
+                            float Distance = player->GetDistance(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
+                            if (30.0f < Distance || Distance > 60.0f)
+                                continue;
+
+                            PlayerList.push_back(player);
+                        }
+                    }
+
+                    if (PlayerList.empty())
+                        return NULL;
+
+                    std::list<Player*>::const_iterator itr = PlayerList.begin();
+                    std::advance(itr, urand(0, PlayerList.size() - 1));
+                    return *itr;
+                }
+                else
+                    return NULL;
+            }
+
             void JustSummoned(Creature* summon)
             {
                 switch (summon->GetEntry())
@@ -272,6 +303,7 @@ class boss_kologarn : public CreatureScript
                     return;
 
                 events.Update(diff);
+                _DoAggroPulse(diff);
 
                 if (me->HasUnitState(UNIT_STAT_CASTING))
                     return;
@@ -330,10 +362,12 @@ class boss_kologarn : public CreatureScript
                             DoScriptText(SAY_GRAB_PLAYER, me);
                         }
                         events.RepeatEvent(25000);
+                        break;
                     }
-                    break;
                     case EVENT_FOCUSED_EYEBEAM:
-                        Unit* eyebeamTargetUnit = SelectTarget(SELECT_TARGET_FARTHEST, 0, 50.0f, true);
+                        Unit* eyebeamTargetUnit = GetEyeBeamTarget();
+                        if (!eyebeamTargetUnit)
+                            eyebeamTargetUnit = SelectTarget(SELECT_TARGET_RANDOM, 0, 60.0f, true);
                         if (eyebeamTargetUnit)
                         {
                             eyebeamTarget = eyebeamTargetUnit->GetGUID();
@@ -349,8 +383,7 @@ class boss_kologarn : public CreatureScript
 
             void RespawnArm(uint32 entry)
             {
-                /* no way to get arms by guid as they got unsummoned in Unit::_ExitVehicle.
-                    temporary spawn them here */
+                // no way to get arms by guid as they got unsummoned in Unit::_ExitVehicle. temporary spawn them here
                 if (Creature* arm = me->SummonCreature(entry, *me))
                 {
                     arm->AddUnitTypeMask(UNIT_MASK_ACCESSORY);
@@ -498,8 +531,9 @@ class spell_ulduar_stone_grip_cast_target : public SpellScriptLoader
                 if (!plr)
                     return;
 
-                plr->CastSpell(GetTargetUnit(), GetSpellInfo()->EffectTriggerSpell[i], true);     // Don't send m_originalCasterGUID param here or underlying
-                PreventHitEffect(i);                                                                   // AureEffect::HandleAuraControlVehicle will fail on caster == target
+                // Don't send m_originalCasterGUID param here or underlying AuraEffect::HandleAuraControlVehicle will fail on caster == target
+                plr->CastSpell(GetTargetUnit(), GetSpellInfo()->EffectTriggerSpell[i], true);
+                PreventHitEffect(i);
             }
 
             void Register()
@@ -638,8 +672,11 @@ class spell_ulduar_stone_grip : public SpellScriptLoader
 
             void OnRemoveStun(AuraEffect const* aurEff, AuraEffectHandleModes /*mode*/)
             {
-                if (Player* pOwner = GetOwner()->ToPlayer())
-                    pOwner->RemoveAurasDueToSpell(aurEff->GetAmount());
+                if (Player* owner = GetOwner()->ToPlayer())
+                {
+                    owner->RemoveAurasDueToSpell(aurEff->GetAmount());
+                    owner->RemoveAurasDueToSpell(64708);
+                }
             }
 
             void OnRemoveVehicle(AuraEffect const* /*aurEff*/, AuraEffectHandleModes mode)
