@@ -22,4 +22,4 @@ INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type
 (@NPC,0,2,0,11,0,100,0,0,0,0,0,81,2,0,0,0,0,0,1,0,0,0,0,0,0,0,'Fizzcrank Recon Pilot - On spawn - set gossip flag'),
 (@NPC,0,3,4,8,0,100,0,46362,0,0,0,11,46362,0,0,0,0,0,7,0,0,0,0,0,0,0,'Fizzcrank Recon Pilot - On spellhit - cast spell on envoker'),
 (@NPC,0,4,0,61,0,100,0,0,0,0,0,23,1,0,0,0,0,0,1,0,0,0,0,0,0,0,'Fizzcrank Recon Pilot - On spellhit - set phase 1'),
-(@NPC,0,5,0,1,1,100,0,3000,3000,0,0,41,0,0,0,0,0,0,1,0,0,0,0,0,0,0,'Fizzcrank Recon Pilot - OOC - wait 3 sec despawn (Phase 1)'); -
+(@NPC,0,5,0,1,1,100,0,3000,3000,0,0,41,0,0,0,0,0,0,1,0,0,0,0,0,0,0,'Fizzcrank Recon Pilot - OOC - wait 3 sec despawn (Phase 1)');

@@ -259,6 +259,7 @@ public:
         void JustSummoned(Creature* summoned)
         {
             summons.Summon(summoned);
+            DoZoneInCombat(summoned);
         }
 
         void DoAction(const int32 action)
@@ -511,7 +512,7 @@ public:
                 heart->EnterVehicle(me, 1);
                 heart->ClearUnitState(UNIT_STAT_ONVEHICLE); // Hack
                 heart->SetInCombatWithZone();
-                heart->CastSpell(heart, SPELL_EXPOSED_HEART, false);
+                heart->CastSpell(heart, SPELL_EXPOSED_HEART, true);
             }
 
             // Start "end of phase 2 timer"
@@ -568,7 +569,6 @@ public:
             _instance = creature->GetInstanceScript();
             //me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_STUNNED);
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
-            //DoCast(me, SPELL_EXPOSED_HEART);
         }
 
         InstanceScript* _instance;
@@ -805,10 +805,11 @@ public:
         return new mob_void_zoneAI(creature);
     }
 
-    struct mob_void_zoneAI : public ScriptedAI
+    struct mob_void_zoneAI : public Scripted_NoMovementAI
     {
-        mob_void_zoneAI(Creature* creature) : ScriptedAI(creature)
+        mob_void_zoneAI(Creature* creature) : Scripted_NoMovementAI(creature)
         {
+            me->SetReactState(REACT_PASSIVE);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
         }
 
@@ -876,30 +877,76 @@ public:
     };
 };
 
-class spell_gravity_bomb_targeting : public SpellScriptLoader
+class BombTargetSelector : public std::unary_function<Unit *, bool>
 {
     public:
-        spell_gravity_bomb_targeting() : SpellScriptLoader("spell_gravity_bomb_targeting") { }
+        BombTargetSelector(Creature* me, const Unit* victim) : _me(me), _victim(victim) {}
 
-        class spell_gravity_bomb_targeting_SpellScript : public SpellScript
+        bool operator() (Unit* target)
         {
-            PrepareSpellScript(spell_gravity_bomb_targeting_SpellScript);
+            if (target == _victim && _me->getThreatManager().getThreatList().size() > 1)
+                return true;
 
-            void FilterTargets(std::list<Unit*>& unitList)
+            if (target->GetTypeId() != TYPEID_PLAYER)
+                return true;
+
+            return false;
+        }
+
+        Creature* _me;
+        Unit const* _victim;
+};
+
+class spell_xt002_bomb_select_target : public SpellScriptLoader
+{
+    public:
+        spell_xt002_bomb_select_target() : SpellScriptLoader("spell_xt002_bomb_select_target") { }
+
+        class spell_xt002_bomb_select_target_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_xt002_bomb_select_target_SpellScript);
+
+            bool Load()
             {
-                unitList.remove(GetTargetUnit());
+                _target = NULL;
+                return GetCaster()->GetTypeId() == TYPEID_UNIT;
+            }
+
+            void FilterTargetsInitial(std::list<Unit*>& targetList)
+            {
+                targetList.remove_if(BombTargetSelector(GetCaster()->ToCreature(), GetCaster()->getVictim()));
+
+                if (targetList.empty())
+                    return;
+
+                std::list<Unit*>::iterator itr = targetList.begin();
+                std::advance(itr, urand(0, targetList.size() - 1));
+                Unit* target = *itr;
+                targetList.clear();
+                targetList.push_back(target);
+                _target = target;
+            }
+
+            void SetTarget(std::list<Unit*>& targetList)
+            {
+                targetList.clear();
+                if (_target)
+                    targetList.push_back(_target);
             }
 
             void Register()
             {
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_gravity_bomb_targeting_SpellScript::FilterTargets, EFFECT_0, TARGET_DST_CASTER);
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_gravity_bomb_targeting_SpellScript::FilterTargets, EFFECT_1, TARGET_DST_CASTER);
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_xt002_bomb_select_target_SpellScript::FilterTargetsInitial, EFFECT_0, TARGET_UNIT_AREA_ENEMY_DST);
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_xt002_bomb_select_target_SpellScript::SetTarget, EFFECT_1, TARGET_UNIT_AREA_ENEMY_DST);
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_xt002_bomb_select_target_SpellScript::SetTarget, EFFECT_2, TARGET_UNIT_AREA_ENEMY_DST);
             }
+
+            Unit* _target;
         };
 
         SpellScript* GetSpellScript() const
         {
-            return new spell_gravity_bomb_targeting_SpellScript();
+            return new spell_xt002_bomb_select_target_SpellScript();
         }
 };
 
@@ -912,5 +959,5 @@ void AddSC_boss_xt002()
     new mob_void_zone();
     new mob_life_spark();
     new boss_xt002();
-    new spell_gravity_bomb_targeting();
+    new spell_xt002_bomb_select_target();
 }

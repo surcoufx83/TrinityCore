@@ -303,6 +303,10 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionType
 
 UPDATE `creature_template` SET `faction_A`=14, `faction_H`=14 WHERE `entry` IN (34149,34361);
 
+-- Junk Bot
+UPDATE `creature_template` SET `difficulty_entry_1`=34114 WHERE `entry`=33855;
+UPDATE `creature_template` SET `faction_A`=16, `faction_H`=16, `dmg_multiplier`=15 WHERE `entry`=34114;
+
 -- ##########################################################
 -- Thorim
 -- ##########################################################

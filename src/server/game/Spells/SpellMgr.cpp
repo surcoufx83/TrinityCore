@@ -4156,16 +4156,17 @@ void SpellMgr::LoadSpellCustomAttr()
             mSpellCustomAttr[i] |= SPELL_ATTR0_CU_IGNORE_ARMOR;
             ++count;
             break;
+        case 63025: // XT-002 Gravity Bomb
+        case 64233: // XT-002 Gravity Bomb
+            mSpellCustomAttr[i] |= SPELL_ATTR0_CU_EXCLUDE_SELF;
+            ++count;
+            break;
         case 65210: // Keeper Mimiron Destabilization Matrix - Ignore LoS (because Mimiron stands in a Tube and is out of LoS)
         case 62042: // Thorim - Stormhammer
             mSpellCustomAttr[i] |= SPELL_ATTR0_CU_IGNORE_LOS;
             ++count;
             break;
         case 62488: // Ignis Activate Construct (only visually)
-        case 63024: // XT-002 Gravity Bomb
-        case 64234: // XT-002 Gravity Bomb
-        case 63018: // XT-002 Searing Light
-        case 65121: // XT-002 Searing Light
         case 65301: // Sara Psychosis
         case 63830: // Sara Malady of the Mind
         case 64465: // Yogg Saron Shadow Beacon
