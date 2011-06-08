@@ -4163,6 +4163,9 @@ void SpellMgr::LoadSpellCustomAttr()
             break;
         case 65210: // Keeper Mimiron Destabilization Matrix - Ignore LoS (because Mimiron stands in a Tube and is out of LoS)
         case 62042: // Thorim - Stormhammer
+        case 62521: // Freya - Attuned to Nature 25 Dose Reduction
+        case 62524: // Freya - Attuned to Nature 2 Dose Reduction
+        case 62525: // Freya - Attuned to Nature 10 Dose Reduction
             mSpellCustomAttr[i] |= SPELL_ATTR0_CU_IGNORE_LOS;
             ++count;
             break;
