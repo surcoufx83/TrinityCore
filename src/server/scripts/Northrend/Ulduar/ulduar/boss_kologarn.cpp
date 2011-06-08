@@ -35,6 +35,7 @@ EndScriptData */
 #define SPELL_STONE_SHOUT       RAID_MODE(63716, 64005)
 #define SPELL_PETRIFY_BREATH    RAID_MODE(62030, 63980)
 #define SPELL_STONE_GRIP        RAID_MODE(62166, 63981)
+#define SPELL_STONE_GRIP_DOT    RAID_MODE(64290, 64292)
 #define SPELL_STONE_GRIP_CANCEL 65594
 #define SPELL_SUMMON_RUBBLE     63633
 #define SPELL_FALLING_RUBBLE    63821
@@ -242,8 +243,11 @@ class boss_kologarn : public CreatureScript
                     {
                         if (Player* player = itr->getSource())
                         {
+                            if (player->isDead() || player->HasAura(SPELL_STONE_GRIP_DOT) || player->isGameMaster())
+                                continue;
+
                             float Distance = player->GetDistance(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
-                            if (30.0f < Distance || Distance > 60.0f)
+                            if (Distance < 20.0f || Distance > 60.0f)
                                 continue;
 
                             PlayerList.push_back(player);
@@ -367,7 +371,7 @@ class boss_kologarn : public CreatureScript
                     case EVENT_FOCUSED_EYEBEAM:
                         Unit* eyebeamTargetUnit = GetEyeBeamTarget();
                         if (!eyebeamTargetUnit)
-                            eyebeamTargetUnit = SelectTarget(SELECT_TARGET_RANDOM, 0, 60.0f, true);
+                            eyebeamTargetUnit = SelectTarget(SELECT_TARGET_RANDOM, 0, 60.0f, true, -SPELL_STONE_GRIP_DOT);
                         if (eyebeamTargetUnit)
                         {
                             eyebeamTarget = eyebeamTargetUnit->GetGUID();

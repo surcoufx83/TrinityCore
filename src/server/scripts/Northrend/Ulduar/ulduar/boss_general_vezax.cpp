@@ -244,8 +244,11 @@ public:
                 {
                     if (Player* player = itr->getSource())
                     {
+                        if (player->isDead() || player->isGameMaster())
+                            continue;
+
                         float Distance = player->GetDistance(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
-                        if (RangeMin < Distance || Distance > RangeMax)
+                        if (Distance < RangeMin || Distance > RangeMax)
                             continue;
 
                         PlayerList.push_back(player);
