@@ -22,10 +22,7 @@
             Nerf Gravity Bombs - (?) - Spellscript
             Must Deconstruct Faster - in XT-002 script / core
 
-        Boombot explosion only hurt allies to the npc at the moment
         Boombot explosion visual
-
-        If the boss is to close to a scrap pile -> no summon
         make the life sparks visible...
 */
 
@@ -271,14 +268,10 @@ public:
                     {
                         hardMode = true;
                         me->AddLootMode(LOOT_MODE_HARD_MODE_1);
-
                         // Enter hard mode
                         enterHardMode = true;
-                        uiEnrageTimer = TIMER_ENRAGE;
-
                         // set max health
                         me->SetFullHealth();
-
                         // Get his heartbreak buff
                         me->CastSpell(me, RAID_MODE(SPELL_HEARTBREAK_10, SPELL_HEARTBREAK_25), true);
                     }
@@ -398,10 +391,7 @@ public:
                 }
                 else
                 {
-                    //Stop moving
-                    //me->StopMoving();
-
-                    //Start summoning adds
+                    // Start summoning adds
                     if (uiSpawnAddTimer <= diff)
                     {
                         DoScriptText(SAY_SUMMON, me);
@@ -415,10 +405,10 @@ public:
                             case 3: me->SummonCreature(NPC_XM024_PUMMELLER, UL_X, UL_Y, SPAWN_Z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000); break;
                         }
 
-                        // Spawn 5 Bombs
+                        // Spawn 5 Scrapbots
                         for (int8 n = 0; n < 5; n++)
                         {
-                            //Some randomes are added so they wont spawn in a pile
+                            // Some randomes are added so they wont spawn in a pile
                             switch(rand() % 4)
                             {
                                 case 0: me->SummonCreature(NPC_XS013_SCRAPBOT, float(irand(LR_X - 3, LR_X + 3)), float(irand(LR_Y - 3, LR_Y + 3)), SPAWN_Z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000); break;
@@ -428,13 +418,16 @@ public:
                             }
                         }
 
-                        //Spawn 5 Scrapbots
-                        switch (rand() % 4)
+                        // Spawn 3 Bombs
+                        for (int8 n = 0; n < 3; n++)
                         {
-                            case 0: me->SummonCreature(NPC_XE321_BOOMBOT, LR_X, LR_Y, SPAWN_Z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000); break;
-                            case 1: me->SummonCreature(NPC_XE321_BOOMBOT, LL_X, LL_Y, SPAWN_Z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000); break;
-                            case 2: me->SummonCreature(NPC_XE321_BOOMBOT, UR_X, UR_Y, SPAWN_Z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000); break;
-                            case 3: me->SummonCreature(NPC_XE321_BOOMBOT, UL_X, UL_Y, SPAWN_Z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000); break;
+                            switch (rand() % 4)
+                            {
+                                case 0: me->SummonCreature(NPC_XE321_BOOMBOT, LR_X, LR_Y, SPAWN_Z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000); break;
+                                case 1: me->SummonCreature(NPC_XE321_BOOMBOT, LL_X, LL_Y, SPAWN_Z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000); break;
+                                case 2: me->SummonCreature(NPC_XE321_BOOMBOT, UR_X, UR_Y, SPAWN_Z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000); break;
+                                case 3: me->SummonCreature(NPC_XE321_BOOMBOT, UL_X, UL_Y, SPAWN_Z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000); break;
+                            }
                         }
 
                         uiSpawnAddTimer = TIMER_SPAWN_ADD;
