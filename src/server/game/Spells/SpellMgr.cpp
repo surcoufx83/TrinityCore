@@ -4205,6 +4205,11 @@ void SpellMgr::LoadSpellCustomAttr()
             spellInfo->Attributes |= SPELL_ATTR0_UNAFFECTED_BY_INVULNERABILITY;
             ++count;
             break;
+        case 62711: // Ignis - Grab
+            spellInfo->Attributes |= SPELL_ATTR0_UNAFFECTED_BY_INVULNERABILITY;
+            spellInfo->AttributesEx2 |= SPELL_ATTR2_CANT_REFLECTED;
+            ++count;
+            break;
         // ENDOF ULDUAR SPELLS
         //
         // ICECROWN CITADEL SPELLS

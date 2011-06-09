@@ -64,6 +64,10 @@ INSERT INTO `spell_linked_spell` (`spell_trigger`,`spell_effect`,`type`,`comment
 (62382,-65667,2, 'Iron Construct - immune to Heat when Brittle'),
 (67114,-65667,2, 'Iron Construct - immune to Heat when Brittle');
 
+DELETE FROM `conditions` WHERE `SourceEntry`=62711 AND `SourceTypeOrReferenceId`=13 AND `ConditionTypeOrReference`=18;
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`Comment`) VALUES
+(13,62711,18,1,33118,'Ingis - Grab');
+
 -- ##########################################################
 -- Razorscale
 -- ##########################################################
