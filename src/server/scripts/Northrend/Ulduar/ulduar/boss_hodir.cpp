@@ -137,14 +137,14 @@ class boss_hodir : public CreatureScript
 public:
     boss_hodir() : CreatureScript("boss_hodir") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new boss_hodirAI(pCreature);
+        return new boss_hodirAI(creature);
     }
 
     struct boss_hodirAI : public BossAI
     {
-        boss_hodirAI(Creature *pCreature) : BossAI(pCreature, TYPE_HODIR)
+        boss_hodirAI(Creature* creature) : BossAI(creature, TYPE_HODIR)
         {
             me->ApplySpellImmune(0, IMMUNITY_ID, 65280, true);  // Singed
         }
@@ -236,6 +236,7 @@ public:
                 me->Kill(me->getVictim());
 
             events.Update(diff);
+            _DoAggroPulse(diff);
         
             if (me->HasUnitState(UNIT_STAT_CASTING))
                 return;

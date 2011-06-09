@@ -402,6 +402,7 @@ class boss_razorscale : public CreatureScript
                     return;
 
                 events.Update(Diff);
+                _DoAggroPulse(Diff);
 
                 if (HealthBelowPct(50) && !PermaGround)
                     EnterPermaGround();

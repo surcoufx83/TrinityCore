@@ -20,18 +20,6 @@
 #include "SpellScript.h"
 #include "ulduar.h"
 
-/*
-LandofLegends - Entwicklungsnotizen:
-DoTo:
-Freya:
-    Spawn Trunk at the End of the Fight
-
-Elders:
-Elder Brightleaf: - finished
-Elder Ironbranch - finished
-Elder Stonebark - finished
-*/
-
 enum Yells
 {
     SAY_AGGRO                                   = -1603180,
@@ -278,7 +266,7 @@ public:
         {
             pInstance = pCreature->GetInstanceScript();
             if (pInstance)
-                EncounterFinished = (pInstance->GetData(TYPE_FREYA) == DONE);
+                EncounterFinished = (pInstance->GetBossState(TYPE_FREYA) == DONE);
         }
 
         InstanceScript* pInstance;
@@ -294,6 +282,7 @@ public:
         uint32 Ground_Tremor_Timer;
         uint32 Iron_Roots_Timer;
         uint32 uiNaturalBomb_Timer;
+        uint32 inFightAggroCheck_Timer;
 
         uint32 ReviveTimer;
         uint8 ReviveCount;
@@ -305,7 +294,7 @@ public:
 
         void Reset()
         {
-            if(EncounterFinished)
+            if (EncounterFinished)
             {
                 me->setFaction(35);
             }else
@@ -325,6 +314,7 @@ public:
                 Berserk_Timer = 600000;
                 Lifebinders_Gift_Timer = 30000;
                 uiNaturalBomb_Timer = 30000;
+                inFightAggroCheck_Timer = 5000;
 
                 bIsElderBrightleafAlive = bIsElderIronbranchAlive = bIsElderStonebarkAlive = false;
 
@@ -589,6 +579,13 @@ public:
             if (!UpdateVictim())
                 return;
 
+            if (inFightAggroCheck_Timer < diff)
+            {
+                if (me->getVictim() && me->getVictim()->ToPlayer())
+                    DoAttackerGroupInCombat(me->getVictim()->ToPlayer());
+                inFightAggroCheck_Timer = 5000;
+            } else inFightAggroCheck_Timer -= diff;
+
             if (ReviveCount)
             {
                 if (ReviveTimer < diff)
@@ -604,7 +601,7 @@ public:
                         DoSummonWave();
                         uiWave_Timer = 60000;
                     }
-                }else uiWave_Timer -= diff;
+                } else uiWave_Timer -= diff;
             else
             {
                 if (uiNaturalBomb_Timer <= diff)

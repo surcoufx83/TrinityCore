@@ -15,12 +15,6 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
  
-/* ScriptData
-SDName: Mimiron
-SD%Complete: 95
-SDComments: P3Wx2 Laser Barrage not works in phase 4 due to core limits.
-EndScriptData */
-
 #include "ScriptPCH.h"
 #include "ulduar.h"
 #include "Unit.h"
@@ -209,14 +203,14 @@ class boss_mimiron : public CreatureScript
 public:
     boss_mimiron() : CreatureScript("boss_mimiron") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new boss_mimironAI(pCreature);
+        return new boss_mimironAI(creature);
     }
 
     struct boss_mimironAI : public BossAI
     {
-        boss_mimironAI(Creature *pCreature) : BossAI(pCreature, TYPE_MIMIRON)
+        boss_mimironAI(Creature* creature) : BossAI(creature, TYPE_MIMIRON)
         {
             me->ApplySpellImmune(0, IMMUNITY_ID, SPELL_ROCKET_STRIKE_DMG, true);
             me->SetReactState(REACT_PASSIVE);
@@ -337,6 +331,8 @@ public:
         {
             if (!UpdateVictim())
                 return;
+
+            _DoAggroPulse(diff);
 
             if (EnrageTimer <= diff && !Enraged)
             {
@@ -743,7 +739,7 @@ public:
             }
         }
 
-        void KilledUnit(Unit *who)
+        void KilledUnit(Unit* /*who*/)
         {
             if (!(rand()%5))
                 if (instance)
@@ -756,7 +752,7 @@ public:
                     }
         }
 
-        void DamageTaken(Unit *who, uint32 &damage)
+        void DamageTaken(Unit* /*who*/, uint32 &damage)
         {
             if (phase == PHASE_LEVIATHAN_SOLO)
                 if (damage >= me->GetHealth())
@@ -770,9 +766,9 @@ public:
                     me->SetHealth(me->GetMaxHealth());
                     events.SetPhase(PHASE_NULL);
                     phase = PHASE_NULL;
-                    if (Creature *pMimiron = me->GetCreature(*me, instance->GetData64(TYPE_MIMIRON)))
-                        pMimiron->AI()->DoAction(DO_ACTIVATE_VX001);
-                    if (Creature *turret = CAST_CRE(me->GetVehicleKit()->GetPassenger(3)))
+                    if (Creature* Mimiron = me->GetCreature(*me, instance->GetData64(TYPE_MIMIRON)))
+                        Mimiron->AI()->DoAction(DO_ACTIVATE_VX001);
+                    if (Creature* turret = CAST_CRE(me->GetVehicleKit()->GetPassenger(3)))
                         turret->Kill(turret, false);
                     me->SetSpeed(MOVE_RUN, 1.5f, true);
                     me->GetMotionMaster()->MovePoint(0, 2790.11f, 2595.83f, 364.32f);
@@ -791,12 +787,12 @@ public:
                     me->SetStandState(UNIT_STAND_STATE_DEAD);
                     events.SetPhase(PHASE_NULL);
                     phase = PHASE_NULL;
-                    if (Creature *pMimiron = me->GetCreature(*me, instance->GetData64(TYPE_MIMIRON)))
-                        pMimiron->AI()->DoAction(DO_ACTIVATE_DEATH_TIMER);
+                    if (Creature* Mimiron = me->GetCreature(*me, instance->GetData64(TYPE_MIMIRON)))
+                        Mimiron->AI()->DoAction(DO_ACTIVATE_DEATH_TIMER);
                 }
         }
 
-        void EnterCombat(Unit *who)
+        void EnterCombat(Unit* /*who*/)
         {
             if (MimironHardMode)
             {
@@ -804,7 +800,7 @@ public:
                 events.ScheduleEvent(EVENT_FLAME_SUPPRESSANT, 60000, 0, PHASE_LEVIATHAN_SOLO);
             }
 
-            if (Creature *turret = CAST_CRE(me->GetVehicleKit()->GetPassenger(3)))
+            if (Creature* turret = CAST_CRE(me->GetVehicleKit()->GetPassenger(3)))
             {
                 turret->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
                 turret->SetReactState(REACT_AGGRESSIVE);
@@ -1192,7 +1188,7 @@ public:
                             break;
                         case EVENT_HEAT_WAVE:
                             DoCastAOE(SPELL_HEAT_WAVE);
-                            events.RescheduleEvent(EVENT_HEAT_WAVE, 12000, 0, PHASE_VX001_SOLO);
+                            events.RescheduleEvent(EVENT_HEAT_WAVE, 10000, 0, PHASE_VX001_SOLO);
                             break;
                         case EVENT_HAND_PULSE:
                             if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))

@@ -269,14 +269,14 @@ class boss_thorim : public CreatureScript
 public:
     boss_thorim() : CreatureScript("boss_thorim") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new boss_thorimAI(pCreature);
+        return new boss_thorimAI(creature);
     }
 
     struct boss_thorimAI : public BossAI
     {
-        boss_thorimAI(Creature* pCreature) : BossAI(pCreature, TYPE_THORIM)
+        boss_thorimAI(Creature* creature) : BossAI(creature, TYPE_THORIM)
         {
             bWipe = false;
         }
@@ -382,6 +382,7 @@ public:
             }
             
             events.Update(diff);
+            _DoAggroPulse(diff);
             EncounterTime += diff;
 
             if (me->HasUnitState(UNIT_STAT_CASTING))
