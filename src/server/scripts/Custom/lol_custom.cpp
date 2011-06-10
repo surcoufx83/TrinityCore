@@ -2707,6 +2707,21 @@ bool HasItemInMail(Player *pPlayer, uint32 item)
 //insert ignore into `custom_texts` (`entry`, `content_default`) values('-2000000','Im Februar ist LoL 2 Jahre alt geworden. Dieses war für uns ein Grund zum Feiern. Und damit auch ihr etwas Freude daran habt, schenken wir euch etwas : Das Haustier Welpling von Onyxia. $B$B Wir danken damit auch allen Spielern, die uns unterstütz und motviert haben.$B$B Wir wünschen euch und uns noch weitere schöne Spielzeit hier auf LoL. Seht es locker, nehmt nicht alles sauernst, WoW ist und bleibt nur ein Spiel. $B$B Euer LoL-Team.');
 //INSERT IGNORE INTO `game_event` (`eventEntry`, `start_time`, `end_time`, `occurence`, `length`, `holiday`, `description`, `world_event`) VALUES('203','2011-06-04 10:00:00','2011-06-11 10:00:00','14400','14400','0','Treuebaer Verteilung','0');
 
+/*
+INSERT IGNORE INTO `game_event` (`eventEntry`, `start_time`, `end_time`, `occurence`, `length`, `holiday`, `description`, `world_event`) VALUES('210','2011-06-04 10:00:00','2011-06-11 10:00:00','14400','14400','0','Treuebaer Verteilung','0');
+
+INSERT IGNORE INTO `custom_texts` (`entry`, `content_default`) VALUES('-2000001',
+'
+Ein besonderes Geschenk für eine besondere Community.$B
+Wir möchten uns herzlich bei Euch bedanken, für Eure Geduld, Unterstützung und Euer
+Durchhaltevermögen und deshalb wollen wir Euch heute ein Geschenk als Zeichen unserer Dankbarkeit überreichen.$B
+Das Blizzardbärenbaby. Füttert es, streichelt es, kuschelt mit ihm, haltet es in Ehren.$B
+Wir wünschen Euch und uns noch weitere schöne Spielzeit hier auf LoL. $B$B
+Euer LoL Team
+');
+*/
+
+
 //OnLogin not implemented yet
 class SurprisePlayerScript : public PlayerScript
 {

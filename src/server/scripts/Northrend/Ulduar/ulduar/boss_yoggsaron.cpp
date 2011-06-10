@@ -1014,7 +1014,7 @@ public:
             case ENTRY_DEATHSWORN_ZEALOT:
             case ENTRY_SUIT_OF_ARMOR:
                 pSummoned->SetReactState(REACT_DEFENSIVE);
-                pSummoned->setFaction(4);
+                pSummoned->setFaction(15);
                 break;
             case ENTRY_KEEPER_FREYA:
             case ENTRY_KEEPER_HODIR:
@@ -1494,7 +1494,7 @@ public:
                                             yogg->CastSpell(yogg,SPELL_SUMMON_CURRUPTOR_TENTACLE,true);
                                     }
                                 }
-                                uiTentacle_Timer =  uiBrainEvents_Count < 4 ? urand(10000,20000) : urand(5000,10000);
+                                uiTentacle_Timer =  uiBrainEvents_Count < 4 ? urand(5000,10000) : urand(2000,5000);
                             }else uiTentacle_Timer -= diff;
                         }else
                         {
@@ -2231,7 +2231,6 @@ public:
         npc_influence_tentacleAI(Creature *c) : Scripted_NoMovementAI(c)
         {
             me->SetReactState(REACT_DEFENSIVE);
-            me->setFaction(7);
         }
 
         void JustDied(Unit* /*killer*/)
@@ -2239,13 +2238,27 @@ public:
             me->RemoveAurasDueToSpell(SPELL_TENTACLE_VOID_ZONE);
         }
 
+        void Reset()
+        {
+        }
+
+        void DamageTaken(Unit* attacker, uint32 &damage)
+        {
+            if(attacker->ToPlayer())
+                me->CastCustomSpell(SPELL_GRIM_REPRISAL_DAMAGE, SPELLVALUE_BASE_POINT0, int32(damage *0.60), attacker,true);
+        }
+
         void EnterCombat(Unit* attacker)
         {
-            me->UpdateEntry(ENTRY_INFULENCE_TENTACLE);
-            me->setFaction(14);
-            DoCast(SPELL_GRIM_REPRISAL);
+            if(me->GetEntry() != ENTRY_INFULENCE_TENTACLE)
+            {
+                me->UpdateEntry(ENTRY_INFULENCE_TENTACLE);
+                me->setFaction(14);
+                me->setRegeneratingHealth(false);
+                DoCast(SPELL_GRIM_REPRISAL);
 
-            DoCast(me,SPELL_TENTACLE_VOID_ZONE,true);
+                DoCast(me,SPELL_TENTACLE_VOID_ZONE,true);
+            }
         }
     };
 };
