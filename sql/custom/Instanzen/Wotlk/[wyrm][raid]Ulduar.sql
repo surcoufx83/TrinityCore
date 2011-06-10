@@ -130,6 +130,7 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionType
 
 UPDATE `creature_template` SET `ScriptName`='npc_kologarn_arm' WHERE `entry` IN (32933,32934);
 UPDATE `creature_template` SET `flags_extra`='flags_extra'|2 WHERE `entry`=33661;
+UPDATE `creature_template` SET `minlevel`=83, `maxlevel`=83 WHERE `entry`=33909;
 
 -- Swap trigger model ids
 UPDATE `creature_template` SET `modelid1`=1126, `modelid2`=11686 WHERE `entry` IN (33906,33907);

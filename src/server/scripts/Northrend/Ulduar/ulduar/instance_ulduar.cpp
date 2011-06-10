@@ -59,6 +59,8 @@ public:
 
         // Assembly of Iron
         uint64 uiAssemblyGUIDs[3];
+        uint64 IronCouncilEntranceGUID;
+        uint64 ArchivumDoorGUID;
 
         // Kologarn
         uint64 uiKologarnGUID;
@@ -78,6 +80,7 @@ public:
         uint64 uiHodirStoneDoorGUID;
         uint64 uiHodirEntranceDoorGUID;
         uint64 uiHodirChestGUID;
+        uint64 HodirRareCacheGUID;
 
         // Mimiron
         uint64 uiMimironTrainGUID;
@@ -133,6 +136,7 @@ public:
         uint32 uiPlayerDeathFlag;
         uint32 uiAlgalonKillCount;
         uint32 uiCountdownTimer;
+        uint32 HodirRareCacheData;
 
         uint32 uiAlgalonCountdown;
         //   62 - not ready to engage
@@ -149,6 +153,8 @@ public:
             uiRazorscaleController    = 0;
             uiExpCommanderGUID        = 0;
             uiXT002GUID               = 0;
+            IronCouncilEntranceGUID   = 0;
+            ArchivumDoorGUID          = 0;
             uiKologarnGUID            = 0;
             uiLeftArmGUID             = 0;
             uiRightArmGUID            = 0;
@@ -182,6 +188,7 @@ public:
             uiKologarnChestGUID       = 0;
             uiThorimChestGUID         = 0;
             uiHodirChestGUID          = 0;
+            HodirRareCacheGUID        = 0;
             uiFreyaChestGUID          = 0;
             uiLeviathanGateGUID       = 0;
             uiXT002DoorGUID           = 0;
@@ -191,6 +198,7 @@ public:
             uiYoggSaronBrainDoor1GUID = 0;
             uiYoggSaronBrainDoor2GUID = 0;
             uiYoggSaronBrainDoor3GUID = 0;
+            HodirRareCacheData        = 0;
             uiSupportKeeperFlag       = 0;
             uiPlayerDeathFlag         = 0;
             uiAlgalonKillCount        = 0;
@@ -467,14 +475,20 @@ public:
         {
             switch (go->GetEntry())
             {
+                case GO_IRON_COUNCIL_ENTRANCE:
+                    IronCouncilEntranceGUID = go->GetGUID();
+                    break;
+                case GO_ARCHIVUM_DOOR:
+                    ArchivumDoorGUID = go->GetGUID();
+                    HandleGameObject(0, GetBossState(TYPE_ASSEMBLY) == DONE, go);
+                    break;
                 case GO_KOLOGARN_CHEST_HERO:
                 case GO_KOLOGARN_CHEST:
                     uiKologarnChestGUID = go->GetGUID();
                     break;
                 case GO_KOLOGARN_BRIDGE:
                     uiKologarnBridgeGUID = go->GetGUID();
-                    if (GetBossState(TYPE_KOLOGARN) == DONE)
-                        HandleGameObject(0, false, go);
+                    HandleGameObject(0, GetBossState(TYPE_KOLOGARN) != DONE, go);
                     break;
                 case GO_KOLOGARN_DOOR:
                     uiKologarnDoorGUID = go->GetGUID();
@@ -492,6 +506,10 @@ public:
                 case GO_THORIM_RUNIC_DOOR:
                     uiRunicDoorGUID = go->GetGUID();
                     break;
+                case GO_HODIR_RARE_CACHE:
+                case GO_HODIR_RARE_CACHE_HERO:
+                   HodirRareCacheGUID = go->GetGUID();
+                   break;
                 case GO_HODIR_CHEST_HERO:
                 case GO_HODIR_CHEST:
                     uiHodirChestGUID = go->GetGUID();
@@ -689,6 +707,10 @@ public:
                     HandleGameObject(uiXT002DoorGUID, state != IN_PROGRESS);
                     break;
                 case TYPE_ASSEMBLY:
+                    HandleGameObject(IronCouncilEntranceGUID, state != IN_PROGRESS);
+                    if (state == DONE)
+                        HandleGameObject(ArchivumDoorGUID, true);
+                    break;
                 case TYPE_AURIAYA:
                     break;
                 case TYPE_MIMIRON:
@@ -718,14 +740,15 @@ public:
                     break;
                 case TYPE_HODIR:
                     if (state == DONE)
-                        if (GameObject* go = instance->GetGameObject(uiHodirChestGUID))
-                            go->SetRespawnTime(go->GetRespawnDelay());
-
-                    if (state == DONE)
                     {
                         HandleGameObject(uiHodirIceDoorGUID, true);
                         HandleGameObject(uiHodirStoneDoorGUID, true);
-                        HandleGameObject(uiHodirEntranceDoorGUID, true);
+
+                        if (GameObject* HodirRareCache = instance->GetGameObject(HodirRareCacheGUID))
+                            if (GetData(DATA_HODIR_RARE_CHEST) == 1)
+                                HodirRareCache->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                        if (GameObject* go = instance->GetGameObject(uiHodirChestGUID))
+                            go->SetRespawnTime(go->GetRespawnDelay());
                     }
 
                     HandleGameObject(uiHodirEntranceDoorGUID, state != IN_PROGRESS);
@@ -837,6 +860,9 @@ public:
                 case DATA_ADD_HELP_FLAG:
                     uiSupportKeeperFlag |= UlduarKeeperSupport(data);
                     break;
+                case DATA_HODIR_RARE_CHEST:
+                    HodirRareCacheData = data;
+                    break;
                 default:
                     break;
             }
@@ -922,6 +948,8 @@ public:
                     return uiEncounter[type];
                 case DATA_KEEPER_SUPPORT_YOGG:
                     return uiSupportKeeperFlag;
+                case DATA_HODIR_RARE_CHEST:
+                   return HodirRareCacheData;
             }
 
             return 0;

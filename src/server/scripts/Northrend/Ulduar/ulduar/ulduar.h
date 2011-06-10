@@ -139,6 +139,8 @@ enum UlduarNPCs
 
 enum UlduarGameObjects
 {
+    GO_IRON_COUNCIL_ENTRANCE    = 194554,
+    GO_ARCHIVUM_DOOR            = 194556,
     GO_KOLOGARN_CHEST_HERO      = 195047,
     GO_KOLOGARN_CHEST           = 195046,
     GO_KOLOGARN_BRIDGE          = 194232,
@@ -148,6 +150,8 @@ enum UlduarGameObjects
     GO_THORIM_ENCOUNTER_DOOR    = 194559,
     GO_THORIM_STONE_DOOR        = 194558,
     GO_THORIM_RUNIC_DOOR        = 194557,
+    GO_HODIR_RARE_CACHE_HERO    = 194201,
+    GO_HODIR_RARE_CACHE         = 194200,
     GO_HODIR_CHEST_HERO         = 194308,
     GO_HODIR_CHEST              = 194307,
     GO_HODIR_IN_DOOR_STONE      = 194442,
