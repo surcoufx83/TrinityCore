@@ -146,6 +146,10 @@ enum Achievments
     ACHIEVEMENT_HEARTBREAKER_25                 = 3059
 };
 
+#define EMOTE_TYMPANIC "XT-002 Deconstructor begins to cause the earth to quake."
+#define EMOTE_HEART "XT-002 Deconstructor's heart is exposed and leaking energy."
+#define EMOTE_REPAIR "XT-002 Deconstructor consumes a scrap bot to repair himself!"
+
 /************************************************
 -----------------SPAWN LOCATIONS-----------------
 ************************************************/
@@ -375,6 +379,7 @@ public:
                 if (uiTympanicTantrumTimer <= diff)
                 {
                     DoScriptText(SAY_TYMPANIC_TANTRUM, me);
+                    me->MonsterTextEmote(EMOTE_TYMPANIC, 0, true);
                     DoCast(SPELL_TYMPANIC_TANTRUM);
                     uiTympanicTantrumTimer = TIMER_TYMPANIC_TANTRUM;
                 } else uiTympanicTantrumTimer -= diff;
@@ -519,6 +524,7 @@ public:
             uiSpawnAddTimer = TIMER_SPAWN_ADD;
 
             DoScriptText(SAY_HEART_OPENED, me);
+            me->MonsterTextEmote(EMOTE_HEART, 0, true);
         }
 
         void SetPhaseOne()
@@ -639,7 +645,7 @@ public:
                     if (!casted)
                         if (me->GetDistance2d(pXT002) <= 2)
                         {
-                            // TODO Send raid message
+                            pXT002->MonsterTextEmote(EMOTE_REPAIR, 0, true);
                             casted = true;
                             pXT002->CastSpell(pXT002, SPELL_HEAL_XT002, true);
                             pXT002->AI()->DoAction(ACTION_XT002_REACHED);
