@@ -9,3 +9,6 @@ UPDATE creature_template SET unit_flags = unit_flags|512 WHERE entry IN (
 34098, -- Auriaya Seeping Essence Stalker
 34174  -- Auriaya Seeping Essence Stalker (heroic)
 );
+
+-- Remove NON_SELECTABLE from Clockwork Mechanic
+UPDATE creature_template SET unit_flags = unit_flags &~ 33554432 WHERE entry = 34184;
