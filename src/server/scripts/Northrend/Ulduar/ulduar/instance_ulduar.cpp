@@ -761,18 +761,16 @@ public:
                     HandleGameObject(uiHodirEntranceDoorGUID, state != IN_PROGRESS);
                     break;
                 case TYPE_THORIM:
-                    if (state == DONE)
-                        if (GameObject* go = instance->GetGameObject(uiThorimChestGUID))
-                            go->SetRespawnTime(go->GetRespawnDelay());
-
+                    //if (state == DONE)
+                    //    if (GameObject* go = instance->GetGameObject(uiThorimChestGUID))
+                    //        go->SetRespawnTime(go->GetRespawnDelay());
                     if (GameObject* obj = instance->GetGameObject(uiThorimDoorGUID))
                         obj->SetGoState(state == IN_PROGRESS ? GO_STATE_READY : GO_STATE_ACTIVE);
-
                     break;
                 case TYPE_FREYA:
-                    if (state == DONE)
-                        if (GameObject* go = instance->GetGameObject(uiFreyaChestGUID))
-                            go->SetRespawnTime(go->GetRespawnDelay());
+                    //if (state == DONE)
+                    //    if (GameObject* go = instance->GetGameObject(uiFreyaChestGUID))
+                    //        go->SetRespawnTime(go->GetRespawnDelay());
                     break;
                 case TYPE_ALGALON:
                     switch (state)

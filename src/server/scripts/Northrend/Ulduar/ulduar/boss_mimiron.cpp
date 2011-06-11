@@ -176,9 +176,9 @@ bool MimironHardMode;
 enum MimironChests
 {
     CACHE_OF_INNOVATION_10                      = 194789,
-    CACHE_OF_INNOVATION_HARDMODE_10             = 194790,
+    CACHE_OF_INNOVATION_HARDMODE_10             = 194957,
     CACHE_OF_INNOVATION_25                      = 194956,
-    CACHE_OF_INNOVATION_HARDMODE_25             = 194957
+    CACHE_OF_INNOVATION_HARDMODE_25             = 194958
 };
 
 const Position SummonPos[9] =

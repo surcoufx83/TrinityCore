@@ -4190,22 +4190,15 @@ void SpellMgr::LoadSpellCustomAttr()
             spellInfo->StackAmount = 4;
             ++count;
             break;
-        case 63018: // Searing Light
-        case 65121: // Searing Light (25m)
-        case 63024: // Gravity Bomb
-        case 64234: // Gravity Bomb (25m)
-            spellInfo->MaxAffectedTargets = 1;
-            ++count;
-            break;
-        case 62834: // Boom
+        //case 62834: // Boom
         // This hack is here because we suspect our implementation of spell effect execution on targets
         // is done in the wrong order. We suspect that EFFECT_0 needs to be applied on all targets,
         // then EFFECT_1, etc - instead of applying each effect on target1, then target2, etc.
         // The above situation causes the visual for this spell to be bugged, so we remove the instakill
         // effect and implement a script hack for that.
-            spellInfo->Effect[EFFECT_1] = 0;
-            ++count;
-            break;
+        //    spellInfo->Effect[EFFECT_1] = 0;
+        //    ++count;
+        //    break;
         case 63293: // Mimiron - P3Wx2 Laser Barrage
             mSpellCustomAttr[i] |= SPELL_ATTR0_CU_CONE_LINE;
             ++count;

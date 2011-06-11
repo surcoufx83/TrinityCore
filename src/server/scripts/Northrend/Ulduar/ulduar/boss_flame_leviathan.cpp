@@ -519,6 +519,7 @@ class boss_flame_leviathan : public CreatureScript
                     }
                 }
 
+                /*
                 if (action && action <= 4) // Tower destruction, debuff leviathan loot and reduce active tower
                 {
                     if (me->HasLootMode(31) && ActiveTowersCount == 4)
@@ -545,7 +546,7 @@ class boss_flame_leviathan : public CreatureScript
 
                 switch (action)
                 {
-                    case 0:  // Activate hard-mode setting counter to 4 towers, enable all towers apply buffs on levithian
+                    case 0: // Activate hard-mode setting counter to 4 towers, enable all towers apply buffs on levithian
                         ActiveTowers = true;
                         towerOfStorms = true;
                         towerOfLife = true;
@@ -568,6 +569,7 @@ class boss_flame_leviathan : public CreatureScript
                     default:
                         break;
                 }
+                */
             }
         };
 
