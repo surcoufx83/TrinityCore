@@ -43,6 +43,7 @@ public:
         uint64 uiLeviathanGUID;
         uint64 uiLeviathanGateGUID;
         std::list<uint64> uiLeviathanDoorGUIDList;
+        uint64 XTToyPileGUIDs[4];
 
         // Ignis
         uint64 uiIgnisGUID;
@@ -207,6 +208,7 @@ public:
 
             memset(uiEncounter, 0, sizeof(uiEncounter));
             memset(uiAssemblyGUIDs, 0, sizeof(uiAssemblyGUIDs));
+            memset(XTToyPileGUIDs, 0, sizeof(XTToyPileGUIDs));
             memset(uiRazorHarpoonGUIDs, 0, sizeof(uiRazorHarpoonGUIDs));
         }
 
@@ -371,6 +373,11 @@ public:
                     return;
                 case NPC_XT002:
                     uiXT002GUID = creature->GetGUID();
+                    break;
+                case NPC_XT_TOY_PILE:
+                    for (uint8 i = 0; i < 4; ++i)
+                        if (!XTToyPileGUIDs[i])
+                            XTToyPileGUIDs[i] = creature->GetGUID();
                     break;
 
                 // Assembly of Iron
@@ -900,6 +907,11 @@ public:
                 case DATA_VX_001:               return uiVX001GUID;
                 case DATA_AERIAL_UNIT:          return uiAerialUnitGUID;
                 case DATA_MAGNETIC_CORE:        return uiMagneticCoreGUID;
+                case DATA_TOY_PILE_0:
+                case DATA_TOY_PILE_1:
+                case DATA_TOY_PILE_2:
+                case DATA_TOY_PILE_3:
+                    return XTToyPileGUIDs[data - DATA_TOY_PILE_0];
 
                 case TYPE_HODIR:                return uiHodirGUID;
 
