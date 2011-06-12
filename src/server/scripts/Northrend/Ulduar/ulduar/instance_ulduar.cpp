@@ -473,6 +473,8 @@ public:
                     uiAlgalonGUID = creature->GetGUID();
                     if (uiAlgalonCountdown < 62)
                         creature->setFaction(7);
+                    else
+                        creature->SetVisible(false);
                     break;
             }
 
@@ -777,7 +779,10 @@ public:
                     {
                         case SPECIAL:
                             if (Creature* algalon = instance->GetCreature(uiAlgalonGUID))
+                            {
                                 algalon->setFaction(7);
+                                algalon->SetVisible(true);
+                            }
                             HandleGameObject(uiAlgalonDoor1GUID, true);
                             HandleGameObject(uiAlgalonDoor2GUID, true);
                             uiAlgalonCountdown = 61;
