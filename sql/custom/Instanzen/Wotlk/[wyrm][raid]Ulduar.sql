@@ -404,8 +404,8 @@ DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry`=63
 INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`) VALUES
 (13,63322,18,1,0);
 
--- DELETE FROM spell_script_names WHERE spell_id = 63278;
--- INSERT INTO spell_script_names VALUE (63278,'spell_general_vezax_mark_of_the_faceless_spell');
+DELETE FROM `spell_script_names` WHERE `spell_id`=63278;
+INSERT INTO `spell_script_names` VALUE (63278, 'spell_general_vezax_mark_of_the_faceless_drain');
 
 -- ##########################################################
 -- Yogg-Saron
