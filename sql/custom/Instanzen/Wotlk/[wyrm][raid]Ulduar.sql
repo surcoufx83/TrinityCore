@@ -365,6 +365,7 @@ UPDATE `creature_template` SET `modelid1` = 16925, `modelid2` = 0 WHERE `entry`I
 
 -- Thorim Mini bosses
 UPDATE `creature_template` SET `mechanic_immune_mask` = 650854239, `flags_extra` = 1, `ScriptName` = 'npc_runic_colossus' WHERE `entry` = 32872;
+UPDATE `creature_template` SET `ScriptName`='npc_runic_smash' WHERE `entry`=33140;
 UPDATE `creature_template` SET `mechanic_immune_mask` = 650854239, `flags_extra` = 1, `ScriptName` = 'npc_ancient_rune_giant' WHERE `entry` = 32873;
 UPDATE `creature_template` SET `mechanic_immune_mask` = 650854239, `flags_extra` = 1, `ScriptName` = 'npc_sif' WHERE `entry` = 33196;
 UPDATE `creature_template` SET `ScriptName` = 'npc_thorim_arena_phase' WHERE `entry` IN (32876, 32904, 32878, 32877, 32874, 32875, 33110);
@@ -404,8 +405,8 @@ DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry`=63
 INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`) VALUES
 (13,63322,18,1,0);
 
--- DELETE FROM spell_script_names WHERE spell_id = 63278;
--- INSERT INTO spell_script_names VALUE (63278,'spell_general_vezax_mark_of_the_faceless_spell');
+DELETE FROM `spell_script_names` WHERE `spell_id`=63278;
+INSERT INTO `spell_script_names` VALUE (63278, 'spell_general_vezax_mark_of_the_faceless_drain');
 
 -- ##########################################################
 -- Yogg-Saron
@@ -661,3 +662,18 @@ INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
 (64596, 'spell_cosmic_smash_dmg'),
 (64597, 'spell_cosmic_smash_missile_target'),
 (64445, 'spell_remove_player_from_phase');
+
+-- Add passive Flag to various Ulduar triggers
+UPDATE creature_template SET unit_flags = unit_flags|512 WHERE entry IN (
+33054, -- Thorim Trap Bunny
+33500, -- Vezax Bunny
+33575, -- Channel Stalker Freya
+33661, -- Armsweep Stalker Kologarn
+34188, -- Razorscale Devouring Flame Stalker
+34189, -- Razorscale Devouring Flame Stalker (heroic)
+34098, -- Auriaya Seeping Essence Stalker
+34174  -- Auriaya Seeping Essence Stalker (heroic)
+);
+
+-- Remove NON_SELECTABLE from Clockwork Mechanic
+UPDATE creature_template SET unit_flags = unit_flags &~ 33554432 WHERE entry = 34184;

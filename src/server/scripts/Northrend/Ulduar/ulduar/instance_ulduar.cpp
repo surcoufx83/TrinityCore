@@ -473,6 +473,8 @@ public:
                     uiAlgalonGUID = creature->GetGUID();
                     if (uiAlgalonCountdown < 62)
                         creature->setFaction(7);
+                    else
+                        creature->SetVisible(false);
                     break;
             }
 
@@ -761,25 +763,26 @@ public:
                     HandleGameObject(uiHodirEntranceDoorGUID, state != IN_PROGRESS);
                     break;
                 case TYPE_THORIM:
-                    if (state == DONE)
-                        if (GameObject* go = instance->GetGameObject(uiThorimChestGUID))
-                            go->SetRespawnTime(go->GetRespawnDelay());
-
+                    //if (state == DONE)
+                    //    if (GameObject* go = instance->GetGameObject(uiThorimChestGUID))
+                    //        go->SetRespawnTime(go->GetRespawnDelay());
                     if (GameObject* obj = instance->GetGameObject(uiThorimDoorGUID))
                         obj->SetGoState(state == IN_PROGRESS ? GO_STATE_READY : GO_STATE_ACTIVE);
-
                     break;
                 case TYPE_FREYA:
-                    if (state == DONE)
-                        if (GameObject* go = instance->GetGameObject(uiFreyaChestGUID))
-                            go->SetRespawnTime(go->GetRespawnDelay());
+                    //if (state == DONE)
+                    //    if (GameObject* go = instance->GetGameObject(uiFreyaChestGUID))
+                    //        go->SetRespawnTime(go->GetRespawnDelay());
                     break;
                 case TYPE_ALGALON:
                     switch (state)
                     {
                         case SPECIAL:
                             if (Creature* algalon = instance->GetCreature(uiAlgalonGUID))
+                            {
                                 algalon->setFaction(7);
+                                algalon->SetVisible(true);
+                            }
                             HandleGameObject(uiAlgalonDoor1GUID, true);
                             HandleGameObject(uiAlgalonDoor2GUID, true);
                             uiAlgalonCountdown = 61;
@@ -1009,7 +1012,7 @@ public:
                 }
                 uint32 tmpState, tmpState2, tmpState3;
                 loadStream >> tmpState >> tmpState2 >> tmpState3;
-                // tmpState == GetData(TYPE_COLOSSUS) (?)
+                uiEncounter[TYPE_COLOSSUS] = tmpState;
                 uiPlayerDeathFlag = tmpState2;
                 uiAlgalonCountdown = tmpState3;
             }
