@@ -411,6 +411,15 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionType
 -- Yogg-Saron
 -- ##########################################################
 
+-- Spawns of Keeper to activate Non-Hardmode
+/*
+INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`) VALUES('603001','33241','603','3','1','0','0','1939.44','42.0398','411.357','5.17473','300','0','0','14433076','0','0','0','0','0','0');
+INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`) VALUES('603002','33244','603','3','1','0','0','2036.3','25.0515','411.359','3.88826','300','0','0','14433076','0','0','0','0','0','0');
+INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`) VALUES('603003','33242','603','3','1','0','0','2036.67','-73.2069','411.355','2.36615','300','0','0','14433076','0','0','0','0','0','0');
+INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`) VALUES('603004','33213','603','3','1','0','0','1939.91','-90.005','411.357','0.976747','300','0','0','14433076','0','0','0','0','0','0');
+*/
+
+
 UPDATE creature_template SET scriptname = 'boss_sara' WHERE entry = 33134;
 UPDATE script_texts SET npc_entry = 33134 WHERE npc_entry = 33288 AND entry IN (-1603330,-1603331,-1603332,-1603333);
 UPDATE script_texts SET content_default = "Help me! Please get them off me!" WHERE npc_entry = 33134 AND entry = -1603310;
@@ -584,6 +593,10 @@ DELETE FROM disables WHERE sourceType = 4 AND entry IN
 -- ##########################################################
 -- Algalon
 -- ##########################################################
+/*
+-- Delete Obsolete Door
+DELETE FROM gameobject WHERE id = 194911;
+*/
 
 -- For Achievement He Feeds on your Tears
 DELETE FROM achievement_criteria_data WHERE `type` = 18 AND criteria_id IN
