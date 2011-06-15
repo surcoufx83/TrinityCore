@@ -538,7 +538,10 @@ public:
             uiSpawnAddTimer = TIMER_SPAWN_ADD;
 
             if (!hardMode)
+            {
                 me->ModifyHealth(-((int32)transferHealth));
+                me->LowerPlayerDamageReq(transferHealth);
+            }
 
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_NOT_SELECTABLE);
             phase = 1;
