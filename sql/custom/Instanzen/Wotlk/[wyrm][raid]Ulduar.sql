@@ -114,6 +114,8 @@ DELETE FROM `spell_script_names` WHERE `spell_id`=61889;
 INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
 (61889, 'spell_meltdown');
 
+UPDATE `creature_template` SET `ScriptName`='mob_rune_of_power' WHERE `entry`=33705;
+
 -- ##########################################################
 -- Kologarn
 -- ##########################################################
