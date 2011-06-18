@@ -307,7 +307,7 @@ public:
                 elementalList.clear();
 
                 WaveCount = 0;
-                uiWave_Timer = 60000;
+                uiWave_Timer = 10000;
                 Ground_Tremor_Timer = 30000;
                 Iron_Roots_Timer = 22000;
                 uiSunbeam_Timer = urand(20000, 30000);

@@ -8062,19 +8062,6 @@ bool Unit::HandleAuraProc(Unit* pVictim, uint32 damage, Aura * triggeredByAura, 
                     CastCustomSpell(this, 67545, &bp0, NULL, NULL, true, NULL, triggeredByAura->GetEffect(0), GetGUID());
                     return true;
                 }
-                case 44544: // Fingers of Frost
-                {
-                    *handled = true;
-
-                    int32 key = int32(uint32(uint32(triggeredByAura->GetApplyTime()) & uint32(0x7FFFFFFF)));
-
-                    if (Aura * aura = GetAura(74396))
-                        if (aura->GetEffect(EFFECT_0)->GetAmount() == key)
-                            if (aura->DropCharge())
-                                triggeredByAura->Remove();
-
-                    return false;
-                }
             }
             break;
         }
