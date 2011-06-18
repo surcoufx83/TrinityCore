@@ -34,17 +34,17 @@ enum Says
     SAY_AGGRO = 0,
     SAY_ENRAGE = 1,
     SAY_DEATH = 2,
-	SAY_KILL_1 = -1578022,
-	SAY_KILL_2 = -1578023,
-	SAY_KILL_3 = -1578024,
+    SAY_KILL_1 = -1578022,
+    SAY_KILL_2 = -1578023,
+    SAY_KILL_3 = -1578024,
 };
 
 enum Spells
 {
     SPELL_ARCANE_BARRAGE = 50804,
-	SPELL_ARCANE_BARRAGE_H = 59381,
+    SPELL_ARCANE_BARRAGE_H = 59381,
     SPELL_ARCANE_VOLLEY = 51153,
-	SPELL_ARCANE_VOLLEY_H = 59382,
+    SPELL_ARCANE_VOLLEY_H = 59382,
     SPELL_ENRAGED_ASSAULT = 51170,
     SPELL_PLANAR_ANOMALIES = 57959,
     SPELL_PLANAR_SHIFT = 51162,
@@ -95,7 +95,7 @@ enum AmberDrake
     SPELL_RIDE_AMBER_DRAKE_QUE = 49459, //Apply Aura: Periodic Trigger, Interval: 3 seconds ---> 49460
     SPELL_AMBER_DRAKE_SADDLE = 49460, //Allows you to ride on the back of an Amber Drake. ---> Dummy
     SPELL_AMBER_SHOCK_LANCE = 49840, //(60 yds) - Instant - Deals 4822 to 5602 Arcane damage and detonates all Shock Charges on an enemy dragon. Damage is increased by 6525 for each detonated.
-// SPELL_AMBER_STOP_TIME //Instant - 1 min cooldown - Halts the passage of time, freezing all enemy dragons in place for 10 sec. This attack applies 5 Shock Charges to each affected target.
+    // SPELL_AMBER_STOP_TIME //Instant - 1 min cooldown - Halts the passage of time, freezing all enemy dragons in place for 10 sec. This attack applies 5 Shock Charges to each affected target.
     //you do not have access to until you kill the Mage-Lord Urom.
     SPELL_AMBER_TEMPORAL_RIFT = 49592 //(60 yds) - Channeled - Channels a temporal rift on an enemy dragon for 10 sec. While trapped in the rift, all damage done to the target is increased by 100%. In addition, for every 15, 000 damage done to a target affected by Temporal Rift, 1 Shock Charge is generated.
 };
@@ -129,39 +129,39 @@ public:
     {
         boss_eregosAI(Creature* creature) : BossAI(creature, DATA_EREGOS_EVENT) { }
 
-		bool EmeraldVoid;
-		bool RubyVoid;
-		bool AmberVoid;
+        bool EmeraldVoid;
+        bool RubyVoid;
+        bool AmberVoid;
 
         void Reset()
         {
             _Reset();
 
-			EmeraldVoid = true;
-			RubyVoid = true;
-			AmberVoid = true;
+            EmeraldVoid = true;
+            RubyVoid = true;
+            AmberVoid = true;
 
             phase = PHASE_NORMAL;
 
             DoAction(ACTION_SET_NORMAL_EVENTS);
         }
 
-		void KilledUnit(Unit* /*victim*/)
+        void KilledUnit(Unit* /*victim*/)
         {
             DoScriptText(RAND(SAY_KILL_1, SAY_KILL_2, SAY_KILL_3), me);
         }
 
         void EnterCombat(Unit* /*who*/)
         {
-			if(Creature* RubyDrake = me->FindNearestCreature(27756, 200, true))
-				if(RubyDrake->HasAura(49464))
-			        RubyVoid = false;
-			if(Creature* AmberDrake = me->FindNearestCreature(27755, 200, true))
-				if(AmberDrake->HasAura(49460))
-				    AmberVoid = false;
-			if(Creature* EmeraldDrake = me->FindNearestCreature(27692, 200, true))
-				if(EmeraldDrake->HasAura(49346))
-				    EmeraldVoid = false;
+            if(Creature* RubyDrake = me->FindNearestCreature(27756, 200, true))
+                if(RubyDrake->HasAura(49464))
+                    RubyVoid = false;
+            if(Creature* AmberDrake = me->FindNearestCreature(27755, 200, true))
+                if(AmberDrake->HasAura(49460))
+                    AmberVoid = false;
+            if(Creature* EmeraldDrake = me->FindNearestCreature(27692, 200, true))
+                if(EmeraldDrake->HasAura(49346))
+                    EmeraldVoid = false;
 			    
             _EnterCombat();
 
@@ -192,7 +192,6 @@ public:
             if (summon->GetEntry() != NPC_PLANAR_ANOMALY)
                 return;
 
-            // TO-DO: See why the spell is not casted
             summon->CastSpell(summon, SPELL_PLANAR_BLAST, true);
         }
 
@@ -212,17 +211,17 @@ public:
                 // not sure about the amount, and if we should despawn previous spawns (dragon trashs)
                 summons.DespawnAll();
                 for (uint8 i = 0; i < 6; i++)
-				{
-					Creature* pSummoned = me->SummonCreature(30879, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 15000); 
+                {
+                    Creature* pSummoned = me->SummonCreature(30879, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 15000); 
 	                Unit* target = pSummoned->AI()->SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
-					if(target->GetVehicleBase())
-					{
-						pSummoned->CombatStart(target->GetVehicleBase(), true);
-						pSummoned->AddThreat(target->GetVehicleBase(), 50000.0f);
-					}
-	                pSummoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-	                pSummoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED);
-	                pSummoned->SetDisplayId(11686);
+                    if(target->GetVehicleBase())
+                    {
+                        pSummoned->CombatStart(target->GetVehicleBase(), true);
+                        pSummoned->AddThreat(target->GetVehicleBase(), 50000.0f);
+                    }
+                    pSummoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    pSummoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED);
+                    pSummoned->SetDisplayId(11686);
                 }
 
 
@@ -245,17 +244,17 @@ public:
                 switch (eventId)
                 {
                     case EVENT_ARCANE_BARRAGE:
-						if(me->GetMap()->IsHeroic())
-							DoCast(me->getVictim(), SPELL_ARCANE_BARRAGE_H);
-						else
-							DoCast(me->getVictim(), SPELL_ARCANE_BARRAGE);
+                        if(me->GetMap()->IsHeroic())
+                            DoCast(me->getVictim(), SPELL_ARCANE_BARRAGE_H);
+                        else
+                            DoCast(me->getVictim(), SPELL_ARCANE_BARRAGE);
                         events.ScheduleEvent(EVENT_ARCANE_BARRAGE, urand(3, 10) * IN_MILLISECONDS, 0, PHASE_NORMAL);
                         break;
                     case EVENT_ARCANE_VOLLEY:
-						if(me->GetMap()->IsHeroic())
-							DoCastAOE(SPELL_ARCANE_VOLLEY_H);
-						else
-							DoCastAOE(SPELL_ARCANE_VOLLEY);
+                        if(me->GetMap()->IsHeroic())
+                            DoCastAOE(SPELL_ARCANE_VOLLEY_H);
+                        else
+                            DoCastAOE(SPELL_ARCANE_VOLLEY);
                         events.ScheduleEvent(EVENT_ARCANE_VOLLEY, urand(10, 25) * IN_MILLISECONDS, 0, PHASE_NORMAL);
                         break;
                     case EVENT_ENRAGED_ASSAULT:
@@ -276,12 +275,12 @@ public:
 
         void JustDied(Unit* /*killer*/)
         {
-			if(EmeraldVoid == true)
-			   instance->DoCompleteAchievement(2045);
-			if(RubyVoid == true)
-				instance->DoCompleteAchievement(2044);
-			if(AmberVoid == true)
-				instance->DoCompleteAchievement(2046);
+            if(EmeraldVoid == true)
+                instance->DoCompleteAchievement(2045);
+            if(RubyVoid == true)
+                instance->DoCompleteAchievement(2044);
+            if(AmberVoid == true)
+                instance->DoCompleteAchievement(2046);
 
             Talk(SAY_DEATH);
 
