@@ -1,4 +1,3 @@
--- UPDATE `creature_template` SET `dmg_multiplier`=,`AIName`=,'SmartAI' WHERE `entry`=;
 -- ------------------
 -- Flame Leviathane |
 -- ------------------
@@ -374,10 +373,6 @@ DELETE FROM `smart_scripts` WHERE `entryorguid`=33823;
 INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type`,`event_phase_mask`,`event_chance`,`event_flags`,`event_param1`,`event_param2`,`event_param3`,`event_param4`,`action_type`,`action_param1`,`action_param2`,`action_param3`,`action_param4`,`action_param5`,`action_param6`,`target_type`,`target_param1`,`target_param2`,`target_param3`,`target_x`,`target_y`,`target_z`,`target_o`,`comment`) VALUES
 (33823,0,0,0,0,0,100,0,3000,5000,7000,9000,11,35054,0,0,0,0,0,2,0,0,0,0,0,0,0, 'Twilight Slayer - Cast Mortal Strike'),
 (33823,0,1,0,0,0,100,0,8000,12000,12000,15000,11,63784,0,0,0,0,0,2,0,0,0,0,0,0,0, 'Twilight Slayer - Cast Bladestorm');
-
-UPDATE `creature_template` SET `mindmg`=464,`maxdmg`=604,`attackpower`=708,`minrangedmg`=353,`maxrangedmg`=512,`rangedattackpower`=112 
-WHERE `entry` IN (33818,33822,33823,33824,33772,33819,33820,33838);
-
 -- Faceless Horror
 UPDATE `creature_template` SET `mechanic_immune_mask`=33554513,`mindmg`=464,`maxdmg`=604,`attackpower`=708,`minrangedmg`=353,`maxrangedmg`=512,`rangedattackpower`=112,`dmg_multiplier`=7.5,`AIName`='SmartAI' WHERE `entry`=33772;
 UPDATE `creature_template` SET `mechanic_immune_mask`=33554513,`mindmg`=464,`maxdmg`=604,`attackpower`=708,`minrangedmg`=353,`maxrangedmg`=512,`rangedattackpower`=112,`dmg_multiplier`=13 WHERE `entry`=33773;
