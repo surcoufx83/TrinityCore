@@ -157,7 +157,7 @@ public:
             Summons.DespawnAll();
         }
 
-        void EnterCombat(Unit * who)
+        void EnterCombat(Unit* who)
         {
             if (pInstance)
                 pInstance->SetData(DATA_THELURKERBELOWEVENT, IN_PROGRESS);
@@ -420,7 +420,7 @@ public:
 
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
 
         }

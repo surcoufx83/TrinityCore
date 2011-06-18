@@ -215,7 +215,7 @@ public:
             DoMeleeAttackIfReady();
         }
 
-        void JustDied(Unit * /*who*/)
+        void JustDied(Unit* /*who*/)
         {
           /*  if (pInstance)
             {

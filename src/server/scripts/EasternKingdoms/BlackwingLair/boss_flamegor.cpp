@@ -65,7 +65,7 @@ public:
             pInstance->SetData(ENCOUNTER_FLAMEGOR,NOT_STARTED);
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             DoZoneInCombat();
 

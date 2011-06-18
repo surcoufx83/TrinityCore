@@ -316,7 +316,7 @@ public:
             DoCast(me, SPELL_ARTHAS_AURA);
         }
 
-        void JustDied(Unit * /*killer*/)
+        void JustDied(Unit* /*killer*/)
         {
             if (pInstance)
                 pInstance->SetData(DATA_ARTHAS_EVENT, FAIL);

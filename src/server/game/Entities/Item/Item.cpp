@@ -714,7 +714,7 @@ void Item::SetState(ItemUpdateState state, Player *forplayer)
     }
 }
 
-void Item::AddToUpdateQueueOf(Player *player)
+void Item::AddToUpdateQueueOf(Player* player)
 {
     if (IsInUpdateQueue())
         return;
@@ -734,7 +734,7 @@ void Item::AddToUpdateQueueOf(Player *player)
     uQueuePos = player->m_itemUpdateQueue.size()-1;
 }
 
-void Item::RemoveFromUpdateQueueOf(Player *player)
+void Item::RemoveFromUpdateQueueOf(Player* player)
 {
     if (!IsInUpdateQueue())
         return;

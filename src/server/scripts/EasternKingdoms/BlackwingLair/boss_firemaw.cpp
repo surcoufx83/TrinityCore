@@ -63,7 +63,7 @@ public:
             pInstance->SetData(ENCOUNTER_FIREMAW,NOT_STARTED);
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             DoZoneInCombat();
 

@@ -185,7 +185,7 @@ public:
             summon->SetCorpseDelay(0);  //instant despawn corpse (needed?)
         }
 
-        void KilledUnit(Unit * victim)
+        void KilledUnit(Unit* victim)
         {
             if (victim == me)
                 return;

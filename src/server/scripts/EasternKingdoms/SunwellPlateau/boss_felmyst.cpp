@@ -211,7 +211,7 @@ public:
             me->SetVisible(false);
         }
 
-        void EnterCombat(Unit *who)
+        void EnterCombat(Unit* /*who*/)
         {
             me->setActive(true);
             DoZoneInCombat();

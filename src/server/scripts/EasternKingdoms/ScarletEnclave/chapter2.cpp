@@ -383,7 +383,7 @@ public:
             uiStage_timer = 3000;
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             DoScriptText(SAY_TREE2, me);
             me->Unmount();

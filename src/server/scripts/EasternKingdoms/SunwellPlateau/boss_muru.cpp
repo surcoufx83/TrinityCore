@@ -147,7 +147,7 @@ public:
                 pInstance->SetData(DATA_MURU_EVENT, NOT_STARTED);
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             DoCastAOE(SPELL_NEGATIVE_ENERGY_E, true);
             DoCast(me, SPELL_ENTROPIUS_SPAWN, false);
@@ -259,7 +259,7 @@ public:
                 pInstance->SetData(DATA_MURU_EVENT, NOT_STARTED);
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
         DoCastAOE(SPELL_NEGATIVE_ENERGY,true);
         DoCastAOE(SPELL_DARKNESS,true);

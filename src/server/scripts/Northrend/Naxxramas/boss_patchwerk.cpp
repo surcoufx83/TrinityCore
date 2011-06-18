@@ -105,7 +105,7 @@ public:
             }
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             _EnterCombat();
             Enraged = false;

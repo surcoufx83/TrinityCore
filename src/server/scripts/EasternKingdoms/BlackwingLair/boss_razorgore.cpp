@@ -73,7 +73,7 @@ public:
             pInstance->SetData(ENCOUNTER_RAZORGORE,NOT_STARTED);
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             DoZoneInCombat();
 

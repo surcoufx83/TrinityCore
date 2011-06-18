@@ -151,7 +151,7 @@ public:
             }
         }
 
-        void JustDied(Unit * /*killer*/)
+        void JustDied(Unit* /*killer*/)
         {
             DoScriptText(SAY_DEATH, me);
             Summons.DespawnAll();
@@ -178,7 +178,7 @@ public:
                 RemoveGravityLapse();                           // Remove Gravity Lapse so that players fall to ground if they kill him when in air.
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             if (!pInstance)
                 return;
@@ -473,8 +473,8 @@ public:
             DoCast(me, SPELL_FLAMESTRIKE2, true);
         }
 
-        void EnterCombat(Unit * /*who*/) {}
-        void MoveInLineOfSight(Unit * /*who*/) {}
+        void EnterCombat(Unit* /*who*/) {}
+        void MoveInLineOfSight(Unit* /*who*/) {}
         void UpdateAI(const uint32 diff)
         {
             if (FlameStrikeTimer <= diff)

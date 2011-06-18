@@ -87,7 +87,7 @@ public:
             _Reset();
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             _EnterCombat();
             DoScriptText(SAY_AGGRO, me);

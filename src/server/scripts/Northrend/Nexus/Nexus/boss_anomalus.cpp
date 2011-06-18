@@ -235,7 +235,7 @@ public:
         }
 
 
-        void JustDied(Unit * /*killer*/)
+        void JustDied(Unit* /*killer*/)
         {
             if (Creature* pAnomalus = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_ANOMALUS) : 0))
                 if (pInstance && pInstance->GetData(DATA_ANOMALUS_EVENT) == IN_PROGRESS)

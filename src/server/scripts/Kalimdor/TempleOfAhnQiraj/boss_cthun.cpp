@@ -231,7 +231,7 @@ public:
                 pPortal->SetReactState(REACT_PASSIVE);
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             DoZoneInCombat();
             if (pInst)
@@ -419,7 +419,7 @@ public:
             }
         }
 
-        void DamageTaken(Unit * /*done_by*/, uint32 &damage)
+        void DamageTaken(Unit* /*done_by*/, uint32 &damage)
         {
             //No instance
             if (!pInst)
@@ -549,7 +549,7 @@ public:
                 pInst->SetData(DATA_CTHUN_PHASE, PHASE_NOT_STARTED);
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             DoZoneInCombat();
         }
@@ -885,7 +885,7 @@ public:
                 pInst->SetData(DATA_CTHUN_PHASE, PHASE_CTHUN_DONE);
         }
 
-        void DamageTaken(Unit * /*done_by*/, uint32 &damage)
+        void DamageTaken(Unit* /*done_by*/, uint32 &damage)
         {
             //No instance
             if (!pInst)
@@ -968,7 +968,7 @@ public:
             KillSelfTimer = 35000;
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             DoZoneInCombat();
         }
@@ -1043,7 +1043,7 @@ public:
             EvadeTimer = 5000;
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             DoZoneInCombat();
         }
@@ -1155,7 +1155,7 @@ public:
             EvadeTimer = 5000;
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             DoZoneInCombat();
         }
@@ -1268,7 +1268,7 @@ public:
             BeamTimer = 500;
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             DoZoneInCombat();
         }

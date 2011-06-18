@@ -548,7 +548,7 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket & recv_data)
         sLog->outDebug(LOG_FILTER_NETWORKIO, "Character creation %s (account %u) has unhandled tail data: [%u]", name.c_str(), GetAccountId(), unk);
     }
 
-    Player * pNewChar = new Player(this);
+    Player* pNewChar = new Player(this);
     if (!pNewChar->Create(sObjectMgr->GenerateLowGuid(HIGHGUID_PLAYER), name, race_, class_, gender, skin, face, hairStyle, hairColor, facialHair, outfitId))
     {
         // Player not create (race/class/etc problem?)
@@ -828,7 +828,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder * holder)
     pCurrChar->SetInGameTime(getMSTime());
 
     // announce group about member online (must be after add to player list to receive announce to self)
-    if (Group *group = pCurrChar->GetGroup())
+    if (Group* group = pCurrChar->GetGroup())
     {
         //pCurrChar->groupInfo.group->SendInit(this); // useless
         group->SendUpdate();
@@ -1401,6 +1401,9 @@ void WorldSession::HandleEquipmentSetDelete(WorldPacket &recv_data)
 
 void WorldSession::HandleEquipmentSetUse(WorldPacket &recv_data)
 {
+    if (_player->isInCombat())
+        return;
+
     sLog->outDebug(LOG_FILTER_NETWORKIO, "CMSG_EQUIPMENT_SET_USE");
     recv_data.hexlike();
 

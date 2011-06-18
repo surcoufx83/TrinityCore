@@ -135,7 +135,7 @@ class boss_alar : public CreatureScript
                 me->setActive(false);
             }
 
-            void EnterCombat(Unit * /*who*/)
+            void EnterCombat(Unit* /*who*/)
             {
                 if (pInstance)
                     pInstance->SetData(DATA_ALAREVENT, IN_PROGRESS);
@@ -145,7 +145,7 @@ class boss_alar : public CreatureScript
                 me->setActive(true);
             }
 
-            void JustDied(Unit * /*victim*/)
+            void JustDied(Unit* /*victim*/)
             {
                 if (pInstance)
                     pInstance->SetData(DATA_ALAREVENT, DONE);
@@ -158,7 +158,7 @@ class boss_alar : public CreatureScript
                         summon->AI()->AttackStart(pTarget);
             }
 
-            void MoveInLineOfSight(Unit * /*who*/) {}
+            void MoveInLineOfSight(Unit* /*who*/) {}
 
             void AttackStart(Unit* who)
             {
@@ -482,7 +482,7 @@ class mob_ember_of_alar : public CreatureScript
             {
                 toDie = false;
             }
-            void EnterCombat(Unit * /*who*/)
+            void EnterCombat(Unit* /*who*/)
             {
                 DoZoneInCombat();
             }
@@ -549,7 +549,7 @@ class mob_flame_patch_alar : public CreatureScript
         {
             mob_flame_patch_alarAI(Creature* pCreature) : ScriptedAI(pCreature) {}
             void Reset() {}
-            void EnterCombat(Unit * /*who*/) {}
+            void EnterCombat(Unit* /*who*/) {}
             void AttackStart(Unit* /*who*/) {}
             void MoveInLineOfSight(Unit* /*who*/) {}
             void UpdateAI(const uint32 /*diff*/) {}

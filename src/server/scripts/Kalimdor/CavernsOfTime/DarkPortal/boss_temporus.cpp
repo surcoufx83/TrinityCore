@@ -75,12 +75,12 @@ public:
                 if(!HeroicMode) pInstance->SetData(DATA_TEMPORUSDEATH, 0); 
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             DoScriptText(SAY_AGGRO, me);
         }
 
-        void KilledUnit(Unit * /*victim*/)
+        void KilledUnit(Unit* /*victim*/)
         {
             switch(rand()%2)
             {
@@ -89,7 +89,7 @@ public:
             }
         }
 
-        void JustDied(Unit * /*victim*/)
+        void JustDied(Unit* /*victim*/)
         {
             DoScriptText(SAY_DEATH, me);
 

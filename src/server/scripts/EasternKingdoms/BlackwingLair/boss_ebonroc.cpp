@@ -66,7 +66,7 @@ public:
                 pInstance->SetData(ENCOUNTER_EBONROC,NOT_STARTED);
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             DoZoneInCombat();
 

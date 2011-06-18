@@ -118,7 +118,7 @@ public:
                 pInstance->SetData(ENCOUNTER_CHROMAGGUS,NOT_STARTED);
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             if(pInstance)
                 pInstance->SetData(ENCOUNTER_CHROMAGGUS,IN_PROGRESS);

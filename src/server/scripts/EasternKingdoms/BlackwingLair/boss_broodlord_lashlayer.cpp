@@ -69,7 +69,7 @@ public:
             pInstance->SetData(ENCOUNTER_LASHLAYER,NOT_STARTED);
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             DoScriptText(SAY_AGGRO, me);
             DoZoneInCombat();

@@ -578,14 +578,14 @@ void Battleground::SetTeamStartLoc(uint32 TeamID, float X, float Y, float Z, flo
     m_TeamStartLocO[idx] = O;
 }
 
-void Battleground::SendPacketToAll(WorldPacket *packet)
+void Battleground::SendPacketToAll(WorldPacket* packet)
 {
     for (BattlegroundPlayerMap::const_iterator itr = m_Players.begin(); itr != m_Players.end(); ++itr)
         if (Player* player = _GetPlayer(itr, "SendPacketToAll"))
             player->GetSession()->SendPacket(packet);
 }
 
-void Battleground::SendPacketToTeam(uint32 TeamID, WorldPacket *packet, Player *sender, bool self)
+void Battleground::SendPacketToTeam(uint32 TeamID, WorldPacket* packet, Player *sender, bool self)
 {
     for (BattlegroundPlayerMap::const_iterator itr = m_Players.begin(); itr != m_Players.end(); ++itr)
         if (Player* player = _GetPlayerForTeam(TeamID, itr, "SendPacketToTeam"))
@@ -891,16 +891,6 @@ void Battleground::BlockMovement(Player* plr)
 void Battleground::RemovePlayerAtLeave(const uint64& guid, bool Transport, bool SendPacket)
 {
     uint32 team = GetPlayerTeam(guid);
-    bool participant = false;
-    // Remove from lists/maps
-    BattlegroundPlayerMap::iterator itr = m_Players.find(guid);
-    if (itr != m_Players.end())
-    {
-        UpdatePlayersCountByTeam(team, true);               // -1 player
-        m_Players.erase(itr);
-        // check if the player was a participant of the match, or only entered through gm command (goname)
-        participant = true;
-    }
 
     BattlegroundScoreMap::iterator itr2 = m_PlayerScores.find(guid);
     if (itr2 != m_PlayerScores.end())
@@ -925,6 +915,17 @@ void Battleground::RemovePlayerAtLeave(const uint64& guid, bool Transport, bool 
 
     RemovePlayer(plr, guid);                                // BG subclass specific code
 
+    bool participant = false;
+    // Remove from lists/maps
+    BattlegroundPlayerMap::iterator itr = m_Players.find(guid);
+    if (itr != m_Players.end())
+    {
+        UpdatePlayersCountByTeam(team, true);               // -1 player
+        m_Players.erase(itr);
+        // check if the player was a participant of the match, or only entered through gm command (goname)
+        participant = true;
+    }
+
     if (participant) // if the player was a match participant, remove auras, calc rating, update queue
     {
         BattlegroundTypeId bgTypeId = GetTypeID();
@@ -938,7 +939,6 @@ void Battleground::RemovePlayerAtLeave(const uint64& guid, bool Transport, bool 
             // if arena, remove the specific arena auras
             if (isArena())
             {
-                plr->RemoveArenaAuras(true);                // removes debuffs / dots etc., we don't want the player to die after porting out
                 bgTypeId=BATTLEGROUND_AA;                   // set the bg type to all arenas (it will be used for queue refreshing)
 
                 // unsummon current and summon old pet if there was one and there isn't a current pet
@@ -978,7 +978,7 @@ void Battleground::RemovePlayerAtLeave(const uint64& guid, bool Transport, bool 
         }
 
         // remove from raid group if player is member
-        if (Group *group = GetBgRaid(team))
+        if (Group* group = GetBgRaid(team))
         {
             if (!group->RemoveMember(guid))                // group was disbanded
             {
@@ -1391,7 +1391,7 @@ bool Battleground::AddObject(uint32 type, uint32 entry, float x, float y, float 
     // Must be created this way, adding to godatamap would add it to the base map of the instance
     // and when loading it (in go::LoadFromDB()), a new guid would be assigned to the object, and a new object would be created
     // So we must create it specific for this instance
-    GameObject * go = new GameObject;
+    GameObject* go = new GameObject;
     if (!go->Create(sObjectMgr->GenerateLowGuid(HIGHGUID_GAMEOBJECT), entry, GetBgMap(),
         PHASEMASK_NORMAL, x, y, z, o, rotation0, rotation1, rotation2, rotation3, 100, GO_STATE_READY))
     {

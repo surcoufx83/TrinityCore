@@ -94,7 +94,7 @@ public:
             ShadowBolt_Timer = 10000;
             Link_Timer = 1000;
         }
-        void JustDied(Unit * /*victim*/)
+        void JustDied(Unit* /*victim*/)
         {
             Unit* pUnit = Unit::GetUnit((*me), victimGUID);
             if (pUnit && pUnit->HasAura(SPELL_INSIDIOUS_WHISPER))
@@ -110,7 +110,7 @@ public:
             }
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             if (!victimGUID) return;
         }
@@ -305,7 +305,7 @@ public:
 
                 if (pInstance && pInstance->GetData64(DATA_LEOTHERAS_EVENT_STARTER))
                 {
-                    Unit *victim = NULL;
+                    Unit* victim = NULL;
                     victim = Unit::GetUnit(*me, pInstance->GetData64(DATA_LEOTHERAS_EVENT_STARTER));
                     if (victim)
                         me->getThreatManager().addThreat(victim, 1);
@@ -385,7 +385,7 @@ public:
             }
         }
 
-        void KilledUnit(Unit * victim)
+        void KilledUnit(Unit* victim)
         {
             if (victim->GetTypeId() != TYPEID_PLAYER)
                 return;
@@ -400,7 +400,7 @@ public:
             }
         }
 
-        void JustDied(Unit * /*victim*/)
+        void JustDied(Unit* /*victim*/)
         {
             DoScriptText(SAY_DEATH, me);
 
@@ -414,7 +414,7 @@ public:
                 pInstance->SetData(DATA_LEOTHERASTHEBLINDEVENT, DONE);
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             if (me->HasAura(AURA_BANISH))
             return;
@@ -538,7 +538,7 @@ public:
                     {
                         if ((*itr) && (*itr)->isAlive())
                         {
-                            Creature * demon = me->SummonCreature(INNER_DEMON_ID, (*itr)->GetPositionX()+10, (*itr)->GetPositionY()+10, (*itr)->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
+                            Creature* demon = me->SummonCreature(INNER_DEMON_ID, (*itr)->GetPositionX()+10, (*itr)->GetPositionY()+10, (*itr)->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
                             if (demon)
                             {
                                 demon->AI()->AttackStart((*itr));
@@ -632,7 +632,7 @@ public:
             DoScriptText(SAY_FREE, me);
         }
 
-        void KilledUnit(Unit * victim)
+        void KilledUnit(Unit* victim)
         {
             if (victim->GetTypeId() != TYPEID_PLAYER)
                 return;
@@ -640,13 +640,13 @@ public:
             DoScriptText(RAND(SAY_DEMON_SLAY1, SAY_DEMON_SLAY2, SAY_DEMON_SLAY3), me);
         }
 
-        void JustDied(Unit * /*victim*/)
+        void JustDied(Unit* /*victim*/)
         {
             //invisibility (blizzlike, at the end of the fight he doesn't die, he disappears)
             DoCast(me, 8149, true);
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             StartEvent();
         }
@@ -719,7 +719,7 @@ public:
             }
         }
 
-        void EnterCombat(Unit * who)
+        void EnterCombat(Unit* who)
         {
             me->InterruptNonMeleeSpells(false);
             if (pInstance)
@@ -754,7 +754,7 @@ public:
 
                 if (!me->isInCombat() && pInstance->GetData64(DATA_LEOTHERAS_EVENT_STARTER))
                 {
-                    Unit *victim = NULL;
+                    Unit* victim = NULL;
                     victim = Unit::GetUnit(*me, pInstance->GetData64(DATA_LEOTHERAS_EVENT_STARTER));
                     if (victim)
                         AttackStart(victim);
@@ -808,7 +808,7 @@ public:
             DoMeleeAttackIfReady();
         }
 
-        void JustDied(Unit * /*killer*/) {}
+        void JustDied(Unit* /*killer*/) {}
     };
 
 };
