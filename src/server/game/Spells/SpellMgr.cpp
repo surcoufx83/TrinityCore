@@ -778,8 +778,6 @@ bool SpellMgr::_isPositiveEffect(uint32 spellId, uint32 effIndex, bool deep) con
                     return false;
                 case 30877: // Tag Murloc
                 case 62344: // Fists of Stone
-                case 61716: // Rabbit Costume
-                case 61734: // Noblegarden Bunny
                     return true;
                 default:
                     break;
@@ -3819,6 +3817,7 @@ void SpellMgr::LoadSpellCustomAttr()
         case 25425: // Shoot
         case 45761: // Shoot
         case 42611: // Shoot
+        case 62374: // Pursued
         case 61588: // Blazing Harpoon
         case 50988: // Glare of the Tribunal (N)
         case 59870: // Glare of the Tribunal (H)
@@ -4088,9 +4087,6 @@ void SpellMgr::LoadSpellCustomAttr()
             break;
         case 48278: // Paralyze
             spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_TARGET_ENEMY;
-        case 69055:     // Saber Lash
-        case 70814:     // Saber Lash
-            spellInfo->EffectRadiusIndex[0] = 8;
             count++;
             break;
         case 18500: // Wing Buffet
@@ -4236,6 +4232,9 @@ void SpellMgr::LoadSpellCustomAttr()
         case 65121: // Searing Light (25m) (XT-002)
         case 63024: // Gravity Bomb (XT-002)
         case 64234: // Gravity Bomb (25m) (XT-002)
+            spellInfo->MaxAffectedTargets = 1;
+            ++count;
+            break;
         //case 62834: // Boom
         // This hack is here because we suspect our implementation of spell effect execution on targets
         // is done in the wrong order. We suspect that EFFECT_0 needs to be applied on all targets,
@@ -4307,6 +4306,11 @@ void SpellMgr::LoadSpellCustomAttr()
         case 70860: // Frozen Throne Teleport
         case 70861: // Sindragosa's Lair Teleport
             spellInfo->EffectImplicitTargetA[0] = TARGET_DST_DB;
+            ++count;
+            break;
+        case 69055: // Saber Lash (Lord Marrowgar)
+        case 70814: // Saber Lash (Lord Marrowgar)
+            spellInfo->EffectRadiusIndex[0] = 8;    // 5yd
             ++count;
             break;
         case 69075: // Bone Storm (Lord Marrowgar)
