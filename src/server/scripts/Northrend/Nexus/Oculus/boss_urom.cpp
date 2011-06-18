@@ -47,10 +47,10 @@ enum Yells
     SAY_AGGRO_3                                   = -1578002,
     SAY_AGGRO_4                                   = -1578003,
     SAY_TELEPORT                                  = -1578004,
-	SAY_DEATH                                     = -1578018,
-	SAY_KILL_1                                    = -1578019,
-	SAY_KILL_2                                    = -1578020,
-	SAY_KILL_3                                    = -1578021
+    SAY_DEATH                                     = -1578018,
+    SAY_KILL_1                                    = -1578019,
+    SAY_KILL_2                                    = -1578020,
+    SAY_KILL_3                                    = -1578021
 };
 
 enum eCreature
@@ -131,11 +131,11 @@ public:
             timeBombTimer = urand(20000, 25000);
         }
 
-		void DamageTaken(Unit* pAttacker, uint32& )
-		{	
-			if(pAttacker->IsVehicle())
-				pAttacker->DealDamage(pAttacker, pAttacker->GetHealth());
-		}
+        void DamageTaken(Unit* pAttacker, uint32& )
+        {	
+            if(pAttacker->IsVehicle())
+                pAttacker->DealDamage(pAttacker, pAttacker->GetHealth());
+        }
 
         void EnterCombat(Unit* /*pWho*/)
         {
@@ -149,10 +149,10 @@ public:
                 instance->SetData(DATA_UROM_PLATAFORM, instance->GetData(DATA_UROM_PLATAFORM)+1);
         }
 
-		void KilledUnit(Unit* /*victim*/)
-		{
-			DoScriptText(RAND(SAY_KILL_1, SAY_KILL_2, SAY_KILL_3), me);
-		}
+        void KilledUnit(Unit* /*victim*/)
+        {
+            DoScriptText(RAND(SAY_KILL_1, SAY_KILL_2, SAY_KILL_3), me);
+        }
 
         void AttackStart(Unit* pWho)
         {
@@ -259,10 +259,10 @@ public:
                 {
                     canCast = false;
                     canGoBack = true;
-					if(me->GetMap()->IsHeroic())
-						DoCastAOE(SPELL_EMPOWERED_ARCANE_EXPLOSION_2);
-					else
-						DoCastAOE(SPELL_EMPOWERED_ARCANE_EXPLOSION);
+                    if(me->GetMap()->IsHeroic())
+                        DoCastAOE(SPELL_EMPOWERED_ARCANE_EXPLOSION_2);
+                    else
+                        DoCastAOE(SPELL_EMPOWERED_ARCANE_EXPLOSION);
                     castArcaneExplosionTimer = 2000;
                 }else castArcaneExplosionTimer -= uiDiff;
             }
@@ -296,10 +296,10 @@ public:
                 {
                     if (Unit* pUnit = SelectTarget(SELECT_TARGET_RANDOM))
 					{
-						if(me->GetMap()->IsHeroic())
+                        if(me->GetMap()->IsHeroic())
                            DoCast(pUnit, SPELL_TIME_BOMB_2);
-						else
-							DoCast(pUnit, SPELL_TIME_BOMB);
+                        else
+                            DoCast(pUnit, SPELL_TIME_BOMB);
 					}
 
                     timeBombTimer = urand(20000, 25000);
@@ -311,7 +311,7 @@ public:
 
         void JustDied(Unit* /*killer*/)
         {
-			DoScriptText(SAY_DEATH, me);
+             DoScriptText(SAY_DEATH, me);
             _JustDied();
         }
 

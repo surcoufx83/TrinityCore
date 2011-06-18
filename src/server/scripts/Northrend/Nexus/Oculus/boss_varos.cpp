@@ -31,17 +31,17 @@ enum Spells
 {
     SPELL_ENERGIZE_CORES_VISUAL = 62136,
     SPELL_ENERGIZE_CORES = 50785, //Damage 5938 to 6562, effec2 Triggers 54069, effect3 Triggers 56251
-	SPELL_ENERGIZE_CORES_H = 59372,
+    SPELL_ENERGIZE_CORES_H = 59372,
     SPELL_CALL_AZURE_RING_CAPTAIN = 51002, //Effect Send Event (12229)
     /*SPELL_CALL_AZURE_RING_CAPTAIN_2 = 51006, //Effect Send Event (10665)
-SPELL_CALL_AZURE_RING_CAPTAIN_3 = 51007, //Effect Send Event (18454)
-SPELL_CALL_AZURE_RING_CAPTAIN_4 = 51008, //Effect Send Event (18455)*/
+    SPELL_CALL_AZURE_RING_CAPTAIN_3 = 51007, //Effect Send Event (18454)
+    SPELL_CALL_AZURE_RING_CAPTAIN_4 = 51008, //Effect Send Event (18455)*/
     SPELL_CALL_AMPLIFY_MAGIC = 51054,
-	SPELL_CALL_AMPLIFY_MAGIC_H = 59371,
+    SPELL_CALL_AMPLIFY_MAGIC_H = 59371,
 
     SPELL_ARCANE_BEAM_PERIODIC = 51019,
     SPELL_SUMMON_ARCANE_BEAM = 51017,
-	SPELL_ARCANE_BEAM_VISUAL = 51024
+    SPELL_ARCANE_BEAM_VISUAL = 51024
 };
 
 enum Events
@@ -111,10 +111,10 @@ public:
                 switch (eventId)
                 {
                     case EVENT_ENERGIZE_CORES:
-						if(me->GetMap()->IsHeroic())
-                           DoCast(me, SPELL_ENERGIZE_CORES_H);
-						else 
-							DoCast(me, SPELL_ENERGIZE_CORES);
+                        if(me->GetMap()->IsHeroic())
+                            DoCast(me, SPELL_ENERGIZE_CORES_H);
+                        else 
+                            DoCast(me, SPELL_ENERGIZE_CORES);
                         events.CancelEvent(EVENT_ENERGIZE_CORES);
                         break;
                     case EVENT_ENERGIZE_CORES_VISUAL:
@@ -130,17 +130,16 @@ public:
                         events.ScheduleEvent(EVENT_ENERGIZE_CORES, 4000);
                         break;
                     case EVENT_CALL_AZURE:
-                        // not sure how blizz handles this, i cant see any pattern between the differnt spells
                         DoCast(me, SPELL_CALL_AZURE_RING_CAPTAIN);
                         Talk(SAY_AZURE);
                         Talk(SAY_AZURE_EMOTE);
                         events.ScheduleEvent(EVENT_CALL_AZURE, urand(20, 25) * IN_MILLISECONDS);
                         break;
                     case EVENT_AMPLIFY_MAGIC:
-						if(me->GetMap()->IsHeroic())
-                           DoCast(me->getVictim(), SPELL_CALL_AMPLIFY_MAGIC_H);
-						else
-                           DoCast(me->getVictim(), SPELL_CALL_AMPLIFY_MAGIC);
+                        if(me->GetMap()->IsHeroic())
+                            DoCast(me->getVictim(), SPELL_CALL_AMPLIFY_MAGIC_H);
+                        else
+                            DoCast(me->getVictim(), SPELL_CALL_AMPLIFY_MAGIC);
                         events.ScheduleEvent(EVENT_AMPLIFY_MAGIC, urand(17, 20) * IN_MILLISECONDS);
                         break;
                 }
@@ -155,11 +154,11 @@ public:
             _JustDied(); 
         }
 
-		void DamageTaken(Unit* pAttacker, uint32& )
-		{
-			if(pAttacker->IsVehicle())
-				pAttacker->DealDamage(pAttacker, pAttacker->GetHealth());
-		}
+        void DamageTaken(Unit* pAttacker, uint32& )
+        {
+            if(pAttacker->IsVehicle())
+                pAttacker->DealDamage(pAttacker, pAttacker->GetHealth());
+        }
     private:
         bool firstCoreEnergize;
         float coreEnergizeOrientation;
@@ -203,10 +202,10 @@ class npc_azure_ring_captain : public CreatureScript
                 me->GetMotionMaster()->MoveIdle();
 
                 if (Unit* target = ObjectAccessor::GetUnit(*me, targetGUID))
-				{
-					Creature* pSummoned = target->SummonCreature(28239, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 10000);
-		            DoCast(pSummoned, SPELL_ARCANE_BEAM_VISUAL);
-				}
+                {
+                    Creature* pSummoned = target->SummonCreature(28239, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 10000);
+                    DoCast(pSummoned, SPELL_ARCANE_BEAM_VISUAL);
+                }
             }
 
             void DoAction(const int32 action)
@@ -229,7 +228,7 @@ class npc_azure_ring_captain : public CreatureScript
                         }
                         break;
                 }
-           }
+            }
 
         private:
             uint64 targetGUID;
@@ -396,18 +395,18 @@ class npc_arcane_beam : public CreatureScript
         {
             npc_arcane_beamAI(Creature* creature) : ScriptedAI(creature) {}
 
-			void Reset()
-			{
-				Unit* target;
-				me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED);
-				me->AddAura(51019, me);
-				me->SetDisplayId(11686);
-				if(target = me->SelectNearestTarget(30))
-					me->AddThreat(target, (float)50000);
-			}
-		};
+            void Reset()
+            {
+                Unit* target;
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED);
+                me->AddAura(51019, me);
+                me->SetDisplayId(11686);
+                if(target = me->SelectNearestTarget(30))
+                    me->AddThreat(target, (float)50000);
+            }
+        };
 
-		CreatureAI* GetAI(Creature* creature) const
+        CreatureAI* GetAI(Creature* creature) const
         {
             return new npc_arcane_beamAI (creature);
         }
@@ -420,5 +419,5 @@ void AddSC_boss_varos()
     new spell_varos_centrifuge_shield();
     new spell_varos_energize_core_area_enemy();
     new spell_varos_energize_core_area_entry();
-	new npc_arcane_beam();
+    new npc_arcane_beam();
 }

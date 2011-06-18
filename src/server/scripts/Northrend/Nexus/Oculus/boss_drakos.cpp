@@ -22,7 +22,7 @@ enum Spells
 {
     SPELL_MAGIC_PULL = 51336,
     SPELL_THUNDERING_STOMP = 50774,
-	SPELL_THUNDERING_STOMP_H =59370,
+    SPELL_THUNDERING_STOMP_H =59370,
     SPELL_UNSTABLE_SPHERE_PASSIVE = 50756,
     SPELL_UNSTABLE_SPHERE_PULSE = 50757,
     SPELL_UNSTABLE_SPHERE_TIMER = 50758,
@@ -105,35 +105,32 @@ public:
                 switch (eventId)
                 {
                     case EVENT_BOMB_SUMMON:
-                        {
-                            Position pPosition;
-                            me->GetPosition(&pPosition);
+                        Position pPosition;
+                        me->GetPosition(&pPosition);
 
-                            for (uint8 i = 0; i <= (postPull ? 3 : 0); i++)
-                            {
-                                me->GetRandomNearPosition(pPosition, float(urand(0, 10)));
-                                me->SummonCreature(NPC_UNSTABLE_SPHERE, pPosition);
-                            }
+                        for (uint8 i = 0; i <= (postPull ? 3 : 0); i++)
+                        {
+                            me->GetRandomNearPosition(pPosition, float(urand(0, 10)));
+                            me->SummonCreature(NPC_UNSTABLE_SPHERE, pPosition);
                         }
                         events.ScheduleEvent(EVENT_BOMB_SUMMON, 3000);
                         break;
                     case EVENT_MAGIC_PULL:
-						DoScriptText(RAND(SAY_PULL_1, SAY_PULL_2, SAY_PULL_3, SAY_PULL_4), me);
+                        DoScriptText(RAND(SAY_PULL_1, SAY_PULL_2, SAY_PULL_3, SAY_PULL_4), me);
                         DoCast(SPELL_MAGIC_PULL);
                         postPull = true;
                         events.ScheduleEvent(EVENT_MAGIC_PULL, 15000);
                         break;
                     case EVENT_STOMP:
                         DoScriptText(RAND(SAY_STOMP_1, SAY_STOMP_2, SAY_STOMP_3), me);
-						if(me->GetMap()->IsHeroic())
-						   DoCast(SPELL_THUNDERING_STOMP_H);
-						else
-							DoCast(SPELL_THUNDERING_STOMP);
+                        if(me->GetMap()->IsHeroic())
+                            DoCast(SPELL_THUNDERING_STOMP_H);
+                        else
+                            DoCast(SPELL_THUNDERING_STOMP);
                         events.ScheduleEvent(EVENT_STOMP, 17000);
                         break;
                 }
             }
-
             DoMeleeAttackIfReady();
         }
 
