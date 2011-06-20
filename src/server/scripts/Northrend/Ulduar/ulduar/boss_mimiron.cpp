@@ -895,39 +895,78 @@ public:
 
 class boss_leviathan_mk_turret : public CreatureScript
 {
-public:
-    boss_leviathan_mk_turret() : CreatureScript("boss_leviathan_mk_turret") { }
+    public:
+        boss_leviathan_mk_turret() : CreatureScript("boss_leviathan_mk_turret") { }
 
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return new boss_leviathan_mk_turretAI(creature);
-    }
-
-    struct boss_leviathan_mk_turretAI : public ScriptedAI
-    {
-        boss_leviathan_mk_turretAI(Creature* c) : ScriptedAI(c) 
+        struct boss_leviathan_mk_turretAI : public ScriptedAI
         {
-            SetImmuneToPushPullEffects(true);
-            me->SetReactState(REACT_PASSIVE);
-            uiNapalmShell = urand(4000, 8000);
-        }
-
-        uint32 uiNapalmShell;
-        
-        void UpdateAI(const uint32 diff)
-        {
-            if (!UpdateVictim())
-                return;
-
-            if (uiNapalmShell <= diff)
+            boss_leviathan_mk_turretAI(Creature* c) : ScriptedAI(c) 
             {
-                if (Unit* target = SelectTarget(SELECT_TARGET_FARTHEST, 0, -12.0f))
-                    DoCast(target, SPELL_NAPALM_SHELL);
-                uiNapalmShell = urand(8000, 12000);
+                SetImmuneToPushPullEffects(true);
+                me->SetReactState(REACT_PASSIVE);
+                _NapalmShell = urand(4000, 8000);
             }
-            else uiNapalmShell -= diff;
+
+            // try to prefer ranged targets
+            Unit* GetNapalmShellTarget()
+            {
+                Map* map = me->GetMap();
+                if (map && map->IsDungeon())
+                {
+                    std::list<Player*> playerList;
+                    Map::PlayerList const& Players = map->GetPlayers();
+                    for (Map::PlayerList::const_iterator itr = Players.begin(); itr != Players.end(); ++itr)
+                    {
+                        if (Player* player = itr->getSource())
+                        {
+                            if (player->isDead() || player->isGameMaster())
+                                continue;
+
+                            float Distance = player->GetDistance(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
+                            if (Distance < 15.0f || Distance > 100.0f)
+                                continue;
+
+                            playerList.push_back(player);
+                        }
+                    }
+
+                    if (playerList.empty())
+                        return NULL;
+
+                    std::list<Player*>::const_iterator itr = playerList.begin();
+                    std::advance(itr, urand(0, playerList.size() - 1));
+                    return *itr;
+                }
+                else
+                    return NULL;
+            }
+            
+            void UpdateAI(uint32 const diff)
+            {
+                if (!UpdateVictim())
+                    return;
+
+                if (_NapalmShell <= diff)
+                {
+                    Unit* shellTarget = GetNapalmShellTarget();
+                    if (!shellTarget)
+                        shellTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100.0f, true);
+                    if (shellTarget)
+                        DoCast(shellTarget, SPELL_NAPALM_SHELL);
+                    _NapalmShell = urand(8000, 12000);
+                }
+                else
+                    _NapalmShell -= diff;
+            }
+
+        private:
+            uint32 _NapalmShell;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new boss_leviathan_mk_turretAI(creature);
         }
-    };
 };
 
 class npc_proximity_mine : public CreatureScript
@@ -1204,7 +1243,7 @@ public:
                         case EVENT_HAND_PULSE:
                             if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
                                 DoCast(target, SPELL_HAND_PULSE);
-                            events.RescheduleEvent(EVENT_HAND_PULSE, urand(4000, 5000));
+                            events.RescheduleEvent(EVENT_HAND_PULSE, urand(3000, 4000));
                             break;
                         case EVENT_FROST_BOMB:
                             me->SummonCreature(NPC_FROST_BOMB, SummonPos[rand()%9], TEMPSUMMON_TIMED_DESPAWN, 11000);

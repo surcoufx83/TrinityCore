@@ -1661,14 +1661,17 @@ class mob_iron_roots : public CreatureScript
 public:
    mob_iron_roots() : CreatureScript("mob_iron_roots") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new mob_iron_rootsAI(pCreature);
+        return new mob_iron_rootsAI(creature);
     }
 
     struct mob_iron_rootsAI : public ScriptedAI
     {
-        mob_iron_rootsAI(Creature *pCreature) : ScriptedAI(pCreature) { }
+        mob_iron_rootsAI(Creature* creature) : ScriptedAI(creature)
+        {
+            SetImmuneToPushPullEffects(true);
+        }
 
         uint64 RootsGUID;
 
