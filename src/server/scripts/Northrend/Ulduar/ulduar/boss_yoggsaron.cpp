@@ -1646,6 +1646,10 @@ public:
 
             if(m_Phase != PHASE_NONE && !IsEncounterInProgress())
                 EnterEvadeMode();
+
+            // temporary
+            if (m_Phase == PHASE_NONE && me->isInCombat())
+                EnterEvadeMode();
         }
     };
 };
@@ -1704,6 +1708,7 @@ public:
         void Reset()
         {
             DoCast(me,SPELL_OMINOUS_CLOUD_EFFECT,true);
+            me->RemoveAurasDueToSpell(SPELL_SUMMON_GUARDIAN);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             //me->SetReactState(REACT_PASSIVE); //Prevent MoveInLineOfSight
