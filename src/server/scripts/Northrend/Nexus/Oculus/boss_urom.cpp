@@ -106,7 +106,7 @@ public:
 
         void Reset()
         {
-            if (instance->GetBossState(DATA_VAROS_EVENT) != DONE)
+            if (instance->GetBossState(DATA_VAROS_EVENT) != DONE && instance->GetData(DATA_UROM_PLATAFORM) < 3)
                 DoCast(SPELL_ARCANE_SHIELD);
 
             _Reset();
@@ -237,7 +237,7 @@ public:
         void UpdateAI(const uint32 uiDiff)
         {
             //Return since we have no target
-            if (!UpdateVictim())
+            if (!me->IsNonMeleeSpellCasted(false) && !UpdateVictim())
                 return;
 
             if (!instance || instance->GetData(DATA_UROM_PLATAFORM) < 2)
@@ -246,6 +246,8 @@ public:
             if (teleportTimer <= uiDiff)
             {
                 me->InterruptNonMeleeSpells(false);
+                if (frostBombTimer <= 8000)
+                    frostBombTimer += 8000;
                 DoScriptText(SAY_TELEPORT, me);
                 me->GetMotionMaster()->MoveIdle();
                 DoCast(SPELL_TELEPORT);
