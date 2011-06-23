@@ -45,7 +45,7 @@ enum Yells
 
 #define EMOTE_LEVIATHAN                         "Leviathan MK II begins to cast Plasma Blast!"
 
-enum eSpells
+enum Spells
 {
     // Leviathan MK II
     SPELL_MINES_SPAWN                           = 65347,
@@ -92,7 +92,7 @@ enum eSpells
     SPELL_BOMB_BOT                              = 63801  // should be 63767
 };
 
-enum eEvents
+enum Events
 {
     // Leviathan MK II
     EVENT_NONE,
@@ -133,7 +133,7 @@ enum Phases
     PHASE_V0L7R0N_ACTIVATION,
 };
 
-enum eActions
+enum Actions
 {
     DO_START_ENCOUNTER                          = 1,
     DO_ACTIVATE_VX001                           = 2,
@@ -148,7 +148,8 @@ enum eActions
     DO_ACTIVATE_DEATH_TIMER                     = 11,
     DO_ENTER_ENRAGE                             = 12,
     DO_ACTIVATE_HARD_MODE                       = 13,
-    DO_DESPAWN_SUMMONS                          = 14
+    DO_DESPAWN_SUMMONS                          = 14,
+    DATA_GET_HARD_MODE                          = 15
 };
 
 enum Npcs
@@ -166,8 +167,6 @@ enum Npcs
     NPC_FROST_BOMB                              = 34149,
     NPC_MKII_TURRET                             = 34071,
 };
-
-bool MimironHardMode;
 
 // Achievements
 #define ACHIEVEMENT_FIREFIGHTER                 RAID_MODE(3180, 3189)
@@ -222,6 +221,7 @@ public:
         uint32 EnrageTimer;
         uint32 FlameTimer;
         uint32 uiBotTimer;
+        bool MimironHardMode;
         bool checkBotAlive;
         bool Enraged;
 
@@ -657,6 +657,13 @@ public:
             }
         }
 
+        uint32 GetData(uint32 type)
+        {
+            if (type == DATA_GET_HARD_MODE)
+                return MimironHardMode ? 1 : 0;
+            return 0;
+        }
+
         void DoAction(const int32 action)
         {
             switch (action)
@@ -718,27 +725,23 @@ public:
         Vehicle* vehicle;
         Phases phase;
         EventMap events;
+        bool MimironHardMode;
 
         void Reset()
         {
             events.Reset();
-            //me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
             me->SetStandState(UNIT_STAND_STATE_STAND);
             me->SetReactState(REACT_PASSIVE);
-            //me->RemoveAllAuras();
             me->RemoveAllAurasExceptType(SPELL_AURA_CONTROL_VEHICLE);
             phase = PHASE_NULL;
             events.SetPhase(PHASE_NULL);
-
-            //if (me->GetVehicleKit())
-            //    me->GetVehicleKit()->Reset();
+            MimironHardMode = false;
 
             if (Creature *turret = CAST_CRE(me->GetVehicleKit()->GetPassenger(3)))
             {
                 turret->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
                 turret->SetReactState(REACT_PASSIVE);
-                //turret->AI()->EnterEvadeMode();
             }
         }
 
@@ -757,18 +760,18 @@ public:
 
         void DamageTaken(Unit* /*who*/, uint32 &damage)
         {
-            if (phase == PHASE_NULL)
+            if (me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1))
                 damage = 0;
 
             if (phase == PHASE_LEVIATHAN_SOLO)
                 if (damage >= me->GetHealth())
                 {
                     damage = 0;
+                    me->InterruptNonMeleeSpells(true);
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
                     me->AttackStop();
                     me->SetReactState(REACT_PASSIVE);
                     me->RemoveAllAurasExceptType(SPELL_AURA_CONTROL_VEHICLE);
-                    //me->RemoveAllAuras();
                     me->SetHealth(me->GetMaxHealth());
                     events.SetPhase(PHASE_NULL);
                     phase = PHASE_NULL;
@@ -784,11 +787,11 @@ public:
                 if (damage >= me->GetHealth())
                 {
                     damage = 0;
+                    me->InterruptNonMeleeSpells(true);
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
                     me->AttackStop();
                     me->SetReactState(REACT_PASSIVE);
                     me->RemoveAllAurasExceptType(SPELL_AURA_CONTROL_VEHICLE);
-                    //me->RemoveAllAuras();
                     me->SetHealth(me->GetMaxHealth());
                     me->SetStandState(UNIT_STAND_STATE_DEAD);
                     events.SetPhase(PHASE_NULL);
@@ -800,6 +803,10 @@ public:
 
         void EnterCombat(Unit* /*who*/)
         {
+            if (Creature* Mimiron = me->GetCreature(*me, instance ? instance->GetData64(TYPE_MIMIRON) : 0))
+                if (Mimiron->AI()->GetData(DATA_GET_HARD_MODE) == 1)
+                    MimironHardMode = true;
+
             if (MimironHardMode)
             {
                 DoCast(me, SPELL_EMERGENCY_MODE);
@@ -1042,6 +1049,7 @@ public:
 
         Phases phase;
         EventMap events;
+        bool MimironHardMode;
 
         bool spinning;
         bool direction;
@@ -1062,6 +1070,13 @@ public:
             me->RemoveAllAurasExceptType(SPELL_AURA_CONTROL_VEHICLE);
             phase = PHASE_NULL;
             events.SetPhase(PHASE_NULL);
+            MimironHardMode = false;
+
+            // TODO: remove when Spinning Up is fixed properly
+            me->ApplySpellImmune(0, IMMUNITY_ID, 48181, true);
+            me->ApplySpellImmune(0, IMMUNITY_ID, 59161, true);
+            me->ApplySpellImmune(0, IMMUNITY_ID, 59163, true);
+            me->ApplySpellImmune(0, IMMUNITY_ID, 59164, true);
         }
 
         void KilledUnit(Unit * /*who*/)
@@ -1077,8 +1092,12 @@ public:
                     }
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
+            if (Creature* Mimiron = me->GetCreature(*me, instance ? instance->GetData64(TYPE_MIMIRON) : 0))
+                if (Mimiron->AI()->GetData(DATA_GET_HARD_MODE) == 1)
+                    MimironHardMode = true;
+
             if (MimironHardMode)
             {
                 DoCast(me, SPELL_EMERGENCY_MODE);
@@ -1125,7 +1144,7 @@ public:
 
         void DamageTaken(Unit * /*who*/, uint32 &damage)
         {
-            if (phase == PHASE_NULL)
+            if (me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1))
                 damage = 0;
 
             if (phase == PHASE_VX001_SOLO)
@@ -1133,6 +1152,7 @@ public:
                 {
                     damage = 0;
                     spinning = false;
+                    me->InterruptNonMeleeSpells(true);
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
                     me->AttackStop();
                     me->GetMotionMaster()->Initialize();
@@ -1150,6 +1170,7 @@ public:
                 {
                     damage = 0;
                     spinning = false;
+                    me->InterruptNonMeleeSpells(true);
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
                     me->AttackStop();
                     me->RemoveAllAurasExceptType(SPELL_AURA_CONTROL_VEHICLE);
@@ -1343,6 +1364,7 @@ public:
 
         Phases phase;
         EventMap events;
+        bool MimironHardMode;
         uint8 spawnedAdds;
 
         void Reset()
@@ -1358,6 +1380,7 @@ public:
             events.SetPhase(PHASE_NULL);
             summons.DespawnAll();
             spawnedAdds = 0;
+            MimironHardMode = false;
         }
 
         void KilledUnit(Unit * /*who*/)
@@ -1375,6 +1398,10 @@ public:
 
         void EnterCombat(Unit * /*who*/)
         {
+            if (Creature* Mimiron = me->GetCreature(*me, instance ? instance->GetData64(TYPE_MIMIRON) : 0))
+                if (Mimiron->AI()->GetData(DATA_GET_HARD_MODE) == 1)
+                    MimironHardMode = true;
+
             if (MimironHardMode)
                 DoCast(me, SPELL_EMERGENCY_MODE);
 
@@ -1504,7 +1531,7 @@ public:
                     break;
             }
 
-            spawnedAdds++;
+            ++spawnedAdds;
             if (spawnedAdds > 2)
                 spawnedAdds = 0;
         }
@@ -1523,13 +1550,14 @@ public:
 
         void DamageTaken(Unit * /*who*/, uint32 &damage)
         {
-            if (phase == PHASE_NULL)
+            if (me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1))
                 damage = 0;
 
             if (phase == PHASE_AERIAL_SOLO)
                 if (damage >= me->GetHealth())
                 {
                     damage = 0;
+                    me->InterruptNonMeleeSpells(true);
                     me->GetMotionMaster()->Clear(true);
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
                     me->SetReactState(REACT_PASSIVE);
@@ -1547,6 +1575,7 @@ public:
                 if (damage >= me->GetHealth())
                 {
                     damage = 0;
+                    me->InterruptNonMeleeSpells(true);
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
                     me->AttackStop();
                     me->SetReactState(REACT_PASSIVE);

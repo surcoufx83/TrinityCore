@@ -527,7 +527,7 @@ public:
                     NPCChangeTarget(uiThassarianGUID);
 
                     me->Unmount();
-                //me->CastSpell(me, SPELL_THE_MIGHT_OF_MOGRAINE, true); // need to fix, on player only
+                    //me->CastSpell(me, SPELL_THE_MIGHT_OF_MOGRAINE, true); // need to fix, on player only
 
                     if (Creature* pTemp = Unit::GetCreature(*me, uiKoltiraGUID))
                         pTemp->Unmount();
@@ -543,7 +543,6 @@ public:
                 case 3:
                 {
                     //Unit* pTirion = Unit::GetCreature(*me, uiTirionGUID);
-
                     DoScriptText(EMOTE_LIGHT_OF_DAWN05, me);
                     if (me->HasAura(SPELL_THE_LIGHT_OF_DAWN, 0))
                         me->RemoveAurasDueToSpell(SPELL_THE_LIGHT_OF_DAWN);
@@ -614,7 +613,7 @@ public:
 
         void EnterEvadeMode()
         {
-            if (!bIsBattle)//do not reset self if we are in battle
+            if (!bIsBattle) //do not reset self if we are in battle
                 npc_escortAI::EnterEvadeMode();
         }
 
@@ -737,7 +736,7 @@ public:
 
                         case 9: // charge begins
                             SetHoldState(false);
-                        me->CastSpell(me, SPELL_THE_MIGHT_OF_MOGRAINE, true); // need to fix, on player only
+                            me->CastSpell(me, SPELL_THE_MIGHT_OF_MOGRAINE, true); // need to fix, on player only
                             if (Creature* pTemp = Unit::GetCreature(*me, uiKoltiraGUID))
                             {
                                 pTemp->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
@@ -939,7 +938,7 @@ public:
                         case 33: // Darion supports to jump to lich king here
                             if (Unit::GetCreature(*me, uiLichKingGUID))
                                 DoCast(me, SPELL_MOGRAINE_CHARGE); // jumping charge
-    //   doesn't make it looks well, so workarounds, Darion charges, looks better
+                            //   doesn't make it looks well, so workarounds, Darion charges, looks better
                             me->SetSpeed(MOVE_RUN, 3.0f);
                             me->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
                             SetHoldState(false);
