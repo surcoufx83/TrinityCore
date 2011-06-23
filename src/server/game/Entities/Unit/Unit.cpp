@@ -7945,6 +7945,20 @@ bool Unit::HandleAuraProc(Unit* pVictim, uint32 damage, Aura * triggeredByAura, 
                     *handled = true;
                     break;
                 }
+                // Evasive Aura
+                case 50248:
+                {
+                    if(Aura* aur_old = GetAura(50240))
+                    {
+                        CastSpell(this, 50241, true);
+                        Aura* aur_new = AddAura(50240, this);
+                        aur_new->SetDuration(aur_old->GetDuration());
+                    }
+                    else
+                        CastSpell(this, 50241, true);
+                    *handled = true;
+                    break;
+                }
                 // Nevermelting Ice Crystal
                 case 71564:
                     RemoveAuraFromStack(71564);
