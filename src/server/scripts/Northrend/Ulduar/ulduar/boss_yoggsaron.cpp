@@ -663,6 +663,7 @@ public:
             uiRandomYell_Timer = urand(10000,20000);
 
             bUsedMindcontroll = false;
+            uiAmountKeeperActive = -1;
         }
 
         void JustDied(Unit *killer)
@@ -714,7 +715,6 @@ public:
             if(m_pInstance)
                 m_pInstance->SetBossState(TYPE_YOGGSARON,IN_PROGRESS);
 
-            uiAmountKeeperActive = CountKeepersActive();
             lastBrainAction = Actions(0);
         }
 
@@ -854,9 +854,9 @@ public:
                 case 1:
                     m_pInstance->DoCompleteAchievement(RAID_MODE(ACHIEVMENT_ONE_LIGHTS_IN_THE_DARKNESS_10,ACHIEVMENT_ONE_LIGHTS_IN_THE_DARKNESS_25));
                 case 2:
-                    m_pInstance->DoCompleteAchievement(RAID_MODE(ACHIEVMENT_ONE_LIGHTS_IN_THE_DARKNESS_10,ACHIEVMENT_ONE_LIGHTS_IN_THE_DARKNESS_25));
+                    m_pInstance->DoCompleteAchievement(RAID_MODE(ACHIEVMENT_TWO_LIGHTS_IN_THE_DARKNESS_10,ACHIEVMENT_TWO_LIGHTS_IN_THE_DARKNESS_25));
                 case 3:
-                    m_pInstance->DoCompleteAchievement(RAID_MODE(ACHIEVMENT_ONE_LIGHTS_IN_THE_DARKNESS_10,ACHIEVMENT_ONE_LIGHTS_IN_THE_DARKNESS_25));
+                    m_pInstance->DoCompleteAchievement(RAID_MODE(ACHIEVMENT_THREE_LIGHTS_IN_THE_DARKNESS_10,ACHIEVMENT_THREE_LIGHTS_IN_THE_DARKNESS_25));
                     break;
                 default: break;
                 }
@@ -889,6 +889,7 @@ public:
             case PHASE_SARA:
                 DoSpawnKeeperForSupport();
                 SetSanityAura();
+                uiAmountKeeperActive = CountKeepersActive();
                 break;
             case PHASE_BRAIN:
                 me->SetHealth(me->GetMaxHealth());
