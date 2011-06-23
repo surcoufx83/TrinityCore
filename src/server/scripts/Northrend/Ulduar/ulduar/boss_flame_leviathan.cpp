@@ -102,6 +102,9 @@ enum Towers
     GO_TOWER_OF_FLAMES  = 194371,
     GO_TOWER_OF_FROST   = 194370,
     GO_TOWER_OF_LIFE    = 194375,
+    // TODO: remove later
+    GO_CACHE_10         = 500005,
+    GO_CACHE_25         = 500006
 };
 
 enum Events
@@ -288,6 +291,9 @@ class boss_flame_leviathan : public CreatureScript
                 events.ScheduleEvent(EVENT_SPEED, 15*IN_MILLISECONDS);
                 ActiveTower();
                 vehicle->InstallAllAccessories(false);
+
+                // TODO: remove later
+                me->RemoveLootMode(LOOT_MODE_DEFAULT);
             }
 
             void EnterEvadeMode()
@@ -340,11 +346,9 @@ class boss_flame_leviathan : public CreatureScript
                 _JustDied();
                 DoScriptText(SAY_DEATH, me);
 
-                // DEBUG
-                bool isAllowed = me->IsDamageEnoughForLootingAndReward();
-                char fText[128];
-                sprintf(fText, "DEBUG >> %u LootRecipient: %s", isAllowed, me->GetLootRecipient() ? me->GetLootRecipient()->GetName() : "not found");
-                me->MonsterYell(fText, LANG_UNIVERSAL, 0);
+                me->SummonGameObject(RAID_MODE(GO_CACHE_10, GO_CACHE_25), Center->GetPositionX(), Center->GetPositionY(), Center->GetPositionZ(),
+                    Center->GetOrientation(), 0, 0, 0, 0, 604800);
+                me->ForcedDespawn(7000);
 
                 if (ActiveTowers)
                 {
