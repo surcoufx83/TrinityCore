@@ -156,10 +156,10 @@ public:
             me->SetReactState(REACT_PASSIVE);
         
             // Spawn NPC Helpers
-            for (uint8 i = 0; i < RAID_MODE(NORMAL_COUNT, RAID_COUNT); i++)
+            for (uint8 i = 0; i < RAID_MODE(NORMAL_COUNT, RAID_COUNT); ++i)
             {
                 if (Creature* pHelper = me->SummonCreature(addLocations[i].entry,addLocations[i].x,addLocations[i].y,addLocations[i].z,addLocations[i].o))
-                    if (Creature *pIceBlock = pHelper->SummonCreature(ENTRY_NPC_FLASH_FREEZE_PRE,addLocations[i].x,addLocations[i].y,addLocations[i].z,addLocations[i].o))
+                    if (Creature* pIceBlock = pHelper->SummonCreature(ENTRY_NPC_FLASH_FREEZE_PRE,addLocations[i].x,addLocations[i].y,addLocations[i].z,addLocations[i].o))
                         pHelper->AddThreat(me, 5000000.0f);
             }
         }

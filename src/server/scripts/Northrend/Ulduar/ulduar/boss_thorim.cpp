@@ -46,7 +46,7 @@ enum Phases
 
 enum Events
 {
-    EVENT_NONE,
+    EVENT_SAY_AGGRO_2 = 1,
     EVENT_STORMHAMMER,
     EVENT_CHARGE_ORB,
     EVENT_SUMMON_ADDS,
@@ -357,7 +357,7 @@ public:
 
         void EnterCombat(Unit* /*pWho*/)
         {
-            DoScriptText(RAND(SAY_AGGRO_1, SAY_AGGRO_2), me);
+            DoScriptText(SAY_AGGRO_1, me);
             _EnterCombat();
         
             // Spawn Thunder Orbs
@@ -373,6 +373,7 @@ public:
             events.ScheduleEvent(EVENT_CHARGE_ORB, 30000, 0, PHASE_1);
             events.ScheduleEvent(EVENT_SUMMON_ADDS, 20000, 0, PHASE_1);
             events.ScheduleEvent(EVENT_BERSERK, 300000, 0, PHASE_1);
+            events.ScheduleEvent(EVENT_SAY_AGGRO_2, 10000, 0, PHASE_1);
 
             if (Creature* runic = me->GetCreature(*me, instance->GetData64(DATA_RUNIC_COLOSSUS)))
                 runic->AI()->DoAction(ACTION_RUNIC_SMASH);
@@ -405,6 +406,10 @@ public:
                 {
                     switch (eventId)
                     {
+                        case EVENT_SAY_AGGRO_2:
+                            DoScriptText(SAY_AGGRO_2, me);
+                            events.CancelEvent(EVENT_SAY_AGGRO_2);
+                            break;
                         case EVENT_STORMHAMMER:
                             DoCast(SPELL_STORMHAMMER);
                             events.ScheduleEvent(EVENT_STORMHAMMER, urand(15000, 20000), 0, PHASE_1);
