@@ -500,13 +500,14 @@ VALUES
 (64172,'spell_titanic_storm_targeting');
 
 -- Condition because NPCs need this else no hit
-DELETE FROM conditions WHERE SourceEntry = 64172;
+DELETE FROM conditions WHERE SourceEntry in (64172,64465);
 INSERT INTO conditions
 (SourceTypeOrReferenceId,SourceGroup,SourceEntry,ElseGroup,
  ConditionTypeOrReference,ConditionValue1,ConditionValue2,ConditionValue3,
  ErrorTextId,ScriptName,COMMENT)
 VALUES
-(13,0,64172,0,18,1,33988,0,0,'','Effekt only for Immortal Guardians');
+(13,0,64172,0,18,1,33988,0,0,'','Effekt only for Immortal Guardians'),
+(13,0,64465,0,18,1,33988,0,0,'','Effekt only for Immortal Guardians');
 
 -- Hodir Secound Aura Script
 DELETE FROM spell_script_names WHERE spell_id IN (64174);
