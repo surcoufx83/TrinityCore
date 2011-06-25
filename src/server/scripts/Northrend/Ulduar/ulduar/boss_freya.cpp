@@ -255,16 +255,16 @@ class boss_freya : public CreatureScript
 public:
     boss_freya() : CreatureScript("boss_freya") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new boss_freyaAI(pCreature);
+        return new boss_freyaAI(creature);
     }
 
     struct boss_freyaAI : public ScriptedAI
     {
-        boss_freyaAI(Creature* pCreature) : ScriptedAI(pCreature)
+        boss_freyaAI(Creature* creature) : ScriptedAI(creature)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = creature->GetInstanceScript();
             if (pInstance)
                 EncounterFinished = (pInstance->GetBossState(TYPE_FREYA) == DONE);
         }
@@ -297,7 +297,8 @@ public:
             if (EncounterFinished)
             {
                 me->setFaction(35);
-            }else
+            }
+            else
             {
                 if (pInstance)
                     pInstance->SetBossState(TYPE_FREYA, NOT_STARTED);
@@ -470,6 +471,9 @@ public:
 
         void EncounterIsDone()
         {
+            if (EncounterFinished)
+                return;
+
             EncounterFinished = true;
             DoScriptText(SAY_DEATH, me);
 
@@ -527,8 +531,16 @@ public:
             }
         }
 
+        void JustReachedHome()
+        {
+            // TODO: use bossAI
+            me->setActive(false);
+        }
+
         void EnterCombat(Unit* who)
         {
+            me->setActive(true);
+
             DoScriptText(SAY_AGGRO, me);
 
             // Add Attuned to Nature and Touch of Eonar
