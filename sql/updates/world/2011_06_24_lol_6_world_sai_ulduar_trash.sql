@@ -52,7 +52,7 @@ DELETE FROM `creature_ai_scripts` WHERE `creature_id`=34086;
 DELETE FROM `smart_scripts` WHERE `entryorguid`=34086;
 INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type`,`event_phase_mask`,`event_chance`,`event_flags`,`event_param1`,`event_param2`,`event_param3`,`event_param4`,`action_type`,`action_param1`,`action_param2`,`action_param3`,`action_param4`,`action_param5`,`action_param6`,`target_type`,`target_param1`,`target_param2`,`target_param3`,`target_x`,`target_y`,`target_z`,`target_o`,`comment`) VALUES
 (34086,0,0,0,0,0,100,0,2000,4000,6000,8000,11,64773,0,0,0,0,0,5,0,0,0,0,0,0,0, 'Magma Rager - Cast Fire Blast'),
-(34086,0,1,0,0,0,100,0,6000,16000,15000,25000,11,64746,0,0,0,0,0,1,0,0,0,0,0,0,0, 'Magma Rager - Cast Superheated Winds');
+(34086,0,1,0,0,0,100,0,6000,16000,12000,20000,11,64746,0,0,0,0,0,1,0,0,0,0,0,0,0, 'Magma Rager - Cast Superheated Winds');
 -- Superheated Winds
 UPDATE `creature_template` SET `unit_flags`=33718790,`modelid1`=11686,`modelid2`=0,`AIName`='SmartAI' WHERE `entry`=34194;
 DELETE FROM `creature_ai_scripts` WHERE `creature_id`=34194;
@@ -173,8 +173,8 @@ DELETE FROM `creature_ai_scripts` WHERE `creature_id`=34203;
 DELETE FROM `smart_scripts` WHERE `entryorguid`=34203;
 INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type`,`event_phase_mask`,`event_chance`,`event_flags`,`event_param1`,`event_param2`,`event_param3`,`event_param4`,`action_type`,`action_param1`,`action_param2`,`action_param3`,`action_param4`,`action_param5`,`action_param6`,`target_type`,`target_param1`,`target_param2`,`target_param3`,`target_x`,`target_y`,`target_z`,`target_o`,`comment`) VALUES
 (34203,0,0,0,54,0,100,0,0,0,0,0,29,0,360,0,0,0,0,5,0,0,0,0,0,0,0,'Displacement Device - on Summon - Follow random Hostile'),
-(34203,0,1,0,1,0,100,2,0,0,0,0,11,64793,0,0,0,0,0,1,0,0,0,0,0,0,0,'Displacement Device - OOC - Cast Displacement 10'),
-(34203,0,2,0,1,0,100,4,0,0,0,0,11,64941,0,0,0,0,0,1,0,0,0,0,0,0,0,'Displacement Device - OOC - Cast Displacement 25'); 
+(34203,0,1,0,0,0,100,2,0,0,0,0,11,64793,2,0,0,0,0,1,0,0,0,0,0,0,0,'Displacement Device - OOC - Cast Displacement 10'),
+(34203,0,2,0,0,0,100,4,0,0,0,0,11,64941,2,0,0,0,0,1,0,0,0,0,0,0,0,'Displacement Device - OOC - Cast Displacement 25'); 
 -- ---------------------
 -- Circle of Guardians |
 -- ---------------------
@@ -298,8 +298,8 @@ INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type
 -- Thorim |
 -- --------
 -- Dark Rune Ravager & Thunderer
-UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`dmg_multiplier`= 18 WHERE `entry` IN (33754,33755);
-UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`dmg_multiplier`= 32 WHERE `entry` IN (33757,33758);
+UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`dmg_multiplier`= 25 WHERE `entry` IN (33754,33755);
+UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`dmg_multiplier`= 45 WHERE `entry` IN (33757,33758);
 UPDATE `creature_template` SET `dmgschool`=3 WHERE `entry`=33754; -- Nature Damage
 -- some equipment updates
 UPDATE `creature_template` SET `equipment_id` = 1849 WHERE `entry` = 32885;
@@ -348,7 +348,8 @@ INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type
 (33818,0,1,0,0,0,100,0,3000,5000,6000,8000,11,64662,0,0,0,0,0,17,15,0,0,0,0,0,0, 'Twilight Adherent - Cast Blink'),
 (33818,0,2,0,0,0,100,0,12000,15000,15000,20000,11,63760,0,0,0,0,0,9,0,0,20,0,0,0,0, 'Twilight Adherent - Cast Greater Heal'),
 (33818,0,3,0,0,0,100,0,4000,6000,10000,16000,11,13704,0,0,0,0,0,1,0,0,0,0,0,0,0, 'Twilight Adherent - Cast Psychic Scream'),
-(33818,0,4,0,0,0,100,0,8000,10000,12000,15000,11,37978,0,0,0,0,0,9,0,0,20,0,0,0,0, 'Twilight Adherent - Cast Renew');
+(33818,0,4,0,0,0,100,0,8000,10000,12000,15000,11,37978,0,0,0,0,0,9,0,0,20,0,0,0,0, 'Twilight Adherent - Cast Renew'),
+(33818,0,5,0,4,0,100,0,0,0,0,0,39,25,0,0,0,0,0,1,0,0,0,0,0,0,0, 'Twilight Pyromancer - on Aggro - Call for Help');
 -- Twilight Guardian
 UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`mechanic_immune_mask`=33554513,`mindmg`=464,`maxdmg`=604,`attackpower`=708,`minrangedmg`=353,`maxrangedmg`=512,`rangedattackpower`=112,`equipment_id`=1852,`dmg_multiplier`=10,`AIName`='SmartAI' WHERE `entry`=33822;
 UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`mechanic_immune_mask`=33554513,`mindmg`=464,`maxdmg`=604,`attackpower`=708,`minrangedmg`=353,`maxrangedmg`=512,`rangedattackpower`=112,`equipment_id`=1852,`dmg_multiplier`=18 WHERE `entry`=33828;
@@ -357,7 +358,8 @@ DELETE FROM `smart_scripts` WHERE `entryorguid`=33822;
 INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type`,`event_phase_mask`,`event_chance`,`event_flags`,`event_param1`,`event_param2`,`event_param3`,`event_param4`,`action_type`,`action_param1`,`action_param2`,`action_param3`,`action_param4`,`action_param5`,`action_param6`,`target_type`,`target_param1`,`target_param2`,`target_param3`,`target_x`,`target_y`,`target_z`,`target_o`,`comment`) VALUES
 (33822,0,0,0,0,0,100,0,6000,10000,8000,10000,11,52719,0,0,0,0,0,2,0,0,0,0,0,0,0, 'Twilight Guardian - Cast Concussion Blow'),
 (33822,0,1,0,0,0,100,0,2000,3000,3000,6000,11,62317,0,0,0,0,0,2,0,0,0,0,0,0,0, 'Twilight Guardian - Cast Devastate'),
-(33822,0,2,0,0,0,100,0,8000,10000,10000,12000,11,63757,0,0,0,0,0,2,0,0,0,0,0,0,0, 'Twilight Guardian - Cast Thunderclap');
+(33822,0,2,0,0,0,100,0,8000,10000,10000,12000,11,63757,0,0,0,0,0,2,0,0,0,0,0,0,0, 'Twilight Guardian - Cast Thunderclap'),
+(33822,0,3,0,4,0,100,0,0,0,0,0,39,25,0,0,0,0,0,1,0,0,0,0,0,0,0, 'Twilight Pyromancer - on Aggro - Call for Help');
 -- Twilight Shadowblade
 UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`mechanic_immune_mask`=33554513,`mindmg`=464,`maxdmg`=604,`attackpower`=708,`minrangedmg`=353,`maxrangedmg`=512,`rangedattackpower`=112,`equipment_id`=1862,`dmg_multiplier`=10,`baseattacktime`=1000,`AIName`='SmartAI' WHERE `entry`=33824;
 UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`mechanic_immune_mask`=33554513,`mindmg`=464,`maxdmg`=604,`attackpower`=708,`minrangedmg`=353,`maxrangedmg`=512,`rangedattackpower`=112,`equipment_id`=1862,`dmg_multiplier`=18,`baseattacktime`=1000 WHERE `entry`=33831;
@@ -365,7 +367,8 @@ DELETE FROM `creature_ai_scripts` WHERE `creature_id`=33824;
 DELETE FROM `smart_scripts` WHERE `entryorguid`=33824;
 INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type`,`event_phase_mask`,`event_chance`,`event_flags`,`event_param1`,`event_param2`,`event_param3`,`event_param4`,`action_type`,`action_param1`,`action_param2`,`action_param3`,`action_param4`,`action_param5`,`action_param6`,`target_type`,`target_param1`,`target_param2`,`target_param3`,`target_x`,`target_y`,`target_z`,`target_o`,`comment`) VALUES
 (33824,0,0,0,0,0,100,0,6000,8000,10000,12000,11,63753,0,0,0,0,0,0,0,0,0,0,0,0,0, 'Twilight Shadowblade - Cast Fan of Knives'),
-(33824,0,1,0,0,0,100,0,6000,8000,10000,12000,11,63754,0,0,0,0,0,5,0,0,0,0,0,0,0, 'Twilight Shadowblade - Cast Backstab');
+(33824,0,1,0,0,0,100,0,6000,8000,10000,12000,11,63754,0,0,0,0,0,5,0,0,0,0,0,0,0, 'Twilight Shadowblade - Cast Backstab'),
+(33824,0,2,0,4,0,100,0,0,0,0,0,39,25,0,0,0,0,0,1,0,0,0,0,0,0,0, 'Twilight Pyromancer - on Aggro - Call for Help');
 -- Twilight Slayer
 UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`mechanic_immune_mask`=33554513,`mindmg`=464,`maxdmg`=604,`attackpower`=708,`minrangedmg`=353,`maxrangedmg`=512,`rangedattackpower`=112,`equipment_id`=1847,`dmg_multiplier`=10,`AIName`='SmartAI' WHERE `entry`=33823;
 UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`mechanic_immune_mask`=33554513,`mindmg`=464,`maxdmg`=604,`attackpower`=708,`minrangedmg`=353,`maxrangedmg`=512,`rangedattackpower`=112,`equipment_id`=1847,`dmg_multiplier`=18 WHERE `entry`=33832;
@@ -373,7 +376,8 @@ DELETE FROM `creature_ai_scripts` WHERE `creature_id`=33823;
 DELETE FROM `smart_scripts` WHERE `entryorguid`=33823;
 INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type`,`event_phase_mask`,`event_chance`,`event_flags`,`event_param1`,`event_param2`,`event_param3`,`event_param4`,`action_type`,`action_param1`,`action_param2`,`action_param3`,`action_param4`,`action_param5`,`action_param6`,`target_type`,`target_param1`,`target_param2`,`target_param3`,`target_x`,`target_y`,`target_z`,`target_o`,`comment`) VALUES
 (33823,0,0,0,0,0,100,0,3000,5000,7000,9000,11,35054,0,0,0,0,0,2,0,0,0,0,0,0,0, 'Twilight Slayer - Cast Mortal Strike'),
-(33823,0,1,0,0,0,100,0,8000,12000,12000,15000,11,63784,0,0,0,0,0,2,0,0,0,0,0,0,0, 'Twilight Slayer - Cast Bladestorm');
+(33823,0,1,0,0,0,100,0,8000,12000,12000,15000,11,63784,0,0,0,0,0,2,0,0,0,0,0,0,0, 'Twilight Slayer - Cast Bladestorm'),
+(33823,0,2,0,4,0,100,0,0,0,0,0,39,25,0,0,0,0,0,1,0,0,0,0,0,0,0, 'Twilight Pyromancer - on Aggro - Call for Help');
 -- Faceless Horror
 UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`mechanic_immune_mask`=33554513,`mindmg`=464,`maxdmg`=604,`attackpower`=708,`minrangedmg`=353,`maxrangedmg`=512,`rangedattackpower`=112,`dmg_multiplier`=18,`AIName`='SmartAI' WHERE `entry`=33772;
 UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`mechanic_immune_mask`=33554513,`mindmg`=464,`maxdmg`=604,`attackpower`=708,`minrangedmg`=353,`maxrangedmg`=512,`rangedattackpower`=112,`dmg_multiplier`=32 WHERE `entry`=33773;
@@ -410,7 +414,8 @@ INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type
 (33819,0,1,0,0,0,100,0,1000,2000,6000,8000,11,63913,0,0,0,0,0,5,0,0,0,0,0,0,0, 'Twilight Frost Mage - Cast Frostbolt'),
 (33819,0,2,0,0,0,100,0,2000,4000,10000,16000,11,63758,0,0,0,0,0,1,0,0,0,0,0,0,0, 'Twilight Frost Mage - Cast Frost Bolt Volley'),
 (33819,0,3,0,0,0,100,0,8000,10000,12000,16000,11,63912,0,0,0,0,0,1,0,0,0,0,0,0,0, 'Twilight Frost Mage - Cast Frost Nova'),
-(33819,0,4,0,0,0,100,0,7000,9000,9000,11000,11,64662,0,0,0,0,0,17,15,0,0,0,0,0,0, 'Twilight Frost Mage - Cast Blink');
+(33819,0,4,0,0,0,100,0,7000,9000,9000,11000,11,64662,0,0,0,0,0,17,15,0,0,0,0,0,0, 'Twilight Frost Mage - Cast Blink'),
+(33819,0,5,0,4,0,100,0,0,0,0,0,39,25,0,0,0,0,0,1,0,0,0,0,0,0,0, 'Twilight Pyromancer - on Aggro - Call for Help');
 -- Twilight Pyromancer
 UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`equipment_id`=1848,`mechanic_immune_mask`=33554513,`unit_class`=2,`dmg_multiplier`=10,`mindmg`=464,`maxdmg`=604,`attackpower`=708,`minrangedmg`=353,`maxrangedmg`=512,`rangedattackpower`=112,`AIName`='SmartAI' WHERE `entry`=33820;
 UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`equipment_id`=1848,`mechanic_immune_mask`=33554513,`unit_class`=2,`dmg_multiplier`=18,`mindmg`=464,`maxdmg`=604,`attackpower`=708,`minrangedmg`=353,`maxrangedmg`=512,`rangedattackpower`=112 WHERE `entry`=33830;
@@ -421,7 +426,8 @@ INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type
 (33820,0,1,0,0,0,100,0,1000,2000,6000,8000,11,63789,0,0,0,0,0,5,0,0,0,0,0,0,0, 'Twilight Pyromancer - Cast Fireball'),
 (33820,0,2,0,0,0,100,0,2000,4000,10000,16000,11,63775,0,0,0,0,0,5,0,0,0,0,0,0,0, 'Twilight Pyromancer - Cast Flamestrike'),
 (33820,0,3,0,0,0,100,0,7000,9000,9000,11000,11,64662,0,0,0,0,0,17,15,0,0,0,0,0,0, 'Twilight Pyromancer - Cast Blink'),
-(33820,0,4,0,11,0,100,0,0,0,0,0,11,63774,0,0,0,0,0,1,0,0,0,0,0,0,0, 'Twilight Pyromancer - Cast Summon Fire Elemental');
+(33820,0,4,0,11,0,100,0,0,0,0,0,11,63774,0,0,0,0,0,1,0,0,0,0,0,0,0, 'Twilight Pyromancer - Cast Summon Fire Elemental'),
+(33820,0,5,0,4,0,100,0,0,0,0,0,39,25,0,0,0,0,0,1,0,0,0,0,0,0,0, 'Twilight Pyromancer - on Aggro - Call for Help');
 -- Enslaved Fire Elemental
 UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`difficulty_entry_1`=33839,`faction_A`=16,`faction_H`=16,`mechanic_immune_mask`=33554513,`dmg_multiplier`=10,`mindmg`=464,`maxdmg`=604,`attackpower`=708,`minrangedmg`=353,`maxrangedmg`=512,`rangedattackpower`=112,`AIName`='SmartAI' WHERE `entry`=33838;
 UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`faction_A`=16,`faction_H`=16,`mechanic_immune_mask`=33554513,`dmg_multiplier`=18,`mindmg`=464,`maxdmg`=604,`attackpower`=708,`minrangedmg`=353,`maxrangedmg`=512,`rangedattackpower`=112 WHERE `entry`=33839;
