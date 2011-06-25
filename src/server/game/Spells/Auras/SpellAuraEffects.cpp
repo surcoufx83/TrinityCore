@@ -1294,31 +1294,12 @@ void AuraEffect::PeriodicTick(AuraApplication * aurApp, Unit* caster) const
     {
         case SPELL_AURA_PERIODIC_DUMMY:
             HandlePeriodicDummyAuraTick(target, caster);
-                    case 48920:                          // Grievous Bite
             break;
         case SPELL_AURA_PERIODIC_TRIGGER_SPELL:
             HandlePeriodicTriggerSpellAuraTick(target, caster);
-            //Special Spells triggered
-            if (GetAuraType() == SPELL_AURA_PERIODIC_DAMAGE)
-            {
-                switch (GetId())
-                {
-                case 22682: // Shadow Flame
-                    if(m_tickNumber == GetTotalTicks())
-                        caster->CastSpell(target,22993,true);
-                    break;
-                }
-            }
-
             break;
-                        case 68948: // Irresistible Cologne Spray
-                            if (target->HasAura(68530))
-                                damage = 0;
-                            break;
-                        case 68607: // Alluring Perfume Spray
-                            if (target->HasAura(68529))
-                                damage = 0;
-                            break;
+        case SPELL_AURA_PERIODIC_TRIGGER_SPELL_WITH_VALUE:
+            HandlePeriodicTriggerSpellWithValueAuraTick(target, caster);
             break;
         case SPELL_AURA_PERIODIC_DAMAGE:
         case SPELL_AURA_PERIODIC_DAMAGE_PERCENT:
@@ -1347,29 +1328,11 @@ void AuraEffect::PeriodicTick(AuraApplication * aurApp, Unit* caster) const
             HandlePeriodicPowerBurnManaAuraTick(target, caster);
             break;
         case SPELL_AURA_DUMMY:
-            // Haunting Spirits
-            if (GetId() == 7057)
-                target->CastSpell((Unit*)NULL , GetAmount(), true);
-            break;
-        default:
-            break;
-    }
-}
-
-            // Dementia
-            case 41404:
+            
+            switch(GetId())
             {
-                uint32 trigger_spell_id;
-                if(rand()%2)
-                    trigger_spell_id = 41406;
-                else
-                    trigger_spell_id = 41409;
-
-                // Must be Tested
-                target->CastSpell(target, trigger_spell_id, true, 0, this, GetCasterGUID());
-            }break;
-            case 47407: // Direbrew's Disarm (precast)
-                caster->CastSpell(caster, 47409, true);
+            case 7057: // Haunting Spirits
+                target->CastSpell((Unit*)NULL , GetAmount(), true);
                 break;
             case 58600: // No fly Zone - Dalaran
                 if (GetTickNumber() == 10)
@@ -1384,44 +1347,12 @@ void AuraEffect::PeriodicTick(AuraApplication * aurApp, Unit* caster) const
             case 68798: // Concentrated Alluring Perfume Spill
                 caster->CastSpell(target, 68927, false);
                 break;
-                    // Doomfire
-                    case 31944:
-                    {
-                        const int32 damage = 2250 - (150 * m_tickNumber-1) > 0 ? 2250 - (150 * m_tickNumber-1) : 0;
-                        target->CastCustomSpell(target, 31969, &damage, NULL, NULL, true, 0, this);
+            }
+        default:
+            break;
+    }
+}
 
-                        return;
-                    }
-                    // Prismatic Shield
-                    case 40879:
-                    {
-                        switch (rand()%6)
-                        {
-                            case 0: triggerSpellId = 40880; break;
-                            case 1: triggerSpellId = 40882; break;
-                            case 2: triggerSpellId = 40883; break;
-                            case 3: triggerSpellId = 40891; break;
-                            case 4: triggerSpellId = 40896; break;
-                            case 5: triggerSpellId = 40897; break;
-                        }
-                        break;
-                    }
-                    // Aura of Desire
-                    case 41350:
-                    {
-                        AuraEffect * aurEff = this->GetBase()->GetEffect(EFFECT_1);
-                        int32 amount = aurEff->GetAmount() - 5 < -100 ? -100 : aurEff->GetAmount() - 5;
-                        aurEff->ChangeAmount(amount, false);
-                        return;
-                    }
-                    if (caster->HasAura(67855)) permafrostCaster = caster->GetAura(67855)->GetCaster(); 
-                    if (caster->HasAura(67856)) permafrostCaster = caster->GetAura(67856)->GetCaster(); 
-                
- 
-            // Arcane Overload
-            case 56432:
-                target->CastCustomSpell(triggerSpellId, SPELLVALUE_RADIUS_MOD, (100 - (m_tickNumber + 5) * 2) * 100, NULL, true, NULL, this);
-                return;
 bool AuraEffect::IsAffectedOnSpell(SpellEntry const *spell) const
 {
     if (!spell)
@@ -5189,9 +5120,8 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
                 case 57723: // Exhaustion
                 case 57724: // Sated
                 {
-                    target->ApplySpellImmune(GetId(), IMMUNITY_ID, 32182, apply); // Heroism
-                    target->ApplySpellImmune(GetId(), IMMUNITY_ID, 2825, apply); // Bloodlust
-                    break;
+                    target->ApplySpellImmune(GetId(), IMMUNITY_ID, 32182, apply); break; // Heroism
+                    target->ApplySpellImmune(GetId(), IMMUNITY_ID, 2825, apply);  break; // Bloodlust
                 }
                 case 57819: // Argent Champion
                 case 57820: // Ebon Champion
@@ -5719,6 +5649,21 @@ void AuraEffect::HandlePeriodicDummyAuraTick(Unit* target, Unit* caster) const
         case SPELLFAMILY_GENERIC:
             switch (GetId())
             {
+                case 41404: // Dementia
+                {
+                  uint32 trigger_spell_id;
+                  if(rand()%2)
+                      trigger_spell_id = 41406;
+                  else
+                      trigger_spell_id = 41409;
+
+                 // Must be Tested
+                 target->CastSpell(target, trigger_spell_id, true, 0, this, GetCasterGUID());
+                 break;
+                }
+                case 47407: // Direbrew's Disarm (precast)
+                    caster->CastSpell(caster, 47409, true);
+                break;
                 case 54798: // FLAMING Arrow Triggered Effect
                 {
                     if (!caster || !target || !target->ToCreature() || !caster->IsVehicle() || target->HasAura(54683))
@@ -6046,6 +5991,13 @@ void AuraEffect::HandlePeriodicTriggerSpellAuraTick(Unit* target, Unit* caster) 
                         target->SummonCreature(17870, 0, 0, 0, target->GetOrientation(), TEMPSUMMON_DEAD_DESPAWN, 0);
                         return;
                     }
+                    case 31944:// Doomfire
+                    {
+                        const int32 damage = 2250 - (150 * m_tickNumber-1) > 0 ? 2250 - (150 * m_tickNumber-1) : 0;
+                        target->CastCustomSpell(target, 31969, &damage, NULL, NULL, true, 0, this);
+
+                        return;
+                    }
                     // Flame Quills
                     case 34229:
                     {
@@ -6081,10 +6033,34 @@ void AuraEffect::HandlePeriodicTriggerSpellAuraTick(Unit* target, Unit* caster) 
                     case 39857:
                         triggerSpellId = 39856;
                         break;
+                    case 40879: // Prismatic Shield
+                    {
+                        switch (rand()%6)
+                        {
+                            case 0: triggerSpellId = 40880; break;
+                            case 1: triggerSpellId = 40882; break;
+                            case 2: triggerSpellId = 40883; break;
+                            case 3: triggerSpellId = 40891; break;
+                            case 4: triggerSpellId = 40896; break;
+                            case 5: triggerSpellId = 40897; break;
+                        }
+                        break;
+                    }
+                    case 41350: // Aura of Desire
+                    {
+                        AuraEffect * aurEff = this->GetBase()->GetEffect(EFFECT_1);
+                        int32 amount = aurEff->GetAmount() - 5 < -100 ? -100 : aurEff->GetAmount() - 5;
+                        aurEff->ChangeAmount(amount, false);
+                        return;
+                    }
+
                     // Personalized Weather
                     case 46736:
                         triggerSpellId = 46737;
                         break;
+                    case 56432:  // Arcane Overload
+                        target->CastCustomSpell(triggerSpellId, SPELLVALUE_RADIUS_MOD, (100 - (m_tickNumber + 5) * 2) * 100, NULL, true, NULL, this);
+                        return;
                 }
                 break;
             }
@@ -6249,6 +6225,7 @@ void AuraEffect::HandlePeriodicDamageAurasTick(Unit* target, Unit* caster) const
         {
             case 43093: case 31956: case 38801:  // Grievous Wound
             case 35321: case 38363: case 39215:  // Gushing Wound
+            case 48920:                          // Grievous Bite 
                 if (target->IsFullHealth())
                 {
                     target->RemoveAurasDueToSpell(GetId());
@@ -6265,6 +6242,20 @@ void AuraEffect::HandlePeriodicDamageAurasTick(Unit* target, Unit* caster) const
                 }
                 break;
             }
+            case 22682: // Shadow Flame
+            {
+                if(m_tickNumber == GetTotalTicks())
+                   caster->CastSpell(target,22993,true);
+                break;
+            }
+            //case 68948: // Irresistible Cologne Spray
+            //    if (target->HasAura(68530))
+            //        m_amount = 0;
+            //break;
+            //case 68607: // Alluring Perfume Spray
+            //    if (target->HasAura(68529))
+            //        m_amount = 0;
+            //break;
         }
     }
 

@@ -1483,7 +1483,7 @@ class spell_anti_air_rocket : public SpellScriptLoader
             {
                 PreventHitDefaultEffect(effIndex);
 
-                if (Position* pos = GetTargetDest())
+                if (const WorldLocation* pos = GetTargetDest())
                 {
                     if (Creature* temp = GetCaster()->SummonCreature(89, *pos, TEMPSUMMON_TIMED_DESPAWN, 500))
                     {

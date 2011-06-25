@@ -779,10 +779,10 @@ void WorldSession::SendListInventory(uint64 vendorGuid)
                     continue;
 
                 // display bta shoulder/head enchants only if player has reputation for it
-                if (!_player->isGameMaster() && pProto->Flags2 & ITEM_FLAGS_EXTRA_SELL_AT_REPUTATION)
+                if (!_player->isGameMaster() && itemTemplate->Flags2 & ITEM_FLAGS_EXTRA_SELL_AT_REPUTATION)
                 {
                     ReputationRank rank;
-                    switch (pProto->ItemId)
+                    switch (itemTemplate->ItemId)
                     {
                         case 44133: // sons of hodir enchantments
                         case 44134:
@@ -793,7 +793,7 @@ void WorldSession::SendListInventory(uint64 vendorGuid)
                         default:
                             rank = REP_REVERED;
                     }
-                    if (FactionTemplateEntry const* vendor_faction = pCreature->getFactionTemplateEntry())
+                    if (FactionTemplateEntry const* vendor_faction = vendor->getFactionTemplateEntry())
                         if (_player->GetReputationRank(vendor_faction->faction) < rank)
                             continue;
                 }

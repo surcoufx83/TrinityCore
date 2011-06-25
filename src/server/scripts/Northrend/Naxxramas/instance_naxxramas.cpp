@@ -207,7 +207,6 @@ public:
             memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
             gothikDoorState = GO_STATE_ACTIVE;
             SlimeCheckTimer = 1000;
-                case 15936: uiHeigan = creature->GetGUID(); return;
         }
 
         bool IsEncounterInProgress() const
@@ -241,6 +240,7 @@ public:
                 case 15930: uiFeugen = pCreature->GetGUID(); return;
                 case 15929: uiStalagg = pCreature->GetGUID(); return;
                 case 15990: uiKelthuzad = pCreature->GetGUID(); return;
+                case 15936: uiHeigan = pCreature->GetGUID(); return;
             }
             switch(pCreature->GetEntry())
             {
