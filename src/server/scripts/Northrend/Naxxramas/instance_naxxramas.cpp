@@ -188,6 +188,7 @@ public:
         uint64 uiSir;
 
         uint64 uiThaddius;
+        uint64 uiHeigan;
         uint64 uiFeugen;
         uint64 uiStalagg;
 
@@ -206,6 +207,7 @@ public:
             memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
             gothikDoorState = GO_STATE_ACTIVE;
             SlimeCheckTimer = 1000;
+                case 15936: uiHeigan = creature->GetGUID(); return;
         }
 
         bool IsEncounterInProgress() const
@@ -427,6 +429,8 @@ public:
                 return uiSir;
             case DATA_THADDIUS:
                 return uiThaddius;
+            case DATA_HEIGAN:
+                return uiHeigan;
             case DATA_FEUGEN:
                 return uiFeugen;
             case DATA_STALAGG:

@@ -2853,7 +2853,7 @@ DiminishingGroup GetDiminishingReturnsGroupForSpell(SpellEntry const* spellproto
             else if ((spellproto->SpellFamilyFlags[0] & 0x40000) && spellproto->SpellIconID == 132)
                 return DIMINISHING_SCATTER_SHOT;
             // Entrapment (own diminishing)
-            else if ((spellproto->SpellVisual[0] == 7484) && spellproto->SpellIconID == 20)
+            else if (spellproto->SpellVisual[0] == 7484 && spellproto->SpellIconID == 20)
                 return DIMINISHING_ENTRAPMENT;
             // Wyvern Sting mechanic is MECHANIC_SLEEP but the diminishing is DIMINISHING_DISORIENT
             else if ((spellproto->SpellFamilyFlags[1] & 0x1000) && spellproto->SpellIconID == 1721)
@@ -2865,9 +2865,13 @@ DiminishingGroup GetDiminishingReturnsGroupForSpell(SpellEntry const* spellproto
         }
         case SPELLFAMILY_PALADIN:
         {
+            // Judgement of Justice - limit duration to 10s in PvP
+            if (spellproto->SpellFamilyFlags[0] & 0x100000)
+                return DIMINISHING_LIMITONLY;
             // Turn Evil
-            if ((spellproto->SpellFamilyFlags[1] & 0x804000) && spellproto->SpellIconID == 309)
+            else if ((spellproto->SpellFamilyFlags[1] & 0x804000) && spellproto->SpellIconID == 309)
                 return DIMINISHING_FEAR;
+            break;
         }
         case SPELLFAMILY_PRIEST:
         {
@@ -2917,7 +2921,7 @@ DiminishingGroup GetDiminishingReturnsGroupForSpell(SpellEntry const* spellproto
             if (spellproto->SpellFamilyFlags[0] & 0x80000)
                 return DIMINISHING_HORROR;
             // Curses/etc
-            else if (spellproto->SpellFamilyFlags[0] & 0x80000000)
+            else if ((spellproto->SpellFamilyFlags[0] & 0x80000000) || (spellproto->SpellFamilyFlags[1] & 0x200))
                 return DIMINISHING_LIMITONLY;
             // Seduction
             else if (spellproto->SpellFamilyFlags[1] & 0x10000000)
@@ -3015,6 +3019,12 @@ int32 GetDiminishingReturnsLimitDuration(DiminishingGroup group, SpellEntry cons
             // Banish - limit to 6 seconds in PvP
             if (spellproto->SpellFamilyFlags[1] & 0x8000000)
                 return 6 * IN_MILLISECONDS;
+            // Curse of Tongues - limit to 12 seconds in PvP
+            else if (spellproto->SpellFamilyFlags[2] & 0x800)
+                return 12 * IN_MILLISECONDS;
+            // Curse of Elements - limit to 120 seconds in PvP
+            else if (spellproto->SpellFamilyFlags[1] & 0x200)
+               return 120 * IN_MILLISECONDS;
             break;
         }
         default:
@@ -3904,7 +3914,6 @@ void SpellMgr::LoadSpellCustomAttr()
         case 55665: // Life Drain - Sapphiron (H)
         case 28796: // Poison Bolt Volly - Faerlina
         case 29232: // Fungal Creep - Loatheb Spore - Dont know if needed
-        case 5484:  // Howl Of Terror (Warlock)
             spellInfo->MaxAffectedTargets = 5;
             ++count;
             break;
@@ -3972,10 +3981,6 @@ void SpellMgr::LoadSpellCustomAttr()
             break;
         case 51852: // The Eye of Acherus (no spawn in phase 2 in db)
             spellInfo->EffectMiscValue[0] |= 1;
-            ++count;
-            break;
-        case 52025: // Cleansing Totem Effect
-            spellInfo->EffectDieSides[1] = 1;
             ++count;
             break;
         case 51904: // Summon Ghouls On Scarlet Crusade (core does not know the triggered spell is summon spell)
@@ -4369,7 +4374,6 @@ void SpellMgr::LoadSpellCustomAttr()
             spellInfo->AreaGroupId = 0; // originally, these require area 4522, which is... outside of Icecrown Citadel
             ++count;
             break;
-        case 70588: // Suppression
         case 70602: // Corruption
             spellInfo->AttributesEx |= SPELL_ATTR1_STACK_FOR_DIFF_CASTERS;
             ++count;
@@ -4420,9 +4424,6 @@ void SpellMgr::LoadSpellCustomAttr()
                 // Starfall Target Selection
                 if (spellInfo->SpellFamilyFlags[2] & 0x100)
                     spellInfo->MaxAffectedTargets = 2;
-                // Starfall AOE Damage
-                else if (spellInfo->SpellFamilyFlags[2] & 0x800000)
-                    mSpellCustomAttr[i] |= SPELL_ATTR0_CU_EXCLUDE_SELF;
                 // Roar
                 else if (spellInfo->SpellFamilyFlags[0] & 0x8)
                     mSpellCustomAttr[i] |= SPELL_ATTR0_CU_AURA_CC;
