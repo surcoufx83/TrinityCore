@@ -188,6 +188,7 @@ public:
         uint64 uiSir;
 
         uint64 uiThaddius;
+        uint64 uiHeigan;
         uint64 uiFeugen;
         uint64 uiStalagg;
 
@@ -239,6 +240,7 @@ public:
                 case 15930: uiFeugen = pCreature->GetGUID(); return;
                 case 15929: uiStalagg = pCreature->GetGUID(); return;
                 case 15990: uiKelthuzad = pCreature->GetGUID(); return;
+                case 15936: uiHeigan = pCreature->GetGUID(); return;
             }
             switch(pCreature->GetEntry())
             {
@@ -427,6 +429,8 @@ public:
                 return uiSir;
             case DATA_THADDIUS:
                 return uiThaddius;
+            case DATA_HEIGAN:
+                return uiHeigan;
             case DATA_FEUGEN:
                 return uiFeugen;
             case DATA_STALAGG:

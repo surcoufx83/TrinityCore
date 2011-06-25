@@ -305,4 +305,17 @@ enum UlduarWorldstates
     WORLDSTATE_ALGALON_SHOW = 4132
 };
 
+class PlayerOrPetCheck
+{
+    public:
+        bool operator() (Unit* unit)
+        {
+            if (unit->GetTypeId() != TYPEID_PLAYER)
+                if (!unit->ToCreature()->isPet())
+                    return true;
+
+            return false;
+        }
+};
+
 #endif

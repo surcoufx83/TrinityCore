@@ -66,7 +66,7 @@ public:
 
     bool ItemUse_item_wyrm_attuned_crystal_cores(Player *player, Item* _Item, SpellCastTargets const& targets)
     {
-        if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && targets.getUnitTarget()->GetEntry() == 24972 && targets.getUnitTarget()->isDead() && (player->GetQuestStatus(11524) == QUEST_STATUS_INCOMPLETE || player->GetQuestStatus(11525) == QUEST_STATUS_INCOMPLETE) )
+        if( targets.GetUnitTarget() && targets.GetUnitTarget()->GetTypeId()==TYPEID_UNIT && targets.GetUnitTarget()->GetEntry() == 24972 && targets.GetUnitTarget()->isDead() && (player->GetQuestStatus(11524) == QUEST_STATUS_INCOMPLETE || player->GetQuestStatus(11525) == QUEST_STATUS_INCOMPLETE) )
             return false;
 
         player->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,_Item,NULL);
@@ -1777,7 +1777,7 @@ public:
 
     bool OnUse(Player *player, Item* _Item, SpellCastTargets const& targets)
     {
-        if(Unit *target = targets.getUnitTarget())
+        if(Unit *target = targets.GetUnitTarget())
         {
             if(target->GetTypeId() == TYPEID_PLAYER || 
                 (target->GetEntry() != 27237 && target->GetEntry() != 27235 &&  target->GetEntry() != 27234 &&  target->GetEntry() != 27236))

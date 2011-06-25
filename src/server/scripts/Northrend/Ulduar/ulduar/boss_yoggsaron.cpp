@@ -3026,9 +3026,9 @@ class spell_summon_tentacle_position : public SpellScriptLoader
 
             void ChangeSummonPos(SpellEffIndex /*effIndex*/)
             {
-                WorldLocation* summonPos = GetTargetDest();
+                WorldLocation summonPos = *GetTargetDest();
                 if(Unit* caster = GetCaster())
-                    summonPos->m_positionZ = caster->GetMap()->GetHeight(summonPos->GetPositionX(),summonPos->GetPositionY(),summonPos->GetPositionZ(),true,50.0f);
+                    summonPos.m_positionZ = caster->GetMap()->GetHeight(summonPos.GetPositionX(),summonPos.GetPositionY(),summonPos.GetPositionZ(),true,50.0f);
             }
 
             void Register()
