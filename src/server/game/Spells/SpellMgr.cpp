@@ -4182,6 +4182,8 @@ void SpellMgr::LoadSpellCustomAttr()
             ++count;
             break;
         case 64218: // Emalon - Overcharge
+        case 64216: // Emalon - Lightning Nova
+        case 65279: // Emalon - Lightning Nova
             mSpellCustomAttr[i] |= SPELL_ATTR0_CU_IGNORE_LOS;
             ++count;
             break;

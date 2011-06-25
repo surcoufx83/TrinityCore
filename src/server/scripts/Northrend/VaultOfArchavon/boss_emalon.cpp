@@ -27,6 +27,7 @@ enum Spells
     SPELL_SHOCK                 = 64363,
     SPELL_OVERCHARGED           = 64217,
     SPELL_OVERCHARGED_BLAST     = 64219,    // Cast when Overcharged reaches 10 stacks. Mob dies after that
+    SPELL_WARDER_OVERCHARGE     = 64379
 };
 
 // cannot let SpellDifficulty handle it, no entries for these
@@ -173,17 +174,20 @@ class mob_tempest_minion : public CreatureScript
         {
             mob_tempest_minionAI(Creature* creature) : ScriptedAI(creature)
             {
-                instance = creature->GetInstanceScript();
+                _instance = creature->GetInstanceScript();
             }
 
             void Reset()
             {
-                events.Reset();
+                _events.Reset();
             }
 
             void JustDied(Unit* /*Killer*/)
             {
-                if (Creature* emalon = Unit::GetCreature(*me, instance ? instance->GetData64(DATA_EMALON) : 0))
+                if (!me->isSummon())
+                    return;
+
+                if (Creature* emalon = Unit::GetCreature(*me, _instance ? _instance->GetData64(DATA_EMALON) : 0))
                 {
                     if (emalon->isAlive())
                     {
@@ -196,9 +200,12 @@ class mob_tempest_minion : public CreatureScript
             void EnterCombat(Unit* who)
             {
                 DoZoneInCombat();
-                events.ScheduleEvent(EVENT_SHOCK, urand(10000, 20000));
+                _events.ScheduleEvent(EVENT_SHOCK, urand(10000, 20000));
 
-                if (Creature* emalon = Unit::GetCreature(*me, instance ? instance->GetData64(DATA_EMALON) : 0))
+                if (!me->isSummon())
+                    return;
+
+                if (Creature* emalon = Unit::GetCreature(*me, _instance ? _instance->GetData64(DATA_EMALON) : 0))
                 {
                     if (!emalon->getVictim() && emalon->AI())
                         emalon->AI()->AttackStart(who);
@@ -207,14 +214,16 @@ class mob_tempest_minion : public CreatureScript
 
             void UpdateAI(uint32 const diff)
             {
-                //Return since we have no target
                 if (!UpdateVictim())
                     return;
 
-                events.Update(diff);
+                _events.Update(diff);
 
                 if (me->HasUnitState(UNIT_STAT_CASTING))
                     return;
+
+                if (!me->isSummon() && HealthBelowPct(40) && !me->HasAura(SPELL_WARDER_OVERCHARGE))
+                    DoCast(me, SPELL_WARDER_OVERCHARGE, true);
 
                 if (me->GetAuraCount(SPELL_OVERCHARGED) >= 10)
                 {
@@ -222,18 +231,18 @@ class mob_tempest_minion : public CreatureScript
                     me->DealDamage(me, me->GetHealth());
                 }
 
-                if (events.ExecuteEvent() == EVENT_SHOCK)
+                if (_events.ExecuteEvent() == EVENT_SHOCK)
                 {
                     DoCastVictim(SPELL_SHOCK);
-                    events.ScheduleEvent(EVENT_SHOCK, urand(17500, 22500));
+                    _events.ScheduleEvent(EVENT_SHOCK, urand(17500, 22500));
                 }
 
                 DoMeleeAttackIfReady();
             }
 
         private:
-            InstanceScript* instance;
-            EventMap events;
+            InstanceScript* _instance;
+            EventMap _events;
         };
 
         CreatureAI* GetAI(Creature* creature) const
@@ -287,9 +296,43 @@ class spell_overcharge_targeting : public SpellScriptLoader
         }
 };
 
+class spell_emalon_lightning_nova : public SpellScriptLoader
+{
+    public:
+        spell_emalon_lightning_nova() : SpellScriptLoader("spell_emalon_lightning_nova") { }
+
+        class spell_emalon_lightning_nova_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_emalon_lightning_nova_SpellScript);
+
+            void CalcDamage(SpellEffIndex /*effIndex*/)
+            {
+                if (!GetHitUnit() || !GetCaster())
+                    return;
+
+                float distance = GetHitUnit()->GetExactDist2d(GetCaster());
+                if (distance < 10.0f)
+                    return;
+
+                SetHitDamage(int32(GetHitDamage() * 10 / distance));
+            }
+
+            void Register()
+            {
+                OnEffect += SpellEffectFn(spell_emalon_lightning_nova_SpellScript::CalcDamage, EFFECT_0, SPELL_EFFECT_SCHOOL_DAMAGE);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_emalon_lightning_nova_SpellScript();
+        }
+};
+
 void AddSC_boss_emalon()
 {
     new boss_emalon();
     new mob_tempest_minion();
     new spell_overcharge_targeting();
+    new spell_emalon_lightning_nova();
 }
