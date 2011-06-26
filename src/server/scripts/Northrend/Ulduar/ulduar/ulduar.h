@@ -77,9 +77,9 @@ enum UlduarTypes
     DATA_CALL_TRAM,
     //Mimiron
     DATA_LEVIATHAN_MK_II,
-    DATA_MIMIRON_ELEVATOR,
-    DATA_AERIAL_UNIT,
     DATA_VX_001,
+    DATA_AERIAL_UNIT,
+    DATA_MIMIRON_ELEVATOR,
     DATA_MAGNETIC_CORE,
 
     //Pre YoggSaron
@@ -95,7 +95,7 @@ enum UlduarNPCs
     NPC_STEELFORGED_DEFFENDER   = 33236,
     NPC_EXPEDITION_COMMANDER    = 33210,
     NPC_XT002                   = 33293,
-    NPC_XT_TOY_PILE                              = 33337,
+    NPC_XT_TOY_PILE             = 33337,
     NPC_STEELBREAKER            = 32867,
     NPC_MOLGEIM                 = 32927,
     NPC_BRUNDIR                 = 32857,
