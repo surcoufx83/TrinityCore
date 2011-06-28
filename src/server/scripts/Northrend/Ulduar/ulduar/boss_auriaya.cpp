@@ -105,14 +105,11 @@ public:
     {
         boss_auriayaAI(Creature* creature) : BossAI(creature, TYPE_AURIAYA)
         {
-            /* set sentinel blast duration to 5 seconds, dont interrupt by taking damage */
+            // dont interrupt by taking damage
             SpellEntry* tempSpell;
             tempSpell = GET_SPELL(RAID_MODE(SPELL_SENTINEL_BLAST_10, SPELL_SENTINEL_BLAST_25));
             if (tempSpell)
-            {
-                tempSpell->DurationIndex = 28;
                 tempSpell->ChannelInterruptFlags &= ~AURA_INTERRUPT_FLAG_TAKE_DAMAGE;
-            }
         }
 
         uint8 defenderLifeCount;

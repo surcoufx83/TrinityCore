@@ -37,7 +37,7 @@ enum Spells
     SPELL_STATIC_DISRUPTION_H           = 63495,
     SPELL_OVERWHELMING_POWER_H          = 61888,
     SPELL_OVERWHELMING_POWER            = 64637,
-    SPELL_ELECTRICAL_CHARGE             = 61902,
+    SPELL_ELECTRICAL_CHARGE             = 61901,
 
     // Runemaster Molgeim
     SPELL_SHIELD_OF_RUNES               = 62274,
@@ -293,18 +293,26 @@ class boss_steelbreaker : public CreatureScript
                 }
             }
 
-            void KilledUnit(Unit* /*who*/)
+            void KilledUnit(Unit* who)
             {
                 DoScriptText(RAND(SAY_STEELBREAKER_SLAY_1, SAY_STEELBREAKER_SLAY_2), me);
 
                 if (_phase == 3)
-                    DoCast(me, SPELL_ELECTRICAL_CHARGE, true);
+                    who->CastSpell(me, SPELL_ELECTRICAL_CHARGE, true);
             }
 
-            void SpellHit(Unit* /*from*/, const SpellEntry* spell)
+            void SpellHit(Unit* /*from*/, SpellEntry const* spell)
             {
-                if (spell->Id == SPELL_SUPERCHARGE)
-                    DoAction(EVENT_UPDATEPHASE);
+                switch (spell->Id)
+                {
+                    case SPELL_SUPERCHARGE:
+                        DoAction(EVENT_UPDATEPHASE);
+                        break;
+                    case SPELL_ELECTRICAL_CHARGE + 1:
+                        if (!me->isInCombat())
+                            me->RemoveAurasDueToSpell(SPELL_ELECTRICAL_CHARGE + 1);
+                        break;
+                }
             }
 
             // try to prefer ranged targets
@@ -348,6 +356,9 @@ class boss_steelbreaker : public CreatureScript
 
                 _events.Update(diff);
 
+                if (me->HasUnitState(UNIT_STAT_CASTING))
+                    return;
+
                 while (uint32 eventId = _events.ExecuteEvent())
                 {
                     switch (eventId)
@@ -372,7 +383,7 @@ class boss_steelbreaker : public CreatureScript
                                 target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100.0f, true);
                             if (target)
                                 DoCast(target, RAID_MODE(SPELL_STATIC_DISRUPTION, SPELL_STATIC_DISRUPTION_H));
-                            _events.ScheduleEvent(EVENT_STATIC_DISRUPTION, urand(20000, 30000));
+                            _events.ScheduleEvent(EVENT_STATIC_DISRUPTION, 20000);
                             break;
                         }
                         case EVENT_OVERWHELMING_POWER:
@@ -398,6 +409,48 @@ class boss_steelbreaker : public CreatureScript
         }
 };
 
+class spell_steelbreaker_static_disruption : public SpellScriptLoader
+{
+    public:
+        spell_steelbreaker_static_disruption() : SpellScriptLoader("spell_steelbreaker_static_disruption") { }
+
+        class spell_steelbreaker_static_disruption_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_steelbreaker_static_disruption_SpellScript);
+
+            bool Validate(SpellEntry const* /*spell*/)
+            {
+                if (!sSpellStore.LookupEntry(61912))
+                    return false;
+                if (!sSpellStore.LookupEntry(63494))
+                    return false;
+                return true;
+            }
+
+            void HandleTriggerMissile(SpellEffIndex effIndex)
+            {
+                PreventHitDefaultEffect(effIndex);
+                Unit* caster = GetCaster();
+                Unit* target = GetTargetUnit();
+                if (caster && target)
+                {
+                    uint32 id = uint32(caster->GetMap()->GetDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL ? 61912 : 63494);
+                    caster->CastSpell(target, id, true);
+                }
+            }
+
+            void Register()
+            {
+                OnEffect += SpellEffectFn(spell_steelbreaker_static_disruption_SpellScript::HandleTriggerMissile, EFFECT_0, SPELL_EFFECT_TRIGGER_MISSILE);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_steelbreaker_static_disruption_SpellScript();
+        }
+};
+
 class spell_meltdown : public SpellScriptLoader
 {
     public:
@@ -416,10 +469,8 @@ class spell_meltdown : public SpellScriptLoader
 
             void TriggerElectricalCharge(SpellEffIndex /*effIndex*/)
             {
-                if (Unit* target = GetHitUnit())
-                    if (InstanceScript* instance = target->GetInstanceScript())
-                        if (Creature* steelbreaker = ObjectAccessor::GetCreature(*target, instance->GetData64(DATA_STEELBREAKER)))
-                            steelbreaker->CastSpell(steelbreaker, SPELL_ELECTRICAL_CHARGE, true);
+                if (GetHitUnit() && GetCaster())
+                    GetHitUnit()->CastSpell(GetCaster(), SPELL_ELECTRICAL_CHARGE, true);
             }
 
             void Register()
@@ -553,6 +604,9 @@ class boss_runemaster_molgeim : public CreatureScript
 
                 _events.Update(diff);
 
+                if (me->HasUnitState(UNIT_STAT_CASTING))
+                    return;
+
                 while (uint32 eventId = _events.ExecuteEvent())
                 {
                     switch (eventId)
@@ -566,7 +620,7 @@ class boss_runemaster_molgeim : public CreatureScript
                                 DoAttackerGroupInCombat(me->getVictim()->ToPlayer());
                             _events.ScheduleEvent(EVENT_PULSE, 5000);
                             break;
-                        case EVENT_RUNE_OF_POWER: // Improve target selection; random alive friendly
+                        case EVENT_RUNE_OF_POWER:
                         {
                             Unit* target = DoSelectLowestHpFriendly(60);
                             if (!target || !target->isAlive())
@@ -755,6 +809,7 @@ class boss_stormcaller_brundir : public CreatureScript
                 _forceLand = false;
                 me->RemoveAllAuras();
                 me->RemoveLootMode(LOOT_MODE_DEFAULT);
+                me->SetSpeed(MOVE_RUN, 1.42857f);
                 if (me->HasUnitMovementFlag(MOVEMENTFLAG_LEVITATING))
                 {
                     me->RemoveUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
@@ -868,13 +923,14 @@ class boss_stormcaller_brundir : public CreatureScript
                 {
                     case POINT_FLY:
                     {
-                        DoCast(RAID_MODE(SPELL_LIGHTNING_TENDRILS, SPELL_LIGHTNING_TENDRILS_H));
+                        me->SetSpeed(MOVE_RUN, 0.85f);
                         _events.ScheduleEvent(EVENT_LIGHTNING_TENDRILS_END, 30000);
                         _events.ScheduleEvent(EVENT_THREAT_WIPE, 0);
                         break;
                     }
                     case POINT_LAND:
                     {
+                        me->SetSpeed(MOVE_RUN, 1.42857f);
                         me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, false);
                         me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, false);
                         me->RemoveUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
@@ -940,6 +996,7 @@ class boss_stormcaller_brundir : public CreatureScript
                         case EVENT_LIGHTNING_TENDRILS_START:
                             me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
                             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, true);
+                            DoCast(RAID_MODE(SPELL_LIGHTNING_TENDRILS, SPELL_LIGHTNING_TENDRILS_H));
                             me->AddUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
                             me->SendMovementFlagUpdate();
                             me->GetMotionMaster()->MovePoint(POINT_FLY, me->GetPositionX(), me->GetPositionY(), 435.0f);
@@ -1002,6 +1059,7 @@ class spell_shield_of_runes : public SpellScriptLoader
 void AddSC_boss_assembly_of_iron()
 {
     new boss_steelbreaker();
+    new spell_steelbreaker_static_disruption();
     new spell_meltdown();
     new boss_runemaster_molgeim();
     new boss_stormcaller_brundir();

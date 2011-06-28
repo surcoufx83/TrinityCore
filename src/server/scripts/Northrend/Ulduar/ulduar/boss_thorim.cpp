@@ -33,8 +33,8 @@ enum Spells
     SPELL_LIGHTNING_RELEASE                     = 62466,
     SPELL_LIGHTNING_PILLAR                      = 62976,
     SPELL_UNBALANCING_STRIKE                    = 62130,
-    SPELL_BERSERK_PHASE1                        = 62560,
-    SPELL_BERSERK_PHASE2                        = 26662
+    SPELL_BERSERK_PHASE_1                       = 62560,
+    SPELL_BERSERK_PHASE_2                       = 26662
 };
 
 enum Phases
@@ -121,8 +121,9 @@ const uint32 SPELL_PRE_SECONDARY_N[]            = {SPELL_SWEEP,     SPELL_HEROIC
 const uint32 SPELL_PRE_SECONDARY_H[]            = {SPELL_SWEEP_H,   SPELL_HEROIC_SWIPE,     SPELL_SHOOT,    SPELL_GREATER_HEAL_H,   SPELL_HEROIC_SWIPE, SPELL_SHOOT};
 #define SPELL_HOLY_SMITE                        RAID_MODE(62335, 62443)
 
-#define INCREASE_PREADDS_COUNT                  1
+#define ACTION_INCREASE_PREADDS_COUNT           1
 #define ACTION_RUNIC_SMASH                      2
+#define ACTION_BERSERK                          3
 #define MAX_HARD_MODE_TIME                      180000 // 3 Minutes
 
 // Achievements
@@ -287,7 +288,7 @@ public:
     {
         boss_thorimAI(Creature* creature) : BossAI(creature, TYPE_THORIM)
         {
-            bWipe = false;
+            Wipe = false;
         }
 
         Phases phase;
@@ -295,27 +296,29 @@ public:
         uint8 PreAddsCount;
         uint8 spawnedAdds;
         uint32 EncounterTime;
-        bool bWipe;
+        bool Wipe;
         bool HardMode;
+        bool OrbSummoned;
 
         void Reset()
         {
-            if (bWipe)
+            if (Wipe)
                 DoScriptText(SAY_WIPE, me);
             
             _Reset();
         
             me->SetReactState(REACT_PASSIVE);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NON_ATTACKABLE);
-            bWipe = false;
+            Wipe = false;
             HardMode = false;
+            OrbSummoned = false;
             PreAddsCount = 0;
             spawnedAdds = 0;
 
             // Respawn Mini Bosses
             for (uint8 i = DATA_RUNIC_COLOSSUS; i <= DATA_RUNE_GIANT; i++)
-                if (Creature* pMiniBoss = me->GetCreature(*me, instance->GetData64(i)))
-                    pMiniBoss->Respawn(true);
+                if (Creature* MiniBoss = me->GetCreature(*me, instance->GetData64(i)))
+                    MiniBoss->Respawn(true);
 
             // Spawn Pre-Phase Adds
             for (uint8 i = 0; i < 6; i++)
@@ -331,7 +334,7 @@ public:
                 DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2), me);
         }
 
-        void JustDied(Unit* /*victim*/)
+        void JustDied(Unit* /*killer*/)
         {
             DoScriptText(SAY_DEATH, me);
             _JustDied();
@@ -355,7 +358,7 @@ public:
             }
         }
 
-        void EnterCombat(Unit* /*pWho*/)
+        void EnterCombat(Unit* /*who*/)
         {
             DoScriptText(SAY_AGGRO_1, me);
             _EnterCombat();
@@ -364,7 +367,7 @@ public:
             for(uint8 n = 0; n < 7; n++)
                 me->SummonCreature(33378, PosOrbs[n], TEMPSUMMON_CORPSE_DESPAWN);
         
-            bWipe = true;
+            Wipe = true;
             EncounterTime = 0;
             phase = PHASE_1;
             events.SetPhase(PHASE_1);
@@ -382,7 +385,7 @@ public:
                 go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             if (!UpdateVictim())
                 return;
@@ -423,7 +426,8 @@ public:
                             events.ScheduleEvent(EVENT_SUMMON_ADDS, 10000, 0, PHASE_1);
                             break;
                         case EVENT_BERSERK:
-                            DoCast(me, SPELL_BERSERK_PHASE1);
+                            DoCast(me, SPELL_BERSERK_PHASE_1);
+                            DoCast(me, SPELL_SUMMON_LIGHTNING_ORB, true);
                             DoScriptText(SAY_BERSERK, me);
                             events.CancelEvent(EVENT_BERSERK);
                             break;
@@ -458,7 +462,7 @@ public:
                             events.ScheduleEvent(EVENT_TRANSFER_ENERGY, 8000, 0, PHASE_2);
                             break;
                         case EVENT_BERSERK:
-                            DoCast(me, SPELL_BERSERK_PHASE2);
+                            DoCast(me, SPELL_BERSERK_PHASE_2);
                             DoScriptText(SAY_BERSERK, me);
                             events.CancelEvent(EVENT_BERSERK);
                             break;
@@ -469,16 +473,23 @@ public:
             DoMeleeAttackIfReady();
         }
 
-        void DoAction(const int32 action)
+        void DoAction(int32 const action)
         {
             switch (action)
             {
-                case INCREASE_PREADDS_COUNT:
+                case ACTION_BERSERK:
+                    if (!OrbSummoned)
+                    {
+                        events.RescheduleEvent(EVENT_BERSERK, 1000);
+                        OrbSummoned = true;
+                    }
+                    return;
+                case ACTION_INCREASE_PREADDS_COUNT:
                     ++PreAddsCount;
                     break;
             }
         
-            if (PreAddsCount >= 6 && !bWipe)
+            if (PreAddsCount >= 6 && !Wipe)
             {
                 // Event starts
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -597,7 +608,7 @@ public:
         void JustDied(Unit* /*victim*/)
         {
             if (Creature* pThorim = me->GetCreature(*me, pInstance->GetData64(TYPE_THORIM)))
-                pThorim->AI()->DoAction(INCREASE_PREADDS_COUNT);
+                pThorim->AI()->DoAction(ACTION_INCREASE_PREADDS_COUNT);
         }
 
         void UpdateAI(const uint32 diff)
@@ -655,127 +666,132 @@ public:
 
 class npc_thorim_arena_phase : public CreatureScript
 {
-public:
-    npc_thorim_arena_phase() : CreatureScript("npc_thorim_arena_phase") { }
+    public:
+        npc_thorim_arena_phase() : CreatureScript("npc_thorim_arena_phase") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_thorim_arena_phaseAI (pCreature);
-    }
-
-    struct npc_thorim_arena_phaseAI : public ScriptedAI
-    {
-        npc_thorim_arena_phaseAI(Creature* pCreature) : ScriptedAI(pCreature)
+        struct npc_thorim_arena_phaseAI : public ScriptedAI
         {
-            pInstance = pCreature->GetInstanceScript();
-            me->setFaction(14);
-            for (uint8 i = 0; i < 7; ++i)
-                if (me->GetEntry() == ARENA_PHASE_ADD[i])
-                    id = ArenaAdds(i);
-
-            IsInArena = IN_ARENA(me);
-            healer = IS_HEALER(me);
-        }
-
-        InstanceScript* pInstance;
-        ArenaAdds id;
-        uint32 PrimaryTimer;
-        uint32 SecondaryTimer;
-        uint32 ChargeTimer;
-        bool IsInArena;
-        bool healer;
-
-        bool isOnSameSide(const Unit* pWho)
-        {
-            return (IsInArena == IN_ARENA(pWho));
-        }
-    
-        void DamageTaken(Unit* attacker, uint32 &damage)
-        {
-            if (!isOnSameSide(attacker))
-                damage = 0;
-        }
-
-        void Reset()
-        {
-            PrimaryTimer = urand(3000, 6000);
-            SecondaryTimer = urand (7000, 9000);
-            ChargeTimer = 8000;
-        }
-
-        void EnterCombat(Unit* /*who*/)
-        {
-            if (id == DARK_RUNE_WARBRINGER)
-                DoCast(me, SPELL_AURA_OF_CELERITY);
-        }
-
-        void UpdateAI(const uint32 diff)
-        {
-            if (!isOnSameSide(me))
+            npc_thorim_arena_phaseAI(Creature* creature) : ScriptedAI(creature)
             {
-                EnterEvadeMode();
-                return;
-            }
-            
-            if (me->getVictim() && !isOnSameSide(me->getVictim()))
-                me->getVictim()->getHostileRefManager().deleteReference(me);
+                _instance = creature->GetInstanceScript();
+                me->setFaction(14);
+                for (uint8 i = 0; i < 7; ++i)
+                    if (me->GetEntry() == ARENA_PHASE_ADD[i])
+                        _id = ArenaAdds(i);
 
-            if (!UpdateVictim() || me->HasUnitState(UNIT_STAT_CASTING))
-                return;
-            
-            if (PrimaryTimer <= diff)
+                _IsInArena = IN_ARENA(me);
+                _healer = IS_HEALER(me);
+            }
+
+            bool isOnSameSide(const Unit* who)
             {
-                Unit* target = NULL;
-                if (healer && id != 32878)
-                {
-                    if (!(target = DoSelectLowestHpFriendly(30)))
-                        target = me;
-                }else
-                {
-                    target = me->getVictim();
-                }
-
-                DoCast(SPELL_ARENA_PRIMARY(id));
-                PrimaryTimer = urand(3000, 6000);
+                return (_IsInArena == IN_ARENA(who));
             }
-            else PrimaryTimer -= diff;
         
-            if (SecondaryTimer <= diff)
+            void DamageTaken(Unit* attacker, uint32 &damage)
             {
-                Unit* target = NULL;
-                if (healer)
-                {
-                    if (!(target = DoSelectLowestHpFriendly(30)))
-                        target = me;
-                }else
-                {
-                    target = me->getVictim();
-                }
-
-                if (target)
-                {
-                    DoCast(SPELL_ARENA_SECONDARY(id));
-                    SecondaryTimer = urand(12000, 16000);
-                }
+                if (!isOnSameSide(attacker))
+                    damage = 0;
             }
-            else SecondaryTimer -= diff;
-        
-            if (ChargeTimer <= diff)
+
+            void Reset()
             {
-                if (id == DARK_RUNE_CHAMPION)
-                    if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 40, true))
-                        DoCast(target, SPELL_CHARGE);
-                ChargeTimer = 12000;
+                _PrimaryTimer = urand(3000, 6000);
+                _SecondaryTimer = urand (7000, 9000);
+                _ChargeTimer = 8000;
             }
-            else ChargeTimer -= diff;
 
-            if (id == DARK_RUNE_ACOLYTE)
-                DoSpellAttackIfReady(SPELL_HOLY_SMITE);
-            else
-                DoMeleeAttackIfReady();
+            void EnterCombat(Unit* /*who*/)
+            {
+                if (_id == DARK_RUNE_WARBRINGER)
+                    DoCast(me, SPELL_AURA_OF_CELERITY);
+            }
+
+            // this should only happen if theres no alive player in the arena -> summon orb
+            void EnterEvadeMode()
+            {
+                if (Creature* thorim = me->GetCreature(*me, _instance ? _instance->GetData64(TYPE_THORIM) : 0))
+                    thorim->AI()->DoAction(ACTION_BERSERK);
+                _EnterEvadeMode();
+                me->GetMotionMaster()->MoveTargetedHome();
+                Reset();
+            }
+
+            void UpdateAI(uint32 const diff)
+            {
+                if (me->getVictim() && !isOnSameSide(me->getVictim()))
+                    me->getVictim()->getHostileRefManager().deleteReference(me);
+
+                if (!UpdateVictim() || me->HasUnitState(UNIT_STAT_CASTING))
+                    return;
+                
+                if (_PrimaryTimer <= diff)
+                {
+                    Unit* target = NULL;
+                    if (_healer && _id != 32878)
+                    {
+                        if (!(target = DoSelectLowestHpFriendly(30)))
+                            target = me;
+                    }
+                    else
+                        target = me->getVictim();
+
+                    DoCast(SPELL_ARENA_PRIMARY(_id));
+                    _PrimaryTimer = urand(3000, 6000);
+                }
+                else
+                    _PrimaryTimer -= diff;
+            
+                if (_SecondaryTimer <= diff)
+                {
+                    Unit* target = NULL;
+                    if (_healer)
+                    {
+                        if (!(target = DoSelectLowestHpFriendly(30)))
+                            target = me;
+                    }
+                    else
+                        target = me->getVictim();
+
+                    if (target)
+                    {
+                        DoCast(SPELL_ARENA_SECONDARY(_id));
+                        _SecondaryTimer = urand(12000, 16000);
+                    }
+                }
+                else
+                    _SecondaryTimer -= diff;
+            
+                if (_ChargeTimer <= diff)
+                {
+                    if (_id == DARK_RUNE_CHAMPION)
+                        if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 40, true))
+                            DoCast(target, SPELL_CHARGE);
+                    _ChargeTimer = 12000;
+                }
+                else
+                    _ChargeTimer -= diff;
+
+                if (_id == DARK_RUNE_ACOLYTE)
+                    DoSpellAttackIfReady(SPELL_HOLY_SMITE);
+                else
+                    DoMeleeAttackIfReady();
+            }
+
+        private:
+            InstanceScript* _instance;
+            ArenaAdds _id;
+            uint32 _PrimaryTimer;
+            uint32 _SecondaryTimer;
+            uint32 _ChargeTimer;
+            bool _IsInArena;
+            bool _healer;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new npc_thorim_arena_phaseAI(creature);
         }
-    };
-
 };
 
 class npc_runic_colossus : public CreatureScript

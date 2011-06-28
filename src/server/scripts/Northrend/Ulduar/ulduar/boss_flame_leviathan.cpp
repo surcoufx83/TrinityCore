@@ -225,11 +225,6 @@ class boss_flame_leviathan : public CreatureScript
         {
             boss_flame_leviathanAI(Creature* creature) : BossAI(creature, TYPE_LEVIATHAN), vehicle(creature->GetVehicleKit())
             {
-                // temporary disable vehicle hp scaling effect, nyi
-                //SpellEntry* tempSpell;
-                //tempSpell = GET_SPELL(65266);
-                //if (tempSpell)
-                //    tempSpell->Effect[2] = 0;
             }
 
             void InitializeAI()
@@ -348,7 +343,6 @@ class boss_flame_leviathan : public CreatureScript
 
                 me->SummonGameObject(RAID_MODE(GO_CACHE_10, GO_CACHE_25), Center->GetPositionX(), Center->GetPositionY(), Center->GetPositionZ(),
                     Center->GetOrientation(), 0, 0, 0, 0, 604800);
-                me->ForcedDespawn(7000);
 
                 if (ActiveTowers)
                 {

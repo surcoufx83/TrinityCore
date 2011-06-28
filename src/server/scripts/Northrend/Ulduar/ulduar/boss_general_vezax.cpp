@@ -156,7 +156,7 @@ public:
             DoScriptText(SAY_AGGRO, me);
         }
 
-        void SpellHitTarget(Unit* target, const SpellEntry* spell)
+        void SpellHitTarget(Unit* target, SpellEntry const* spell)
         {
             if (target && target->ToPlayer())
             {
@@ -219,9 +219,9 @@ public:
             _JustDied();
         }
 
-        void DoAction(const int32 action)
+        void DoAction(int32 const action)
         {
-            switch(action)
+            switch (action)
             {
                 case ACTION_VARPOR_KILLED:
                     VarporKilled = true;
@@ -238,7 +238,7 @@ public:
             Map* map = me->GetMap();
             if (map && map->IsDungeon())
             {
-                std::list<Player*> PlayerList;
+                std::list<Player*> playerList;
                 Map::PlayerList const& Players = map->GetPlayers();
                 for (Map::PlayerList::const_iterator itr = Players.begin(); itr != Players.end(); ++itr)
                 {
@@ -251,18 +251,18 @@ public:
                         if (Distance < RangeMin || Distance > RangeMax)
                             continue;
 
-                        PlayerList.push_back(player);
+                        playerList.push_back(player);
                     }
                 }
 
-                if (PlayerList.empty())
+                if (playerList.empty())
                     return NULL;
 
-                size_t size = PlayerList.size();
+                size_t size = playerList.size();
                 if (size < PlayersMin)
                     return NULL;
 
-                std::list<Player*>::const_iterator itr = PlayerList.begin();
+                std::list<Player*>::const_iterator itr = playerList.begin();
                 std::advance(itr, urand(0, size - 1));
                 return *itr;
             }
@@ -270,7 +270,7 @@ public:
                 return NULL;
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             if (!UpdateVictim() )
                 return;
@@ -369,16 +369,15 @@ class mob_saronit_varpor : public CreatureScript
         {
             mob_saronit_varporAI(Creature* c) : ScriptedAI(c)
             {
-                instance = c->GetInstanceScript();
+                _instance = c->GetInstanceScript();
                 me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
-                me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
                 me->SetReactState(REACT_PASSIVE);
                 DoScriptText(EMOTE_VAPORS, me);
             }
 
             void Reset()
             {
-                RandomMove_Timer = urand(5000, 7500);
+                _randomMoveTimer = urand(5000, 7500);
             }
 
             void DamageTaken(Unit* /*attacker*/, uint32 &damage)
@@ -395,24 +394,26 @@ class mob_saronit_varpor : public CreatureScript
                     me->DespawnOrUnsummon(30000);
                     me->CastSpell(me, SPELL_SARONIT_VARPOR, true);
 
-                    if (instance)
-                        if (Creature* vezax = Creature::GetCreature((*me), instance->GetData64(TYPE_VEZAX)))
+                    if (_instance)
+                        if (Creature* vezax = Creature::GetCreature(*me, _instance->GetData64(TYPE_VEZAX)))
                             vezax->AI()->DoAction(ACTION_VARPOR_KILLED);
                 }
             }
 
-            void UpdateAI(const uint32 diff)
+            void UpdateAI(uint32 const diff)
             {
-                if (RandomMove_Timer < diff)
+                if (_randomMoveTimer < diff)
                 {
                     me->GetMotionMaster()->MoveRandom(30.0f);
-                    RandomMove_Timer = urand(5000, 7500);
-                }else RandomMove_Timer -= diff;
+                    _randomMoveTimer = urand(5000, 7500);
+                }
+                else
+                    _randomMoveTimer -= diff;
             }
 
         private:
-            InstanceScript* instance;
-            uint32 RandomMove_Timer;
+            InstanceScript* _instance;
+            uint32 _randomMoveTimer;
         };
 
         CreatureAI* GetAI(Creature* creature) const
@@ -430,42 +431,44 @@ class mob_saronit_animus : public CreatureScript
         {
             mob_saronit_animusAI(Creature* c) : ScriptedAI(c)
             {
-                instance = c->GetInstanceScript();
+                _instance = c->GetInstanceScript();
             }
 
             void Reset()
             {
-                ProfoundDarkness_Timer = 1000;
+                _profoundDarknessTimer = 1000;
                 DoCast(me, SPELL_VISUAL_SARONITE_ANIMUS);
             }
 
             void JustDied(Unit* /*killer*/)
             {
-                if (instance)
-                    if (Creature* vezax = Creature::GetCreature((*me), instance->GetData64(NPC_VEZAX)))
+                if (_instance)
+                    if (Creature* vezax = Creature::GetCreature(*me, _instance->GetData64(NPC_VEZAX)))
                         vezax->AI()->DoAction(ACTION_ANIMUS_KILLED);
             }
 
-            void UpdateAI(const uint32 diff)
+            void UpdateAI(uint32 const diff)
             {
                 if (!UpdateVictim() )
                     return;
 
-                if (ProfoundDarkness_Timer < diff)
+                if (_profoundDarknessTimer < diff)
                 {
                     if (!me->IsNonMeleeSpellCasted(false))
                     {
                         DoCast(SPELL_PROFOUND_DARKNESS);
-                        ProfoundDarkness_Timer = RAID_MODE(7000, 3000);
+                        _profoundDarknessTimer = RAID_MODE(7000, 3000);
                     }
-                }else ProfoundDarkness_Timer -= diff;
+                }
+                else
+                    _profoundDarknessTimer -= diff;
 
                 DoMeleeAttackIfReady();
             }
 
         private:
-            InstanceScript* instance;
-            uint32 ProfoundDarkness_Timer;
+            InstanceScript* _instance;
+            uint32 _profoundDarknessTimer;
         };
 
         CreatureAI* GetAI(Creature* creature) const

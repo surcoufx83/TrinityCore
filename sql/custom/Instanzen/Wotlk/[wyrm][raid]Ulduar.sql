@@ -116,6 +116,16 @@ INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
 
 UPDATE `creature_template` SET `ScriptName`='mob_rune_of_power' WHERE `entry`=33705;
 
+-- Electrical Charge
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry`=61901;
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`) VALUES
+(13,61901,18,1,32867);
+
+DELETE FROM `spell_script_names` WHERE `spell_id` IN (61911,63495);
+INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
+(61911, 'spell_steelbreaker_static_disruption'),
+(63495, 'spell_steelbreaker_static_disruption');
+
 -- ##########################################################
 -- Kologarn
 -- ##########################################################
@@ -394,6 +404,9 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionType
 
 UPDATE `creature_template` SET `faction_A`=35, `faction_H`=35 WHERE `entry`=34055;
 
+-- thorim - lightning orb (temporary)
+UPDATE `creature_template` SET `speed_run`=9.6, `dmg_multiplier`=200, `baseattacktime`=1000, `Health_mod`=100 WHERE `entry`=33138;
+
 DELETE FROM `spell_script_names` WHERE `spell_id`=62042;
 INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
 (62042, 'spell_stormhammer_targeting');
@@ -419,6 +432,9 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionType
 
 DELETE FROM `spell_script_names` WHERE `spell_id`=63278;
 INSERT INTO `spell_script_names` VALUE (63278, 'spell_general_vezax_mark_of_the_faceless_drain');
+
+-- run speed
+UPDATE `creature_template` SET `speed_run`=1.42857, `baseattacktime`=1500 WHERE `entry` IN (33271,33449);
 
 -- ##########################################################
 -- Yogg-Saron
@@ -804,3 +820,6 @@ UPDATE `creature_template` SET `mingold`=1810711*2.5, `maxgold`=1810711*2.5 WHER
 -- Yogg-Saron
 UPDATE `creature_template` SET `mingold`=2128378, `maxgold`=2128378 WHERE `entry`=33288;
 UPDATE `creature_template` SET `mingold`=2128378*2.5, `maxgold`=2128378*2.5 WHERE `entry`=33955;
+
+-- herb and mineral respawn
+UPDATE `gameobject` SET `spawntimesecs`=604800 WHERE `map`=603 AND `spawntimesecs`=3600;
