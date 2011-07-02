@@ -787,7 +787,11 @@ UPDATE creature_template SET unit_flags = unit_flags|512 WHERE entry IN (
 34188, -- Razorscale Devouring Flame Stalker
 34189, -- Razorscale Devouring Flame Stalker (heroic)
 34098, -- Auriaya Seeping Essence Stalker
-34174  -- Auriaya Seeping Essence Stalker (heroic)
+34174, -- Auriaya Seeping Essence Stalker (heroic)
+33809, -- Rubble Stalker Kologarn
+33942, -- Rubble Stalker Kologarn (heroic)
+33571, -- Ulduar Gauntlet Generator
+34159  -- Ulduar Gauntlet Generator (small radius)
 );
 
 -- Remove NON_SELECTABLE from Clockwork Mechanic
