@@ -101,7 +101,7 @@ public:
 
     struct boss_four_horsemenAI : public BossAI
     {
-        boss_four_horsemenAI(Creature *c) : BossAI(c, BOSS_HORSEMEN)
+        boss_four_horsemenAI(Creature* c) : BossAI(c, BOSS_HORSEMEN)
         {
             id = Horsemen(0);
             for (uint8 i = 0; i < 4; ++i)
@@ -150,15 +150,15 @@ public:
             Reset();
         }
 
-        bool DoEncounterAction(Unit *who, bool attack, bool reset, bool checkAllDead)
+        bool DoEncounterAction(Unit* who, bool attack, bool reset, bool checkAllDead)
         {
             if (!instance)
                 return false;
 
-            Creature *Thane = CAST_CRE(Unit::GetUnit(*me, instance->GetData64(DATA_THANE)));
-            Creature *Lady = CAST_CRE(Unit::GetUnit(*me, instance->GetData64(DATA_LADY)));
-            Creature *Baron = CAST_CRE(Unit::GetUnit(*me, instance->GetData64(DATA_BARON)));
-            Creature *Sir = CAST_CRE(Unit::GetUnit(*me, instance->GetData64(DATA_SIR)));
+            Creature* Thane = CAST_CRE(Unit::GetUnit(*me, instance->GetData64(DATA_THANE)));
+            Creature* Lady = CAST_CRE(Unit::GetUnit(*me, instance->GetData64(DATA_LADY)));
+            Creature* Baron = CAST_CRE(Unit::GetUnit(*me, instance->GetData64(DATA_BARON)));
+            Creature* Sir = CAST_CRE(Unit::GetUnit(*me, instance->GetData64(DATA_SIR)));
 
             if (Thane && Lady && Baron && Sir)
             {
@@ -243,7 +243,7 @@ public:
                 movementCompleted = true;
                 me->SetReactState(REACT_AGGRESSIVE);
 
-                Unit *eventStarter = Unit::GetUnit(*me, uiEventStarterGUID);
+                Unit* eventStarter = Unit::GetUnit(*me, uiEventStarterGUID);
 
                 if (eventStarter && me->canAttack(eventStarter))
                     AttackStart(eventStarter);
@@ -267,7 +267,7 @@ public:
         }
 
         // switch to "who" if nearer than current target.
-        void SelectNearestTarget(Unit *who)
+        void SelectNearestTarget(Unit* who)
         {
             if (me->getVictim() && me->GetDistanceOrder(who, me->getVictim()) && me->canAttack(who))
             {
@@ -276,14 +276,14 @@ public:
             }
         }
 
-        void MoveInLineOfSight(Unit *who)
+        void MoveInLineOfSight(Unit* who)
         {
             BossAI::MoveInLineOfSight(who);
             if (caster)
                 SelectNearestTarget(who);
         }
 
-        void AttackStart(Unit *who)
+        void AttackStart(Unit* who)
         {
             if (!movementCompleted && !movementStarted)
             {

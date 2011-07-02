@@ -129,7 +129,7 @@ public:
 
             // Aura Check. If the gamer is affected by confliguration we attack a random gamer.
             if (me->getVictim() && me->getVictim()->HasAura(SPELL_CONFLAGRATION))
-                if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1, 100, true))
+                if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1, 100, true))
                     me->TauntApply(pTarget);
 
             DoMeleeAttackIfReady();

@@ -1544,7 +1544,7 @@ UPDATE `creature_template` SET `ScriptName`='boss_flame_leviathan_defense_turret
 UPDATE `creature_template` SET `ScriptName`='boss_flame_leviathan_overload_device' WHERE `entry`=33143;
 UPDATE `creature_template` SET `ScriptName`='boss_flame_leviathan_defense_cannon' WHERE `entry`=33139;
 UPDATE `creature_template` SET `ScriptName`='npc_colossus' WHERE `entry`=33237;
-UPDATE `creature_template` SET `ScriptName`='spell_pool_of_tar' WHERE `entry`=33090;
+UPDATE `creature_template` SET `ScriptName`='npc_pool_of_tar' WHERE `entry`=33090;
 UPDATE `creature_template` SET `ScriptName`='boss_ignis' WHERE `entry`=33118;
 UPDATE `creature_template` SET `ScriptName`='npc_iron_construct' WHERE `entry`=33121;
 UPDATE `creature_template` SET `ScriptName`='npc_scorch_ground' WHERE `entry`=33221;
@@ -1844,6 +1844,7 @@ INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`,
 (1239,11,0,0, 'achievement_bg_control_all_nodes'),
 (5605,11,0,0, 'achievement_save_the_day'),
 (5606,11,0,0, 'achievement_save_the_day'),
+(6800,11,0,0, 'achievement_sickly_gazelle'),
 (12993,11,0,0, 'achievement_doesnt_go_to_eleven'),
 (12778,11,0,0, 'achievement_ive_gone_and_made_a_mess'),
 (13036,11,0,0, 'achievement_ive_gone_and_made_a_mess'),
@@ -1927,6 +1928,7 @@ INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`,
 /* SPELLS */
 INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
 -- generic
+( 66218, 'spell_gen_launch'),
 ( 39228, 'spell_gen_absorb0_hitlimit1'),
 ( 60218, 'spell_gen_absorb0_hitlimit1'),
 (  6962, 'spell_gen_pet_summoned'),
@@ -1987,6 +1989,12 @@ INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
 ( 12749, 'spell_gen_allow_cast_from_item_only'),
 ( 13258, 'spell_gen_allow_cast_from_item_only'),
 ( 13166, 'spell_gen_allow_cast_from_item_only'),
+ (65266, 'spell_gen_vehicle_scaling'),
+ (65635, 'spell_gen_vehicle_scaling'),
+ (65636, 'spell_gen_vehicle_scaling'),
+ (66666, 'spell_gen_vehicle_scaling'),
+ (66667, 'spell_gen_vehicle_scaling'),
+ (66668, 'spell_gen_vehicle_scaling'),
 -- instances
 -- Black Temple
 ( 41475, 'spell_boss_lady_malande_shield'),
@@ -2048,10 +2056,10 @@ INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
 ( 72440, 'spell_deathbringer_blood_nova'),
 ( 72378, 'spell_deathbringer_blood_nova_targeting'),
 ( 73058, 'spell_deathbringer_blood_nova_targeting'),
-( 72255, 'spell_deathbringer_mark_of_the_fallen_champion'),
-( 72444, 'spell_deathbringer_mark_of_the_fallen_champion'),
-( 72445, 'spell_deathbringer_mark_of_the_fallen_champion'),
-( 72446, 'spell_deathbringer_mark_of_the_fallen_champion'),
+( 72385, 'spell_deathbringer_boiling_blood'),
+( 72441, 'spell_deathbringer_boiling_blood'),
+( 72442, 'spell_deathbringer_boiling_blood'),
+( 72443, 'spell_deathbringer_boiling_blood'),
 ( 72155, 'spell_icc_harvest_blight_specimen'),
 ( 72162, 'spell_icc_harvest_blight_specimen'),
 ( 71123, 'spell_stinky_precious_decimate'),

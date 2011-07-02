@@ -79,7 +79,7 @@ public:
 
     struct boss_taldaramAI : public ScriptedAI
     {
-        boss_taldaramAI(Creature *c) : ScriptedAI(c)
+        boss_taldaramAI(Creature* c) : ScriptedAI(c)
         {
             pInstance = c->GetInstanceScript();
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
@@ -148,7 +148,7 @@ public:
 
                         //DoCast(me, SPELL_FLAME_SPHERE_SUMMON_1);
                         pSpheres[0] = DoSpawnCreature(CREATURE_FLAME_SPHERE, 0, 0, 5, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 10*IN_MILLISECONDS);
-                        Unit *pSphereTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
+                        Unit* pSphereTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
                         if (pSphereTarget && pSpheres[0])
                         {
                             float angle, x, y;
@@ -182,7 +182,7 @@ public:
                         break;
                     }
                     case JUST_VANISHED:
-                        if (Unit *pEmbraceTarget = GetEmbraceTarget())
+                        if (Unit* pEmbraceTarget = GetEmbraceTarget())
                         {
                             me->GetMotionMaster()->Clear();
                             me->SetSpeed(MOVE_WALK, 2.0f, true);
@@ -193,7 +193,7 @@ public:
                         break;
                     case VANISHED:
                         me->SetVisible(true);
-                        if (Unit *pEmbraceTarget = GetEmbraceTarget())
+                        if (Unit* pEmbraceTarget = GetEmbraceTarget())
                             DoCast(pEmbraceTarget, DUNGEON_MODE(SPELL_EMBRACE_OF_THE_VAMPYR, H_SPELL_EMBRACE_OF_THE_VAMPYR));
                         me->GetMotionMaster()->Clear();
                         me->SetSpeed(MOVE_WALK, 1.0f, true);
@@ -224,9 +224,9 @@ public:
                         if (uiVanishTimer <= diff)
                         {
                             //Count alive players
-                            Unit *pTarget = NULL;
+                            Unit* pTarget = NULL;
                             std::list<HostileReference *> t_list = me->getThreatManager().getThreatList();
-                            std::vector<Unit *> target_list;
+                            std::vector<Unit* > target_list;
                             for (std::list<HostileReference *>::const_iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
                             {
                                 pTarget = Unit::GetUnit(*me, (*itr)->getUnitGuid());
@@ -307,7 +307,7 @@ public:
 
             for (uint8 i=0; i < 2; ++i)
             {
-                GameObject *pSpheres = pInstance->instance->GetGameObject(uiSphereGuids[i]);
+                GameObject* pSpheres = pInstance->instance->GetGameObject(uiSphereGuids[i]);
                 if (!pSpheres)
                     return false;
                 if (pSpheres->GetGoState() != GO_STATE_ACTIVE)
@@ -340,7 +340,7 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
+    CreatureAI *GetAI(Creature* creature) const
     {
         return new boss_taldaramAI(creature);
     }
@@ -353,7 +353,7 @@ public:
 
     struct mob_taldaram_flamesphereAI : public ScriptedAI
     {
-        mob_taldaram_flamesphereAI(Creature *c) : ScriptedAI(c)
+        mob_taldaram_flamesphereAI(Creature* c) : ScriptedAI(c)
         {
             pInstance = c->GetInstanceScript();
         }
@@ -390,7 +390,7 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
+    CreatureAI *GetAI(Creature* creature) const
     {
         return new mob_taldaram_flamesphereAI(creature);
     }
@@ -401,11 +401,11 @@ class prince_taldaram_sphere : public GameObjectScript
 public:
     prince_taldaram_sphere() : GameObjectScript("prince_taldaram_sphere") { }
 
-    bool OnGossipHello(Player* /*pPlayer*/, GameObject *pGO)
+    bool OnGossipHello(Player* /*pPlayer*/, GameObject* pGO)
     {
         InstanceScript *pInstance = pGO->GetInstanceScript();
 
-        Creature *pPrinceTaldaram = Unit::GetCreature(*pGO, pInstance ? pInstance->GetData64(DATA_PRINCE_TALDARAM) : 0);
+        Creature* pPrinceTaldaram = Unit::GetCreature(*pGO, pInstance ? pInstance->GetData64(DATA_PRINCE_TALDARAM) : 0);
         if (pPrinceTaldaram && pPrinceTaldaram->isAlive())
         {
             // maybe these are hacks :(

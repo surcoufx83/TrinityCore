@@ -57,7 +57,7 @@ class boss_moorabi : public CreatureScript
 public:
     boss_moorabi() : CreatureScript("boss_moorabi") { }
 
-    CreatureAI* GetAI(Creature *pCreature) const
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_moorabiAI(pCreature);
     }
@@ -202,6 +202,9 @@ public:
     };
 
 };
+
+            if (!target)
+                return false;
 
 void AddSC_boss_moorabi()
 {

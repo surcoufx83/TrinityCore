@@ -187,7 +187,7 @@ public:
            //Close the encounter door, open it in JustDied/Reset
         }
 
-        void MoveInLineOfSight(Unit *who)
+        void MoveInLineOfSight(Unit* who)
         {
             if (!HasTaunted && me->IsWithinDistInMap(who, 40.0f))
             {
@@ -315,7 +315,7 @@ public:
                     if (PhoenixTimer <= diff)
                     {
 
-                        Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1);
+                        Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1);
 
                         uint8 random = urand(1, 2);
                         float x = KaelLocations[random][0];
@@ -339,7 +339,7 @@ public:
 
                     if (FlameStrikeTimer <= diff)
                     {
-                        if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                        if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
                         {
                             me->InterruptSpell(CURRENT_CHANNELED_SPELL);
                             me->InterruptSpell(CURRENT_GENERIC_SPELL);
@@ -411,7 +411,7 @@ public:
 
                                 for (uint8 i = 0; i < 3; ++i)
                                 {
-                                    Unit *pTarget = NULL;
+                                    Unit* pTarget = NULL;
                                     pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0);
 
                                     Creature* Orb = DoSpawnCreature(CREATURE_ARCANE_SPHERE, 5, 5, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
@@ -457,7 +457,7 @@ public:
 
     struct mob_felkael_flamestrikeAI : public ScriptedAI
     {
-        mob_felkael_flamestrikeAI(Creature *c) : ScriptedAI(c)
+        mob_felkael_flamestrikeAI(Creature* c) : ScriptedAI(c)
         {
         }
 
@@ -619,7 +619,7 @@ public:
 
     struct mob_felkael_phoenix_eggAI : public ScriptedAI
     {
-        mob_felkael_phoenix_eggAI(Creature *c) : ScriptedAI(c) {}
+        mob_felkael_phoenix_eggAI(Creature* c) : ScriptedAI(c) {}
 
         uint32 HatchTimer;
 
@@ -656,7 +656,7 @@ public:
 
     struct mob_arcane_sphereAI : public ScriptedAI
     {
-        mob_arcane_sphereAI(Creature *c) : ScriptedAI(c) { Reset(); }
+        mob_arcane_sphereAI(Creature* c) : ScriptedAI(c) { Reset(); }
 
         uint32 DespawnTimer;
         uint32 ChangeTargetTimer;
@@ -687,7 +687,7 @@ public:
 
             if (ChangeTargetTimer <= diff)
             {
-                if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
                 {
                     me->AddThreat(pTarget, 1.0f);
                     me->TauntApply(pTarget);

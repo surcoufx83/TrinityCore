@@ -51,7 +51,7 @@ public:
 
     struct boss_temporusAI : public ScriptedAI
     {
-        boss_temporusAI(Creature *c) : ScriptedAI(c)
+        boss_temporusAI(Creature* c) : ScriptedAI(c)
         {
             pInstance = c->GetInstanceScript();
             HeroicMode = me->GetMap()->IsHeroic();
@@ -97,7 +97,7 @@ public:
                 pInstance->SetData(DATA_TEMPORUSDEATH, 1); 
         }
 
-        void MoveInLineOfSight(Unit *who)
+        void MoveInLineOfSight(Unit* who)
         {
             if (!who || me->getVictim())
                 return;

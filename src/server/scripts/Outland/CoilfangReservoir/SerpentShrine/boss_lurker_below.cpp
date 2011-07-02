@@ -78,7 +78,7 @@ public:
 
     struct boss_the_lurker_belowAI : public Scripted_NoMovementAI
     {
-        boss_the_lurker_belowAI(Creature *c) : Scripted_NoMovementAI(c), Summons(me)
+        boss_the_lurker_belowAI(Creature* c) : Scripted_NoMovementAI(c), Summons(me)
         {
             pInstance = c->GetInstanceScript();
             SpellEntry *TempSpell = GET_SPELL(SPELL_SPOUT_ANIM);
@@ -164,7 +164,7 @@ public:
             Scripted_NoMovementAI::EnterCombat(who);
         }
 
-        void MoveInLineOfSight(Unit *who)
+        void MoveInLineOfSight(Unit* who)
         {
             if (!CanStartEvent)//boss is invisible, don't attack
                 return;
@@ -294,7 +294,7 @@ public:
 
                 if (GeyserTimer <= diff)
                 {
-                    Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1);
+                    Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1);
                     if (!pTarget && me->getVictim())
                         pTarget = me->getVictim();
                     if (pTarget)
@@ -306,7 +306,7 @@ public:
                 {
                     if (WaterboltTimer <= diff)
                     {
-                        Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0);
+                        Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0);
                         if (!pTarget && me->getVictim())
                             pTarget = me->getVictim();
                         if (pTarget)
@@ -403,7 +403,7 @@ public:
 
     struct mob_coilfang_ambusherAI : public Scripted_NoMovementAI
     {
-        mob_coilfang_ambusherAI(Creature *c) : Scripted_NoMovementAI(c)
+        mob_coilfang_ambusherAI(Creature* c) : Scripted_NoMovementAI(c)
         {
             SpellEntry *TempSpell = GET_SPELL(SPELL_SHOOT);
             if (TempSpell)
@@ -425,7 +425,7 @@ public:
 
         }
 
-        void MoveInLineOfSight(Unit *who)
+        void MoveInLineOfSight(Unit* who)
         {
             if (!who || me->getVictim()) return;
 
@@ -448,7 +448,7 @@ public:
 
             if (ShootBowTimer <= diff)
             {
-                Unit *pTarget = NULL;
+                Unit* pTarget = NULL;
                 pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0);
                 int bp0 = 1100;
                 if (pTarget)

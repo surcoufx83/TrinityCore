@@ -54,7 +54,7 @@ public:
 
     struct boss_draganthaurissanAI : public ScriptedAI
     {
-        boss_draganthaurissanAI(Creature *c) : ScriptedAI(c) {}
+        boss_draganthaurissanAI(Creature* c) : ScriptedAI(c) {}
 
         uint32 HandOfThaurissan_Timer;
         uint32 AvatarOfFlame_Timer;
@@ -86,7 +86,7 @@ public:
 
             if (HandOfThaurissan_Timer <= diff)
             {
-                if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
                     DoCast(pTarget, SPELL_HANDOFTHAURISSAN);
 
                 //3 Hands of Thaurissan will be casted

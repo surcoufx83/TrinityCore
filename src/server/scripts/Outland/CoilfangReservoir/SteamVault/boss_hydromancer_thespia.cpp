@@ -56,7 +56,7 @@ public:
 
     struct boss_thespiaAI : public ScriptedAI
     {
-        boss_thespiaAI(Creature *c) : ScriptedAI(c)
+        boss_thespiaAI(Creature* c) : ScriptedAI(c)
         {
             pInstance = c->GetInstanceScript();
         }
@@ -125,12 +125,12 @@ public:
             //LightningCloud_Timer
             if (LightningCloud_Timer <= diff)
             {
-                if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
                     DoCast(pTarget, SPELL_LIGHTNING_CLOUD);
 
                 //cast twice in Heroic mode
                 if (IsHeroic())
-                    if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                    if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
                         DoCast(pTarget, SPELL_LIGHTNING_CLOUD);
 
                 LightningCloud_Timer = 15000+rand()%10000;
@@ -139,7 +139,7 @@ public:
             //LungBurst_Timer
             if (LungBurst_Timer <= diff)
             {
-                if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
                     DoCast(pTarget, SPELL_LUNG_BURST,true);
                 LungBurst_Timer = 7000+rand()%5000;
             } else LungBurst_Timer -=diff;
@@ -147,12 +147,12 @@ public:
             //EnvelopingWinds_Timer
             if (EnvelopingWinds_Timer <= diff)
             {
-                if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
                     DoCast(pTarget, SPELL_ENVELOPING_WINDS);
 
                 //cast twice in Heroic mode
                 if (IsHeroic())
-                    if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                    if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
                         DoCast(pTarget, SPELL_ENVELOPING_WINDS,true);
                 EnvelopingWinds_Timer = 10000+rand()%5000;
             } else EnvelopingWinds_Timer -=diff;
@@ -177,7 +177,7 @@ public:
 
     struct mob_coilfang_waterelementalAI : public ScriptedAI
     {
-        mob_coilfang_waterelementalAI(Creature *c) : ScriptedAI(c) {}
+        mob_coilfang_waterelementalAI(Creature* c) : ScriptedAI(c) {}
 
         uint32 WaterBoltVolley_Timer;
 

@@ -85,7 +85,7 @@ public:
 
     struct boss_volkhanAI : public ScriptedAI
     {
-        boss_volkhanAI(Creature *pCreature) : ScriptedAI(pCreature)
+        boss_volkhanAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
             m_pInstance = pCreature->GetInstanceScript();
         }

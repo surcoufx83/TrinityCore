@@ -238,7 +238,7 @@ public:
 
     struct npc_arthasAI : public npc_escortAI
     {
-        npc_arthasAI(Creature *pCreature) : npc_escortAI(pCreature)
+        npc_arthasAI(Creature* pCreature) : npc_escortAI(pCreature)
         {
             pInstance = pCreature->GetInstanceScript();
             Reset();

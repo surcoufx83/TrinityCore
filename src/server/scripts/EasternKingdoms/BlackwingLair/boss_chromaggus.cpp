@@ -72,7 +72,7 @@ public:
 
     struct boss_chromaggusAI : public ScriptedAI
     {
-        boss_chromaggusAI(Creature *c) : ScriptedAI(c)
+        boss_chromaggusAI(Creature* c) : ScriptedAI(c)
         {
             pInstance = c->GetInstanceScript();
             //Select the 2 breaths that we are going to use until despawned
