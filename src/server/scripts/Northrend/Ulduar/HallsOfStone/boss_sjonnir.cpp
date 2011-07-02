@@ -57,8 +57,12 @@ enum SjonnirCreatures
 };
 
 #define DATA_TIME_BEFORE_OOZE                              150000 //2min 30 secs
+
+enum Misc
+{
     ACHIEV_ABUSE_THE_OOZE                                  = 2155,
     NPC_BRANN                                              = 28070
+};
 
 struct Locations
 {

@@ -274,10 +274,6 @@ public:
             } else uiSummonCrazedManaWraithTimer -= diff;
         }
     };
-
-            if (!target)
-                return false;
-
 };
 
 void AddSC_boss_anomalus()

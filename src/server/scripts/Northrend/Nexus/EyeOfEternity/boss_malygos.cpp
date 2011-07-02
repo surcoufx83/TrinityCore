@@ -996,7 +996,7 @@ public:
             if(killer->GetVehicle() && (killer->GetVehicle()->GetCreatureEntry() == 30234 || killer->GetVehicle()->GetCreatureEntry() == 30248))
             {
                 if(AchievementEntry const* pAE = GetAchievementStore()->LookupEntry(RAID_MODE(ACHIEVEMENT_DENYIN_THE_SCION_10,ACHIEVEMENT_DENYIN_THE_SCION_25)))
-                    killer->ToPlayer()->CompletedAchievement(pAE,false);
+                    killer->ToPlayer()->CompletedAchievement(pAE);
             }
         }
 
