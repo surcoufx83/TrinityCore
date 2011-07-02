@@ -149,8 +149,7 @@ enum eSpells
     H_SPELL_POISONED_SPEAR_DOT  = 59334,
     SPELL_WHIRLWIND             = 50228, //random target, but not the tank approx. every 20s
     H_SPELL_WHIRLWIND           = 59322,
-    SPELL_RAPID_FIRE            = 56570,
-    SPELL_HARPOON_DAMAGE        = 56578,
+    SPELL_LAUNCH_HARPOON        = 51368,
     SPELL_FREEZING_CLOUD        = 47579,
     H_SPELL_FREEZING_CLOUD      = 60020
 };
@@ -308,7 +307,7 @@ public:
 
         void SpellHit(Unit* /*caster*/, const SpellEntry *spell)
         {
-            if (spell->Id == SPELL_HARPOON_DAMAGE && Phase == FLYING)
+            if (spell->Id == SPELL_LAUNCH_HARPOON && Phase == FLYING)
             {
                 DoScriptText(RAND(SAY_DRAKE_HARPOON_1, SAY_DRAKE_HARPOON_2), me);
                 m_uiSpellHitCount++;
@@ -345,6 +344,7 @@ public:
             if (spell->Id == DUNGEON_MODE(SPELL_POISONED_SPEAR, H_SPELL_POISONED_SPEAR))
                 pTarget->CastSpell(pTarget, DUNGEON_MODE(SPELL_POISONED_SPEAR_DOT, H_SPELL_POISONED_SPEAR_DOT), true);
         }
+
         void UpdateAI(const uint32 diff)
         {
             switch(Phase)
@@ -589,21 +589,22 @@ public:
 
 class go_harpoon_launcher : public GameObjectScript
 {
-public:
-    go_harpoon_launcher() : GameObjectScript("go_harpoon_launcher") { }
+    public:
+        go_harpoon_launcher() : GameObjectScript("go_harpoon_launcher") { }
 
-    bool OnGossipHello(Player *pPlayer, GameObject *pGO)
-    {
-        InstanceScript* m_pInstance = pGO->GetInstanceScript();
-        if (!m_pInstance) return false;
-
-        if (Creature* pSkadi = Unit::GetCreature((*pGO), m_pInstance->GetData64(DATA_SKADI_THE_RUTHLESS)))
+        bool OnGossipHello(Player* player, GameObject* go)
         {
-            pPlayer->CastSpell(pSkadi, SPELL_RAPID_FIRE, true);
-        }
-        return false;
-    }
+            InstanceScript* instance = go->GetInstanceScript();
 
+            if (!instance)
+                return false;
+
+            Creature* skadi = Unit::GetCreature(*go, instance->GetData64(DATA_SKADI_THE_RUTHLESS));
+            if (skadi && skadi->isAlive())
+                player->CastSpell(skadi, SPELL_LAUNCH_HARPOON, true);
+
+            return false;
+        }
 };
 
 void AddSC_boss_skadi()
