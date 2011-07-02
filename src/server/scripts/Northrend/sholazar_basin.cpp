@@ -722,7 +722,7 @@ static const char * Seeker_sayings[] = { "Ooh! Shinies!", "Maybe more shiny bugs
 
 enum oracle_specific 
 {
-    TRIGGER_ID = 19656,
+    TRIGGER_ID = 28088, // bad id, just not used
     TRIGGER_SEARCH_DIST = 10,
     FACTION_ID = 35,
     NPC_HIGH_ORACLE_SOO_SAY = 28027,
@@ -837,7 +837,7 @@ public:
                         if (me->GetOwner() && Unit::GetPlayer(*me,me->GetOwner()->GetGUID()) && Unit::GetPlayer(*me,me->GetOwner()->GetGUID())->GetQuestStatus(QUEST_APPEASING_THE_GREAT_RAIN_STONE) == QUEST_STATUS_INCOMPLETE
                                 || Unit::GetPlayer(*me,me->GetOwner()->GetGUID())->GetQuestStatus(QUEST_GODS_LIKE_SHINEY_THINGS) == QUEST_STATUS_INCOMPLETE)
                         {
-                            if (Creature *OracleTrigger = me->FindNearestCreature(TRIGGER_ID, TRIGGER_SEARCH_DIST)) 
+                            if (Creature *OracleTrigger = me->FindNearestCreature(TRIGGER_ID, TRIGGER_SEARCH_DIST))
                             {
                                 OracleTrigger->AI()->SetData(DATA_CHANGEFORCEAURAREMOVE,1);
                                 SetFollowPaused(true);
@@ -1411,14 +1411,16 @@ public:
 ## npc_tipsy_mcmanus
 ######*/
 
-enum eTipsy_mcmanus
+enum TipsyMcManus
 {
-    QUEST_STILL_AT_IT = 12644,
-    GOSSIP_TIPSY_MCMANUS_TEXT = 13288,
-    JUNGLE_PUNCH_ENTRY = 190643
+    DATA_EVENT                 = 1,
+    DATA_OBJECT_ENTRY          = 2,
+    QUEST_STILL_AT_IT          = 12644,
+    GOSSIP_TIPSY_MCMANUS_TEXT  = 13288,
+    GO_JUNGLE_PUNCH            = 190643
 };
 
-static const uint32 GOEntry[5] = 
+static uint32 const goEntry[5] = 
 {   
     190635,
     190636,
@@ -1427,7 +1429,7 @@ static const uint32 GOEntry[5] =
     190639
 };
 
-static const char * Instructions[6] =
+static char const* Instructions[6] =
 {
     "Benutze das Druckventil!",
     "Heize die Kohlenpfanne an!",
@@ -1441,137 +1443,141 @@ static const char * Instructions[6] =
 
 class npc_tipsy_mcmanus : public CreatureScript
 {
-public:
-    npc_tipsy_mcmanus() : CreatureScript("npc_tipsy_mcmanus") { }
+    public:
+        npc_tipsy_mcmanus() : CreatureScript("npc_tipsy_mcmanus") { }
 
-    struct npc_tipsy_mcmanusAI : public ScriptedAI
-    {
-        npc_tipsy_mcmanusAI(Creature *c) : ScriptedAI(c) {}
-
-        bool Event;
-        bool choice;
-        uint8 count;
-        uint32 rnd;
-        uint32 react_Timer;
-
-        void Reset()
+        bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action)
         {
-            Event = false;
-            choice = true;
-            rnd = 0;
-            count = 0;
-            react_Timer = 10*IN_MILLISECONDS;
- 
-            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            if (action == GOSSIP_ACTION_INFO_DEF + 1)
+            {
+                player->CLOSE_GOSSIP_MENU();
+                creature->AI()->SetData(DATA_EVENT, 1);
+                creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            }
+            return true;
         }
 
-        void GOUsed(uint32 entry) 
+        bool OnGossipHello(Player* player, Creature* creature)
         {
-            if ((!choice) && (entry == GOEntry[rnd]))   //used correct GO
-            {
-                me->HandleEmoteCommand(EMOTE_ONESHOT_CHEER);     
-                choice = true;
+            if (player->GetQuestStatus(QUEST_STILL_AT_IT) == QUEST_STATUS_INCOMPLETE)
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TIPSY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
-                react_Timer = urand(5*IN_MILLISECONDS, 7*IN_MILLISECONDS);
-            }
+            player->SEND_GOSSIP_MENU(GOSSIP_TIPSY_MCMANUS_TEXT, creature->GetGUID());
+            return true;
         }
 
-        void UpdateAI(const uint32 diff)
+        struct npc_tipsy_mcmanusAI : public ScriptedAI
         {
-            if (UpdateVictim())
-            {
-                DoMeleeAttackIfReady();
-                return;
-            }
-        
-            if (Event)  //active
-            {
+            npc_tipsy_mcmanusAI(Creature* c) : ScriptedAI(c) {}
 
-                if(react_Timer <= diff)
+            void Reset()
+            {
+                _event = false;
+                _choice = true;
+                _rnd = 0;
+                _count = 0;
+                _reactTimer = 10000;
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            }
+
+            void SetData(uint32 id, uint32 data)
+            {
+                switch (id)
                 {
-                    if (choice)    //used correct GO
-                    {
-                        ++count;
-
-                        if (count > 10)    //spawn quest reward and reset
+                    case DATA_EVENT:
+                        _event = data ? true : false;
+                        break;
+                    case DATA_OBJECT_ENTRY:
+                        if (!_choice && data == goEntry[_rnd]) // used correct object
                         {
-                            float x, y, z;
-                            me->GetPosition(x, y, z);         
-                            me->SummonGameObject(JUNGLE_PUNCH_ENTRY, x + 1.2f, y + 0.8f, z - 0.23f, 0, 0, 0, 0, 0, 60);
+                            me->HandleEmoteCommand(EMOTE_ONESHOT_CHEER);
+                            _choice = true;
+                            _reactTimer = urand(5000, 7000);
+                        }
+                        break;
+                }
+            }
+
+            void UpdateAI(uint32 const diff)
+            {
+                if (UpdateVictim())
+                {
+                    DoMeleeAttackIfReady();
+                    return;
+                }
+
+                if (_event) // active
+                {
+                    if(_reactTimer <= diff)
+                    {
+                        if (_choice) // used correct object
+                        {
+                            ++_count;
+
+                            if (_count > 10) // spawn quest reward and reset
+                            {
+                                float x, y, z;
+                                me->GetPosition(x, y, z);
+                                me->SummonGameObject(GO_JUNGLE_PUNCH, x + 1.2f, y + 0.8f, z - 0.23f, 0, 0, 0, 0, 0, 60);
+                                Reset();
+                                return;
+                            }
+
+                            _rnd = urand(0, 4);
+                            me->MonsterSay(Instructions[_rnd], LANG_UNIVERSAL, 0); // give new instructions
+                            me->HandleEmoteCommand(RAND(EMOTE_ONESHOT_EXCLAMATION, EMOTE_ONESHOT_POINT));
+                            _choice = false; // reset choice
+                        }
+                        else // failed -> reset and try again
+                        {
+                            me->MonsterSay(Instructions[5], LANG_UNIVERSAL, 0);
+                            me->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);
                             Reset();
                             return;
                         }
-                           
-                        rnd = urand(0, 4);
-                    
-                        me->MonsterSay(Instructions[rnd], LANG_UNIVERSAL, 0);   //give new instructions
-                        me->HandleEmoteCommand(RAND(EMOTE_ONESHOT_EXCLAMATION, EMOTE_ONESHOT_POINT));
-                    
-                        choice = false;  //reset choice
 
-                    }else          //failed -> reset and try again
-                    {
-                        me->MonsterSay(Instructions[5], LANG_UNIVERSAL, 0);
-                        me->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);
-                        Reset();
+                        _reactTimer = 10000;
                     }
-                    react_Timer = 10*IN_MILLISECONDS;
-
-                }else react_Timer -= diff;
+                    else
+                        _reactTimer -= diff;
+                }
             }
-        }
-    };
 
-    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
-    {
-        if (uiAction == GOSSIP_ACTION_INFO_DEF +1)
+        private:
+            bool _event;
+            bool _choice;
+            uint8 _count;
+            uint8 _rnd;
+            uint32 _reactTimer;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
         {
-            pPlayer->CLOSE_GOSSIP_MENU();
-            CAST_AI(npc_tipsy_mcmanus::npc_tipsy_mcmanusAI, pCreature->AI())->Event = true;
-            pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            return new npc_tipsy_mcmanusAI(creature);
         }
-        return true;
-    }
-
-    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
-    {
-        if (pPlayer->GetQuestStatus(QUEST_STILL_AT_IT) == QUEST_STATUS_INCOMPLETE)
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TIPSY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-
-        pPlayer->SEND_GOSSIP_MENU(GOSSIP_TIPSY_MCMANUS_TEXT, pCreature->GetGUID());
-        return true;
-    }
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_tipsy_mcmanusAI (pCreature);
-    }
-
 };
 
 /*######
 ## go_brew_event
 ######*/
 
-enum eBrewEventGO
+enum BrewEvent
 {
-    NPC_TIPSY_MCMANUS    = 28566
+    NPC_TIPSY_MCMANUS = 28566
 };
 
 class go_brew_event : public GameObjectScript
 {
-public:
-    go_brew_event() : GameObjectScript("go_brew_event") { }
+    public:
+        go_brew_event() : GameObjectScript("go_brew_event") { }
 
-    bool OnGossipHello (Player *pPlayer, GameObject *pGO)
-    {
-        uint32 entry = pGO->GetEntry();
+        bool OnGossipHello(Player* /*player*/, GameObject* go)
+        {
+            if (Creature* Tipsy = go->FindNearestCreature(NPC_TIPSY_MCMANUS, 30.0f, true))
+                Tipsy->AI()->SetData(DATA_OBJECT_ENTRY, go->GetEntry());
 
-        if (Creature* pTipsy = GetClosestCreatureWithEntry(pPlayer, NPC_TIPSY_MCMANUS, 30.0f))
-            CAST_AI(npc_tipsy_mcmanus::npc_tipsy_mcmanusAI, pTipsy->AI())->GOUsed(entry);
-
-        return false;
-    }
+            return false;
+        }
 };
 
 void AddSC_sholazar_basin()
