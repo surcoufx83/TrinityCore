@@ -15442,7 +15442,8 @@ void Unit::Kill(Unit* victim, bool durabilityLoss)
             if (uint32 lootid = creature->GetCreatureInfo()->lootid)
                 loot->FillLoot(lootid, LootTemplates_Creature, looter, false, false, creature->GetLootMode());
 
-            loot->generateMoneyLoot(creature->GetCreatureInfo()->mingold, creature->GetCreatureInfo()->maxgold);
+            if (creature->GetLootMode()) // no lootmode, no money
+                loot->generateMoneyLoot(creature->GetCreatureInfo()->mingold, creature->GetCreatureInfo()->maxgold);
         }
 
         player->RewardPlayerAndGroupAtKill(victim, false);
