@@ -2811,3 +2811,26 @@ Anticheat.MaxReportsForDailyReport = 70
 Armory.Enable = 0
 
 ###################################################################################################
+
+###################################################################################################
+# Warden options
+#
+#     WardenLogFile = "warden.log"
+#        Warden log file
+
+WardenLogFile = "warden.log"
+
+#
+#     Warden.Kick = 1
+#        Enable 1 or Disable 0 kick player if no answer\timeout\failed checks
+
+Warden.Kick = 1
+
+#
+#     Warden.BanDay = 3
+#        Number of days for ban player's account if check failed
+#        0 - Disable ban
+
+Warden.BanDay = 3
+
+###################################################################################################

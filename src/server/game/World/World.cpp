@@ -28,6 +28,7 @@
 #include "Opcodes.h"
 #include "WorldSession.h"
 #include "WorldPacket.h"
+#include "WardenDataStorage.h"
 #include "Player.h"
 #include "Vehicle.h"
 #include "SkillExtraItems.h"
@@ -1060,6 +1061,9 @@ void World::LoadConfigSettings(bool reload)
     if (m_int_configs[CONFIG_GUILD_BANK_EVENT_LOG_COUNT] > GUILD_BANKLOG_MAX_RECORDS)
         m_int_configs[CONFIG_GUILD_BANK_EVENT_LOG_COUNT] = GUILD_BANKLOG_MAX_RECORDS;
 
+    // Warden
+    m_bool_configs[CONFIG_BOOL_WARDEN_KICK] = sConfig->GetBoolDefault("Warden.Kick", false);
+
     //visibility on continents
     m_MaxVisibleDistanceOnContinents = sConfig->GetFloatDefault("Visibility.Distance.Continents", DEFAULT_VISIBILITY_DISTANCE);
     if (m_MaxVisibleDistanceOnContinents < 45*sWorld->getRate(RATE_CREATURE_AGGRO))
@@ -1198,6 +1202,9 @@ void World::LoadConfigSettings(bool reload)
 
     /** World of Warcraft Armory **/
     m_bool_configs[CONFIG_ARMORY_ENABLE] = sConfig->GetBoolDefault("Armory.Enable", false);
+
+    // Warden
+    m_int_configs[CONFIG_INT_WARDEN_BANDAY] = sConfig->GetIntDefault("Warden.BanDay", 0);
 
     sScriptMgr->OnConfigLoad(reload);
 }
@@ -1689,6 +1696,9 @@ void World::SetInitialWorldSettings()
     sLog->outString("Starting Game Event system...");
     uint32 nextGameEvent = sGameEventMgr->StartSystem();
     m_timers[WUPDATE_EVENTS].SetInterval(nextGameEvent);    //depend on next event
+
+    sLog->outString("Loading Warden Data...");
+    WardenDataStorage.Init();
 
     // Delete all characters which have been deleted X days before
     Player::DeleteOldCharacters();
