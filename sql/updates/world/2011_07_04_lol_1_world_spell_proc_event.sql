@@ -1,7 +1,7 @@
 -- Ulduar Proc Trinket's
 DELETE FROM `spell_proc_event` WHERE `entry` IN (65007,65002,64738,64742,64714,65005,64792,65013,65025,64786,65020,64764);
 INSERT INTO `spell_proc_event` (`entry`,`SchoolMask`,`SpellFamilyName`,`SpellFamilyMask0`,`SpellFamilyMask1`,`SpellFamilyMask2`,`procFlags`,`procEx`,`ppmRate`,`CustomChance`,`Cooldown`) VALUES
-(65007,0,0,0,0,0,0x00055000,0,0,100,0),         -- Eye of the Broodmother
+(65007,0,0,0,0,0,0x00055400,0,0,100,0),         -- Eye of the Broodmother
 (65002,0,0,0,0,0,0x00055400,0,0,0,45),          -- Sif's Remembrance
 (64738,0,0,0,0,0,0x00055400,0,0,0,45),          -- Show of Faith
 (64742,0,0,0,0,0,0x00055400,0,0,0,45),          -- Pandora's Plea
