@@ -1,1 +1,0 @@
-UPDATE `creature_template` SET `unit_flags`=`unit_flags`|2 WHERE `entry` IN (33809,33942); -- Rubble Stalker Kologarn add UNIT_FLAG_NON_ATTACKABLE 
