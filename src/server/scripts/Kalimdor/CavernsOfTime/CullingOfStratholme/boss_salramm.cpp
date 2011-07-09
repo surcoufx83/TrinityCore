@@ -66,9 +66,9 @@ class boss_salramm : public CreatureScript
 public:
     boss_salramm() : CreatureScript("boss_salramm") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new boss_salrammAI (pCreature);
+        return new boss_salrammAI (creature);
     }
 
     struct boss_salrammAI : public ScriptedAI
@@ -138,7 +138,7 @@ public:
             //Shadow bolt timer
             if (uiShadowBoltTimer <= diff)
             {
-                if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
                     DoCast(pTarget, DUNGEON_MODE(SPELL_SHADOW_BOLT, H_SPELL_SHADOW_BOLT));
                 uiShadowBoltTimer = urand(8000, 10000);
             } else uiShadowBoltTimer -= diff;

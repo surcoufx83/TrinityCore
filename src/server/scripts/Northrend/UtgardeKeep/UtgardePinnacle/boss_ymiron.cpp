@@ -105,9 +105,9 @@ class boss_ymiron : public CreatureScript
 public:
     boss_ymiron() : CreatureScript("boss_ymiron") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new boss_ymironAI(pCreature);
+        return new boss_ymironAI(creature);
     }
 
     struct boss_ymironAI : public ScriptedAI
@@ -355,8 +355,8 @@ public:
 
                             if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
                             {
-                                pTemp->AddThreat(pTarget, 0.0f);
-                                pTemp->AI()->AttackStart(pTarget);
+                                pTemp->AddThreat(target, 0.0f);
+                                pTemp->AI()->AttackStart(target);
                             }
                         }
                     }

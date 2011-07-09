@@ -18,7 +18,7 @@
 
 /* ScriptData
 SDName: Boss_Ragnaros
-SD%Complete: 75
+SD%Complete: 95
 SDComment: Intro Dialog and event NYI
 SDCategory: Molten Core
 EndScriptData */

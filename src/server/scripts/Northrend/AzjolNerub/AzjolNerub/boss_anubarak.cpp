@@ -156,7 +156,7 @@ public:
         Creature* DoSummonImpaleTarget(Unit *pTarget)
         {
             Position targetPos;
-            pTarget->GetPosition(&targetPos);
+            target->GetPosition(&targetPos);
 
             if (TempSummon* pImpaleTarget = me->SummonCreature(CREATURE_IMPALE_TARGET, targetPos, TEMPSUMMON_TIMED_DESPAWN, 6*IN_MILLISECONDS))
             {
@@ -383,9 +383,9 @@ public:
                 pInstance->SetData(DATA_ANUBARAK_EVENT, DONE);
         }
 
-        void KilledUnit(Unit *pVictim)
+        void KilledUnit(Unit* victim)
         {
-            if (pVictim == me)
+            if (victim == me)
                 return;
             DoScriptText(RAND(SAY_SLAY_1, SAY_SLAY_2, SAY_SLAY_3), me);
         }

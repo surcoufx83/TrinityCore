@@ -63,9 +63,9 @@ class boss_magus_telestra : public CreatureScript
 public:
     boss_magus_telestra() : CreatureScript("boss_magus_telestra") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new boss_magus_telestraAI (pCreature);
+        return new boss_magus_telestraAI (creature);
     }
 
     struct boss_magus_telestraAI : public ScriptedAI
@@ -171,7 +171,7 @@ public:
                     }
                 }
                 if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
-                    Summoned->AI()->AttackStart(pTarget);
+                    Summoned->AI()->AttackStart(target);
                 return Summoned->GetGUID();
             }
             return 0;
@@ -292,7 +292,7 @@ public:
             {
                 if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
                 {
-                    DoCast(pTarget, SPELL_ICE_NOVA, false);
+                    DoCast(target, SPELL_ICE_NOVA, false);
                     uiCooldown = 1500;
                 }
                 uiIceNovaTimer = 15*IN_MILLISECONDS;
@@ -302,7 +302,7 @@ public:
             {
                 if (Unit *pTarget = me->getVictim())
                 {
-                    DoCast(pTarget, SPELL_GRAVITY_WELL);
+                    DoCast(target, SPELL_GRAVITY_WELL);
                     uiCooldown = 6*IN_MILLISECONDS;
                 }
                 uiGravityWellTimer = 15*IN_MILLISECONDS;
@@ -312,7 +312,7 @@ public:
             {
                 if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
                 {
-                    DoCast(pTarget, SPELL_FIREBOMB, false);
+                    DoCast(target, SPELL_FIREBOMB, false);
                     uiCooldown = 2*IN_MILLISECONDS;
                 }
                 uiFireBombTimer = 2*IN_MILLISECONDS;

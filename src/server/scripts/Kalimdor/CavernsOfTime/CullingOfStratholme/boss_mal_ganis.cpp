@@ -69,9 +69,9 @@ class boss_mal_ganis : public CreatureScript
 public:
     boss_mal_ganis() : CreatureScript("boss_mal_ganis") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new boss_mal_ganisAI (pCreature);
+        return new boss_mal_ganisAI (creature);
     }
 
     struct boss_mal_ganisAI : public ScriptedAI
@@ -174,7 +174,7 @@ public:
 
                     if (uiMindBlastTimer <= diff)
                     {
-                        if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                        if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
                             DoCast(pTarget, DUNGEON_MODE(SPELL_MIND_BLAST, H_SPELL_MIND_BLAST));
                         uiMindBlastTimer = 6000;
                     } else uiMindBlastTimer -= diff;

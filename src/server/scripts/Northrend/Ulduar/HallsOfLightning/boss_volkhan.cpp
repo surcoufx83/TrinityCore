@@ -78,16 +78,16 @@ class boss_volkhan : public CreatureScript
 public:
     boss_volkhan() : CreatureScript("boss_volkhan") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new boss_volkhanAI(pCreature);
+        return new boss_volkhanAI(creature);
     }
 
     struct boss_volkhanAI : public ScriptedAI
     {
-        boss_volkhanAI(Creature* pCreature) : ScriptedAI(pCreature)
+        boss_volkhanAI(Creature* creature) : ScriptedAI(creature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = creature->GetInstanceScript();
         }
 
         InstanceScript* m_pInstance;
@@ -134,7 +134,7 @@ public:
                 m_pInstance->SetData(TYPE_VOLKHAN, NOT_STARTED);
         }
 
-        void EnterCombat(Unit* /*pWho*/)
+        void EnterCombat(Unit* /*who*/)
         {
             DoScriptText(SAY_AGGRO, me);
 
@@ -142,20 +142,20 @@ public:
                 m_pInstance->SetData(TYPE_VOLKHAN, IN_PROGRESS);
         }
 
-        void AttackStart(Unit* pWho)
+        void AttackStart(Unit* who)
         {
-            if (me->Attack(pWho, true))
+            if (me->Attack(who, true))
             {
-                me->AddThreat(pWho, 0.0f);
-                me->SetInCombatWith(pWho);
-                pWho->SetInCombatWith(me);
+                me->AddThreat(who, 0.0f);
+                me->SetInCombatWith(who);
+                who->SetInCombatWith(me);
 
                 if (!m_bHasTemper)
-                    me->GetMotionMaster()->MoveChase(pWho);
+                    me->GetMotionMaster()->MoveChase(who);
             }
         }
 
-        void JustDied(Unit* /*pKiller*/)
+        void JustDied(Unit* /*killer*/)
         {
             DoScriptText(SAY_DEATH, me);
             DespawnGolem();
@@ -179,7 +179,7 @@ public:
             }
         }
 
-        void KilledUnit(Unit* /*pVictim*/)
+        void KilledUnit(Unit* /*victim*/)
         {
             DoScriptText(RAND(SAY_SLAY_1, SAY_SLAY_2, SAY_SLAY_3), me);
         }
@@ -220,13 +220,13 @@ public:
             }
         }
 
-        void JustSummoned(Creature* pSummoned)
+        void JustSummoned(Creature* summoned)
         {
-            if (pSummoned->GetEntry() == NPC_MOLTEN_GOLEM)
+            if (summoned->GetEntry() == NPC_MOLTEN_GOLEM)
             {
-                m_lGolemGUIDList.push_back(pSummoned->GetGUID());
+                m_lGolemGUIDList.push_back(summoned->GetGUID());
 
-                if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
                     pSummoned->AI()->AttackStart(pTarget);
 
                 //useless at this position
@@ -372,9 +372,9 @@ class mob_molten_golem : public CreatureScript
 public:
     mob_molten_golem() : CreatureScript("mob_molten_golem") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new mob_molten_golemAI(pCreature);
+        return new mob_molten_golemAI(creature);
     }
 
     struct mob_molten_golemAI : public ScriptedAI
@@ -398,16 +398,16 @@ public:
             m_uiImmolation_Timer = 5000;
         }
 
-        void AttackStart(Unit* pWho)
+        void AttackStart(Unit* who)
         {
-            if (me->Attack(pWho, true))
+            if (me->Attack(who, true))
             {
-                me->AddThreat(pWho, 0.0f);
-                me->SetInCombatWith(pWho);
-                pWho->SetInCombatWith(me);
+                me->AddThreat(who, 0.0f);
+                me->SetInCombatWith(who);
+                who->SetInCombatWith(me);
 
                 if (!m_bIsFrozen)
-                    me->GetMotionMaster()->MoveChase(pWho);
+                    me->GetMotionMaster()->MoveChase(who);
             }
         }
 

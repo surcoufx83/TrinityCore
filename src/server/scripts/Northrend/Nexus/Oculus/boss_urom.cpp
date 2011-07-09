@@ -95,9 +95,9 @@ class boss_urom : public CreatureScript
 public:
     boss_urom() : CreatureScript("boss_urom") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new boss_uromAI (pCreature);
+        return new boss_uromAI (creature);
     }
 
     struct boss_uromAI : public BossAI
@@ -137,7 +137,6 @@ public:
                 pAttacker->DealDamage(pAttacker, pAttacker->GetHealth());
         }
 
-        void EnterCombat(Unit* /*pWho*/)
         {
             _EnterCombat();
 
@@ -154,24 +153,23 @@ public:
             DoScriptText(RAND(SAY_KILL_1, SAY_KILL_2, SAY_KILL_3), me);
         }
 
-        void AttackStart(Unit* pWho)
         {
-            if (!pWho)
+            if (!who)
                 return;
 
             if (me->GetPositionZ() > 518.63f)
-                DoStartNoMovement(pWho);
+                DoStartNoMovement(who);
 
             if (me->GetPositionZ() < 518.63f)
             {
-                if (me->Attack(pWho, true))
+                if (me->Attack(who, true))
                 {
                     DoScriptText(SayAggro[3], me);
 
-                    me->SetInCombatWith(pWho);
-                    pWho->SetInCombatWith(me);
+                    me->SetInCombatWith(who);
+                    who->SetInCombatWith(me);
 
-                    me->GetMotionMaster()->MoveChase(pWho, 0, 0);
+                    me->GetMotionMaster()->MoveChase(who, 0, 0);
                 }
             }
         }

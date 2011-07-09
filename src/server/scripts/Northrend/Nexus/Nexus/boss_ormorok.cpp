@@ -56,9 +56,9 @@ class boss_ormorok : public CreatureScript
 public:
     boss_ormorok() : CreatureScript("boss_ormorok") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new boss_ormorokAI (pCreature);
+        return new boss_ormorokAI (creature);
     }
 
     struct boss_ormorokAI : public ScriptedAI
@@ -225,9 +225,9 @@ class mob_crystal_spike : public CreatureScript
 public:
     mob_crystal_spike() : CreatureScript("mob_crystal_spike") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new mob_crystal_spikeAI (pCreature);
+        return new mob_crystal_spikeAI (creature);
     }
 
     struct mob_crystal_spikeAI : public Scripted_NoMovementAI
