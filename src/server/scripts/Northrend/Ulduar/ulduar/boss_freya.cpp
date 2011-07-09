@@ -574,14 +574,14 @@ public:
 
                 if (Elder[1]->isAlive())
                 {
-                    Elder[1]->CastSpell(me, SPELL_STONEBARK_ESSENCE, true);
-                    bIsElderStonebarkAlive = true;
+                    Elder[1]->CastSpell(me, SPELL_IRONBRANCH_ESSENCE, true);
+                    bIsElderIronbranchAlive = true;
                 }
 
                 if (Elder[2]->isAlive())
                 {
-                    Elder[2]->CastSpell(me, SPELL_IRONBRANCH_ESSENCE, true);
-                    bIsElderIronbranchAlive = true;
+                    Elder[2]->CastSpell(me, SPELL_STONEBARK_ESSENCE, true);
+                    bIsElderStonebarkAlive = true;
                 }
             }
         }
