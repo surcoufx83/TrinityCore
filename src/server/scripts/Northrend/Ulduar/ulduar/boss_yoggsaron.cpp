@@ -582,6 +582,7 @@ public:
         uint32 uiPsychosis_Timer;
         uint32 uiMindSpell_Timer;
         uint32 uiTentacle_Timer;
+        uint32 uiTentacle1_Timer;
 
         uint32 uiEnrage_Timer;
         uint32 uiMadness_Timer;
@@ -702,6 +703,7 @@ public:
             uiPsychosis_Timer = urand(5000,5000);
             uiMindSpell_Timer = urand(30000,30000);
             uiTentacle_Timer = urand(3000,5000);
+            uiTentacle1_Timer = 1000;
             uiMadness_Timer = 60000;
 
             uiDeafeningRoar_Timer = urand(30000,60000);
@@ -1426,7 +1428,6 @@ public:
                                     yogg->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                                     DoScriptText(SAY_PHASE2_5,yogg);
 
-                                    yogg->CastSpell(yogg,SPELL_SUMMON_CRUSHER_TENTACLE,true);
                                     yogg->CastSpell(yogg,SPELL_SUMMON_CURRUPTOR_TENTACLE,true);
                                 }
                                 me->setFaction(14);
@@ -1481,7 +1482,7 @@ public:
 
                             if(uiTentacle_Timer <= diff)
                             {
-                                if(urand(0,2) == 0)
+                                if(urand(0,1) == 0)
                                 {
                                     if(Player* target = SelectPlayerTargetInRange(500.0f))
                                         if(!IsPlayerInBrainRoom(target))
@@ -1489,15 +1490,19 @@ public:
                                 }else
                                 {
                                     if(Creature* yogg = me->GetCreature(*me,guidYogg))
-                                    {
-                                        if(!GetRandomEntryTarget(SPELL_SUMMON_CRUSHER_TENTACLE) || !urand(0,3))
-                                            yogg->CastSpell(yogg,SPELL_SUMMON_CRUSHER_TENTACLE,true);
-                                        else
-                                            yogg->CastSpell(yogg,SPELL_SUMMON_CURRUPTOR_TENTACLE,true);
-                                    }
+                                        yogg->CastSpell(yogg,SPELL_SUMMON_CURRUPTOR_TENTACLE,true);
                                 }
                                 uiTentacle_Timer =  uiBrainEvents_Count < 4 ? urand(5000,10000) : urand(2000,5000);
                             }else uiTentacle_Timer -= diff;
+
+                            if(uiTentacle1_Timer <= diff)
+                            {
+                                if(Creature* yogg = me->GetCreature(*me,guidYogg))
+                                    yogg->CastSpell(yogg,SPELL_SUMMON_CRUSHER_TENTACLE,true);
+                                uiTentacle1_Timer = uiBrainEvents_Count < 4 ? urand(30000,40000) : urand(10000,15000);
+                            }else uiTentacle1_Timer -= diff;
+
+
                         }else
                         {
                             if(Creature* yoggbrain = me->GetCreature(*me,guidYoggBrain))
@@ -1711,7 +1716,7 @@ public:
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             //me->SetReactState(REACT_PASSIVE); //Prevent MoveInLineOfSight
 
-            me->GetMotionMaster()->MoveRandom(50.0f);
+            me->GetMotionMaster()->MoveRandom(25.0f);
         }
 
         void UpdateAI(const uint32 diff) {}

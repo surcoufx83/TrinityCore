@@ -433,9 +433,12 @@ void AchievementMgr::ResetAchievementCriteria(AchievementCriteriaTypes type, uin
 {
     sLog->outDebug(LOG_FILTER_ACHIEVEMENTSYS, "AchievementMgr::ResetAchievementCriteria(%u, %u, %u)", type, miscvalue1, miscvalue2);
 
-    // disable for gamemasters with GM-mode enabled
-    if (m_player->isGameMaster())
+    if (m_player->GetSession()->GetSecurity() > AccountTypes(sWorld->getIntConfig(CONFIG_GM_LEVEL_ALLOW_ACHIEVEMENTS)))
         return;
+
+    // disable for gamemasters with GM-mode enabled
+    //if (m_player->GetSession()->GetSecurity() > SEC_PLAYER)
+    //    return;
 
     AchievementCriteriaEntryList const& achievementCriteriaList = sAchievementMgr->GetAchievementCriteriaByType(type);
     for (AchievementCriteriaEntryList::const_iterator i = achievementCriteriaList.begin(); i != achievementCriteriaList.end(); ++i)
@@ -734,9 +737,12 @@ void AchievementMgr::UpdateAchievementCriteria(AchievementCriteriaTypes type, ui
 {
     sLog->outDebug(LOG_FILTER_ACHIEVEMENTSYS, "AchievementMgr::UpdateAchievementCriteria(%u, %u, %u)", type, miscValue1, miscValue2);
 
-    // disable for gamemasters with GM-mode enabled
-    if (m_player->isGameMaster())
+    if (m_player->GetSession()->GetSecurity() > AccountTypes(sWorld->getIntConfig(CONFIG_GM_LEVEL_ALLOW_ACHIEVEMENTS)))
         return;
+
+    // disable for gamemasters with GM-mode enabled
+    //if (m_player->GetSession()->GetSecurity() > SEC_PLAYER)
+    //    return;
 
     AchievementCriteriaEntryList const& achievementCriteriaList = sAchievementMgr->GetAchievementCriteriaByType(type);
     for (AchievementCriteriaEntryList::const_iterator i = achievementCriteriaList.begin(); i != achievementCriteriaList.end(); ++i)
@@ -2006,9 +2012,12 @@ void AchievementMgr::CompletedAchievement(AchievementEntry const* achievement)
 {
     sLog->outDetail("AchievementMgr::CompletedAchievement(%u)", achievement->ID);
 
-    // disable for gamemasters with GM-mode enabled
-    if (m_player->isGameMaster())
+    if (m_player->GetSession()->GetSecurity() > AccountTypes(sWorld->getIntConfig(CONFIG_GM_LEVEL_ALLOW_ACHIEVEMENTS)))
         return;
+
+    // disable for gamemasters with GM-mode enabled
+    //if (m_player->GetSession()->GetSecurity() > SEC_PLAYER)
+    //    return;
 
     if (achievement->flags & ACHIEVEMENT_FLAG_COUNTER || HasAchieved(achievement))
         return;
