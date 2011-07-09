@@ -25,6 +25,68 @@ enum Data
     DATA_LICHKING_EVENT,
     DATA_WAVE_COUNT,
     DATA_TEAM_IN_INSTANCE,
+    
+    DATA_ESCAPE_LIDER       = 101,
+    DATA_LIDER              = 102,
+    DATA_SUMMONS            = 103,
+
+    TYPE_PHASE              = 0,
+    TYPE_EVENT              = 1,
+    TYPE_FALRIC             = 2,
+    TYPE_MARWYN             = 3,
+    TYPE_FROST_GENERAL      = 4,
+    TYPE_LICH_KING          = 5,
+    TYPE_ICE_WALL_01        = 6,
+    TYPE_ICE_WALL_02        = 7,
+    TYPE_ICE_WALL_03        = 8,
+    TYPE_ICE_WALL_04        = 9,
+    TYPE_HALLS              = 10,
+    MAX_ENCOUNTERS,
+
+    /*UNITS*/
+    NPC_DARK_1                   = 38177, //Shadowy Mercenary
+    NPC_DARK_2                   = 38176, //Tortured Rifleman
+    NPC_DARK_3                   = 38173, //Spectral Footman
+    NPC_DARK_4                   = 38172, //Phantom Mage
+    NPC_DARK_5                   = 38567, //Phantom Hallucination
+    NPC_DARK_6                   = 38175, //Ghostly Priest
+    NPC_JAINA                    = 37221,
+    NPC_SYLVANA                  = 37223,
+    NPC_JAINA_OUTRO              = 36955,
+    NPC_SYLVANA_OUTRO            = 37554,
+    NPC_ALTAR_TARGET             = 37704,
+    NPC_LICH_KING                = 36954,
+    BOSS_LICH_KING               = 37226,
+    NPC_ICE_WALL                 = 37014,
+    NPC_GHOSTLY_ROGUE            = 38177,
+    NPC_GHOSTLY_PRIEST           = 38175,
+    NPC_GHOSTLY_MAGE             = 38172,
+    NPC_GHOSTLY_FOOTMAN          = 38173,
+    NPC_GHOSTLY_RIFLEMAN         = 38176,
+    NPC_GLUK                     = 38567,
+
+    NPC_RAGING_GNOUL             = 36940,
+    NPC_RISEN_WITCH_DOCTOR       = 36941,
+    NPC_ABON                     = 37069,
+
+    NPC_FROST_GENERAL            = 36723,
+
+    GO_ICECROWN_DOOR             = 201976, //72802
+    GO_ICECROWN_DOOR_2           = 197342,
+    GO_ICECROWN_DOOR_3           = 197343,
+    GO_IMPENETRABLE_DOOR         = 197341, //72801
+
+    GO_ICE_WALL_1                = 201385,
+    GO_ICE_WALL_2                = 201885,
+    GO_ICE_WALL_3                = 202396,
+    GO_ICE_WALL_4                = 500001,
+    GO_CAVE                      = 201596,
+    GO_PORTAL                    = 202079,
+
+    GO_CAPTAIN_CHEST_1           = 202212, //3145
+    GO_CAPTAIN_CHEST_2           = 201710, //30357
+    GO_CAPTAIN_CHEST_3           = 202337, //3246
+    GO_CAPTAIN_CHEST_4           = 202336, //3333
 };
 
 enum Data64

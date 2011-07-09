@@ -99,7 +99,7 @@ public:
         if (creature->isQuestGiver())
             player->PrepareQuestMenu(creature->GetGUID());
 
-    if (pPlayer->GetQuestStatus(11132) == QUEST_STATUS_COMPLETE && pPlayer->GetQuestStatus(11166) == QUEST_STATUS_INCOMPLETE)
+    if (player->GetQuestStatus(11132) == QUEST_STATUS_COMPLETE && player->GetQuestStatus(11166) == QUEST_STATUS_INCOMPLETE)
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HBN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
         player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());

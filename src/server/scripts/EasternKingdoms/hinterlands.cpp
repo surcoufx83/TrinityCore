@@ -132,7 +132,7 @@ public:
 
         void JustSummoned(Creature* summoned)
         {
-            pSummoned->AI()->AttackStart(me);
+            summoned->AI()->AttackStart(me);
         }
     };
 

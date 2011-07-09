@@ -537,7 +537,7 @@ public:
                             uint32 count = urand(1, 3);
                             for (uint8 i = 1; i <= count; i++)
                             {
-                                Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1, 200, true);
+                                Unit *target = SelectTarget(SELECT_TARGET_RANDOM, 1, 200, true);
                                 if (target && !target->isCharmed() && (chained.find(target->GetGUID()) == chained.end()))
                                 {
                                     DoCast(target, SPELL_CHAINS_OF_KELTHUZAD);
@@ -569,7 +569,7 @@ public:
                                         continue;
                                     }
 
-                                    if (Unit *pTarget = SelectTarget(SELECT_TARGET_TOPAGGRO, 0, NotCharmedTargetSelector()))
+                                    if (Unit *target = SelectTarget(SELECT_TARGET_TOPAGGRO, 0, NotCharmedTargetSelector()))
                                     {
                                         switch(player->getClass())
                                         {

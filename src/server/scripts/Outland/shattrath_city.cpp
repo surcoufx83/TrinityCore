@@ -453,7 +453,7 @@ public:
             {
                 case 0:
                 {
-                    me->SetInFront(pPlayer);
+                    me->SetInFront(player);
                     Unit* Creepjack = me->FindNearestCreature(NPC_CREEPJACK, 20);
                     if (Creepjack)
                         Creepjack->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
@@ -464,19 +464,19 @@ public:
                     return 2000;
                 }
                 case 1:
-                    DoScriptText(SAY_1, me, pPlayer);
+                    DoScriptText(SAY_1, me, player);
                     return 3000;
                 case 2:
-                    DoScriptText(SAY_2, me, pPlayer);
+                    DoScriptText(SAY_2, me, player);
                     return 5000;
                 case 3:
-                    DoScriptText(SAY_3, me, pPlayer);
+                    DoScriptText(SAY_3, me, player);
                     return 2000;
                 case 4:
-                    DoScriptText(SAY_4, me, pPlayer);
+                    DoScriptText(SAY_4, me, player);
                     return 2000;
                 case 5:
-                    DoScriptText(SAY_5, me, pPlayer);
+                    DoScriptText(SAY_5, me, player);
                     return 2000;
                 case 6:
                     Attack = true;
@@ -538,7 +538,7 @@ public:
                 me->SetReactState(REACT_AGGRESSIVE);
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
-                if (!pPlayer || !me->canAttack(pPlayer))
+                if (!player || !me->canAttack(player))
                 {
                     EnterEvadeMode();
                     return;
@@ -547,18 +547,18 @@ public:
                 Creature* Creepjack = me->FindNearestCreature(NPC_CREEPJACK, 20);
                 if (Creepjack)
                 {
-                    Creepjack->AI()->AttackStart(pPlayer);
+                    Creepjack->AI()->AttackStart(player);
                     Creepjack->setFaction(14);
                     Creepjack->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 }
                 Creature* Malone = me->FindNearestCreature(NPC_MALONE, 20);
                 if (Malone)
                 {
-                    Malone->AI()->AttackStart(pPlayer);
+                    Malone->AI()->AttackStart(player);
                     Malone->setFaction(14);
                     Malone->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 }
-                AttackStart(pPlayer);
+                AttackStart(player);
                 Attack = false;
             }
 

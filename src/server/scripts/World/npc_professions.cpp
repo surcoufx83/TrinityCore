@@ -397,7 +397,7 @@ public:
 
         if (player->HasSkill(SKILL_ALCHEMY) && player->GetBaseSkillValue(SKILL_ALCHEMY) >= 350 && player->getLevel() > 67)
         {
-            if (pPlayer->GetQuestRewardStatus(Q_TRANSMUTE) || pPlayer->GetQuestRewardStatus(Q_POTION) || pPlayer->GetQuestRewardStatus(Q_ELIXIR))
+            if (player->GetQuestRewardStatus(Q_TRANSMUTE) || player->GetQuestRewardStatus(Q_POTION) || player->GetQuestRewardStatus(Q_ELIXIR))
             {
                 switch (eCreature)
                 {
@@ -470,7 +470,7 @@ public:
                 if (player->HasEnoughMoney(DoHighUnlearnCost(player)))
                 {
                     creature->CastSpell(player, S_UNLEARN_TRANSMUTE, true);
-                    pPlayer->removeSpell(S_TRANSMUTE);
+                    player->removeSpell(S_TRANSMUTE);
                 } else
                     player->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, creature, 0, 0);
                 player->CLOSE_GOSSIP_MENU();
@@ -479,7 +479,7 @@ public:
                 if (player->HasEnoughMoney(DoHighUnlearnCost(player)))
                 {
                     creature->CastSpell(player, S_UNLEARN_ELIXIR, true);
-                    pPlayer->removeSpell(S_ELIXIR);
+                    player->removeSpell(S_ELIXIR);
                 } else
                     player->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, creature, 0, 0);
                 player->CLOSE_GOSSIP_MENU();
@@ -488,7 +488,7 @@ public:
                 if (player->HasEnoughMoney(DoHighUnlearnCost(player)))
                 {
                     creature->CastSpell(player, S_UNLEARN_POTION, true);
-                    pPlayer->removeSpell(S_POTION);
+                    player->removeSpell(S_POTION);
                 } else
                     player->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, creature, 0, 0);
                 player->CLOSE_GOSSIP_MENU();
@@ -682,8 +682,8 @@ public:
                     {
                         player->CastSpell(player, S_UNLEARN_WEAPON, true);
                         ProfessionUnlearnSpells(player, S_UNLEARN_WEAPON);
-                        pPlayer->removeSpell(S_WEAPON);
-                        pPlayer->GetTeam() == TEAM_ALLIANCE ? pPlayer->SetQuestStatus( Q_WEAPON_A, QUEST_STATUS_NONE) :  pPlayer->SetQuestStatus( Q_WEAPON_A, QUEST_STATUS_NONE);
+                        player->removeSpell(S_WEAPON);
+                        player->GetTeam() == TEAM_ALLIANCE ? player->SetQuestStatus( Q_WEAPON_A, QUEST_STATUS_NONE) :  player->SetQuestStatus( Q_WEAPON_A, QUEST_STATUS_NONE);
                         player->CLOSE_GOSSIP_MENU();
                     } else
                         player->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, creature, 0, 0);
@@ -701,8 +701,8 @@ public:
                     {
                         player->CastSpell(player, S_UNLEARN_ARMOR, true);
                         ProfessionUnlearnSpells(player, S_UNLEARN_ARMOR);
-                        pPlayer->removeSpell(S_ARMOR);
-                        pPlayer->GetTeam() == TEAM_ALLIANCE ? pPlayer->SetQuestStatus( Q_ARMOR_A, QUEST_STATUS_NONE) :  pPlayer->SetQuestStatus( Q_ARMOR_A, QUEST_STATUS_NONE);
+                        player->removeSpell(S_ARMOR);
+                        player->GetTeam() == TEAM_ALLIANCE ? player->SetQuestStatus( Q_ARMOR_A, QUEST_STATUS_NONE) :  player->SetQuestStatus( Q_ARMOR_A, QUEST_STATUS_NONE);
                     } else
                         player->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, creature, 0, 0);
                 } else
@@ -730,7 +730,7 @@ public:
                     {
                         player->CastSpell(player, S_UNLEARN_HAMMER, true);
                         ProfessionUnlearnSpells(player, S_UNLEARN_HAMMER);
-                        pPlayer->removeSpell(S_HAMMER);
+                        player->removeSpell(S_HAMMER);
                     } else
                         player->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, creature, 0, 0);
                 } else
@@ -744,7 +744,7 @@ public:
                     {
                         player->CastSpell(player, S_UNLEARN_AXE, true);
                         ProfessionUnlearnSpells(player, S_UNLEARN_AXE);
-                        pPlayer->removeSpell(S_AXE);
+                        player->removeSpell(S_AXE);
                     } else
                         player->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, creature, 0, 0);
                 } else
@@ -758,7 +758,7 @@ public:
                     {
                         player->CastSpell(player, S_UNLEARN_SWORD, true);
                         ProfessionUnlearnSpells(player, S_UNLEARN_SWORD);
-                        pPlayer->removeSpell(S_SWORD);
+                        player->removeSpell(S_SWORD);
                     } else
                         player->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, creature, 0, 0);
                 } else
@@ -1041,7 +1041,7 @@ public:
                         player->CastSpell(player, S_UNLEARN_DRAGON, true);
                         ProfessionUnlearnSpells(player, S_UNLEARN_DRAGON);
 
-                        pPlayer->removeSpell(S_DRAGON);
+                        player->removeSpell(S_DRAGON);
 
                     } else
                         player->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, creature, 0, 0);
@@ -1057,7 +1057,7 @@ public:
                         player->CastSpell(player, S_UNLEARN_ELEMENTAL, true);
                         ProfessionUnlearnSpells(player, S_UNLEARN_ELEMENTAL);
 
-                    pPlayer->removeSpell(S_ELEMENTAL);
+                    player->removeSpell(S_ELEMENTAL);
 
                     } else
                         player->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, creature, 0, 0);
@@ -1073,7 +1073,7 @@ public:
                         player->CastSpell(player, S_UNLEARN_TRIBAL, true);
                         ProfessionUnlearnSpells(player, S_UNLEARN_TRIBAL);
 
-                        pPlayer->removeSpell(S_TRIBAL);
+                        player->removeSpell(S_TRIBAL);
 
                     } else
                         player->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, creature, 0, 0);
@@ -1231,7 +1231,7 @@ public:
                     {
                         player->CastSpell(player, S_UNLEARN_SPELLFIRE, true);
                         ProfessionUnlearnSpells(player, S_UNLEARN_SPELLFIRE);
-                        pPlayer->removeSpell(S_SPELLFIRE);
+                        player->removeSpell(S_SPELLFIRE);
                     } else
                         player->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, creature, 0, 0);
                 } else
@@ -1245,7 +1245,7 @@ public:
                     {
                         player->CastSpell(player, S_UNLEARN_MOONCLOTH, true);
                         ProfessionUnlearnSpells(player, S_UNLEARN_MOONCLOTH);
-                        pPlayer->removeSpell(S_MOONCLOTH);
+                        player->removeSpell(S_MOONCLOTH);
                     } else
                         player->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, creature, 0, 0);
                 } else
@@ -1259,7 +1259,7 @@ public:
                     {
                         player->CastSpell(player, S_UNLEARN_SHADOWEAVE, true);
                         ProfessionUnlearnSpells(player, S_UNLEARN_SHADOWEAVE);
-                        pPlayer->removeSpell(S_SHADOWEAVE);
+                        player->removeSpell(S_SHADOWEAVE);
                     } else
                         player->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, creature, 0, 0);
                 } else

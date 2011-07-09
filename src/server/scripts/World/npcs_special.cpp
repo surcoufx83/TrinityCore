@@ -1281,7 +1281,7 @@ public:
         if (creature->isCanTrainingAndResetTalentsOf(player))
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, GOSSIP_HELLO_ROGUE1, GOSSIP_SENDER_MAIN, GOSSIP_OPTION_UNLEARNTALENTS);
 
-        if (pPlayer->GetSpecsCount() == 1 && pCreature->isCanTrainingAndResetTalentsOf(pPlayer) && !(pPlayer->getLevel() < sWorld->getIntConfig(CONFIG_MIN_DUALSPEC_LEVEL)))
+        if (player->GetSpecsCount() == 1 && creature->isCanTrainingAndResetTalentsOf(player) && !(player->getLevel() < sWorld->getIntConfig(CONFIG_MIN_DUALSPEC_LEVEL)))
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, GOSSIP_HELLO_ROGUE3, GOSSIP_SENDER_MAIN, GOSSIP_OPTION_LEARNDUALSPEC);
 
         if (player->getClass() == CLASS_ROGUE && player->getLevel() >= 24 && !player->HasItemCount(17126, 1) && !player->GetQuestRewardStatus(6681))
@@ -2256,8 +2256,9 @@ public:
         return new npc_wormholeAI(creature);
     }
 
+    bool OnGossipHello(Player* player, Creature* creature)
     {
-        npc_wormholeAI* pAI = CAST_AI(npc_wormholeAI, pCreature->AI());
+        npc_wormholeAI* pAI = CAST_AI(npc_wormholeAI, creature->AI());
         
         if (!pAI)
             return false;
@@ -2272,7 +2273,7 @@ public:
                 player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ENGINEERING5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
 
                 if (pAI->rnd == 1)
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ENGINEERING6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ENGINEERING6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
 
             }
         }
@@ -2310,8 +2311,8 @@ public:
                 player->CastSpell(player, SPELL_STORM_PEAKS, true);
                 break;
             case GOSSIP_ACTION_INFO_DEF + 6: //Underground
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pPlayer->CastSpell(pPlayer, SPELL_UNDERGROUND, true);
+                player->CLOSE_GOSSIP_MENU();
+                player->CastSpell(player, SPELL_UNDERGROUND, true);
                 break;
         }
         return true;
@@ -2584,8 +2585,8 @@ public:
             !player->HasItemCount(ITEM_TABARD_OF_THE_SUMMER_FLAMES, 1, true))
             m_bLostSummer = true;
 
-        if(pPlayer->HasAchieved(ACHIEVEMENT_EXPLORE_NORTHREND) &&
-            !pPlayer->HasItemCount(ITEM_TABARD_OF_THE_EXPLORER, 1, true))
+        if(player->HasAchieved(ACHIEVEMENT_EXPLORE_NORTHREND) &&
+            !player->HasItemCount(ITEM_TABARD_OF_THE_EXPLORER, 1, true))
             m_bLostExplorer = true;
 
         if (m_bLostBloodKnight || m_bLostHand || m_bLostProtector || m_bLostIllidari || m_bLostSummer || m_bLostExplorer)
@@ -2614,7 +2615,7 @@ public:
             }
 
             if(m_bLostExplorer)
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOST_TABARD_OF_THE_EXPLORER, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+8);
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOST_TABARD_OF_THE_EXPLORER, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+8);
 
         }
         else
@@ -2660,8 +2661,8 @@ public:
                 player->CastSpell(player, SPELL_TABARD_OF_SUMMER_FLAMES, false);
                 break;
             case GOSSIP_ACTION_INFO_DEF+8:
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pPlayer->CastSpell(pPlayer, SPELL_TABARD_OF_THE_EXPLORER, false);
+                player->CLOSE_GOSSIP_MENU();
+                player->CastSpell(player, SPELL_TABARD_OF_THE_EXPLORER, false);
                 break;
         }
         return true;

@@ -153,7 +153,7 @@ public:
             }
         }
 
-        Creature* DoSummonImpaleTarget(Unit *pTarget)
+        Creature* DoSummonImpaleTarget(Unit *target)
         {
             Position targetPos;
             target->GetPosition(&targetPos);

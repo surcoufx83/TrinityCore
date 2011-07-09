@@ -181,7 +181,7 @@ public:
                 if (uint64 TargetGUID = GetChainHealTargetGUID())
                 {
                     if (Creature* target = Unit::GetCreature(*me, TargetGUID))
-                        DoCast(pTarget, DUNGEON_MODE(SPELL_CHAIN_HEAL,H_SPELL_CHAIN_HEAL));
+                        DoCast(target, DUNGEON_MODE(SPELL_CHAIN_HEAL,H_SPELL_CHAIN_HEAL));
 
                     //If one of the adds is dead spawn heals faster
                     Creature* pGuard1 = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_EREKEM_GUARD_1) : 0);

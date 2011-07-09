@@ -326,8 +326,8 @@ public:
                         {
                             Phoenix->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE + UNIT_FLAG_NON_ATTACKABLE);
                             SetThreatList(Phoenix);
-                            if (pTarget)
-                                Phoenix->AI()->AttackStart(pTarget);
+                            if (target)
+                                Phoenix->AI()->AttackStart(target);
                             else
                                 Phoenix->AI()->AttackStart(me->getVictim());
                         }

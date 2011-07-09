@@ -353,7 +353,7 @@ public:
                         {
                             pTemp->CastSpell(pTemp, SPELL_WITHER, true);
 
-                            if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                            if (Unit *target = SelectTarget(SELECT_TARGET_RANDOM, 0))
                             {
                                 pTemp->AddThreat(target, 0.0f);
                                 pTemp->AI()->AttackStart(target);

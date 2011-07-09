@@ -82,8 +82,8 @@ public:
 
             me->setDeathState(DEAD);
 
-        if(pWho->GetTypeId() == TYPEID_PLAYER)
-            pWho->ToPlayer()->KilledMonsterCredit(NPC_RAGECLAW,RageclawGUID);
+            if(who->GetTypeId() == TYPEID_PLAYER)
+                who->ToPlayer()->KilledMonsterCredit(NPC_RAGECLAW,RageclawGUID);
         }
 
         void SpellHit(Unit* pCaster, const SpellEntry* pSpell)

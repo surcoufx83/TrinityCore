@@ -92,7 +92,7 @@ class boss_grand_warlock_nethekurse : public CreatureScript
             boss_grand_warlock_nethekurseAI(Creature* creature) : ScriptedAI(creature)
             {
                 pInstance = creature->GetInstanceScript();
-                HeroicMode = pCreature->GetMap()->IsHeroic();
+                HeroicMode = creature->GetMap()->IsHeroic();
             }
 
             InstanceScript* pInstance;

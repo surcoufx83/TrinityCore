@@ -138,9 +138,8 @@ public:
         if (player->GetQuestStatus(QUEST_FORTUNATE_MISUNDERSTANDINGS) == QUEST_STATUS_INCOMPLETE)
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    if (pPlayer->GetQuestStatus(QUEST_JUST_FOLLOWING_ORDERS) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-
+        if (player->GetQuestStatus(QUEST_JUST_FOLLOWING_ORDERS) == QUEST_STATUS_INCOMPLETE)
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
 
         return true;
     }
@@ -155,18 +154,18 @@ public:
             creature->SetUnitMovementFlags(MOVEMENTFLAG_JUMPING);
             DoScriptText(SAY_START_IRO, creature);
 
-            switch (pPlayer->GetTeam())
+            switch (player->GetTeam())
             {
                 case ALLIANCE:
-                    pCreature->setFaction(FACTION_ESCORTEE_A);
+                    creature->setFaction(FACTION_ESCORTEE_A);
                     break;
                 case HORDE:
-                    pCreature->setFaction(FACTION_ESCORTEE_H);
+                    creature->setFaction(FACTION_ESCORTEE_H);
                     break;
             }
         }else if (uiAction == GOSSIP_ACTION_INFO_DEF + 2)
         {
-            pCreature->SummonCreature(ENTRY_RAVENOUS_MANGAL_CROCOLISK,*pCreature,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
+            player->SummonCreature(ENTRY_RAVENOUS_MANGAL_CROCOLISK,*creature,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
         }
         return true;
     }
@@ -307,7 +306,7 @@ public:
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
             player->CastSpell(player, SPELL_FREYA_CONVERSATION, true);
-            pPlayer->CompleteQuest(QUEST_FREYA_PACT);
+            player->CompleteQuest(QUEST_FREYA_PACT);
             break;
         }
         return true;

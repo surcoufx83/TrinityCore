@@ -227,7 +227,7 @@ public:
                 m_lGolemGUIDList.push_back(summoned->GetGUID());
 
                 if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
-                    pSummoned->AI()->AttackStart(pTarget);
+                    summoned->AI()->AttackStart(target);
 
                 //useless at this position
                 //pSummoned->CastSpell(pSummoned, DUNGEON_MODE(SPELL_HEAT_N, SPELL_HEAT_H), false, NULL, NULL, me->GetGUID());

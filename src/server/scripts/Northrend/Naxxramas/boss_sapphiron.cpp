@@ -378,8 +378,8 @@ public:
                 {
                     if (GameObject* pGo = GameObject::GetGameObject(*me, itr->second))
                     {
-                        float angle = me->GetAngle(pGo) - me->GetAngle(pTarget);
-                        float dist = me->GetExactDist2d(pTarget->GetPositionX(), pTarget->GetPositionY()) - me->GetExactDist2d(pGo->GetPositionX(), pGo->GetPositionY());
+                        float angle = me->GetAngle(pGo) - me->GetAngle(target);
+                        float dist = me->GetExactDist2d(target->GetPositionX(), target->GetPositionY()) - me->GetExactDist2d(pGo->GetPositionX(), pGo->GetPositionY());
                         //if (pGo->IsInBetween(me, pTarget, 2.0f)
                         //    && me->GetExactDist2d(pTarget->GetPositionX(), pTarget->GetPositionY()) - me->GetExactDist2d(pGo->GetPositionX(), pGo->GetPositionY()) < 5.0f)
                         if (angle > -0.04f && angle < 0.04f && dist < 5.0f && dist >= 0.0f)

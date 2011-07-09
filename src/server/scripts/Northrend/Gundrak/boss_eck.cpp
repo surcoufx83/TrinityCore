@@ -123,10 +123,10 @@ public:
                 Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1);
                 if (target && target->GetTypeId() == TYPEID_PLAYER)
                 {
-                    if (me->GetExactDist(pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ()) < 35)
+                    if (me->GetExactDist(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ()) < 35)
                     { 
-                        DoCast(pTarget, SPELL_ECK_SPRING);
-                        EckResetThread(pTarget); //test
+                        DoCast(target, SPELL_ECK_SPRING);
+                        EckResetThread(target); //test
 
                         uiSpringTimer = urand(9*IN_MILLISECONDS, 15*IN_MILLISECONDS);
                     }

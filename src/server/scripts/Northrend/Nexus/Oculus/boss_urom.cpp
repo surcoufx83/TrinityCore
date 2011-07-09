@@ -132,11 +132,12 @@ public:
         }
 
         void DamageTaken(Unit* pAttacker, uint32& )
-        {	
+        {
             if(pAttacker->IsVehicle())
                 pAttacker->DealDamage(pAttacker, pAttacker->GetHealth());
         }
 
+        void EnterCombat(Unit* /*who*/)
         {
             _EnterCombat();
 
@@ -153,6 +154,7 @@ public:
             DoScriptText(RAND(SAY_KILL_1, SAY_KILL_2, SAY_KILL_3), me);
         }
 
+        void AttackStart(Unit* who)
         {
             if (!who)
                 return;

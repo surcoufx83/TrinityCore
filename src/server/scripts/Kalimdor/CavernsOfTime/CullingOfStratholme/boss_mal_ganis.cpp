@@ -175,7 +175,7 @@ public:
                     if (uiMindBlastTimer <= diff)
                     {
                         if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                            DoCast(pTarget, DUNGEON_MODE(SPELL_MIND_BLAST, H_SPELL_MIND_BLAST));
+                            DoCast(target, DUNGEON_MODE(SPELL_MIND_BLAST, H_SPELL_MIND_BLAST));
                         uiMindBlastTimer = 6000;
                     } else uiMindBlastTimer -= diff;
 
