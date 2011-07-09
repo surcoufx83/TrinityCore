@@ -827,3 +827,12 @@ UPDATE `creature_template` SET `mingold`=2128378*2.5, `maxgold`=2128378*2.5 WHER
 
 -- herb and mineral respawn
 UPDATE `gameobject` SET `spawntimesecs`=604800 WHERE `map`=603 AND `spawntimesecs`=3600;
+
+-- Yogg-Saron brain Interrupt Immune ( 501ac1b297e903800de2df63a34e2b5675c9fc26 )
+UPDATE `creature_template` SET `mechanic_immune_mask`=`mechanic_immune_mask`| 650805115 WHERE `entry` IN (33890,33954);
+
+-- Add Stun-Immune to XT-002 Heart; 2048 = MECHANIC_STUN
+UPDATE `creature_template` SET `mechanic_immune_mask` = `mechanic_immune_mask` | 2048 WHERE `entry` IN (
+33995, -- Heart of the Deconstructor (Heroic)
+33329  -- Heart of the Deconstructor
+)
