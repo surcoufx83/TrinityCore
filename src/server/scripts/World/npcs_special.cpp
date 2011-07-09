@@ -2796,11 +2796,12 @@ class npc_torch_tossing_bunny : public CreatureScript
             void Reset()
             {
                 _targetTimer = urand(5000, 20000);
+                _validTarget = false;
             }
 
             void SpellHit(Unit* caster, SpellEntry const* spell)
             {
-                if (spell->Id == SPELL_TORCH_TOSS && me->HasAura(SPELL_TARGET_INDICATOR))
+                if (spell->Id == SPELL_TORCH_TOSS && _validTarget)
                 {
                     uint8 neededHits;
 
@@ -2829,8 +2830,17 @@ class npc_torch_tossing_bunny : public CreatureScript
             {
                 if (_targetTimer <= diff)
                 {
-                    DoCast(SPELL_TARGET_INDICATOR);
-                    _targetTimer = urand(10000, 20000);
+                    if (!_validTarget)
+                    {
+                        _validTarget = true;
+                        DoCast(SPELL_TARGET_INDICATOR);
+                        _targetTimer = 5000;
+                    }
+                    else
+                    {
+                        _validTarget = false;
+                        _targetTimer = urand(5000, 15000);
+                    }
                 }
                 else
                     _targetTimer -= diff;
@@ -2838,6 +2848,7 @@ class npc_torch_tossing_bunny : public CreatureScript
 
         private:
             uint32 _targetTimer;
+            bool _validTarget;
         };
 
         CreatureAI* GetAI(Creature* creature) const

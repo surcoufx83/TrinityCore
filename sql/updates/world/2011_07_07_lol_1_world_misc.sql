@@ -89,7 +89,7 @@ UPDATE `gameobject_template` SET `ScriptName`='go_ahune_ice_stone' WHERE `entry`
 DELETE FROM `smart_scripts` WHERE `entryorguid` IN (25757,25756,25755) AND `source_type`=0;
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`) VALUES
 (25757,0,0,0,25,0,100,0,0,0,0,0,75,51620,0,0,0,0,0,1,0,0,0,0,0,0,0, 'Ahunite Frostwind - Add Lightning Shield on Reset'),
-(25757,0,1,0,0,0,100,0,5000,5000,7000,7000,11,46568,0,0,0,0,0,17,8,25,0,0,0,0,0, 'Ahunite Frostwind - Cast Wind Buffet'),
-(25756,0,0,0,0,0,100,0,1000,5000,4000,5000,11,46406,0,0,0,0,0,5,0,0,0,0,0,0,0,'Ahunite Coldwave - Cast Bitter Blast'),
+(25757,0,1,0,0,0,100,0,5000,10000,10000,15000,11,46568,0,0,0,0,0,17,8,25,0,0,0,0,0, 'Ahunite Frostwind - Cast Wind Buffet'),
+(25756,0,0,0,0,0,100,0,1000,5000,5000,9000,11,46406,0,0,0,0,0,5,0,0,0,0,0,0,0,'Ahunite Coldwave - Cast Bitter Blast'),
 (25755,0,0,0,25,0,100,0,0,0,0,0,75,46542,0,0,0,0,0,1,0,0,0,0,0,0,0, 'Ahunite Hailstone - Add Chilling Aura on Reset'),
-(25755,0,1,0,0,0,100,0,2500,5000,6000,7000,11,2676,0x02,0,0,0,0,1,0,0,0,0,0,0,0, 'Ahunite Hailstone - Cast Pulverize');
+(25755,0,1,0,0,0,100,0,2500,5000,7000,10000,11,2676,0x02,0,0,0,0,1,0,0,0,0,0,0,0, 'Ahunite Hailstone - Cast Pulverize');

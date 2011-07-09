@@ -4102,6 +4102,12 @@ void SpellMgr::LoadSpellCustomAttr()
             spellInfo->AttributesEx &= ~SPELL_ATTR1_CANT_TARGET_SELF;
             ++count;
             break;
+        case 45819: // Midsummer - Throw Torch
+            spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_AREA_ENTRY_DST;
+            spellInfo->EffectRadiusIndex[0] = 15;
+            spellInfo->MaxAffectedTargets = 1;
+            ++count;
+            break;
         case 46363: // Midsummer - Beam Attack against Ahune
             spellInfo->EffectImplicitTargetA[0] = TARGET_SRC_CASTER;
             spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_TARGET_ANY;

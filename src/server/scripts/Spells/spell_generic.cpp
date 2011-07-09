@@ -1397,6 +1397,69 @@ class spell_gen_juggle_torch_catch : public SpellScriptLoader
         }
 };
 
+class spell_gen_throw_torch : public SpellScriptLoader
+{
+    public:
+        spell_gen_throw_torch() : SpellScriptLoader("spell_gen_throw_torch") {}
+
+        class spell_gen_throw_torch_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_gen_throw_torch_SpellScript);
+
+            bool Validate(SpellEntry const* /*spellEntry*/)
+            {
+                if (!sSpellStore.LookupEntry(45638))
+                    return false;
+                if (!sSpellStore.LookupEntry(45792))
+                    return false;
+                if (!sSpellStore.LookupEntry(45806))
+                    return false;
+                if (!sSpellStore.LookupEntry(45816))
+                    return false;
+                return true;
+            }
+
+            void HandleDummy(SpellEffIndex /*effIndex*/)
+            {
+                Unit* caster = GetCaster();
+                Unit* target = GetHitPlayer();
+
+                if (!caster || !target)
+                    return;
+                
+                if (caster != target)
+                {
+                    uint32 spellId;
+                    switch (urand(0, 2))
+                    {
+                        case 1:
+                            spellId = 45816;
+                            break;
+                        case 2:
+                            spellId = 45806;
+                            break;
+                        default:
+                            spellId = 45792;
+                            break;
+                    }
+                    caster->CastSpell(target, spellId, true);
+                }
+                else
+                    caster->CastSpell(caster, 45638, true);
+            }
+
+            void Register()
+            {
+                OnEffect += SpellEffectFn(spell_gen_throw_torch_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_gen_throw_torch_SpellScript();
+        }
+};
+
 enum Launch
 {
     SPELL_LAUNCH_NO_FALLING_DAMAGE = 66251
@@ -1538,6 +1601,7 @@ void AddSC_generic_spell_scripts()
     new spell_gen_ribbon_pole_dancer_check();
     new spell_gen_torch_target_picker();
     new spell_gen_juggle_torch_catch();
+    new spell_gen_throw_torch();
     new spell_gen_launch();
     new spell_gen_vehicle_scaling();
 }
