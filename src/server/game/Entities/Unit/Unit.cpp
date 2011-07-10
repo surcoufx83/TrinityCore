@@ -11164,6 +11164,9 @@ uint32 Unit::SpellCriticalDamageBonus(SpellEntry const *spellProto, uint32 damag
     if (Player* modOwner = GetSpellModOwner())
         modOwner->ApplySpellMod(spellProto->Id, SPELLMOD_CRIT_DAMAGE_BONUS, crit_bonus);
 
+    // TODO: check calculation?
+    crit_bonus = int32(crit_bonus * GetTotalAuraMultiplierByMiscMask(SPELL_AURA_MOD_CRIT_DAMAGE_BONUS_MELEE, SPELL_SCHOOL_MASK_MAGIC));
+
     if (pVictim)
     {
         uint32 creatureTypeMask = pVictim->GetCreatureTypeMask();
