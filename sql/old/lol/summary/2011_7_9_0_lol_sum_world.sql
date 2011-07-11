@@ -225,7 +225,7 @@ UPDATE npc_vendor SET `ExtendedCost`=2965 WHERE `ExtendedCost`=2460 AND `entry`=
 UPDATE `creature_template` SET `mechanic_immune_mask` = `mechanic_immune_mask` | 2048 WHERE `entry` IN (
 33995, -- Heart of the Deconstructor (Heroic)
 33329  -- Heart of the Deconstructor
-)
+);
 SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 -- Table structure for `warden_data_result`
