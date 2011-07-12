@@ -6,6 +6,7 @@
 
 #define EMOTE_SUBMERGE             "Ahune Retreats. His Defenses Diminish."
 #define EMOTE_EMERGE_SOON          "Ahune will soon resurface."
+#define GOSSIP_STONE_ITEM          "Disturb the stone and summon Lord Ahune."
 
 enum Spells
 {
@@ -102,6 +103,8 @@ class npc_frostlord_ahune : public CreatureScript
                 switch (summon->GetEntry())
                 {
                     case NPC_FROZEN_CORE: 
+                        summon->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
+                        summon->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_GRIP, true);
                         summon->SetHealth(me->GetHealth());
                         summon->SetReactState(REACT_PASSIVE);
                         summon->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
@@ -261,7 +264,7 @@ class npc_ahune_ice_spear : public CreatureScript
         {
             npc_ahune_ice_spearAI(Creature* creature) : Scripted_NoMovementAI(creature)
             {
-                _spikeTimer = 2000;
+                _spikeTimer = 2500;
                 _spiked = false;
                 DoCast(me, SPELL_SUMMON_ICE_SPEAR_OBJECT, true);
             }
@@ -277,7 +280,7 @@ class npc_ahune_ice_spear : public CreatureScript
                             target->CastSpell(target, SPELL_ICE_SPEAR_KNOCKBACK, true);
                         spike->UseDoorOrButton();
                         _spiked = true;
-                        _spikeTimer = 4000;
+                        _spikeTimer = 3500;
                     }
                     else if (spike)
                     {
@@ -305,12 +308,25 @@ class go_ahune_ice_stone : public GameObjectScript
     public:
         go_ahune_ice_stone() : GameObjectScript("go_ahune_ice_stone") { }
 
-        bool OnQuestReward(Player* /*player*/, GameObject* go, Quest const* /*quest*/, uint32 /*opt*/)
+        bool OnGossipHello(Player* player, GameObject* go)
         {
-            if (Creature* ahune = go->FindNearestCreature(NPC_FROSTLORD_AHUNE, 100.0f, true))
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_STONE_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+            player->SEND_GOSSIP_MENU(player->GetGossipTextId(go), go->GetGUID());
+
+            return true;
+        }
+
+        bool OnGossipSelect(Player* player, GameObject* go, uint32 /*sender*/, uint32 action)
+        {
+            player->PlayerTalkClass->ClearMenus();
+
+            if (action == GOSSIP_ACTION_INFO_DEF)
             {
-                ahune->AI()->DoAction(ACTION_START_EVENT);
-                go->Delete();
+                if (Creature* ahune = go->FindNearestCreature(NPC_FROSTLORD_AHUNE, 100.0f, true))
+                {
+                    ahune->AI()->DoAction(ACTION_START_EVENT);
+                    go->Delete();
+                }
             }
             return true;
         }
