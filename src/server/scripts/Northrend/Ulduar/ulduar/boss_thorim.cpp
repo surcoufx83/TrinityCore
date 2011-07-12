@@ -364,7 +364,7 @@ public:
             _EnterCombat();
         
             // Spawn Thunder Orbs
-            for(uint8 n = 0; n < 7; n++)
+            for (uint8 n = 0; n < 7; ++n)
                 me->SummonCreature(33378, PosOrbs[n], TEMPSUMMON_CORPSE_DESPAWN);
         
             Wipe = true;
@@ -525,20 +525,20 @@ public:
                     break;
             }
 
-            spawnedAdds++;
+            ++spawnedAdds;
             if (spawnedAdds > 1)
                 spawnedAdds = 0;
         }
         
-        void DamageTaken(Unit* pKiller, uint32 &damage)
+        void DamageTaken(Unit* attacker, uint32 &damage)
         {
-            if (phase == PHASE_1 && pKiller && instance)
+            if (phase == PHASE_1 && attacker && instance)
             {
-                if (Creature* pRunicColossus = me->GetCreature(*me, instance->GetData64(DATA_RUNIC_COLOSSUS)))
-                    if (pRunicColossus->isDead())
-                        if (Creature* pRuneGiant = me->GetCreature(*me, instance->GetData64(DATA_RUNE_GIANT)))
-                            if (pRuneGiant->isDead())
-                                if (me->IsWithinDistInMap(pKiller, 10.0f) && pKiller->ToPlayer())
+                if (Creature* RunicColossus = me->GetCreature(*me, instance->GetData64(DATA_RUNIC_COLOSSUS)))
+                    if (RunicColossus->isDead())
+                        if (Creature* RuneGiant = me->GetCreature(*me, instance->GetData64(DATA_RUNE_GIANT)))
+                            if (RuneGiant->isDead())
+                                if (me->IsWithinDistInMap(attacker, 10.0f) && attacker->ToPlayer())
                                 {
                                     DoScriptText(SAY_JUMPDOWN, me);
                                     phase = PHASE_2;
@@ -547,6 +547,7 @@ public:
                                     me->SetReactState(REACT_AGGRESSIVE);
                                     me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
                                     me->GetMotionMaster()->MoveJump(2134.79f, -263.03f, 419.84f, 10.0f, 20.0f);
+                                    summons.DespawnEntry(33378); // despawn charged orbs (not sure)
                                     events.ScheduleEvent(EVENT_UNBALANCING_STRIKE, 15000, 0, PHASE_2);
                                     events.ScheduleEvent(EVENT_CHAIN_LIGHTNING, 20000, 0, PHASE_2);
                                     events.ScheduleEvent(EVENT_TRANSFER_ENERGY, 20000, 0, PHASE_2);

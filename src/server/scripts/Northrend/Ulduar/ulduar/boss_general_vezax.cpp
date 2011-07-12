@@ -334,9 +334,9 @@ public:
             {
                 if (!me->IsNonMeleeSpellCasted(false))
                 {
-                    Unit* target = CheckPlayersInRange(RAID_MODE<uint8>(4, 9), 15.0f, 50.0f);
+                    Unit* target = CheckPlayersInRange(RAID_MODE<uint8>(4, 9), 15.0f, 100.0f);
                     if (!target)
-                        target = SelectTarget(SELECT_TARGET_RANDOM, 0, 150.0f, true);
+                        target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100.0f, true);
                     if (target)
                         DoCast(target, SPELL_MARK_OF_THE_FACELESS);
 

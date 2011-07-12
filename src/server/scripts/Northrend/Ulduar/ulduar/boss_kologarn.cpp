@@ -238,7 +238,7 @@ class boss_kologarn : public CreatureScript
                 Map* map = me->GetMap();
                 if (map && map->IsDungeon())
                 {
-                    std::list<Player*> PlayerList;
+                    std::list<Player*> playerList;
                     Map::PlayerList const& Players = map->GetPlayers();
                     for (Map::PlayerList::const_iterator itr = Players.begin(); itr != Players.end(); ++itr)
                     {
@@ -251,15 +251,15 @@ class boss_kologarn : public CreatureScript
                             if (Distance < 20.0f || Distance > 60.0f)
                                 continue;
 
-                            PlayerList.push_back(player);
+                            playerList.push_back(player);
                         }
                     }
 
-                    if (PlayerList.empty())
+                    if (playerList.empty())
                         return NULL;
 
-                    std::list<Player*>::const_iterator itr = PlayerList.begin();
-                    std::advance(itr, urand(0, PlayerList.size() - 1));
+                    std::list<Player*>::const_iterator itr = playerList.begin();
+                    std::advance(itr, urand(0, playerList.size() - 1));
                     return *itr;
                 }
                 else
@@ -377,7 +377,9 @@ class boss_kologarn : public CreatureScript
                         {
                             eyebeamTarget = eyebeamTargetUnit->GetGUID();
                             me->MonsterWhisper(EMOTE_EYEBEAM, eyebeamTarget, true);
-                            DoCast(SPELL_SUMMON_FOCUSED_EYEBEAM);
+                            eyebeamTargetUnit->CastSpell(eyebeamTargetUnit, 63343, true, NULL, NULL, me->GetGUID());
+                            eyebeamTargetUnit->CastSpell(eyebeamTargetUnit, 63701, true, NULL, NULL, me->GetGUID());
+                            //DoCast(SPELL_SUMMON_FOCUSED_EYEBEAM);
                         }
                         events.RepeatEvent(urand(15000, 35000));
                         break;
