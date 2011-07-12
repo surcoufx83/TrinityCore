@@ -69,7 +69,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const
     {
-        return new mob_voidtravelerAI (creature);
+        return new mob_voidtravelerAI(creature);
     }
 
     struct mob_voidtravelerAI : public ScriptedAI
@@ -89,15 +89,16 @@ public:
             sacrificed = false;
         }
 
-        void EnterCombat(Unit* /*who*/){}
+        void EnterCombat(Unit* /*who*/) {}
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             if (!VorpilGUID)
             {
                 me->Kill(me);
                 return;
             }
+
             if (move <= diff)
             {
                 Creature* Vorpil = Unit::GetCreature(*me, VorpilGUID);
@@ -109,13 +110,18 @@ public:
 
                 if (sacrificed)
                 {
-                    me->AddAura(DUNGEON_MODE(SPELL_EMPOWERING_SHADOWS, H_SPELL_EMPOWERING_SHADOWS), Vorpil);
-                    Vorpil->ModifyHealth(int32(Vorpil->CountPctFromMaxHealth(4)));
+                    if (Vorpil->isAlive())
+                    {
+                        me->AddAura(DUNGEON_MODE(SPELL_EMPOWERING_SHADOWS, H_SPELL_EMPOWERING_SHADOWS), Vorpil);
+                        Vorpil->ModifyHealth(int32(Vorpil->CountPctFromMaxHealth(4)));
+                    }
                     DoCast(me, SPELL_SHADOW_NOVA, true);
                     me->Kill(me);
                     return;
                 }
+
                 me->GetMotionMaster()->MoveFollow(Vorpil, 0, 0);
+
                 if (me->IsWithinDist(Vorpil, 3))
                 {
                     DoCast(me, SPELL_SACRIFICE, false);
@@ -123,16 +129,18 @@ public:
                     move = 500;
                     return;
                 }
+
                 if (!Vorpil->isInCombat() || Vorpil->isDead())
                 {
                     me->Kill(me);
                     return;
                 }
                 move = 1000;
-            } else move -= diff;
+            }
+            else
+                move -= diff;
         }
     };
-
 };
 
 class boss_grandmaster_vorpil : public CreatureScript
@@ -142,7 +150,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const
     {
-        return new boss_grandmaster_vorpilAI (creature);
+        return new boss_grandmaster_vorpilAI(creature);
     }
 
     struct boss_grandmaster_vorpilAI : public ScriptedAI
