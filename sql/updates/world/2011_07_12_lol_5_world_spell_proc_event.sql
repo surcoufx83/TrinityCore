@@ -1,5 +1,5 @@
 -- Ulduar Proc Trinket's
-DELETE FROM `spell_proc_event` WHERE `entry` IN (65007,64738,64742,64714,65005,64792,65013,65025,64786,65020,64764);
+DELETE FROM `spell_proc_event` WHERE `entry` IN (65002,64738,64742,64714,65005,64792,65013,65025,64786,65020,64764);
 INSERT INTO `spell_proc_event` (`entry`,`SchoolMask`,`SpellFamilyName`,`SpellFamilyMask0`,`SpellFamilyMask1`,`SpellFamilyMask2`,`procFlags`,`procEx`,`ppmRate`,`CustomChance`,`Cooldown`) VALUES
 (65002,0,0,0,0,0,0x00055400,0,0,0,45),          -- Sif's Remembrance
 (64738,0,0,0,0,0,0x00055400,0,0,0,45),          -- Show of Faith
@@ -11,4 +11,4 @@ INSERT INTO `spell_proc_event` (`entry`,`SchoolMask`,`SpellFamilyName`,`SpellFam
 (65025,0,0,0,0,0,0x00000154,0,0,0,45),          -- Dark Matter
 (64786,0,0,0,0,0,0x00000154,0,0,0,45),          -- Comet's Trail
 (65020,0,0,0,0,0,0x00000154,0,0,0,45),          -- Mjolnir Runestone 
-(64764,0,0,0,0,0,0x00100000,0,0,0,45);          -- The General's Heart   
+(64764,0,0,0,0,0,0x00100000,0,0,0,45);          -- The General's Heart

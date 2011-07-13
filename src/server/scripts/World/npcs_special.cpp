@@ -2236,87 +2236,94 @@ enum eWormhole
     SPELL_STORM_PEAKS           = 67837,
     SPELL_UNDERGROUND           = 68081,
 
-    TEXT_WORMHOLE               = 907
+    TEXT_WORMHOLE               = 907,
+    DATA_UNDERGROUND            = 1
 };
 
 class npc_wormhole : public CreatureScript
 {
-public:
-    npc_wormhole() : CreatureScript("npc_wormhole") { }
+    public:
+        npc_wormhole() : CreatureScript("npc_wormhole") { }
 
-    struct npc_wormholeAI : PassiveAI
-    {
-        npc_wormholeAI(Creature* c) : PassiveAI(c) { rnd = urand(0,9); }
-
-        uint8 rnd;
-    };
-
-    CreatureAI *GetAI(Creature* creature) const
-    {
-        return new npc_wormholeAI(creature);
-    }
-
-    bool OnGossipHello(Player* player, Creature* creature)
-    {
-        npc_wormholeAI* pAI = CAST_AI(npc_wormholeAI, creature->AI());
-        
-        if (!pAI)
-            return false;
-
+        bool OnGossipHello(Player* player, Creature* creature)
         {
             if (player == creature->ToTempSummon()->GetSummoner())
             {
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ENGINEERING1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ENGINEERING2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ENGINEERING3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ENGINEERING4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ENGINEERING5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ENGINEERING1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ENGINEERING2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ENGINEERING3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ENGINEERING4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ENGINEERING5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
 
-                if (pAI->rnd == 1)
-                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ENGINEERING6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
-
+                if (creature->AI()->GetData(DATA_UNDERGROUND) == 1)
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ENGINEERING6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
             }
+
+            player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
+            return true;
         }
-        return true;
-    }
 
-    bool OnGossipSelect(Player* player, Creature* /*creature*/, uint32 /*uiSender*/, uint32 uiAction)
-    {
-        player->PlayerTalkClass->ClearMenus();
-        bool roll = urand(0, 1);
-
-        switch(uiAction)
+        bool OnGossipSelect(Player* player, Creature* /*creature*/, uint32 /*sender*/, uint32 action)
         {
-            case GOSSIP_ACTION_INFO_DEF + 1: //Borean Tundra
-                player->CLOSE_GOSSIP_MENU();
-                if (roll) //At the moment we don't have chance on spell_target_position table so we hack this
-                    player->TeleportTo(571, 4305.505859f, 5450.839844f, 63.005806f, 0.627286f);
-                else
-                    player->TeleportTo(571, 3201.936279f, 5630.123535f, 133.658798f, 3.855272f);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 2: //Howling Fjord
-                player->CLOSE_GOSSIP_MENU();
-                player->CastSpell(player, SPELL_HOWLING_FJORD, true);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 3: //Sholazar Basin
-                player->CLOSE_GOSSIP_MENU();
-                player->CastSpell(player, SPELL_SHOLAZAR_BASIN, true);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 4: //Icecrown
-                player->CLOSE_GOSSIP_MENU();
-                player->CastSpell(player, SPELL_ICECROWN, true);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 5: //Storm peaks
-                player->CLOSE_GOSSIP_MENU();
-                player->CastSpell(player, SPELL_STORM_PEAKS, true);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 6: //Underground
-                player->CLOSE_GOSSIP_MENU();
-                player->CastSpell(player, SPELL_UNDERGROUND, true);
-                break;
+            player->PlayerTalkClass->ClearMenus();
+            bool roll = urand(0, 1);
+
+            switch (action)
+            {
+                case GOSSIP_ACTION_INFO_DEF + 1: // Borean Tundra
+                    player->CLOSE_GOSSIP_MENU();
+                    if (roll) // At the moment we don't have chance on spell_target_position table so we hack this
+                        player->TeleportTo(571, 4305.505859f, 5450.839844f, 63.005806f, 0.627286f);
+                    else
+                        player->TeleportTo(571, 3201.936279f, 5630.123535f, 133.658798f, 3.855272f);
+                    break;
+                case GOSSIP_ACTION_INFO_DEF + 2: // Howling Fjord
+                    player->CLOSE_GOSSIP_MENU();
+                    player->CastSpell(player, SPELL_HOWLING_FJORD, true);
+                    break;
+                case GOSSIP_ACTION_INFO_DEF + 3: // Sholazar Basin
+                    player->CLOSE_GOSSIP_MENU();
+                    player->CastSpell(player, SPELL_SHOLAZAR_BASIN, true);
+                    break;
+                case GOSSIP_ACTION_INFO_DEF + 4: // Icecrown
+                    player->CLOSE_GOSSIP_MENU();
+                    player->CastSpell(player, SPELL_ICECROWN, true);
+                    break;
+                case GOSSIP_ACTION_INFO_DEF + 5: // Storm peaks
+                    player->CLOSE_GOSSIP_MENU();
+                    player->CastSpell(player, SPELL_STORM_PEAKS, true);
+                    break;
+                case GOSSIP_ACTION_INFO_DEF + 6: // Underground
+                    player->CLOSE_GOSSIP_MENU();
+                    player->CastSpell(player, SPELL_UNDERGROUND, true);
+                    break;
+            }
+            return true;
         }
-        return true;
-    }
+
+        struct npc_wormholeAI : PassiveAI
+        {
+            npc_wormholeAI(Creature* c) : PassiveAI(c)
+            {
+                _random = urand(0, 9);
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+            }
+
+            uint32 GetData(uint32 type)
+            {
+                if (type == DATA_UNDERGROUND)
+                    return (_random > 0) ? 0 : 1;
+                return 0;
+            }
+
+        private:
+            uint8 _random;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new npc_wormholeAI(creature);
+        }
 };
 
 /*######
@@ -2558,34 +2565,34 @@ public:
         bool m_bLostSummer = false;
         bool m_bLostExplorer = false;
 
-        //Tabard of the Blood Knight
+        // Tabard of the Blood Knight
         if (player->GetQuestRewardStatus(QUEST_TRUE_MASTERS_OF_LIGHT) && !player->HasItemCount(ITEM_TABARD_OF_THE_BLOOD_KNIGHT, 1, true))
             m_bLostBloodKnight = true;
 
-        //Tabard of the Hand
+        // Tabard of the Hand
         if (player->GetQuestRewardStatus(QUEST_THE_UNWRITTEN_PROPHECY) && !player->HasItemCount(ITEM_TABARD_OF_THE_HAND, 1, true))
             m_bLostHand = true;
 
-        //Tabard of the Protector
+        // Tabard of the Protector
         if (player->GetQuestRewardStatus(QUEST_INTO_THE_BREACH) && !player->HasItemCount(ITEM_TABARD_OF_THE_PROTECTOR, 1, true))
             m_bLostProtector = true;
 
-        //Green Trophy Tabard of the Illidari
-        //Purple Trophy Tabard of the Illidari
+        // Green Trophy Tabard of the Illidari
+        // Purple Trophy Tabard of the Illidari
         if (player->GetQuestRewardStatus(QUEST_BATTLE_OF_THE_CRIMSON_WATCH) &&
             (!player->HasItemCount(ITEM_GREEN_TROPHY_TABARD_OF_THE_ILLIDARI, 1, true) &&
             !player->HasItemCount(ITEM_PURPLE_TROPHY_TABARD_OF_THE_ILLIDARI, 1, true) &&
             !player->HasItemCount(ITEM_OFFERING_OF_THE_SHATAR, 1, true)))
             m_bLostIllidari = true;
 
-        //Tabard of Summer Skies
-        //Tabard of Summer Flames
+        // Tabard of Summer Skies
+        // Tabard of Summer Flames
         if (player->GetQuestRewardStatus(QUEST_SHARDS_OF_AHUNE) &&
             !player->HasItemCount(ITEM_TABARD_OF_THE_SUMMER_SKIES, 1, true) &&
             !player->HasItemCount(ITEM_TABARD_OF_THE_SUMMER_FLAMES, 1, true))
             m_bLostSummer = true;
 
-        if(player->HasAchieved(ACHIEVEMENT_EXPLORE_NORTHREND) &&
+        if (player->HasAchieved(ACHIEVEMENT_EXPLORE_NORTHREND) &&
             !player->HasItemCount(ITEM_TABARD_OF_THE_EXPLORER, 1, true))
             m_bLostExplorer = true;
 
@@ -2594,29 +2601,30 @@ public:
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
 
             if (m_bLostBloodKnight)
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOST_TABARD_OF_BLOOD_KNIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF +1);
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOST_TABARD_OF_BLOOD_KNIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
             if (m_bLostHand)
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOST_TABARD_OF_THE_HAND, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF +2);
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOST_TABARD_OF_THE_HAND, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
 
             if (m_bLostProtector)
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOST_TABARD_OF_THE_PROTECTOR, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOST_TABARD_OF_THE_PROTECTOR, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
 
             if (m_bLostIllidari)
             {
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOST_GREEN_TROPHY_TABARD_OF_THE_ILLIDARI, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOST_PURPLE_TROPHY_TABARD_OF_THE_ILLIDARI, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOST_GREEN_TROPHY_TABARD_OF_THE_ILLIDARI, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOST_PURPLE_TROPHY_TABARD_OF_THE_ILLIDARI, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
             }
 
             if (m_bLostSummer)
             {
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOST_TABARD_OF_SUMMER_SKIES, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOST_TABARD_OF_SUMMER_FLAMES, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+7);
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOST_TABARD_OF_SUMMER_SKIES, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOST_TABARD_OF_SUMMER_FLAMES, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
             }
 
-            if(m_bLostExplorer)
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOST_TABARD_OF_THE_EXPLORER, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+8);
+            if (m_bLostExplorer)
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOST_TABARD_OF_THE_EXPLORER, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
 
+            player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
         }
         else
             player->GetSession()->SendListInventory(creature->GetGUID());
@@ -2624,43 +2632,44 @@ public:
         return true;
     }
 
-    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action)
     {
         player->PlayerTalkClass->ClearMenus();
-        switch(uiAction)
+
+        switch (action)
         {
             case GOSSIP_ACTION_TRADE:
                 player->GetSession()->SendListInventory(creature->GetGUID());
                 break;
-            case GOSSIP_ACTION_INFO_DEF+1:
+            case GOSSIP_ACTION_INFO_DEF + 1:
                 player->CLOSE_GOSSIP_MENU();
                 player->CastSpell(player, SPELL_TABARD_OF_THE_BLOOD_KNIGHT, false);
                 break;
-            case GOSSIP_ACTION_INFO_DEF+2:
+            case GOSSIP_ACTION_INFO_DEF + 2:
                 player->CLOSE_GOSSIP_MENU();
                 player->CastSpell(player, SPELL_TABARD_OF_THE_HAND, false);
                 break;
-            case GOSSIP_ACTION_INFO_DEF+3:
+            case GOSSIP_ACTION_INFO_DEF + 3:
                 player->CLOSE_GOSSIP_MENU();
                 player->CastSpell(player, SPELL_TABARD_OF_THE_PROTECTOR, false);
                 break;
-            case GOSSIP_ACTION_INFO_DEF+4:
+            case GOSSIP_ACTION_INFO_DEF + 4:
                 player->CLOSE_GOSSIP_MENU();
                 player->CastSpell(player, SPELL_GREEN_TROPHY_TABARD_OF_THE_ILLIDARI, false);
                 break;
-            case GOSSIP_ACTION_INFO_DEF+5:
+            case GOSSIP_ACTION_INFO_DEF + 5:
                 player->CLOSE_GOSSIP_MENU();
                 player->CastSpell(player, SPELL_PURPLE_TROPHY_TABARD_OF_THE_ILLIDARI, false);
                 break;
-            case GOSSIP_ACTION_INFO_DEF+6:
+            case GOSSIP_ACTION_INFO_DEF + 6:
                 player->CLOSE_GOSSIP_MENU();
                 player->CastSpell(player, SPELL_TABARD_OF_SUMMER_SKIES, false);
                 break;
-            case GOSSIP_ACTION_INFO_DEF+7:
+            case GOSSIP_ACTION_INFO_DEF + 7:
                 player->CLOSE_GOSSIP_MENU();
                 player->CastSpell(player, SPELL_TABARD_OF_SUMMER_FLAMES, false);
                 break;
-            case GOSSIP_ACTION_INFO_DEF+8:
+            case GOSSIP_ACTION_INFO_DEF + 8:
                 player->CLOSE_GOSSIP_MENU();
                 player->CastSpell(player, SPELL_TABARD_OF_THE_EXPLORER, false);
                 break;

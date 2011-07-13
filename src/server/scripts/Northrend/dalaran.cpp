@@ -176,41 +176,94 @@ enum eArchmageVargoth
 
 class npc_archmage_vargoth : public CreatureScript
 {
-public:
-    npc_archmage_vargoth() : CreatureScript("npc_archmage_vargoth") { }
+    public:
+        npc_archmage_vargoth() : CreatureScript("npc_archmage_vargoth") { }
 
-    bool OnGossipHello (Player* pPlayer, Creature* pCreature)
-    {
-        if (pCreature->isQuestGiver() && pCreature->GetZoneId() != ZONE_DALARAN)
-            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
-
-        if(pPlayer->HasItemCount(ITEM_ACANE_MAGIC_MASTERY,1,false))
+        bool OnGossipHello(Player* player, Creature* creature)
         {
-            if(!pPlayer->HasSpell(SPELL_FAMILAR_PET) && !pPlayer->HasItemCount(ITEM_FAMILAR_PET,1,true))
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TEXT_FAMILIAR_WELCOME, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+            if (creature->isQuestGiver() && creature->GetZoneId() != ZONE_DALARAN)
+                player->PrepareQuestMenu(creature->GetGUID());
+
+            if (player->HasItemCount(ITEM_ACANE_MAGIC_MASTERY, 1, false))
+            {
+                if (!player->HasSpell(SPELL_FAMILAR_PET) && !player->HasItemCount(ITEM_FAMILAR_PET, 1, true))
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TEXT_FAMILIAR_WELCOME, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+            }
+
+            player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
+
+            return true;
         }
 
-        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
-
-        return true;
-    }
-
-    bool OnGossipSelect (Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
-    {
-        switch (uiAction)
+        bool OnGossipSelect (Player* player, Creature* creature, uint32 /*sender*/, uint32 action)
         {
-            case GOSSIP_ACTION_INFO_DEF+1:
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TEXT_FAMILIAR_THANKS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-                pPlayer->SEND_GOSSIP_MENU(40000, pCreature->GetGUID());
-                break;
-            case GOSSIP_ACTION_INFO_DEF+2:
-                pCreature->CastSpell(pPlayer,SPELL_CREATE_FAMILAR,false);
-                pPlayer->CLOSE_GOSSIP_MENU();
-                break;
+            switch (action)
+            {
+                case GOSSIP_ACTION_INFO_DEF + 1:
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TEXT_FAMILIAR_THANKS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                    player->SEND_GOSSIP_MENU(40000, creature->GetGUID());
+                    break;
+                case GOSSIP_ACTION_INFO_DEF + 2:
+                    creature->CastSpell(player, SPELL_CREATE_FAMILAR, false);
+                    player->CLOSE_GOSSIP_MENU();
+                    break;
+            }
+
+            return true;
+        }
+};
+
+/*######
+## npc_rhonin
+######*/
+
+enum npcRhonin
+{
+    ACHIEVEMENT_HIGHER_LEARNING             = 1956,
+    ITEM_THE_SCHOOLS_OF_ARCANE_MAGIC        = 43824,
+    SPELL_THE_SCHOOLS_OF_ARCANE_MAGIC       = 59983,
+    //QUEST_ALL_IS_WELL_THAT_ENDS_WELL        = 13631,
+    //QUEST_HEROIC_ALL_IS_WELL_THAT_ENDS_WELL = 13819
+};
+
+#define GOSSIP_TEXT_RESTORE_ITEM       "[PH] Bitte gib mir ein neues <Die Schulen der arkanen Magie - Beherrschung>"
+
+class npc_rhonin : public CreatureScript
+{
+    public:
+        npc_rhonin() : CreatureScript("npc_rhonin") { }
+
+        bool OnGossipHello(Player* player, Creature* creature)
+        {
+            if (creature->isQuestGiver())
+                player->PrepareQuestMenu(creature->GetGUID());
+
+            if (player->HasAchieved(ACHIEVEMENT_HIGHER_LEARNING) && !player->HasItemCount(ITEM_THE_SCHOOLS_OF_ARCANE_MAGIC, 1, true))
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TEXT_RESTORE_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+            player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
+            return true;
         }
 
-        return true;
-    }
+        bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action)
+        {
+            player->PlayerTalkClass->ClearMenus();
+
+            if (action == GOSSIP_ACTION_INFO_DEF + 1)
+            {
+                player->CastSpell(player, SPELL_THE_SCHOOLS_OF_ARCANE_MAGIC, false);
+                player->CLOSE_GOSSIP_MENU();
+            }
+
+            return true;
+        }
+
+        // FIXME: add Quest 13631, 13819 Event
+
+        //bool OnQuestComplete(Player* /*player*/, Creature* /*creature*/, Quest const* /*quest*/)
+        //{
+        //    return true;
+        //}
 };
 
 void AddSC_dalaran()
@@ -218,6 +271,7 @@ void AddSC_dalaran()
     new npc_mageguard_dalaran();
     new npc_hira_snowdawn();
     new npc_archmage_vargoth();
+    new npc_rhonin();
 
     //INSERT INTO npc_text (ID,text0_0) VALUES 
     //(40000,'Amazing! There are passages in here that I have never seen before. This must have taken quite a while for you to track down. If you ever find anymore books like this, I would like to be notified immediately. $B$BPlease take one of my Kirin Tor Familiars with you just in case you stumble across anything.');
