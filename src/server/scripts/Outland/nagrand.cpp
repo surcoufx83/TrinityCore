@@ -88,155 +88,143 @@ public:
 #define SPELL_VISUAL_SLEEP  16093
 #define SPELL_SPEAR_THROW   32248
 
-#define LUMP_SAY0 -1000190
-#define LUMP_SAY1 -1000191
+#define LUMP_SAY0          -1000190
+#define LUMP_SAY1          -1000191
 
-#define LUMP_DEFEAT -1000192
+#define LUMP_DEFEAT        -1000192
 
-#define GOSSIP_HL "I need answers, ogre!"
-#define GOSSIP_SL1 "Why are Boulderfist out this far? You know that this is Kurenai territory."
-#define GOSSIP_SL2 "And you think you can just eat anything you want? You're obviously trying to eat the Broken of Telaar."
-#define GOSSIP_SL3 "This means war, Lump! War I say!"
+#define GOSSIP_HL          "I need answers, ogre!"
+#define GOSSIP_SL1         "Why are Boulderfist out this far? You know that this is Kurenai territory."
+#define GOSSIP_SL2         "And you think you can just eat anything you want? You're obviously trying to eat the Broken of Telaar."
+#define GOSSIP_SL3         "This means war, Lump! War I say!"
 
 class mob_lump : public CreatureScript
 {
-public:
-    mob_lump() : CreatureScript("mob_lump") { }
+    public:
+        mob_lump() : CreatureScript("mob_lump") { }
 
-    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
-    {
-        player->PlayerTalkClass->ClearMenus();
-        switch (uiAction)
+        bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action)
         {
-            case GOSSIP_ACTION_INFO_DEF:
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SL1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-                player->SEND_GOSSIP_MENU(9353, creature->GetGUID());
-                break;
-            case GOSSIP_ACTION_INFO_DEF+1:
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SL2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-                player->SEND_GOSSIP_MENU(9354, creature->GetGUID());
-                break;
-            case GOSSIP_ACTION_INFO_DEF+2:
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SL3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-                player->SEND_GOSSIP_MENU(9355, creature->GetGUID());
-                break;
-            case GOSSIP_ACTION_INFO_DEF+3:
-                player->SEND_GOSSIP_MENU(9356, creature->GetGUID());
-                player->TalkedToCreature(18354, creature->GetGUID());
-                break;
-        }
-        return true;
-    }
-
-    bool OnGossipHello(Player* player, Creature* creature)
-    {
-        if (player->GetQuestStatus(9918) == QUEST_STATUS_INCOMPLETE)
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-
-        player->SEND_GOSSIP_MENU(9352, creature->GetGUID());
-
-        return true;
-    }
-
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return new mob_lumpAI(creature);
-    }
-
-    struct mob_lumpAI : public ScriptedAI
-    {
-        mob_lumpAI(Creature* c) : ScriptedAI(c)
-        {
-            bReset = false;
-        }
-
-        uint32 Reset_Timer;
-        uint32 Spear_Throw_Timer;
-        bool bReset;
-
-        void Reset()
-        {
-            Reset_Timer = 60000;
-            Spear_Throw_Timer = 2000;
-
-            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-        }
-
-        void AttackedBy(Unit* pAttacker)
-        {
-            if (me->getVictim())
-                return;
-
-            if (me->IsFriendlyTo(pAttacker))
-                return;
-
-            AttackStart(pAttacker);
-        }
-
-        void DamageTaken(Unit* done_by, uint32 & damage)
-        {
-            if (done_by->GetTypeId() == TYPEID_PLAYER && me->HealthBelowPctDamaged(30, damage))
+            player->PlayerTalkClass->ClearMenus();
+            switch (action)
             {
-                if (!bReset && CAST_PLR(done_by)->GetQuestStatus(9918) == QUEST_STATUS_INCOMPLETE)
+                case GOSSIP_ACTION_INFO_DEF:
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SL1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+                    player->SEND_GOSSIP_MENU(9353, creature->GetGUID());
+                    break;
+                case GOSSIP_ACTION_INFO_DEF+1:
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SL2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                    player->SEND_GOSSIP_MENU(9354, creature->GetGUID());
+                    break;
+                case GOSSIP_ACTION_INFO_DEF+2:
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SL3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                    player->SEND_GOSSIP_MENU(9355, creature->GetGUID());
+                    break;
+                case GOSSIP_ACTION_INFO_DEF+3:
+                    player->SEND_GOSSIP_MENU(9356, creature->GetGUID());
+                    player->TalkedToCreature(18354, creature->GetGUID());
+                    break;
+            }
+            return true;
+        }
+
+        bool OnGossipHello(Player* player, Creature* creature)
+        {
+            if (player->GetQuestStatus(9918) == QUEST_STATUS_INCOMPLETE)
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+
+            player->SEND_GOSSIP_MENU(9352, creature->GetGUID());
+
+            return true;
+        }
+
+        struct mob_lumpAI : public ScriptedAI
+        {
+            mob_lumpAI(Creature* c) : ScriptedAI(c)
+            {
+                _reset = false;
+            }
+
+            void Reset()
+            {
+                _resetTimer = 60000;
+                _spearThrowTimer = 2000;
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_PASSIVE);
+            }
+
+            void DamageTaken(Unit* attacker, uint32& damage)
+            {
+                if (attacker->ToPlayer() && me->HealthBelowPctDamaged(30, damage))
                 {
-                    //Take 0 damage
-                    damage = 0;
-
-                    CAST_PLR(done_by)->AttackStop();
-                    me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    me->RemoveAllAuras();
-                    me->DeleteThreatList();
-                    me->CombatStop(true);
-                    me->setFaction(1080);               //friendly
-                    me->SetStandState(UNIT_STAND_STATE_SIT);
-                    DoScriptText(LUMP_DEFEAT, me);
-
-                    bReset = true;
+                    if (!_reset && attacker->ToPlayer()->GetQuestStatus(9918) == QUEST_STATUS_INCOMPLETE)
+                    {
+                        // Take 0 damage
+                        damage = 0;
+                        attacker->AttackStop();
+                        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                        me->RemoveAllAuras();
+                        me->DeleteThreatList();
+                        me->CombatStop(true);
+                        me->setFaction(1080); // friendly
+                        me->SetStandState(UNIT_STAND_STATE_SIT);
+                        DoScriptText(LUMP_DEFEAT, me);
+                        _reset = true;
+                    }
                 }
             }
-        }
 
-        void EnterCombat(Unit* /*who*/)
-        {
-            if (me->HasAura(SPELL_VISUAL_SLEEP))
-                me->RemoveAura(SPELL_VISUAL_SLEEP);
-
-            if (!me->IsStandState())
-                 me->SetStandState(UNIT_STAND_STATE_STAND);
-
-            DoScriptText(RAND(LUMP_SAY0, LUMP_SAY1), me);
-        }
-
-        void UpdateAI(const uint32 diff)
-        {
-            //check if we waiting for a reset
-            if (bReset)
+            void EnterCombat(Unit* /*who*/)
             {
-                if (Reset_Timer <= diff)
+                if (me->HasAura(SPELL_VISUAL_SLEEP))
+                    me->RemoveAura(SPELL_VISUAL_SLEEP);
+
+                if (!me->IsStandState())
+                     me->SetStandState(UNIT_STAND_STATE_STAND);
+
+                DoScriptText(RAND(LUMP_SAY0, LUMP_SAY1), me);
+            }
+
+            void UpdateAI(uint32 const diff)
+            {
+                // check if we are waiting for a reset
+                if (_reset)
                 {
-                    EnterEvadeMode();
-                    bReset = false;
-                    me->setFaction(1711);               //hostile
+                    if (_resetTimer <= diff)
+                    {
+                        EnterEvadeMode();
+                        _reset = false;
+                        me->setFaction(1711); // hostile
+                        return;
+                    }
+                    else
+                        _resetTimer -= diff;
+                }
+
+                // Return since we have no target
+                if (!UpdateVictim())
                     return;
+
+                if (_spearThrowTimer <= diff)
+                {
+                    DoCastVictim(SPELL_SPEAR_THROW);
+                    _spearThrowTimer = 20000;
                 }
-                else Reset_Timer -= diff;
+                else
+                    _spearThrowTimer -= diff;
+
+                DoMeleeAttackIfReady();
             }
 
-            //Return since we have no target
-            if (!UpdateVictim())
-                return;
+        private:
+            uint32 _resetTimer;
+            uint32 _spearThrowTimer;
+            bool _reset;
+        };
 
-            //Spear_Throw_Timer
-            if (Spear_Throw_Timer <= diff)
-            {
-                DoCast(me->getVictim(), SPELL_SPEAR_THROW);
-                Spear_Throw_Timer = 20000;
-            } else Spear_Throw_Timer -= diff;
-
-            DoMeleeAttackIfReady();
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new mob_lumpAI(creature);
         }
-    };
-
 };
 
 /*####
