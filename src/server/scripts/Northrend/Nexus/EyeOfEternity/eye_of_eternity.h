@@ -18,19 +18,19 @@
 #ifndef DEF_EYE_OF_ETERNITY_H
 #define DEF_EYE_OF_ETERNITY_H
 
-enum eInstanceData
+enum InstanceData
 {
-    TYPE_MALYGOS,
+    BOSS_MALYGOS,
     MAX_ENCOUNTER,
 };
 
-enum eData64
+enum Data64
 {
     DATA_MALYGOS,
     DATA_PLATFORM
 };
 
-enum eCreatures
+enum Creatures
 {
     NPC_MALYGOS                 = 28859,
     NPC_VORTEX                  = 30090,
@@ -47,7 +47,7 @@ enum eCreatures
     NPC_HOVER_DISK_MELEE        = 30248
 };
 
-enum eGameObjects
+enum GameObjects
 {
     GO_PLATFORM                 = 193070,
     GO_EXIT_PORTAL              = 193908,
@@ -59,7 +59,7 @@ enum eGameObjects
     GO_HEART_OF_MAGIC_25        = 194159
 };
 
-enum eAchievementData
+enum AchievementData
 {
     ACHIEV_TIMED_START_EVENT    = 20387
 };

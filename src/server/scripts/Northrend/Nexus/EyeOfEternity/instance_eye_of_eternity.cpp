@@ -23,39 +23,28 @@ class instance_eye_of_eternity : public InstanceMapScript
 public:
     instance_eye_of_eternity() : InstanceMapScript("instance_eye_of_eternity", 616) { }
 
-    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
+    InstanceScript* GetInstanceScript(InstanceMap* map) const
     {
-        return new instance_eye_of_eternity_InstanceMapScript(pMap);
+        return new instance_eye_of_eternity_InstanceMapScript(map);
     }
 
     struct instance_eye_of_eternity_InstanceMapScript : public InstanceScript
     {
-        instance_eye_of_eternity_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {};
+        instance_eye_of_eternity_InstanceMapScript(Map* map) : InstanceScript(map) {};
 
-        uint64 uiMalygosGUID;
-        uint64 uiPlatformGUID;
-        uint64 uiExitPortalGUID;
-        uint64 uiFocusingIrisGUID;
-
-        uint32 auiEncounter[MAX_ENCOUNTER];
+        uint64 malygosGUID;
+        uint64 platformGUID;
+        uint64 exitPortalGUID;
+        uint64 focusingIrisGUID;
 
         void Initialize()
         {
-            memset(&auiEncounter, 0, sizeof(auiEncounter));
+            SetBossNumber(MAX_ENCOUNTER);
 
-            uiMalygosGUID = 0;
-            uiPlatformGUID = 0;
-            uiExitPortalGUID = 0;
-            uiFocusingIrisGUID = 0;
-        }
-
-        bool IsEncounterInProgress() const
-        {
-            for (int i = 0; i < MAX_ENCOUNTER; ++i)
-                if (auiEncounter[i] == IN_PROGRESS)
-                    return true;
-
-            return false;
+            malygosGUID = 0;
+            platformGUID = 0;
+            exitPortalGUID = 0;
+            focusingIrisGUID = 0;
         }
 
         void OnCreatureCreate(Creature* creature)
@@ -63,88 +52,81 @@ public:
             switch (creature->GetEntry())
             {
                 case NPC_MALYGOS:
-                    uiMalygosGUID = creature->GetGUID();
+                    malygosGUID = creature->GetGUID();
                     break;
             }
         }
 
         void OnGameObjectCreate(GameObject* go)
         {
-            switch(go->GetEntry())
+            switch (go->GetEntry())
             {
                 case GO_PLATFORM:
-                    uiPlatformGUID = go->GetGUID();
-                    //if (auiEncounter[0] == DONE)
+                    platformGUID = go->GetGUID();
+                    //if (GetBossState(BOSS_MALYGOS) == DONE)
                     //    go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_DESTROYED);
                     break;
                 case GO_EXIT_PORTAL:
-                    uiExitPortalGUID = go->GetGUID();
+                    exitPortalGUID = go->GetGUID();
                     break;
                 case GO_FOCUSING_IRIS_10:
                 case GO_FOCUSING_IRIS_25:
-                    uiFocusingIrisGUID = go->GetGUID();
-                    if (auiEncounter[0] == DONE)
+                    focusingIrisGUID = go->GetGUID();
+                    if (GetBossState(BOSS_MALYGOS) == DONE)
                         go->SetPhaseMask(2, true);
                     break;
             }
         }
 
-        void SetData(uint32 uiType, uint32 uiData)
+        bool SetBossState(uint32 type, EncounterState state)
         {
-            switch(uiType)
+            if (!InstanceScript::SetBossState(type, state))
+                return false;
+
+            switch (type)
             {
-                case TYPE_MALYGOS:
-                    auiEncounter[0] = uiData;
-
-                    if (uiData == NOT_STARTED)
+                case BOSS_MALYGOS:
+                    if (state == NOT_STARTED)
                     {
-                        if (GameObject* pFocusingIris = instance->GetGameObject(uiFocusingIrisGUID))
+                        if (GameObject* focusingIris = instance->GetGameObject(focusingIrisGUID))
                         {
-                            pFocusingIris->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
-                            pFocusingIris->SetPhaseMask(1, true);
+                            focusingIris->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                            focusingIris->SetPhaseMask(1, true);
                         }
-                        if (GameObject* pExitPortal = instance->GetGameObject(uiExitPortalGUID))
-                            pExitPortal->SetPhaseMask(1, true);
 
-                        if (GameObject* pPlatform = instance->GetGameObject(uiPlatformGUID))
-                            if (pPlatform->HasFlag(GAMEOBJECT_FLAGS, GO_FLAG_DESTROYED))
-                                pPlatform->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_DESTROYED);
-                    }
-                    if (uiData == IN_PROGRESS)
-                    {
-                        if (GameObject* pFocusingIris = instance->GetGameObject(uiFocusingIrisGUID))
-                            pFocusingIris->SetPhaseMask(2, true);
+                        if (GameObject* exitPortal = instance->GetGameObject(exitPortalGUID))
+                            exitPortal->SetPhaseMask(1, true);
 
-                        if (GameObject* pExitPortal = instance->GetGameObject(uiExitPortalGUID))
-                            pExitPortal->SetPhaseMask(2, true);
+                        if (GameObject* platform = instance->GetGameObject(platformGUID))
+                            if (platform->HasFlag(GAMEOBJECT_FLAGS, GO_FLAG_DESTROYED))
+                                platform->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_DESTROYED);
                     }
-                    if (uiData == DONE)
+                    if (state == IN_PROGRESS)
                     {
-                        if (GameObject* pExitPortal = instance->GetGameObject(uiExitPortalGUID))
-                            pExitPortal->SetPhaseMask(1, true);
+                        if (GameObject* focusingIris = instance->GetGameObject(focusingIrisGUID))
+                            focusingIris->SetPhaseMask(2, true);
+
+                        if (GameObject* exitPortal = instance->GetGameObject(exitPortalGUID))
+                            exitPortal->SetPhaseMask(2, true);
+                    }
+                    if (state == DONE)
+                    {
+                        if (GameObject* exitPortal = instance->GetGameObject(exitPortalGUID))
+                            exitPortal->SetPhaseMask(1, true);
                     }
                     break;
             }
-
-            if (uiData == DONE)
-                SaveToDB();
+            return true;
         }
 
-        uint32 GetData(uint32 uiType)
+        uint64 GetData64(uint32 data)
         {
-            switch (uiType)
+            switch (data)
             {
-                case TYPE_MALYGOS: return auiEncounter[0];
-            }
-            return 0;
-        }
-
-        uint64 GetData64(uint32 uiData)
-        {
-            switch (uiData)
-            {
-                case DATA_MALYGOS: return uiMalygosGUID;
-                case DATA_PLATFORM: return uiPlatformGUID;
+                case DATA_MALYGOS:
+                    return malygosGUID;
+                case DATA_PLATFORM:
+                    return platformGUID;
             }
             return 0;
         }
@@ -154,7 +136,7 @@ public:
             OUT_SAVE_INST_DATA;
 
             std::ostringstream saveStream;
-            saveStream << "E E " << auiEncounter[0];
+            saveStream << "E E " << GetBossSaveData();
 
             OUT_SAVE_INST_DATA_COMPLETE;
             return saveStream.str();
@@ -178,24 +160,25 @@ public:
 
             if (dataHead1 == 'E' && dataHead2 == 'E')
             {
-                auiEncounter[0] = data0;
+                if (data0 == IN_PROGRESS || data0 > SPECIAL)
+                    data0 = NOT_STARTED;
 
-                if (auiEncounter[0] == IN_PROGRESS)
-                    auiEncounter[0] = NOT_STARTED;
-
-            } else OUT_LOAD_INST_DATA_FAIL;
+                SetBossState(BOSS_MALYGOS, EncounterState(data0));
+            }
+            else
+                OUT_LOAD_INST_DATA_FAIL;
 
             OUT_LOAD_INST_DATA_COMPLETE;
         }
 
-        void OnPlayerEnter(Player* pPlayer)
+        void OnPlayerEnter(Player* player)
         {
-            //if (auiEncounter[0] == DONE)
+            //if (GetBossState(BOSS_MALYGOS) == DONE)
             //{
-            //   if (Creature* pMount = pPlayer->SummonCreature(NPC_WYRMREST_SKYTALON, pPlayer->GetPositionX(), pPlayer->GetPositionY(), 260.0f, 0.0f))
+            //   if (Creature* mount = player->SummonCreature(NPC_WYRMREST_SKYTALON, player->GetPositionX(), player->GetPositionY(), 260.0f, 0.0f))
             //    {
-            //        pMount->SetFlying(true);
-            //        pPlayer->EnterVehicle(pMount, 0);
+            //        mount->SetFlying(true);
+            //        player->EnterVehicle(mount, 0);
             //    }
             //}
         }
