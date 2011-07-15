@@ -879,7 +879,7 @@ class boss_malygos : public CreatureScript
 
         private:
             std::set<uint64> sparkList;
-            std::list<std::pair<uint64,uint64>> mounts;
+            std::list<std::pair<uint64,uint64> > mounts;
             uint8 step;
             uint8 phase;
             uint8 addsCount;
