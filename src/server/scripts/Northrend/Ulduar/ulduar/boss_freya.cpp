@@ -1739,33 +1739,62 @@ class IsNoAllyOfNature
         }
 };
 
-class spell_elder_essence_targeting : public SpellScriptLoader
+class spell_elder_ironbranchs_essence_targeting : public SpellScriptLoader
 {
     public:
-        spell_elder_essence_targeting() : SpellScriptLoader("spell_elder_essence_targeting") { }
+        spell_elder_ironbranchs_essence_targeting() : SpellScriptLoader("spell_elder_ironbranchs_essence_targeting") { }
 
-        class spell_elder_essence_targeting_SpellScript : public SpellScript
+        class spell_elder_ironbranchs_essence_targeting_SpellScript : public SpellScript
         {
-            PrepareSpellScript(spell_elder_essence_targeting_SpellScript);
+            PrepareSpellScript(spell_elder_ironbranchs_essence_targeting_SpellScript);
 
             void FilterTargets(std::list<Unit*>& unitList)
             {
                 unitList.remove_if(IsNoAllyOfNature());
-
-                if (GetSpellInfo()->Id != 62713)
-                    unitList.push_back(GetCaster());
             }
 
             void Register()
             {
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_elder_essence_targeting_SpellScript::FilterTargets, EFFECT_0, TARGET_UNIT_AREA_ALLY_SRC);
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_elder_essence_targeting_SpellScript::FilterTargets, EFFECT_1, TARGET_UNIT_AREA_ALLY_SRC);
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_elder_ironbranchs_essence_targeting_SpellScript::FilterTargets, EFFECT_0, TARGET_UNIT_AREA_ALLY_SRC);
             }
         };
 
         SpellScript* GetSpellScript() const
         {
-            return new spell_elder_essence_targeting_SpellScript();
+            return new spell_elder_ironbranchs_essence_targeting_SpellScript();
+        }
+};
+
+class spell_elder_brightleafs_essence_targeting : public SpellScriptLoader
+{
+    public:
+        spell_elder_brightleafs_essence_targeting() : SpellScriptLoader("spell_elder_brightleafs_essence_targeting") { }
+
+        class spell_elder_brightleafs_essence_targeting_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_elder_brightleafs_essence_targeting_SpellScript);
+
+            void FilterTargetsEffect0(std::list<Unit*>& unitList)
+            {
+                unitList.remove_if(IsNoAllyOfNature());
+            }
+
+            void FilterTargetsEffect1(std::list<Unit*>& unitList)
+            {
+                unitList.clear();
+                unitList.push_back(GetCaster());
+            }
+
+            void Register()
+            {
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_elder_brightleafs_essence_targeting_SpellScript::FilterTargetsEffect0, EFFECT_0, TARGET_UNIT_AREA_ALLY_SRC);
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_elder_brightleafs_essence_targeting_SpellScript::FilterTargetsEffect1, EFFECT_1, TARGET_UNIT_AREA_ALLY_SRC);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_elder_brightleafs_essence_targeting_SpellScript();
         }
 };
 
@@ -1827,5 +1856,6 @@ void AddSC_boss_freya()
     new spell_freya_sunbeam();
     new mob_freya_sunbeam();
     new mob_iron_roots();
-    new spell_elder_essence_targeting();
+    new spell_elder_ironbranchs_essence_targeting();
+    new spell_elder_brightleafs_essence_targeting();
 }
