@@ -302,7 +302,7 @@ class boss_kologarn : public CreatureScript
                 }
             }
 
-            void UpdateAI(const uint32 diff)
+            void UpdateAI(uint32 const diff)
             {
                 if (!UpdateVictim())
                     return;
@@ -333,7 +333,7 @@ class boss_kologarn : public CreatureScript
                             DoCastVictim(SPELL_TWO_ARM_SMASH);
                         else if (left || right)
                             DoCastVictim(SPELL_ONE_ARM_SMASH);
-                        events.RepeatEvent(urand(8000, 10000));
+                        events.RepeatEvent(15000);
                         break;
                     case EVENT_STONE_SHOUT:
                         DoCast(SPELL_STONE_SHOUT);
