@@ -167,30 +167,30 @@ enum MovePoints
 
 static Position Locations[]=
 {
-    {1178.01f, 1276.01f, 268.2f, 2.3143f},  // p0 - first fly down position
-    {1154.20f, 1301.68f, 302.5f, 2.3143f},  // p1 - low room center / vortex
-    {1154.20f, 1301.68f, 285.5f, 2.3143f},  // p1 - vortex vehicle position
-    {1154.20f, 1301.68f, 320.5f, 2.3143f},  // p2 - higher room center, should fly around
-    {1154.20f, 1301.68f, 225.0f, 2.3143f},  // p3 - "inside" destroyed platform
-    {1154.35f, 1300.87f, 270.2f, 0.0f}      // alexstraszas gift
+    {778.01f, 1276.01f, 268.2f, 2.3143f},  // p0 - first fly down position
+    {754.20f, 1301.68f, 302.5f, 2.3143f},  // p1 - low room center / vortex
+    {754.20f, 1301.68f, 285.5f, 2.3143f},  // p1 - vortex vehicle position
+    {754.20f, 1301.68f, 320.5f, 2.3143f},  // p2 - higher room center, should fly around
+    {754.20f, 1301.68f, 225.0f, 2.3143f},  // p3 - "inside" destroyed platform
+    {754.35f, 1300.87f, 270.2f, 0.0f}      // alexstraszas gift
 };
 
 static Position SparkLocations[]=
 {
     // power spark spawn positions
-    {1052.417f, 1200.52f, 295.972f, 0.78539f},
-    {1247.670f, 1408.05f, 295.972f, 3.97935f},
-    {1047.675f, 1403.80f, 295.972f, 5.53269f},
-    {1243.182f, 1215.42f, 295.972f, 2.35619f}
+    {652.417f, 1200.52f, 295.972f, 0.78539f},
+    {847.670f, 1408.05f, 295.972f, 3.97935f},
+    {647.675f, 1403.80f, 295.972f, 5.53269f},
+    {843.182f, 1215.42f, 295.972f, 2.35619f}
 };
 
 static Position LordLocations[]=
 {
     // nexus lord fly to ground positions
-    {1172.396f, 1301.735f, 266.2f, 0.0f},
-    {1136.652f, 1301.850f, 266.2f, 0.0f},
-    {1154.490f, 1319.730f, 266.2f, 0.0f},
-    {1154.160f, 1282.878f, 266.2f, 0.0f}
+    {772.396f, 1301.735f, 266.2f, 0.0f},
+    {736.652f, 1301.850f, 266.2f, 0.0f},
+    {754.490f, 1319.730f, 266.2f, 0.0f},
+    {754.160f, 1282.878f, 266.2f, 0.0f}
 };
 
 #define FLOOR_Z            268.17f
