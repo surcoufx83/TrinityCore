@@ -4494,7 +4494,7 @@ void SpellMgr::LoadSpellCustomAttr()
             break;
         case 62711: // Ignis - Grab
             spellInfo->Attributes |= SPELL_ATTR0_UNAFFECTED_BY_INVULNERABILITY;
-            spellInfo->AttributesEx2 |= SPELL_ATTR2_CANT_REFLECTED;
+            spellInfo->AttributesEx |= SPELL_ATTR1_CANT_BE_REFLECTED;
             ++count;
             break;
         case 62470: // Deafening Thunder - Spell::DoSpellHitOnUnit sends EVADE if speed > 0

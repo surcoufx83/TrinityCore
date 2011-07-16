@@ -626,8 +626,9 @@ uint32 Unit::DealDamage(Unit* victim, uint32 damage, CleanDamage const* cleanDam
     if (victim->IsAIEnabled)
         victim->GetAI()->DamageTaken(this, damage);
 
-    if (pVictim->GetTypeId() == TYPEID_UNIT && pVictim->ToCreature()->IsAIEnabled)
-        pVictim->ToCreature()->AI()->ElementalDamageTaken(this, damage, damageSchoolMask);
+    if (victim->GetTypeId() == TYPEID_UNIT && victim->ToCreature()->IsAIEnabled)
+        victim->ToCreature()->AI()->ElementalDamageTaken(this, damage, damageSchoolMask);
+
     if (IsAIEnabled)
         GetAI()->DamageDealt(victim, damage, damagetype);
 
@@ -786,7 +787,7 @@ uint32 Unit::DealDamage(Unit* victim, uint32 damage, CleanDamage const* cleanDam
                 threatMod = GetSpellThreatMod(spellProto);
 
             if (threatMod > 0.0f)
-                pVictim->AddThreat(this, damage * threatMod, damageSchoolMask, spellProto);
+                victim->AddThreat(this, damage * threatMod, damageSchoolMask, spellProto);
             else
                 victim->AddThreat(this, (float)damage, damageSchoolMask, spellProto);
         }
@@ -2488,7 +2489,7 @@ SpellMissInfo Unit::MeleeSpellHitResult(Unit* victim, SpellEntry const* spell)
 SpellMissInfo Unit::MagicSpellHitResult(Unit* victim, SpellEntry const* spell)
 {
     // Can`t miss on dead target (on skinning for example)
-    if ((!pVictim->isAlive() && pVictim->GetTypeId() != TYPEID_PLAYER) || spell->AttributesEx3 & SPELL_ATTR3_IGNORE_HIT_RESULT)
+    if ((!victim->isAlive() && victim->GetTypeId() != TYPEID_PLAYER) || spell->AttributesEx3 & SPELL_ATTR3_IGNORE_HIT_RESULT)
         return SPELL_MISS_NONE;
 
     SpellSchoolMask schoolMask = GetSpellSchoolMask(spell);
@@ -11220,7 +11221,7 @@ uint32 Unit::SpellCriticalDamageBonus(SpellEntry const* spellProto, uint32 damag
     // TODO: check calculation?
     crit_bonus = int32(crit_bonus * GetTotalAuraMultiplierByMiscMask(SPELL_AURA_MOD_CRIT_DAMAGE_BONUS_MELEE, SPELL_SCHOOL_MASK_MAGIC));
 
-    if (pVictim)
+    if (victim)
     {
         uint32 creatureTypeMask = victim->GetCreatureTypeMask();
         crit_bonus = int32(crit_bonus * GetTotalAuraMultiplierByMiscMask(SPELL_AURA_MOD_CRIT_PERCENT_VERSUS, creatureTypeMask));
