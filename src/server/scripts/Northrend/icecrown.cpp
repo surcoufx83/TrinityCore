@@ -428,6 +428,43 @@ public:
         return new npc_webbed_crusaderAI(creature);
     }
 };
+
+class spell_argent_cannon : public SpellScriptLoader
+{
+    public:
+        spell_argent_cannon() : SpellScriptLoader("spell_argent_cannon") { }
+
+        class spell_argent_cannon_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_argent_cannon_SpellScript);
+
+            bool Validate(SpellEntry const* /*spellInfo*/)
+            {
+                //if (!sSpellStore.LookupEntry(GetEffectValue()))
+                //    return false;
+                return true;
+            }
+
+            void HandleDummy(SpellEffIndex /*effIndex*/)
+            {
+                const WorldLocation* loc = GetTargetDest();
+                GetCaster()->CastSpell(loc->m_positionX,loc->m_positionY,loc->m_positionZ,GetEffectValue() , true);
+
+                PreventHitDefaultEffect(EFFECT_0);
+            }
+
+            void Register()
+            {
+                OnEffect += SpellEffectFn(spell_argent_cannon_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_argent_cannon_SpellScript();
+        }
+};
+
 void AddSC_icecrown()
 {
     new npc_arete;
@@ -437,4 +474,5 @@ void AddSC_icecrown()
     new npc_alorah_and_grimmin;
     new npc_guardian_pavilion;
     new npc_webbed_crusader;
+    new spell_argent_cannon;
 }

@@ -85,7 +85,8 @@ bool Condition::Meets(Player* player, Unit* invoker)
             condMeets = player->HasSkill(mConditionValue1) && player->GetBaseSkillValue(mConditionValue1) >= mConditionValue2;
             break;
         case CONDITION_QUESTREWARDED:
-            condMeets = (player->GetQuestRewardStatus(mConditionValue1) == !mConditionValue2);
+            QuestStatus status = player->GetQuestStatus(mConditionValue1);
+            condMeets = ((status == QUEST_STATUS_REWARDED) == !mConditionValue2);
             break;
         case CONDITION_QUESTTAKEN:
         {
