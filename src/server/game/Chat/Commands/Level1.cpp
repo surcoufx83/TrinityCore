@@ -90,6 +90,37 @@ bool ChatHandler::HandleGMAnnounceCommand(const char* args)
     return true;
 }
 
+// Send Text to Channel
+bool ChatHandler::HandleChannelMessage(const char* args)
+{
+    if (!*args)
+        return false;
+
+    uint64 p;
+    p = unit64(509999);
+
+    std::string channelName;
+    channelName = sConfig->GetStringDefault("ChannelMessage.Channel", "global");
+    Player *plr = sObjectMgr->GetPlayer(p);
+
+    uint32 messageLength = strlen(args) + 1;
+
+    WorldPacket data(SMSG_MESSAGECHAT, 1+4+8+4+m_name.size()+1+8+4+messageLength+1);
+    data << (uint8)CHAT_MSG_CHANNEL;
+    data << (uint32)LANG_UNIVERSAL;
+    data << p;                                          // 2.1.0
+    data << uint32(0);                                  // 2.1.0
+    data << channelName;
+    data << p;
+    data << messageLength;
+    data << args;
+    data << uint8(plr ? plr->chatTag() : 0);
+
+    SendToAll(&data, true);
+
+    return true;
+}
+
 //notification player at the screen
 bool ChatHandler::HandleNotifyCommand(const char* args)
 {
