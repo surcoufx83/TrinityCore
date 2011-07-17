@@ -12693,8 +12693,9 @@ float Unit::GetSpeed(UnitMoveType mtype) const
 
 void Unit::SetSpeed(UnitMoveType mtype, float rate, bool forced)
 {
-    if (rate < 0)
-        rate = 0.0f;
+    // TODO: replace with original when rate == 0.0f works for creatures
+    if (rate <= 0)        // if (rate < 0)
+        rate = 0.001f;    //     rate = 0.0f;
 
     // Update speed only on change
     if (m_speed_rate[mtype] == rate)
