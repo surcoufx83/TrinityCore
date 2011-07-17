@@ -106,13 +106,10 @@ bool ChatHandler::HandleChannelMessage(const char* args)
     Player *plr = sObjectMgr->GetPlayer(p);
 
     Channel *chn = NULL;
-    if (ChannelMgr* cMgr = channelMgr(ALLIANCE))
     chn = cMgr->GetChannel(channelName, p);
 
     uint32 messageLength = strlen(args) + 1;
 
-    if(chn)
-    {
     WorldPacket data(SMSG_MESSAGECHAT, 1+4+8+4+channelName.size()+1+8+4+messageLength+1);
     data << (uint8)CHAT_MSG_CHANNEL;
     data << (uint32)LANG_UNIVERSAL;
@@ -127,9 +124,6 @@ bool ChatHandler::HandleChannelMessage(const char* args)
     chn->SendToAll(&data, true);
 
     return true;
-    }
-
-    return false;
 }
 
 //notification player at the screen
