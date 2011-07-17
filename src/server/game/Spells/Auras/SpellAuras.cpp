@@ -1294,8 +1294,15 @@ void Aura::HandleAuraSpecificMods(AuraApplication const* aurApp, Unit* caster, b
                         if(removeMode != AURA_REMOVE_BY_EXPIRE && removeMode != AURA_REMOVE_BY_DEATH)
                             break;
                         //Trigger on next player
-                        target->CastSpell(target, 45034, true, NULL, GetEffect(0));
-                    	break;
+                        target->CastSpell(target, GetId(), true, NULL, GetEffect(0));
+                        break;
+                    case 63830: // Malady of the Mind - Sara
+                    case 63881:
+                        if(removeMode != AURA_REMOVE_BY_EXPIRE && removeMode != AURA_REMOVE_BY_DEATH)
+                            break;
+                        //Trigger on next player
+                        target->CastSpell(target, GetId(), true, NULL, GetEffect(0));
+                        break;
                 }
                 break;
             case SPELLFAMILY_MAGE:

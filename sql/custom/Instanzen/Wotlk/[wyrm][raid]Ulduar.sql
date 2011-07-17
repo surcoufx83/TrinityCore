@@ -535,6 +535,11 @@ VALUES
 (13,0,64172,0,18,1,33988,0,0,'','Effekt only for Immortal Guardians'),
 (13,0,64465,0,18,1,33988,0,0,'','Effekt only for Immortal Guardians');
 
+-- Spell Target - Induce Madness
+DELETE FROM conditions WHERE SourceEntry = 64059;
+INSERT INTO conditions VALUES
+(13,0,64059,0,18,1,0,0,0,'','Induce Madness - on Players');
+
 -- Hodir Secound Aura Script
 DELETE FROM spell_script_names WHERE spell_id IN (64174);
 INSERT INTO spell_script_names (spell_id,Scriptname)
