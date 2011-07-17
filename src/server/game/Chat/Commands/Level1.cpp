@@ -27,7 +27,7 @@
 #include "AccountMgr.h"
 #include "Opcodes.h"
 #include "Chat.h"
-#include "Channel.h"
+#include "ChannelMgr.h"
 #include "Log.h"
 #include "MapManager.h"
 #include "ObjectAccessor.h"
@@ -102,7 +102,11 @@ bool ChatHandler::HandleChannelMessage(const char* args)
 
     std::string channelName;
     channelName = "global";
+
     Player *plr = sObjectMgr->GetPlayer(p);
+
+    Channel *chn = NULL;
+    chn = cMgr->GetChannel(channelName, p);
 
     uint32 messageLength = strlen(args) + 1;
 
@@ -117,7 +121,7 @@ bool ChatHandler::HandleChannelMessage(const char* args)
     data << args;
     data << uint8(plr ? plr->chatTag() : 0);
 
-    Channel::SendToAll(&data, true);
+    chn->SendToAll(&data, true);
 
     return true;
 }
