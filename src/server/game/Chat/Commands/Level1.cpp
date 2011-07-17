@@ -27,7 +27,6 @@
 #include "AccountMgr.h"
 #include "Opcodes.h"
 #include "Chat.h"
-#include "Channel.h"
 #include "Log.h"
 #include "MapManager.h"
 #include "ObjectAccessor.h"
@@ -117,7 +116,7 @@ bool ChatHandler::HandleChannelMessage(const char* args)
     data << args;
     data << uint8(plr ? plr->chatTag() : 0);
 
-    Channel::SendToAll(&data, true);
+    SendToAll(&data, true);
 
     return true;
 }
