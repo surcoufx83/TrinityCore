@@ -134,7 +134,6 @@ ChatCommand * ChatHandler::getCommandTable()
     static ChatCommand channelCommandTable[] =
     {
         { "set",      SEC_ADMINISTRATOR,     true,  NULL,  "", channelSetCommandTable },
-        { "message",  SEC_CONSOLE,           true,  OldHandler<&ChatHandler::HandleChannelMessage>,  "", NULL },
         { NULL,       0,                     false, NULL,  "", NULL                   }
     };
 
