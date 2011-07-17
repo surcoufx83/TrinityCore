@@ -107,7 +107,7 @@ bool ChatHandler::HandleChannelMessage(const char* args)
 
     Channel *chn = NULL;
     if (ChannelMgr* cMgr = channelMgr(ALLIANCE))
-    chn = cMgr->GetChannel(channelName, plr);
+    chn = cMgr->GetChannel(channelName, p);
 
     uint32 messageLength = strlen(args) + 1;
 
