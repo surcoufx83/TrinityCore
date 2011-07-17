@@ -532,7 +532,6 @@ const EventSpeech EventNpcSpeaching[19] =
     {ENTRY_YOGG_SARON,SAY_YOGGSARON_5_VISION_3,5000,false},
 };
 
-
 bool IsPlayerInBrainRoom(const Player* pPlayer)
 {
     return pPlayer->GetPositionZ() < 300;
@@ -659,7 +658,8 @@ public:
             // Spawn Yoggy if not spawned
             Creature* yogg = me->GetCreature(*me,guidYogg);
             if(yogg) yogg->DespawnOrUnsummon();
-            DoSummon(ENTRY_YOGG_SARON,SaraLocation,0,TEMPSUMMON_MANUAL_DESPAWN);
+            yogg = DoSummon(ENTRY_YOGG_SARON,SaraLocation,0,TEMPSUMMON_MANUAL_DESPAWN);
+            yogg->SetLootMode(LOOT_MODE_DEFAULT);
 
             Creature* yoggbrain = me->GetCreature(*me,guidYoggBrain);
             if(yoggbrain) yoggbrain->DespawnOrUnsummon();
@@ -899,6 +899,15 @@ public:
                 DoSpawnKeeperForSupport();
                 SetSanityAura();
                 uiAmountKeeperActive = CountKeepersActive();
+                if(Creature* yogg = me->GetCreature(*me,guidYogg))
+                {
+                    yogg->SetLootMode(LOOT_MODE_DEFAULT);
+                    if(uiAmountKeeperActive <= 1)
+                        yogg->AddLootMode(LOOT_MODE_HARD_MODE_1);
+                    if(uiAmountKeeperActive == 0)
+                        yogg->AddLootMode(LOOT_MODE_HARD_MODE_2);
+                }
+
                 break;
             case PHASE_BRAIN:
                 me->SetHealth(me->GetMaxHealth());
