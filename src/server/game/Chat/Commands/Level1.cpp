@@ -97,15 +97,15 @@ bool ChatHandler::HandleChannelMessage(const char* args)
         return false;
 
     uint64 p;
-    p = 509999;
+    p = unit64(509999);
 
     std::string channelName;
-    channelName = "global";
+    channelName = sConfig->GetStringDefault("ChannelMessage.Channel", "global");
     Player *plr = sObjectMgr->GetPlayer(p);
 
     uint32 messageLength = strlen(args) + 1;
 
-    WorldPacket data(SMSG_MESSAGECHAT, 1+4+8+4+channelName.size()+1+8+4+messageLength+1);
+    WorldPacket data(SMSG_MESSAGECHAT, 1+4+8+4+m_name.size()+1+8+4+messageLength+1);
     data << (uint8)CHAT_MSG_CHANNEL;
     data << (uint32)LANG_UNIVERSAL;
     data << p;                                          // 2.1.0
