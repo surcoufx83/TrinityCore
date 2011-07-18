@@ -5151,8 +5151,9 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
                 case 57723: // Exhaustion
                 case 57724: // Sated
                 {
-                    target->ApplySpellImmune(GetId(), IMMUNITY_ID, 32182, apply); break; // Heroism
-                    target->ApplySpellImmune(GetId(), IMMUNITY_ID, 2825, apply);  break; // Bloodlust
+                    target->ApplySpellImmune(GetId(), IMMUNITY_ID, 32182, apply); // Heroism
+                    target->ApplySpellImmune(GetId(), IMMUNITY_ID, 2825, apply); // Bloodlust
+                    break; // needs to be after the two immunes
                 }
                 case 57819: // Argent Champion
                 case 57820: // Ebon Champion
