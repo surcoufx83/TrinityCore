@@ -415,8 +415,12 @@ public:
                 break;
             case 1:
                 {
-                    Creature* temp = DoSpawnCreature(NPC_FORGOTTEN_DEEPS_AMBUSHER,0,0,0,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,30000);
-                    temp->AI()->AttackStart(killer);
+                    if(Creature* temp = DoSpawnCreature(NPC_FORGOTTEN_DEEPS_AMBUSHER,0,0,0,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,30000))
+                    {
+                        temp->CastSpell(temp,56418,true);
+                        temp->SetStandState(UNIT_STAND_STATE_STAND);
+                        temp->AI()->AttackStart(killer);
+                    }
                 }
                 break;
             }
@@ -429,6 +433,12 @@ public:
     }
 };
 
+
+#define SPELL_ARGENT_CANNON_SHOOT               57385
+#define SPELL_ARGENT_CANNON_SHOOT_TRIGGER       57387
+#define SPELL_RECONING_BOMB                     57412
+#define SPELL_RECONING_BOMB_TRIGGER             57414
+
 class spell_argent_cannon : public SpellScriptLoader
 {
     public:
@@ -440,22 +450,34 @@ class spell_argent_cannon : public SpellScriptLoader
 
             bool Validate(SpellEntry const* /*spellInfo*/)
             {
-                //if (!sSpellStore.LookupEntry(GetEffectValue()))
-                //    return false;
+                if (!sSpellStore.LookupEntry(SPELL_ARGENT_CANNON_SHOOT_TRIGGER))
+                    return false;
+                if (!sSpellStore.LookupEntry(SPELL_RECONING_BOMB_TRIGGER))
+                    return false;
                 return true;
             }
 
-            void HandleDummy(SpellEffIndex /*effIndex*/)
+            void HandleDummy(SpellEffIndex effIndex)
             {
                 const WorldLocation* loc = GetTargetDest();
-                GetCaster()->CastSpell(loc->m_positionX,loc->m_positionY,loc->m_positionZ,GetEffectValue() , true);
 
-                PreventHitDefaultEffect(EFFECT_0);
+                switch(GetSpellInfo()->Id)
+                {
+                case SPELL_ARGENT_CANNON_SHOOT:
+                    GetCaster()->CastSpell(loc->m_positionX,loc->m_positionY,loc->m_positionZ,SPELL_ARGENT_CANNON_SHOOT_TRIGGER , true);
+                    break;
+                case SPELL_RECONING_BOMB:
+                    GetCaster()->CastSpell(loc->m_positionX,loc->m_positionY,loc->m_positionZ,SPELL_RECONING_BOMB_TRIGGER , true);
+                    break;
+                }
+
+                PreventHitDefaultEffect(effIndex);
             }
 
             void Register()
             {
-                OnEffect += SpellEffectFn(spell_argent_cannon_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+                //OnEffect += SpellEffectFn(spell_argent_cannon_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+                OnEffect += SpellEffectFn(spell_argent_cannon_SpellScript::HandleDummy, EFFECT_1, SPELL_EFFECT_DUMMY);
             }
         };
 

@@ -959,6 +959,7 @@ void AddSC_lol_event()
     new npc_ghoul();
 
     /*
+    UPDATE creature_template SET scriptname = 'npc_midsummer_scorchling' WHERE entry = 26401;
     update creature_Template set scriptname = 'npc_xiri' where entry = 18528
     UPDATE `creature_template` SET `modelid_A` = 21349  , `modelid_H` = 21349  , `minlevel` = 73  , `maxlevel` = 73  , `minhealth` = 500000  , `maxhealth` = 500000  , `mindmg` = 3000  , `maxdmg` = 4000  , `attackpower` = 16125  , `baseattacktime` = 2000  , `faction_A` = 1866  , `faction_H` = 1866 , `armor` = 6000 , `equipment_id` = 2182 , scriptname = 'npc_preeven_maiev' WHERE `entry` = 22989;
     UPDATE `creature_template` SET `attackpower` = 6540  , `speed` = 1.1 , `type_flags` WHERE `entry` = 23191;

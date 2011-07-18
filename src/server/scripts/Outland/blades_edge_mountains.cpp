@@ -657,4 +657,8 @@ void AddSC_blades_edge_mountains()
     new npc_ogre_brute();
     new mob_aether_ray();
     new mob_wrangled_aether_ray();
+    /*
+        UPDATE creature_template SET scriptname = 'mob_aether_ray' WHERE entry = 22181;
+        UPDATE creature_template SET scriptname = 'mob_wrangled_aether_ray' WHERE entry = 23343;
+    */
 }

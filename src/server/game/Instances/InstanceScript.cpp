@@ -438,7 +438,6 @@ void InstanceScript::UpdateEncounterState(EncounterCreditType type, uint32 credi
     }
 }
 
-
 // Complete Achievement for all players in instance
 void InstanceScript::DoCompleteAchievement(uint32 achievement)
 {
