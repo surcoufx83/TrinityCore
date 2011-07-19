@@ -15463,7 +15463,13 @@ bool Player::SatisfyQuestDay(Quest const* qInfo, bool msg)
     if (qInfo->IsDFQuest())
     {
         if (!m_DFQuests.empty())
+        {
+            DFQuestsDoneList::iterator itr = m_DFQuests.find(qInfo->GetQuestId());
+            if (itr == m_DFQuests.end())
+                return true;
+
             return false;
+        }
 
         return true;
     }
