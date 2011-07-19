@@ -536,9 +536,9 @@ inline void KillRewarder::_RewardXP(Player* player, float rate)
         // calculate the xp boost
         if (boostItem && player->getLevel() <= sWorld->getIntConfig(CONFIG_XP_BOOST_MAXLEVEL))
             if (_group)
-                xp = uint32(xp * sWorld->getRate(RATE_XP_BOOST_GROUP));
+                xp = (uint32)(xp * sWorld->getRate(RATE_XP_BOOST_GROUP));
             else
-                xp = uint32(xp * sWorld->getRate(RATE_XP_BOOST_SOLO));
+                xp = (uint32)(xp * sWorld->getRate(RATE_XP_BOOST_SOLO));
 
         // 4.2.3. Give XP to player.
         player->GiveXP(xp, _victim, _groupRate);

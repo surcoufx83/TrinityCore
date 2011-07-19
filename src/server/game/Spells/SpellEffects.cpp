@@ -814,7 +814,7 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
 
                     // 1 tick/sec * 6 sec = 6 ticks
                     int32 deepWoundsDotBasePoints0 = int32(damage / 6);
-                    m_caster->CastCustomSpell(unitTarget, m_spellInfo->Id, &deepWoundsDotBasePoints0, NULL, NULL, true, NULL);
+                    m_caster->CastCustomSpell(unitTarget, 12721, &deepWoundsDotBasePoints0, NULL, NULL, true, NULL);
                     return;
                 }
                 case 13567:                                 // Dummy Trigger

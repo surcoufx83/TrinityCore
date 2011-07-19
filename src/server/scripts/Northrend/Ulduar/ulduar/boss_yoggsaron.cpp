@@ -658,8 +658,8 @@ public:
             // Spawn Yoggy if not spawned
             Creature* yogg = me->GetCreature(*me,guidYogg);
             if(yogg) yogg->DespawnOrUnsummon();
-            yogg = DoSummon(ENTRY_YOGG_SARON,SaraLocation,0,TEMPSUMMON_MANUAL_DESPAWN);
-            yogg->SetLootMode(LOOT_MODE_DEFAULT);
+            if(yogg = DoSummon(ENTRY_YOGG_SARON,SaraLocation,0,TEMPSUMMON_MANUAL_DESPAWN))
+                yogg->SetLootMode(LOOT_MODE_DEFAULT);
 
             Creature* yoggbrain = me->GetCreature(*me,guidYoggBrain);
             if(yoggbrain) yoggbrain->DespawnOrUnsummon();
