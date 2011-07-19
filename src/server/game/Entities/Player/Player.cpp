@@ -508,7 +508,7 @@ inline void KillRewarder::_RewardXP(Player* player, float rate)
             xp = 0;
 
         // if more then one is in killrange check if someone in range wears the xp boost item
-        if(_count > 1)
+        if (_count > 1)
             for (GroupReference *itr = _group->GetFirstMember(); itr != NULL; itr = itr->next())
                 if (Player* member = itr->getSource())
                     if (
@@ -534,11 +534,11 @@ inline void KillRewarder::_RewardXP(Player* player, float rate)
             AddPctN(xp, (*i)->GetAmount());
 
         // calculate the xp boost
-        if(boostItem && player->getLevel() <= sWorld->getIntConfig(CONFIG_XP_BOOST_MAXLEVEL))
-            if(_group)
-                xp *= sWorld->getRate(RATE_XP_BOOST_GROUP);
+        if (boostItem && player->getLevel() <= sWorld->getIntConfig(CONFIG_XP_BOOST_MAXLEVEL))
+            if (_group)
+                xp = uint32(xp * sWorld->getRate(RATE_XP_BOOST_GROUP));
             else
-                xp *= sWorld->getRate(RATE_XP_BOOST_SOLO);
+                xp = uint32(xp * sWorld->getRate(RATE_XP_BOOST_SOLO));
 
         // 4.2.3. Give XP to player.
         player->GiveXP(xp, _victim, _groupRate);
