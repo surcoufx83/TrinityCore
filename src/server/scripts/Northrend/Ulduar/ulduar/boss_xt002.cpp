@@ -899,14 +899,14 @@ class BombTargetSelector : public std::unary_function<Unit *, bool>
         Unit const* _victim;
 };
 
-class spell_xt002_bomb_select_target : public SpellScriptLoader
+class spell_xt002_searing_light_targeting : public SpellScriptLoader
 {
     public:
-        spell_xt002_bomb_select_target() : SpellScriptLoader("spell_xt002_bomb_select_target") { }
+        spell_xt002_searing_light_targeting() : SpellScriptLoader("spell_xt002_searing_light_targeting") { }
 
-        class spell_xt002_bomb_select_target_SpellScript : public SpellScript
+        class spell_xt002_searing_light_targeting_SpellScript : public SpellScript
         {
-            PrepareSpellScript(spell_xt002_bomb_select_target_SpellScript);
+            PrepareSpellScript(spell_xt002_searing_light_targeting_SpellScript);
 
             bool Load()
             {
@@ -938,9 +938,8 @@ class spell_xt002_bomb_select_target : public SpellScriptLoader
 
             void Register()
             {
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_xt002_bomb_select_target_SpellScript::FilterTargetsInitial, EFFECT_0, TARGET_UNIT_AREA_ENEMY_DST);
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_xt002_bomb_select_target_SpellScript::SetTarget, EFFECT_1, TARGET_UNIT_AREA_ENEMY_DST);
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_xt002_bomb_select_target_SpellScript::SetTarget, EFFECT_2, TARGET_UNIT_AREA_ENEMY_DST);
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_xt002_searing_light_targeting_SpellScript::FilterTargetsInitial, EFFECT_0, TARGET_UNIT_AREA_ENEMY_DST);
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_xt002_searing_light_targeting_SpellScript::SetTarget, EFFECT_1, TARGET_UNIT_AREA_ENEMY_DST);
             }
 
             Unit* _target;
@@ -948,7 +947,59 @@ class spell_xt002_bomb_select_target : public SpellScriptLoader
 
         SpellScript* GetSpellScript() const
         {
-            return new spell_xt002_bomb_select_target_SpellScript();
+            return new spell_xt002_searing_light_targeting_SpellScript();
+        }
+};
+
+class spell_xt002_gravity_bomb_targeting : public SpellScriptLoader
+{
+    public:
+        spell_xt002_gravity_bomb_targeting() : SpellScriptLoader("spell_xt002_gravity_bomb_targeting") { }
+
+        class spell_xt002_gravity_bomb_targeting_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_xt002_gravity_bomb_targeting_SpellScript);
+
+            bool Load()
+            {
+                _target = NULL;
+                return GetCaster()->GetTypeId() == TYPEID_UNIT;
+            }
+
+            void FilterTargetsInitial(std::list<Unit*>& targetList)
+            {
+                targetList.remove_if(BombTargetSelector(GetCaster()->ToCreature(), GetCaster()->getVictim()));
+
+                if (targetList.empty())
+                    return;
+
+                std::list<Unit*>::iterator itr = targetList.begin();
+                std::advance(itr, urand(0, targetList.size() - 1));
+                Unit* target = *itr;
+                targetList.clear();
+                targetList.push_back(target);
+                _target = target;
+            }
+
+            void SetTarget(std::list<Unit*>& targetList)
+            {
+                targetList.clear();
+                if (_target)
+                    targetList.push_back(_target);
+            }
+
+            void Register()
+            {
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_xt002_gravity_bomb_targeting_SpellScript::FilterTargetsInitial, EFFECT_0, TARGET_UNIT_AREA_ENEMY_DST);
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_xt002_gravity_bomb_targeting_SpellScript::SetTarget, EFFECT_2, TARGET_UNIT_AREA_ENEMY_DST);
+            }
+
+            Unit* _target;
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_xt002_gravity_bomb_targeting_SpellScript();
         }
 };
 
@@ -961,5 +1012,6 @@ void AddSC_boss_xt002()
     new mob_void_zone();
     new mob_life_spark();
     new boss_xt002();
-    new spell_xt002_bomb_select_target();
+    new spell_xt002_searing_light_targeting();
+    new spell_xt002_gravity_bomb_targeting();
 }
