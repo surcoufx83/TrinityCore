@@ -5184,8 +5184,10 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
                             if(apply)
                             {
                                 if(caster && caster->ToPlayer())
-                                target->CastSpell(caster,57808,true);
-                                caster->ToPlayer()->CastedCreatureOrGO(30546,target->GetGUID(),57806);
+                                {
+                                    target->CastSpell(caster,57808,true);
+                                    caster->ToPlayer()->CastedCreatureOrGO(30546,target->GetGUID(),57806);
+                                }
                             }
 
                         }
