@@ -16,11 +16,11 @@ SET @Necklace   :=43297;    -- Damaged Necklace
 SET @Book       :=45912;    -- Book of Glyph Mastery
 -- Dropchances in %
 SET @Epic       :=  3;
-SET @Rare       :=  5;
-SET @Green      := 10;
+SET @Rare       :=  3;
+SET @Green      :=  8;
 SET @Grey       :=100;
 SET @Consume    := 25;
-SET @Frostweave :=100;
+SET @Frostweave := 80;
 SET @NeckBook   :=0.1;
 -- Gold Loot
 SET @Min_Gold_10:=100000;
