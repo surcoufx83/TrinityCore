@@ -36,12 +36,11 @@ const Position PosSummon[3] =
 
 enum Events
 {
-    EVENT_NONE,
-    EVENT_WOUND,
+    EVENT_WOUND = 1,
     EVENT_ENRAGE,
     EVENT_DECIMATE,
     EVENT_BERSERK,
-    EVENT_SUMMON,
+    EVENT_SUMMON
 };
 
 #define EMOTE_NEARBY    " spots a nearby zombie to devour!"
@@ -69,18 +68,18 @@ public:
             _Reset();
         }
 
-        void AttackGluth(Creature *pWho)
+        void AttackGluth(Creature* who)
         {
-            pWho->SetReactState(REACT_PASSIVE);
-            pWho->AddThreat(me, 9999999);                                    
-            pWho->AI()->AttackStart(me);
-            pWho->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
-            pWho->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, true);
+            who->SetReactState(REACT_PASSIVE);
+            who->AddThreat(me, 9999999);                                    
+            who->AI()->AttackStart(me);
+            who->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
+            who->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, true);
         }
 
         void MoveInLineOfSight(Unit* who)
         {
-            if (who->GetEntry() == MOB_ZOMBIE && me->IsWithinDistInMap(who, 7))
+            if (who->ToCreature() && who->ToCreature()->GetEntry() == MOB_ZOMBIE && me->IsWithinDistInMap(who, 7))
             {
                 SetGazeOn(who);
                 AttackGluth(who->ToCreature());
@@ -99,8 +98,8 @@ public:
             _EnterCombat();
             events.ScheduleEvent(EVENT_WOUND, 10000);
             events.ScheduleEvent(EVENT_ENRAGE, 15000);
-            events.ScheduleEvent(EVENT_DECIMATE, RAID_MODE(120000,90000));
-            events.ScheduleEvent(EVENT_BERSERK, RAID_MODE(8*60000,7*60000));
+            events.ScheduleEvent(EVENT_DECIMATE, RAID_MODE(120000, 90000));
+            events.ScheduleEvent(EVENT_BERSERK, RAID_MODE(8*60000, 7*60000));
             events.ScheduleEvent(EVENT_SUMMON, 15000);
         }
 
@@ -108,8 +107,8 @@ public:
         {
             if (summon->GetEntry() == MOB_ZOMBIE)
             {
-                if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                    summon->AI()->AttackStart(pTarget);
+                if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                    summon->AI()->AttackStart(target);
                 
                 me->SetInCombatWith(summon);
                 summon->SetInCombatWith(me);
@@ -117,16 +116,15 @@ public:
             }
        
             //summon->CastSpell(summon,SPELL_INFECTED_WOUND,true);
-
             summons.Summon(summon);
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             if (!UpdateVictimWithGaze() || !CheckInRoom())
                 return;
 
-            //temporary
+            // temporary
             if (me->GetDistance(me->GetHomePosition()) > 80.0f)
             {
                 EnterEvadeMode();
@@ -138,10 +136,10 @@ public:
 
             while (uint32 eventId = events.ExecuteEvent())
             {
-                switch(eventId)
+                switch (eventId)
                 {
                     case EVENT_WOUND:
-                        DoCast(me->getVictim(), SPELL_MORTAL_WOUND);
+                        DoCastVictim(SPELL_MORTAL_WOUND);
                         events.ScheduleEvent(EVENT_WOUND, 10000);
                         break;
                     case EVENT_ENRAGE:
@@ -152,30 +150,20 @@ public:
                     case EVENT_DECIMATE:
                         // TODO : Add missing text
                         DoCastAOE(SPELL_DECIMATE);
-                        events.ScheduleEvent(EVENT_DECIMATE, RAID_MODE(120000,90000));
-
+                        events.ScheduleEvent(EVENT_DECIMATE, RAID_MODE(120000, 90000));
                         for (std::list<uint64>::const_iterator itr = summons.begin(); itr != summons.end(); ++itr)
                         {
-                            Creature *minion = Unit::GetCreature(*me, *itr);
+                            Creature* minion = Unit::GetCreature(*me, *itr);
                             if (minion && minion->isAlive())
-                            {
-                                //hack
-                                int32 damage = int32(minion->GetHealth()) - int32(minion->CountPctFromMaxHealth(5));
-                                if (damage > 0)
-                                    me->CastCustomSpell(28375, SPELLVALUE_BASE_POINT0, damage, minion, true);
-
                                 AttackGluth(minion);
-                            }
                         }
                         break;
                     case EVENT_BERSERK:
-                        if(!me->HasAura(SPELL_BERSERK))
-                            DoCast(me, SPELL_BERSERK);
-                        events.ScheduleEvent(EVENT_BERSERK, 1*60000);
+                        DoCast(me, SPELL_BERSERK, true);
                         break;
                     case EVENT_SUMMON:
                         for (int32 i = 0; i < RAID_MODE(1, 2); ++i)
-                            DoSummon(MOB_ZOMBIE, PosSummon[RAID_MODE(0,rand() % 3)], 10*MINUTE*IN_MILLISECONDS, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN);
+                            DoSummon(MOB_ZOMBIE, PosSummon[RAID_MODE(0, rand() % 3)], 10*MINUTE*IN_MILLISECONDS, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN);
                         events.ScheduleEvent(EVENT_SUMMON, 10000);
                         break;
                 }
@@ -201,35 +189,34 @@ class mob_gluth_zombie : public CreatureScript
 public:
     mob_gluth_zombie() : CreatureScript("mob_gluth_zombie") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new mob_gluth_zombieAI (pCreature);
+        return new mob_gluth_zombieAI(creature);
     }
 
     struct mob_gluth_zombieAI : public ScriptedAI
     {
-        mob_gluth_zombieAI(Creature *c) : ScriptedAI(c) { }
+        mob_gluth_zombieAI(Creature* c) : ScriptedAI(c) { }
 
-        void Reset() { }
-
-        void DamageDealt(Unit *pVictim, uint32 &damage, DamageEffectType /*damagetype*/)
+        void DamageDealt(Unit* victim, uint32 &damage, DamageEffectType /*damagetype*/)
         {
             uint8 stackcount = 0;
 
-            if (pVictim->HasAura(SPELL_INFECTED_TRIGGERED)) //if aura exists
+            if (victim->HasAura(SPELL_INFECTED_TRIGGERED)) // if aura exists
             {
-                 if (Aura* pInfectedAura = pVictim->GetAura(SPELL_INFECTED_TRIGGERED))
+                 if (Aura* infectedAura = victim->GetAura(SPELL_INFECTED_TRIGGERED))
                  {
-                     stackcount = pInfectedAura->GetStackAmount();
+                     stackcount = infectedAura->GetStackAmount();
                      if (stackcount < 99)
-                         pInfectedAura->SetStackAmount(stackcount + 1); // add one stack
-                     pInfectedAura->SetDuration(pInfectedAura->GetMaxDuration()); // reset aura duration
+                         infectedAura->SetStackAmount(stackcount + 1); // add one stack
+                     infectedAura->SetDuration(infectedAura->GetMaxDuration()); // reset aura duration
                  }
             }
-            else DoCast(pVictim, SPELL_INFECTED_TRIGGERED);  //else add aura        
+            else
+                DoCast(victim, SPELL_INFECTED_TRIGGERED);  // else add aura        
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             if (!UpdateVictim())
                 return;
