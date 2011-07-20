@@ -38,7 +38,8 @@ enum Spells
     SPELL_STATIC_DISRUPTION_H           = 63495,
     SPELL_OVERWHELMING_POWER_H          = 61888,
     SPELL_OVERWHELMING_POWER            = 64637,
-    SPELL_ELECTRICAL_CHARGE             = 61901,
+    SPELL_ELECTRICAL_CHARGE             = 61900,
+    SPELL_ELECTRICAL_CHARGE_TRIGGERED   = 61902,
 
     // Runemaster Molgeim
     SPELL_SHIELD_OF_RUNES               = 62274,
@@ -257,6 +258,7 @@ class boss_steelbreaker : public CreatureScript
                         if (_phase == 3)
                         {
                             me->ResetLootMode();
+                            DoCast(me, SPELL_ELECTRICAL_CHARGE, true);
                             events.ScheduleEvent(EVENT_OVERWHELMING_POWER, rand()%5000);
                         }
                     break;
@@ -305,9 +307,6 @@ class boss_steelbreaker : public CreatureScript
             void KilledUnit(Unit* who)
             {
                 DoScriptText(RAND(SAY_STEELBREAKER_SLAY_1, SAY_STEELBREAKER_SLAY_2), me);
-
-                if (_phase == 3)
-                    who->CastSpell(me, SPELL_ELECTRICAL_CHARGE, true);
             }
 
             void SpellHit(Unit* /*from*/, SpellEntry const* spell)
@@ -317,9 +316,9 @@ class boss_steelbreaker : public CreatureScript
                     case SPELL_SUPERCHARGE:
                         DoAction(EVENT_UPDATEPHASE);
                         break;
-                    case SPELL_ELECTRICAL_CHARGE + 1:
+                    case SPELL_ELECTRICAL_CHARGE_TRIGGERED:
                         if (!me->isInCombat())
-                            me->RemoveAurasDueToSpell(SPELL_ELECTRICAL_CHARGE + 1);
+                            me->RemoveAurasDueToSpell(SPELL_ELECTRICAL_CHARGE_TRIGGERED);
                         break;
                 }
             }
@@ -454,37 +453,32 @@ class spell_steelbreaker_static_disruption : public SpellScriptLoader
         }
 };
 
-class spell_meltdown : public SpellScriptLoader
+class spell_steelbreaker_electrical_charge : public SpellScriptLoader
 {
     public:
-        spell_meltdown() : SpellScriptLoader("spell_meltdown") { }
+        spell_steelbreaker_electrical_charge() : SpellScriptLoader("spell_steelbreaker_electrical_charge") { }
 
-        class spell_meltdown_SpellScript : public SpellScript
+        class spell_steelbreaker_electrical_charge_AuraScript : public AuraScript
         {
-            PrepareSpellScript(spell_meltdown_SpellScript);
+            PrepareAuraScript(spell_steelbreaker_electrical_charge_AuraScript);
 
-            bool Validate(SpellEntry const* /*spell*/)
+            void OnRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
             {
-                if (!sSpellStore.LookupEntry(SPELL_ELECTRICAL_CHARGE))
-                    return false;
-                return true;
-            }
-
-            void TriggerElectricalCharge(SpellEffIndex /*effIndex*/)
-            {
-                if (GetHitUnit() && GetCaster())
-                    GetHitUnit()->CastSpell(GetCaster(), SPELL_ELECTRICAL_CHARGE, true);
+                Unit* target = GetTarget();
+                Unit* caster = GetCaster();
+                if (target && caster && GetTargetApplication()->GetRemoveMode() == AURA_REMOVE_BY_DEATH)
+                    target->CastSpell(caster, SpellMgr::CalculateSpellEffectAmount(GetSpellProto(), EFFECT_0), true);
             }
 
             void Register()
             {
-                OnEffect += SpellEffectFn(spell_meltdown_SpellScript::TriggerElectricalCharge, EFFECT_1, SPELL_EFFECT_INSTAKILL);
+                AfterEffectRemove += AuraEffectRemoveFn(spell_steelbreaker_electrical_charge_AuraScript::OnRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
             }
         };
 
-        SpellScript* GetSpellScript() const
+        AuraScript* GetAuraScript() const
         {
-            return new spell_meltdown_SpellScript();
+            return new spell_steelbreaker_electrical_charge_AuraScript();
         }
 };
 
@@ -1041,7 +1035,7 @@ class spell_shield_of_runes : public SpellScriptLoader
 
             void Register()
             {
-                 AfterEffectRemove += AuraEffectRemoveFn(spell_shield_of_runes_AuraScript::OnRemove, EFFECT_0, SPELL_AURA_SCHOOL_ABSORB, AURA_EFFECT_HANDLE_REAL);
+                AfterEffectRemove += AuraEffectRemoveFn(spell_shield_of_runes_AuraScript::OnRemove, EFFECT_0, SPELL_AURA_SCHOOL_ABSORB, AURA_EFFECT_HANDLE_REAL);
             }
         };
 
@@ -1095,7 +1089,7 @@ void AddSC_boss_assembly_of_iron()
 {
     new boss_steelbreaker();
     new spell_steelbreaker_static_disruption();
-    new spell_meltdown();
+    new spell_steelbreaker_electrical_charge();
     new boss_runemaster_molgeim();
     new boss_stormcaller_brundir();
     new mob_lightning_elemental();
