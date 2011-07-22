@@ -3957,11 +3957,6 @@ void SpellMgr::LoadSpellCustomAttr()
             spellInfo->AttributesEx3 |= SPELL_ATTR3_CAN_PROC_WITH_TRIGGERED;
             ++count;
             break;
-        case 31117: // Unstable Affliction
-            // this attribute currently makes spell to ignore resilience and absorbs
-            spellInfo->AttributesEx4 &= ~SPELL_ATTR4_FIXED_DAMAGE;
-            ++count;
-            break;
         case 16007: // Draco-Incarcinatrix 900
             // was 46, but effect is aura effect
             spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_NEARBY_ENTRY;
@@ -4080,8 +4075,8 @@ void SpellMgr::LoadSpellCustomAttr()
         case 56908: //Fire Breath - Sartharion
         case 58956: //Fire Breath - Sartharion
         case 57874: //Twilight Shift Damage - Sartharion
-            spellInfo->AttributesEx4 |= SPELL_ATTR4_FIXED_DAMAGE;
-            count++;
+            mSpellCustomAttr[i] |= SPELL_ATTR0_CU_DIRECT_DAMAGE; // spellInfo->AttributesEx4 |= SPELL_ATTR4_FIXED_DAMAGE;
+            ++count;
             break;
         //Change nothing
         //case 57491: //Flame Tzunami Hack - Sartharion
@@ -4089,18 +4084,18 @@ void SpellMgr::LoadSpellCustomAttr()
         //    spellInfo->EffectRadiusIndex[0] = 8;
         //    spellInfo->EffectRadiusIndex[1] = 8;
         //    spellInfo->EffectRadiusIndex[2] = 8;
-        //    count++;
+        //    ++count;
         //    break;
         case 57697: //Lavastrike Hack - Sartharion
             spellInfo->EffectImplicitTargetA[0] = TARGET_DST_TARGET_ENEMY;
             //spellInfo->EffectImplicitTargetB[0] = TARGET_DEST_TARGET_RANDOM;
             spellInfo->EffectImplicitTargetB[0] = TARGET_DST_TARGET_ENEMY; //This would be more funny
-            count++;
+            ++count;
             break;
         case 31225:
         case 8593:
             spellInfo->AttributesEx2 |= SPELL_ATTR2_ALLOW_DEAD_TARGET;
-            count++;
+            ++count;
             break;
         case 41376: // Spite
         case 39992: // Needle Spine
@@ -4331,6 +4326,7 @@ void SpellMgr::LoadSpellCustomAttr()
             count++;
             break;
         case 18500: // Wing Buffet
+        case 28375: // Decimate
         case 33086: // Wild Bite
         case 49749: // Piercing Blow
         case 52890: // Penetrating Strike
