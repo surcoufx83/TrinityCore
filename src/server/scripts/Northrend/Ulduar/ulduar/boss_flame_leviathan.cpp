@@ -341,8 +341,11 @@ class boss_flame_leviathan : public CreatureScript
                 _JustDied();
                 DoScriptText(SAY_DEATH, me);
 
-                me->SummonGameObject(RAID_MODE(GO_CACHE_10, GO_CACHE_25), Center->GetPositionX(), Center->GetPositionY(), Center->GetPositionZ(),
-                    Center->GetOrientation(), 0, 0, 0, 0, 604800);
+                if (GameObject* cache = me->SummonGameObject(RAID_MODE(GO_CACHE_10, GO_CACHE_25), Center->GetPositionX(), Center->GetPositionY(),
+                    Center->GetPositionZ(), Center->GetOrientation(), 0, 0, 0, 0, 604800))
+                {
+                    cache->SetOwnerGUID(0);
+                }
 
                 if (ActiveTowers)
                 {
