@@ -395,6 +395,12 @@ class boss_gothik : public CreatureScript
                 }
             }
 
+            void DamageTaken(Unit* /*who*/ , uint32& damage)
+            {
+                if (!phaseTwo)
+                    damage = 0;
+            }
+
             void SpellHitTarget(Unit* target, SpellEntry const* spell)
             {
                 if (!me->isInCombat())
@@ -515,7 +521,8 @@ class boss_gothik : public CreatureScript
                     }
                 }
 
-                DoMeleeAttackIfReady();
+                if (!phaseTwo)
+                    DoMeleeAttackIfReady();
             }
         };
 

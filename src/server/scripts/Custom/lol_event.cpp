@@ -129,10 +129,10 @@ public:
                 if(Player* player = Unit::GetPlayer(*me, EventStarter))
                 {
 
-                    if( player->GetQuestStatus(11964) == QUEST_STATUS_INCOMPLETE )
+                    if( player->GetQuestStatus(11964) != QUEST_STATUS_REWARDED )
                         player->AreaExploredOrEventHappens(11964);
 
-                    if( player->GetQuestStatus(11966) == QUEST_STATUS_INCOMPLETE )
+                    if( player->GetQuestStatus(11966) != QUEST_STATUS_REWARDED )
                         player->AreaExploredOrEventHappens(11966);
                 }
 

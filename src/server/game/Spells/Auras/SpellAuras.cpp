@@ -1768,7 +1768,7 @@ bool Aura::IsProcOnCooldown() const
     return false;
 }
 
-void Aura::AddProcCooldown(uint32 msec)
+void Aura::AddProcCooldown(uint32 /*msec*/)
 {
     //m_procCooldown = time(NULL) + msec;
 }
