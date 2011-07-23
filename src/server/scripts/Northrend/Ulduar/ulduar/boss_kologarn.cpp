@@ -64,9 +64,7 @@ EndScriptData */
 
 enum Events
 {
-    EVENT_NONE = 0,
-    EVENT_INSTALL_ACCESSORIES,
-    EVENT_MELEE_CHECK,
+    EVENT_MELEE_CHECK = 1,
     EVENT_SMASH,
     EVENT_SWEEP,
     EVENT_STONE_SHOUT,
@@ -93,6 +91,10 @@ enum Yells
 enum
 {
     ACHIEV_DISARMED_START_EVENT                 = 21687,
+
+    DATA_RUBBLE_AND_ROLL                        = 1,
+    DATA_DISARMED                               = 2,
+    DATA_WITH_OPEN_ARMS                         = 3
 };
 
 class boss_kologarn : public CreatureScript
@@ -128,7 +130,22 @@ class boss_kologarn : public CreatureScript
 
             Vehicle* vehicle;
             bool left, right;
+            bool _armDied;
             uint64 eyebeamTarget;
+            uint8 _rubbleCount;
+
+            void Reset()
+            {
+                _Reset();
+
+                _armDied = false;
+                _rubbleCount = 0;
+                eyebeamTarget = 0;
+                me->SetReactState(REACT_DEFENSIVE);
+
+                if (instance)
+                    instance->DoStopTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_DISARMED_START_EVENT);
+            }
 
             void EnterCombat(Unit* /*who*/)
             {
@@ -145,16 +162,8 @@ class boss_kologarn : public CreatureScript
                     if (Unit* arm = vehicle->GetPassenger(i))
                         arm->ToCreature()->SetInCombatWithZone();
 
-                _EnterCombat();
                 me->SetReactState(REACT_AGGRESSIVE);
-            }
-
-            void Reset()
-            {
-                _Reset();
-
-                eyebeamTarget = 0;
-                me->SetReactState(REACT_DEFENSIVE);
+                _EnterCombat();
             }
 
             void JustDied(Unit* /*victim*/)
@@ -179,6 +188,7 @@ class boss_kologarn : public CreatureScript
             void PassengerBoarded(Unit* who, int8 /*seatId*/, bool apply)
             {
                 bool isEncounterInProgress = instance->GetBossState(TYPE_KOLOGARN) == IN_PROGRESS;
+
                 if (who->GetEntry() == NPC_LEFT_ARM)
                 {
                     left = apply;
@@ -208,6 +218,7 @@ class boss_kologarn : public CreatureScript
 
                 if (!apply)
                 {
+                    _armDied = true;
                     who->CastSpell(me, SPELL_ARM_DEAD_DAMAGE, true);
 
                     if (Creature* rubbleStalker = who->FindNearestCreature(NPC_RUBBLE_STALKER, 70.0f))
@@ -227,6 +238,9 @@ class boss_kologarn : public CreatureScript
                 }
                 else
                 {
+                    if (instance)
+                        instance->DoStopTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_DISARMED_START_EVENT);
+
                     events.CancelEvent(EVENT_STONE_SHOUT);
                     who->ToCreature()->SetInCombatWithZone();
                 }
@@ -277,9 +291,10 @@ class boss_kologarn : public CreatureScript
                         summon->CastSpell(me, SPELL_FOCUSED_EYEBEAM_VISUAL_RIGHT, true);
                         break;
                     case NPC_RUBBLE:
-                        summons.push_back(summon->GetGUID());
+                        summons.Summon(summon);
                         summon->SetInCombatWithZone();
-                        // absence of break intended
+                        ++_rubbleCount;
+                        return;
                     default:
                         return;
                 }
@@ -300,6 +315,21 @@ class boss_kologarn : public CreatureScript
                         summon->GetMotionMaster()->MoveChase(target);
                     }
                 }
+            }
+
+            uint32 GetData(uint32 type)
+            {
+                switch (type)
+                {
+                    case DATA_RUBBLE_AND_ROLL:
+                        return (_rubbleCount >= 25) ? 1 : 0;
+                    case DATA_DISARMED:
+                        return (!right && !left) ? 1 : 0;
+                    case DATA_WITH_OPEN_ARMS:
+                        return _armDied ? 0 : 1;
+                }
+
+                return 0;
             }
 
             void UpdateAI(uint32 const diff)
@@ -406,34 +436,34 @@ class boss_kologarn : public CreatureScript
 
 class npc_kologarn_arm : public CreatureScript
 {
-public:
-    npc_kologarn_arm() : CreatureScript("npc_kologarn_arm") { }
+    public:
+        npc_kologarn_arm() : CreatureScript("npc_kologarn_arm") { }
 
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return new npc_kologarn_armAI(creature);
-    }
-
-    struct npc_kologarn_armAI : public ScriptedAI
-    {
-        npc_kologarn_armAI(Creature* c) : ScriptedAI(c) { }
-
-        void Reset()
+        struct npc_kologarn_armAI : public ScriptedAI
         {
-            me->SetReactState(REACT_DEFENSIVE);
-        }
+            npc_kologarn_armAI(Creature* c) : ScriptedAI(c) { }
 
-        void EnterCombat(Unit* who)
+            void Reset()
+            {
+                me->SetReactState(REACT_DEFENSIVE);
+            }
+
+            void EnterCombat(Unit* who)
+            {
+                me->SetReactState(REACT_AGGRESSIVE);
+
+                Creature* kologarn = me->GetVehicleCreatureBase();
+                if (kologarn && !kologarn->isInCombat())
+                    kologarn->AI()->AttackStart(who);
+            }
+            
+            void UpdateAI(uint32 const /*diff*/) { }
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
         {
-            me->SetReactState(REACT_AGGRESSIVE);
-
-            Creature* kologarn = me->GetVehicleCreatureBase();
-            if (kologarn && !kologarn->isInCombat())
-                kologarn->AI()->AttackStart(who);
+            return new npc_kologarn_armAI(creature);
         }
-        
-        void UpdateAI(uint32 const diff) { }
-    };
 };
 
 class spell_ulduar_rubble_summon : public SpellScriptLoader
@@ -718,6 +748,49 @@ class spell_ulduar_stone_grip : public SpellScriptLoader
             return new spell_ulduar_stone_grip_AuraScript();
         }
 };
+
+class achievement_rubble_and_roll : public AchievementCriteriaScript
+{
+    public:
+        achievement_rubble_and_roll() : AchievementCriteriaScript("achievement_rubble_and_roll") { }
+
+        bool OnCheck(Player* /*source*/, Unit* target)
+        {
+            if (target && target->IsAIEnabled)
+                return target->GetAI()->GetData(DATA_RUBBLE_AND_ROLL);
+
+            return false;
+        }
+};
+
+class achievement_disarmed : public AchievementCriteriaScript
+{
+    public:
+        achievement_disarmed() : AchievementCriteriaScript("achievement_disarmed") { }
+
+        bool OnCheck(Player* /*source*/, Unit* target)
+        {
+            if (target && target->IsAIEnabled)
+                return target->GetAI()->GetData(DATA_DISARMED);
+
+            return false;
+        }
+};
+
+class achievement_with_open_arms : public AchievementCriteriaScript
+{
+    public:
+        achievement_with_open_arms() : AchievementCriteriaScript("achievement_with_open_arms") { }
+
+        bool OnCheck(Player* /*source*/, Unit* target)
+        {
+            if (target && target->IsAIEnabled)
+                return target->GetAI()->GetData(DATA_WITH_OPEN_ARMS);
+
+            return false;
+        }
+};
+
 /*
 DELETE FROM `npc_spellclick_spells` WHERE `npc_entry` IN (32930);
 INSERT INTO `npc_spellclick_spells` (`npc_entry`,`spell_id`,`quest_start`,`quest_start_active`,`quest_end`,`cast_flags`,`aura_required`,`aura_forbidden`,`user_type`) VALUES
@@ -733,4 +806,7 @@ void AddSC_boss_kologarn()
     new spell_ulduar_stone_grip_cast_target();
     new spell_ulduar_stone_grip_absorb();
     new spell_ulduar_stone_grip();
+    new achievement_rubble_and_roll();
+    new achievement_disarmed();
+    new achievement_with_open_arms();
 }
