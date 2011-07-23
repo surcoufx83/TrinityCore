@@ -787,16 +787,74 @@ public:
     }
 };
 
+enum CapturedCrusader
+{
+    SPELL_NERUBIAN_WEBS          = 56726,
+    SPELL_GRAB_CAPTURED_CRUSADER = 56683,
+    SPELL_RIDE_VEHICLE           = 56687
+};
+
+// texts not in script
+class npc_captured_crusader : public CreatureScript
+{
+    public:
+        npc_captured_crusader() : CreatureScript("npc_captured_crusader") { }
+
+        struct npc_captured_crusaderAI : public ScriptedAI
+        {
+            npc_captured_crusaderAI(Creature* creature) : ScriptedAI(creature) { }
+
+            void Reset()
+            {
+                _spellHit = false;
+                _vehicleTimer = 5000;
+                DoCast(me, SPELL_NERUBIAN_WEBS, true);
+            }
+
+            void SpellHit(Unit* caster, SpellEntry const* spell)
+            {
+                if (spell->Id == SPELL_GRAB_CAPTURED_CRUSADER)
+                {
+                    _spellHit = true;
+                    DoCast(caster, SPELL_RIDE_VEHICLE, true);
+                }
+            }
+
+            void UpdateAI(uint32 const diff)
+            {
+                if (!_spellHit || _spellHit && me->GetVehicle())
+                    return;
+
+                if (_vehicleTimer <= diff)
+                {
+                    _spellHit = false;
+                    me->DespawnOrUnsummon();
+                }
+                else
+                    _vehicleTimer -= diff;
+            }
+
+        private:
+            bool _spellHit;
+            uint32 _vehicleTimer;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new npc_captured_crusaderAI(creature);
+        }
+};
 
 void AddSC_icecrown()
 {
-    new npc_arete;
-    new npc_dame_evniki_kapsalis;
-    new npc_squire_david;
-    new npc_argent_valiant;
-    new npc_alorah_and_grimmin;
-    new npc_guardian_pavilion;
-    new npc_webbed_crusader;
-    new spell_argent_cannon;
-    new npc_blessed_banner;
+    new npc_arete();
+    new npc_dame_evniki_kapsalis();
+    new npc_squire_david();
+    new npc_argent_valiant();
+    new npc_alorah_and_grimmin();
+    new npc_guardian_pavilion();
+    new npc_webbed_crusader();
+    new spell_argent_cannon();
+    new npc_blessed_banner();
+    new npc_captured_crusader();
 }
