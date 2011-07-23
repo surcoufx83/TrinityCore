@@ -25,72 +25,72 @@
 
 enum Yells
 {
-    SAY_AGGRO                                = -1603220,
-    SAY_SLAY_1                               = -1603221,
-    SAY_SLAY_2                               = -1603222,
-    SAY_DEATH                                = -1603223,
-    SAY_SUMMON                               = -1603224,
-    SAY_SLAG_POT                             = -1603225,
-    SAY_SCORCH_1                             = -1603226,
-    SAY_SCORCH_2                             = -1603227,
-    SAY_BERSERK                              = -1603228,
-    EMOTE_JETS                               = -1603229,
+    SAY_AGGRO                     = -1603220,
+    SAY_SLAY_1                    = -1603221,
+    SAY_SLAY_2                    = -1603222,
+    SAY_DEATH                     = -1603223,
+    SAY_SUMMON                    = -1603224,
+    SAY_SLAG_POT                  = -1603225,
+    SAY_SCORCH_1                  = -1603226,
+    SAY_SCORCH_2                  = -1603227,
+    SAY_BERSERK                   = -1603228,
+    EMOTE_JETS                    = -1603229
 };
 
 enum Spells
 {
     // Ignis
-    SPELL_FLAME_JETS                         = 62680,
-    SPELL_FLAME_JETS_TRIGGERED               = 62681,
-    SPELL_SCORCH                             = 62546,
-    SPELL_SLAG_POT                           = 62717,
-    SPELL_SLAG_POT_DAMAGE                    = 65722,
-    SPELL_SLAG_IMBUED                        = 62836,
-    SPELL_ACTIVATE_CONSTRUCT                 = 62488,
-    SPELL_STRENGTH                           = 64473,
-    SPELL_GRAB                               = 62707,
-    SPELL_BERSERK                            = 47008,
-    SPELL_GRAB_ENTER_VEHICLE                 = 62711,
+    SPELL_FLAME_JETS              = 62680,
+    SPELL_FLAME_JETS_TRIGGERED    = 62681,
+    SPELL_SCORCH                  = 62546,
+    SPELL_SLAG_POT                = 62717,
+    SPELL_SLAG_POT_DAMAGE         = 65722,
+    SPELL_SLAG_IMBUED             = 62836,
+    SPELL_ACTIVATE_CONSTRUCT      = 62488,
+    SPELL_STRENGTH                = 64473,
+    SPELL_GRAB                    = 62707,
+    SPELL_BERSERK                 = 47008,
+    SPELL_GRAB_ENTER_VEHICLE      = 62711,
 
     // Constructs
-    SPELL_HEAT                               = 65667,
-    SPELL_MOLTEN                             = 62373,
-    SPELL_BRITTLE                            = 62382,
-    SPELL_BRITTLE_25                         = 67114,
-    SPELL_SHATTER                            = 62383,
-    SPELL_FREEZE_ANIM                        = 63354,
+    SPELL_HEAT                    = 65667,
+    SPELL_MOLTEN                  = 62373,
+    SPELL_BRITTLE                 = 62382,
+    SPELL_BRITTLE_25              = 67114,
+    SPELL_SHATTER                 = 62383,
+    SPELL_FREEZE_ANIM             = 63354,
 
     // Ground
-    SPELL_GROUND                             = 62548
+    SPELL_GROUND                  = 62548
 };
 
 enum Events
 {
-    EVENT_NONE,
-    EVENT_JET,
+    EVENT_JET                     = 1,
     EVENT_SCORCH,
     EVENT_SLAG_POT,
     EVENT_GRAB_POT,
     EVENT_CHANGE_POT,
     EVENT_CONSTRUCT,
     EVENT_BERSERK,
-    ACTION_REMOVE_BUFF = 20
+
+    ACTION_REMOVE_BUFF,
+
+    DATA_SHATTERED
 };
 
 enum Creatures
 {
-    NPC_IRON_CONSTRUCT                       = 33121,
-    NPC_GROUND_SCORCH                        = 33221
+    NPC_IRON_CONSTRUCT            = 33121,
+    NPC_GROUND_SCORCH             = 33221
 };
 
 enum AchievementData
 {
-    ACHIEVEMENT_SHATTERED_10                 = 2925,
-    ACHIEVEMENT_SHATTERED_25                 = 2926,
-    ACHIEVEMENT_TIMED_START_EVENT            = 20951
+    ACHIEVEMENT_TIMED_START_EVENT = 20951
 };
 
-const Position Pos[20] =
+Position const Pos[20] =
 {
     {630.366f, 216.772f, 360.891f, 3.001970f},
     {630.594f, 231.846f, 360.891f, 3.124140f},
@@ -116,295 +116,295 @@ const Position Pos[20] =
 
 class boss_ignis : public CreatureScript
 {
-public:
-    boss_ignis() : CreatureScript("boss_ignis") { }
+    public:
+        boss_ignis() : CreatureScript("boss_ignis") { }
 
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return new boss_ignis_AI(creature);
-    }
-
-    struct boss_ignis_AI : public BossAI
-    {
-        boss_ignis_AI(Creature* creature) : BossAI(creature, TYPE_IGNIS), vehicle(me->GetVehicleKit())
+        struct boss_ignis_AI : public BossAI
         {
-            assert(vehicle);
-        }
-
-        Vehicle* vehicle;
-
-        std::list<Creature*> creatureList;
-
-        bool Shattered;
-        uint64 SlagPotGUID;
-        uint32 ConstructTimer;
-
-        void Reset()
-        {
-            _Reset();
-            if (vehicle)
-                vehicle->RemoveAllPassengers();
-
-            creatureList.clear();
-            for (uint8 i = 0; i < 20; i++)
+            boss_ignis_AI(Creature* creature) : BossAI(creature, TYPE_IGNIS), _vehicle(me->GetVehicleKit())
             {
-                if (Creature* construct = me->SummonCreature(NPC_IRON_CONSTRUCT, Pos[i]))
-                    creatureList.push_back(construct);
+                assert(_vehicle);
             }
 
-            if (instance)
-                instance->DoStopTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEVEMENT_TIMED_START_EVENT);
-        }
-
-        void EnterCombat(Unit* /*who*/)
-        {
-            _EnterCombat();
-            DoScriptText(SAY_AGGRO, me);
-            events.ScheduleEvent(EVENT_JET, 30000);
-            events.ScheduleEvent(EVENT_SCORCH, 25000);
-            events.ScheduleEvent(EVENT_SLAG_POT, 35000, 1);
-            events.ScheduleEvent(EVENT_CONSTRUCT, 15000);
-            events.ScheduleEvent(EVENT_BERSERK, 480000);
-            SlagPotGUID = 0;
-            ConstructTimer = 0;
-            Shattered = false;
-
-            // Stokin' the Furnace
-            if (instance)
-                instance->DoStartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEVEMENT_TIMED_START_EVENT);
-        }
-
-        void JustDied(Unit * /*victim*/)
-        {
-            _JustDied();
-            DoScriptText(SAY_DEATH, me);
-
-            // Achievements
-            if (instance)
+            void Reset()
             {
-                // Shattered
-                if (Shattered)
-                    instance->DoCompleteAchievement(RAID_MODE(ACHIEVEMENT_SHATTERED_10, ACHIEVEMENT_SHATTERED_25));
+                _Reset();
+                if (_vehicle)
+                    _vehicle->RemoveAllPassengers();
+
+                _creatureList.clear();
+
+                for (uint8 i = 0; i < 20; ++i)
+                    if (Creature* construct = me->SummonCreature(NPC_IRON_CONSTRUCT, Pos[i]))
+                        _creatureList.push_back(construct);
+
+                if (instance)
+                    instance->DoStopTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEVEMENT_TIMED_START_EVENT);
             }
-        }
 
-        void SpellHitTarget(Unit* target, const SpellEntry* spell)
-        {
-            if (spell->Id == SPELL_FLAME_JETS)
-                target->CastSpell(target, SPELL_FLAME_JETS_TRIGGERED, true);
-        }
-
-        void UpdateAI(const uint32 diff)
-        {
-            if (!UpdateVictim())
-                return;
-
-            _DoAggroPulse(diff);
-            events.Update(diff);
-            ConstructTimer += diff;
-
-            if (me->HasUnitState(UNIT_STAT_CASTING))
-                return;
-
-            while (uint32 eventId = events.ExecuteEvent())
+            void EnterCombat(Unit* /*who*/)
             {
-                switch (eventId)
+                _EnterCombat();
+                DoScriptText(SAY_AGGRO, me);
+                events.ScheduleEvent(EVENT_JET, 30000);
+                events.ScheduleEvent(EVENT_SCORCH, 25000);
+                events.ScheduleEvent(EVENT_SLAG_POT, 35000, 1);
+                events.ScheduleEvent(EVENT_CONSTRUCT, 15000);
+                events.ScheduleEvent(EVENT_BERSERK, 480000);
+                _slagPotGUID = 0;
+                _constructTimer = 0;
+                _shattered = false;
+
+                // Stokin' the Furnace
+                if (instance)
+                    instance->DoStartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEVEMENT_TIMED_START_EVENT);
+            }
+
+            void JustDied(Unit* /*victim*/)
+            {
+                _JustDied();
+                DoScriptText(SAY_DEATH, me);
+            }
+
+            void SpellHitTarget(Unit* target, SpellEntry const* spell)
+            {
+                if (spell->Id == SPELL_FLAME_JETS)
+                    target->CastSpell(target, SPELL_FLAME_JETS_TRIGGERED, true);
+            }
+
+            void UpdateAI(uint32 const diff)
+            {
+                if (!UpdateVictim())
+                    return;
+
+                _DoAggroPulse(diff);
+                events.Update(diff);
+                _constructTimer += diff;
+
+                if (me->HasUnitState(UNIT_STAT_CASTING))
+                    return;
+
+                while (uint32 eventId = events.ExecuteEvent())
                 {
-                    case EVENT_JET:
-                        me->MonsterTextEmote(EMOTE_JETS, 0, true);
-                        DoCastAOE(SPELL_FLAME_JETS);
-                        events.DelayEvents(5000, 1);
-                        events.ScheduleEvent(EVENT_JET, urand(35000, 40000));
-                        break;
-                    case EVENT_SLAG_POT:
-                        if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1, 100, true))
-                        {
-                            DoScriptText(SAY_SLAG_POT, me);
-                            SlagPotGUID = target->GetGUID();
-                            DoCast(target, SPELL_GRAB);
-                            events.ScheduleEvent(EVENT_GRAB_POT, 500);
-                        }
-                        events.ScheduleEvent(EVENT_SLAG_POT, RAID_MODE(30000, 15000), 1);
-                        break;
-                    case EVENT_GRAB_POT:
-                        if (Unit* SlagPotTarget = Unit::GetUnit(*me, SlagPotGUID))
-                        {
-                            SlagPotTarget->CastCustomSpell(SPELL_GRAB_ENTER_VEHICLE, SPELLVALUE_BASE_POINT0, 1, me, true);
-                            events.ScheduleEvent(EVENT_CHANGE_POT, 1000);
-                        }
-                        break;
-                    case EVENT_CHANGE_POT:
-                        if (Unit* SlagPotTarget = Unit::GetUnit(*me, SlagPotGUID))
-                        {
-                            SlagPotTarget->AddAura(SPELL_SLAG_POT, SlagPotTarget);
-                            SlagPotTarget->ExitVehicle();
-                            SlagPotTarget->CastCustomSpell(SPELL_GRAB_ENTER_VEHICLE, SPELLVALUE_BASE_POINT0, 2, me, true);
-                            SlagPotTarget->ClearUnitState(UNIT_STAT_ONVEHICLE); // Hack
-                            SlagPotGUID = 0;
-                        }
-                        break;
-                    case EVENT_SCORCH:
-                        DoScriptText(RAND(SAY_SCORCH_1, SAY_SCORCH_2), me);
-                        if (Unit* target = me->getVictim())
-                            me->SummonCreature(NPC_GROUND_SCORCH, *target, TEMPSUMMON_TIMED_DESPAWN, 45000);
-                        DoCast(SPELL_SCORCH);
-                        events.ScheduleEvent(EVENT_SCORCH, 25000);
-                        break;
-                    case EVENT_CONSTRUCT:
+                    switch (eventId)
                     {
-                        DoScriptText(SAY_SUMMON, me);
-                        if (!creatureList.empty())
-                        {
-                            std::list<Creature*>::iterator itr = creatureList.begin();
-                            std::advance(itr, urand(0, creatureList.size()-1));
-                            if (Creature* construct = (*itr))
+                        case EVENT_JET:
+                            me->MonsterTextEmote(EMOTE_JETS, 0, true);
+                            DoCastAOE(SPELL_FLAME_JETS);
+                            events.DelayEvents(5000, 1);
+                            events.ScheduleEvent(EVENT_JET, urand(35000, 40000));
+                            break;
+                        case EVENT_SLAG_POT:
+                            if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1, 100, true))
                             {
-                                construct->RemoveAurasDueToSpell(SPELL_FREEZE_ANIM);
-                                construct->SetReactState(REACT_AGGRESSIVE);
-                                construct->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED | UNIT_FLAG_DISABLE_MOVE);
-                                construct->AI()->AttackStart(me->getVictim());
-                                construct->AI()->DoZoneInCombat();
-                                DoCast(me, SPELL_STRENGTH, true);
-                                creatureList.erase(itr);
+                                DoScriptText(SAY_SLAG_POT, me);
+                                _slagPotGUID = target->GetGUID();
+                                DoCast(target, SPELL_GRAB);
+                                events.ScheduleEvent(EVENT_GRAB_POT, 500);
                             }
+                            events.ScheduleEvent(EVENT_SLAG_POT, RAID_MODE(30000, 15000), 1);
+                            break;
+                        case EVENT_GRAB_POT:
+                            if (Unit* slagPotTarget = Unit::GetUnit(*me, _slagPotGUID))
+                            {
+                                slagPotTarget->CastCustomSpell(SPELL_GRAB_ENTER_VEHICLE, SPELLVALUE_BASE_POINT0, 1, me, true);
+                                events.ScheduleEvent(EVENT_CHANGE_POT, 1000);
+                            }
+                            break;
+                        case EVENT_CHANGE_POT:
+                            if (Unit* slagPotTarget = Unit::GetUnit(*me, _slagPotGUID))
+                            {
+                                slagPotTarget->AddAura(SPELL_SLAG_POT, slagPotTarget);
+                                slagPotTarget->ExitVehicle();
+                                slagPotTarget->CastCustomSpell(SPELL_GRAB_ENTER_VEHICLE, SPELLVALUE_BASE_POINT0, 2, me, true);
+                                slagPotTarget->ClearUnitState(UNIT_STAT_ONVEHICLE); // Hack
+                                _slagPotGUID = 0;
+                            }
+                            break;
+                        case EVENT_SCORCH:
+                            DoScriptText(RAND(SAY_SCORCH_1, SAY_SCORCH_2), me);
+                            if (Unit* target = me->getVictim())
+                                me->SummonCreature(NPC_GROUND_SCORCH, *target, TEMPSUMMON_TIMED_DESPAWN, 45000);
+                            DoCast(SPELL_SCORCH);
+                            events.ScheduleEvent(EVENT_SCORCH, 25000);
+                            break;
+                        case EVENT_CONSTRUCT:
+                        {
+                            DoScriptText(SAY_SUMMON, me);
+                            if (!_creatureList.empty())
+                            {
+                                std::list<Creature*>::iterator itr = _creatureList.begin();
+                                std::advance(itr, urand(0, _creatureList.size() - 1));
+                                if (Creature* construct = (*itr))
+                                {
+                                    construct->RemoveAurasDueToSpell(SPELL_FREEZE_ANIM);
+                                    construct->SetReactState(REACT_AGGRESSIVE);
+                                    construct->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED | UNIT_FLAG_DISABLE_MOVE);
+                                    construct->AI()->AttackStart(me->getVictim());
+                                    construct->AI()->DoZoneInCombat();
+                                    DoCast(me, SPELL_STRENGTH, true);
+                                    _creatureList.erase(itr);
+                                }
+                            }
+                            DoCast(SPELL_ACTIVATE_CONSTRUCT);
+                            events.ScheduleEvent(EVENT_CONSTRUCT, RAID_MODE(40000, 30000));
+                            break;
                         }
-                        DoCast(SPELL_ACTIVATE_CONSTRUCT);
-                        events.ScheduleEvent(EVENT_CONSTRUCT, RAID_MODE(40000, 30000));
-                        break;
+                        case EVENT_BERSERK:
+                            DoCast(me, SPELL_BERSERK, true);
+                            DoScriptText(SAY_BERSERK, me);
+                            break;
                     }
-                    case EVENT_BERSERK:
-                        DoCast(me, SPELL_BERSERK, true);
-                        DoScriptText(SAY_BERSERK, me);
+                }
+
+                DoMeleeAttackIfReady();
+            }
+
+            void KilledUnit(Unit* /*victim*/)
+            {
+                if (!(rand()%5))
+                    DoScriptText(RAND(SAY_SLAY_1, SAY_SLAY_2), me);
+            }
+
+            uint32 GetData(uint32 type)
+            {
+                if (type == DATA_SHATTERED)
+                    return _shattered ? 1 : 0;
+
+                return 0;
+            }
+
+            void DoAction(int32 const action)
+            {
+                switch (action)
+                {
+                    case ACTION_REMOVE_BUFF:
+                        me->RemoveAuraFromStack(SPELL_STRENGTH);
+                        // Shattered Achievement
+                        if (_constructTimer >= 5000)
+                            _constructTimer = 0;
+                        else
+                            _shattered = true;
                         break;
                 }
             }
-            DoMeleeAttackIfReady();
-        }
 
-        void KilledUnit(Unit * /*victim*/)
-        {
-            if (!(rand()%5))
-                DoScriptText(RAND(SAY_SLAY_1, SAY_SLAY_2), me);
-        }
+        private:
+            Vehicle* _vehicle;
+            std::list<Creature*> _creatureList;
+            bool _shattered;
+            uint64 _slagPotGUID;
+            uint32 _constructTimer;
+        };
 
-        void DoAction(const int32 action)
+        CreatureAI* GetAI(Creature* creature) const
         {
-            switch (action)
-            {
-                case ACTION_REMOVE_BUFF:
-                    me->RemoveAuraFromStack(SPELL_STRENGTH);
-                    // Shattered Achievement
-                    if (ConstructTimer >= 5000)
-                        ConstructTimer = 0;
-                    else
-                        Shattered = true;
-                    break;
-            }
+            return new boss_ignis_AI(creature);
         }
-    };
 };
 
 class npc_iron_construct : public CreatureScript
 {
-public:
-    npc_iron_construct() : CreatureScript("npc_iron_construct") { }
+    public:
+        npc_iron_construct() : CreatureScript("npc_iron_construct") { }
 
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return new npc_iron_constructAI(creature);
-    }
-
-    struct npc_iron_constructAI : public ScriptedAI
-    {
-        npc_iron_constructAI(Creature* creature) : ScriptedAI(creature)
+        struct npc_iron_constructAI : public ScriptedAI
         {
-            _instance = creature->GetInstanceScript();
-            creature->setActive(true);
-            creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED | UNIT_FLAG_DISABLE_MOVE);
-            DoCast(me, SPELL_FREEZE_ANIM, true);
-        }
-
-        InstanceScript* _instance;
-        bool brittled;
-
-        void Reset()
-        {
-            me->SetReactState(REACT_PASSIVE);
-            brittled = false;
-        }
-
-        void JustReachedHome()
-        {
-            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED | UNIT_FLAG_DISABLE_MOVE);
-            DoCast(me, SPELL_FREEZE_ANIM, true);
-        }
-
-        void DamageTaken(Unit * /*attacker*/, uint32& damage)
-        {
-            if (me->HasAura(RAID_MODE(SPELL_BRITTLE, SPELL_BRITTLE_25)) && damage >= 5000)
+            npc_iron_constructAI(Creature* creature) : ScriptedAI(creature)
             {
-                DoCast(me, SPELL_SHATTER, true);
-                if (Creature* ignis = me->GetCreature(*me, _instance->GetData64(TYPE_IGNIS)))
-                    if (ignis->AI())
-                        ignis->AI()->DoAction(ACTION_REMOVE_BUFF);
-
-                me->DespawnOrUnsummon(1000);
+                _instance = creature->GetInstanceScript();
+                creature->setActive(true);
+                creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED | UNIT_FLAG_DISABLE_MOVE);
+                DoCast(me, SPELL_FREEZE_ANIM, true);
             }
-        }
 
-        void UpdateAI(const uint32 /*uiDiff*/)
-        {
-            if (!UpdateVictim())
-                return;
-
-            if (Aura* aur = me->GetAura(SPELL_HEAT))
+            void Reset()
             {
-                if (aur->GetStackAmount() >= 10)
+                me->SetReactState(REACT_PASSIVE);
+                _brittled = false;
+            }
+
+            void JustReachedHome()
+            {
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED | UNIT_FLAG_DISABLE_MOVE);
+                DoCast(me, SPELL_FREEZE_ANIM, true);
+            }
+
+            void DamageTaken(Unit* /*attacker*/, uint32& damage)
+            {
+                if (me->HasAura(RAID_MODE(SPELL_BRITTLE, SPELL_BRITTLE_25)) && damage >= 5000)
                 {
-                    me->RemoveAura(SPELL_HEAT);
-                    DoCast(SPELL_MOLTEN);
-                    brittled = false;
+                    DoCast(me, SPELL_SHATTER, true);
+                    if (Creature* ignis = me->GetCreature(*me, _instance->GetData64(TYPE_IGNIS)))
+                        if (ignis->AI())
+                            ignis->AI()->DoAction(ACTION_REMOVE_BUFF);
+
+                    me->DespawnOrUnsummon(1000);
                 }
             }
 
-            // Water pools
-            if (me->IsInWater() && !brittled && me->HasAura(SPELL_MOLTEN))
+            void UpdateAI(uint32 const /*diff*/)
             {
-                DoCast(SPELL_BRITTLE);
-                me->RemoveAura(SPELL_MOLTEN);
-                brittled = true;
+                if (!UpdateVictim())
+                    return;
+
+                if (Aura* aur = me->GetAura(SPELL_HEAT))
+                {
+                    if (aur->GetStackAmount() >= 10)
+                    {
+                        me->RemoveAura(SPELL_HEAT);
+                        DoCast(SPELL_MOLTEN);
+                        _brittled = false;
+                    }
+                }
+
+                // Water pools
+                if (me->IsInWater() && !_brittled && me->HasAura(SPELL_MOLTEN))
+                {
+                    DoCast(SPELL_BRITTLE);
+                    me->RemoveAura(SPELL_MOLTEN);
+                    _brittled = true;
+                }
+
+                DoMeleeAttackIfReady();
             }
 
-            DoMeleeAttackIfReady();
+        private:
+            InstanceScript* _instance;
+            bool _brittled;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new npc_iron_constructAI(creature);
         }
-    };
 };
 
 class npc_scorch_ground : public CreatureScript
 {
-public:
-    npc_scorch_ground() : CreatureScript("npc_scorch_ground") { }
+    public:
+        npc_scorch_ground() : CreatureScript("npc_scorch_ground") { }
 
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return new npc_scorch_groundAI(creature);
-    }
-
-    struct npc_scorch_groundAI : public ScriptedAI
-    {
-        npc_scorch_groundAI(Creature* creature) : ScriptedAI(creature)
+        struct npc_scorch_groundAI : public ScriptedAI
         {
-            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE |UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
-            creature->SetDisplayId(16925); //model 2 in db cannot overwrite wdb fields
-        }
+            npc_scorch_groundAI(Creature* creature) : ScriptedAI(creature)
+            {
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE |UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
+                creature->SetDisplayId(16925); //model 2 in db cannot overwrite wdb fields
+            }
 
-        void Reset()
+            void Reset()
+            {
+                DoCast(me, SPELL_GROUND);
+            }
+
+            void UpdateAI(uint32 const /*diff*/) { }
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
         {
-            DoCast(me, SPELL_GROUND);
+            return new npc_scorch_groundAI(creature);
         }
-
-        void UpdateAI(const uint32 uiDiff) { }
-    };
 };
 
 class spell_ignis_slag_pot : public SpellScriptLoader
@@ -415,11 +415,10 @@ class spell_ignis_slag_pot : public SpellScriptLoader
         class spell_ignis_slag_pot_AuraScript : public AuraScript
         {
             PrepareAuraScript(spell_ignis_slag_pot_AuraScript)
+
             bool Validate(SpellEntry const* /*spellEntry*/)
             {
                 if (!sSpellStore.LookupEntry(SPELL_SLAG_POT_DAMAGE))
-                    return false;
-                if (!sSpellStore.LookupEntry(SPELL_SLAG_POT))
                     return false;
                 if (!sSpellStore.LookupEntry(SPELL_SLAG_IMBUED))
                     return false;
@@ -434,19 +433,38 @@ class spell_ignis_slag_pot : public SpellScriptLoader
 
                 Unit* target = GetTarget();
                 aurEffCaster->CastSpell(target, SPELL_SLAG_POT_DAMAGE, true);
-                if (target->isAlive() && !GetDuration())
-                     target->CastSpell(target, SPELL_SLAG_IMBUED, true);
+            }
+
+            void OnRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
+            {
+                if (GetTarget()->isAlive())
+                    GetTarget()->CastSpell(GetTarget(), SPELL_SLAG_IMBUED, true);
             }
 
             void Register()
             {
                 OnEffectPeriodic += AuraEffectPeriodicFn(spell_ignis_slag_pot_AuraScript::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+                AfterEffectRemove += AuraEffectRemoveFn(spell_ignis_slag_pot_AuraScript::OnRemove, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY, AURA_EFFECT_HANDLE_REAL);
             }
         };
 
         AuraScript* GetAuraScript() const
         {
             return new spell_ignis_slag_pot_AuraScript();
+        }
+};
+
+class achievement_ignis_shattered : public AchievementCriteriaScript
+{
+    public:
+        achievement_ignis_shattered() : AchievementCriteriaScript("achievement_ignis_shattered") { }
+
+        bool OnCheck(Player* /*source*/, Unit* target)
+        {
+            if (target && target->IsAIEnabled)
+                return target->GetAI()->GetData(DATA_SHATTERED);
+
+            return false;
         }
 };
 
@@ -466,4 +484,5 @@ void AddSC_boss_ignis()
     new npc_iron_construct();
     new npc_scorch_ground();
     new spell_ignis_slag_pot();
+    new achievement_ignis_shattered();
 }
