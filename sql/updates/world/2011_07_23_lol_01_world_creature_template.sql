@@ -25,7 +25,9 @@ where entry IN (
 26523, -- Forsaken Blight Spreader
 -- Strand of the Ancients vehicles
 28781, -- Battleground Demolisher
+32796, -- Battleground Demolisher (heroic)
 27894, -- Antipersonnel Cannon
+32795, -- Antipersonnel Cannon (heroic)
 -- Wintergrasp vehicles
 27881, -- Wintergrasp Catapult (both)
 28094, -- Wintergrasp Demolisher (both)
