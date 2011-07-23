@@ -347,7 +347,7 @@ class boss_general_vezax : public CreatureScript
 class mob_saronit_vapor : public CreatureScript
 {
     public:
-        mob_saronit_vapor() : CreatureScript("mob_saronit_varpor") { }
+        mob_saronit_vapor() : CreatureScript("mob_saronit_vapor") { }
 
         struct mob_saronit_vaporAI : public ScriptedAI
         {
