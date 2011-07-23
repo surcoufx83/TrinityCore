@@ -38,14 +38,6 @@ enum Emotes
     EMOTE_SURGE_OF_DARKNESS                     = -1603299,
 };
 
-enum Achievments
-{
-    ACHIEVEMENTS_SMELL_OF_SARONIT_IN_THE_MORNING_10 = 3181,
-    ACHIEVEMENTS_SMELL_OF_SARONIT_IN_THE_MORNING_25 = 3188,
-    ACHIEVEMENTS_SHADOWDODGER_10                    = 2996,
-    ACHIEVEMENTS_SHADOWDODGER_25                    = 2997,
-};
-
 enum Spells
 {
     // General Vezax
@@ -77,6 +69,12 @@ enum NPCs
     ENTRY_GENERAL_VEZAX                         = 33271,
     ENTRY_SARONIT_VAPOR                         = 33488,
     ENTRY_SARONIT_ANIMUS                        = 33524
+};
+
+enum Data
+{
+    DATA_SMELL_OF_SARONITE,
+    DATA_SHADOWDODGER
 };
 
 enum Actions
@@ -189,17 +187,17 @@ class boss_general_vezax : public CreatureScript
             void JustDied(Unit* /*who*/)
             {
                 DoScriptText(SAY_DEATH, me);
-
-                if (!instance)
-                    return;
-
-                if (!_vaporKilled && _animusSummoned && _animusKilled)
-                    instance->DoCompleteAchievement(RAID_MODE(ACHIEVEMENTS_SMELL_OF_SARONIT_IN_THE_MORNING_10, ACHIEVEMENTS_SMELL_OF_SARONIT_IN_THE_MORNING_25));
-
-                if (!_hitByShadowCrash)
-                    instance->DoCompleteAchievement(RAID_MODE(ACHIEVEMENTS_SHADOWDODGER_10, ACHIEVEMENTS_SHADOWDODGER_25));
-
                 _JustDied();
+            }
+
+            uint32 GetData(uint32 type)
+            {
+                if (type == DATA_SMELL_OF_SARONITE)
+                    return (!_vaporKilled && _animusSummoned && _animusKilled) ? 1 : 0;
+                if (type == DATA_SHADOWDODGER)
+                    return !_hitByShadowCrash ? 1 : 0;
+
+                return 0;
             }
 
             void DoAction(int32 const action)
@@ -270,7 +268,11 @@ class boss_general_vezax : public CreatureScript
                     switch (eventId)
                     {
                         case EVENT_SUMMON_VAPOR:
-                            DoSummon(ENTRY_SARONIT_VAPOR, me, 45.0f, 30000, TEMPSUMMON_MANUAL_DESPAWN);
+                            float x, y, angle;
+                            angle = float(2 * M_PI * rand_norm());
+                            x = 1841.98f + float(25) * cos(angle);
+                            y = 113.078f + float(25) * sin(angle);
+                            me->SummonCreature(ENTRY_SARONIT_VAPOR, x, y, 344.13f, 0.0f);
                             if (!_animusSummoned)
                                 events.ScheduleEvent(EVENT_SUMMON_VAPOR, 30*IN_MILLISECONDS);
                             else
@@ -388,7 +390,7 @@ class mob_saronit_vapor : public CreatureScript
             {
                 if (_randomMoveTimer < diff)
                 {
-                    me->GetMotionMaster()->MoveRandom(30.0f);
+                    me->GetMotionMaster()->MoveRandom(25.0f);
                     _randomMoveTimer = urand(5000, 7500);
                 }
                 else
@@ -579,6 +581,34 @@ class spell_general_vezax_mark_of_the_faceless_drain : public SpellScriptLoader
         }
 };
 
+class achievement_shadowdodger : public AchievementCriteriaScript
+{
+    public:
+        achievement_shadowdodger() : AchievementCriteriaScript("achievement_shadowdodger") { }
+
+        bool OnCheck(Player* /*source*/, Unit* target)
+        {
+            if (target && target->IsAIEnabled)
+                return target->GetAI()->GetData(DATA_SHADOWDODGER);
+
+            return false;
+        }
+};
+
+class achievement_i_love_the_smell_of_saronite_in_the_morning : public AchievementCriteriaScript
+{
+    public:
+        achievement_i_love_the_smell_of_saronite_in_the_morning() : AchievementCriteriaScript("achievement_i_love_the_smell_of_saronite_in_the_morning") { }
+
+        bool OnCheck(Player* /*source*/, Unit* target)
+        {
+            if (target && target->IsAIEnabled)
+                return target->GetAI()->GetData(DATA_SMELL_OF_SARONITE);
+
+            return false;
+        }
+};
+
 /*
 UPDATE creature_template SET scriptname = 'boss_general_vezax' WHERE entry = 33271;
 UPDATE creature_template SET scriptname = 'mob_saronit_varpor' WHERE entry = 33488;
@@ -597,4 +627,6 @@ void AddSC_boss_general_vezax()
     new spell_general_vezax_aura_of_despair_aura();
     new spell_general_vezax_mark_of_the_faceless_aura();
     new spell_general_vezax_mark_of_the_faceless_drain();
+    new achievement_shadowdodger();
+    new achievement_i_love_the_smell_of_saronite_in_the_morning();
 }
