@@ -81,6 +81,7 @@ enum Spells
     SPELL_EMERGENCY_MODE                        = 64582,
     SPELL_FLAME_SUPPRESSANT                     = 64570,
     SPELL_FLAME_SUPPRESSANT_VX001               = 65192,
+    SPELL_SUMMON_FLAMES_INITIAL                 = 64563,
     SPELL_FLAME                                 = 64561,
     SPELL_FROST_BOMB                            = 64624,
     SPELL_FROST_BOMB_EXPLOSION_10               = 64626,
@@ -254,6 +255,16 @@ public:
 
             instance->SetData(DATA_MIMIRON_ELEVATOR, GO_STATE_ACTIVE);
 
+            phase = PHASE_NULL;
+            uiStep = 0;
+            uiPhase_timer = -1;
+            uiBotTimer = 0;
+            MimironHardMode = false;
+            checkBotAlive = true;
+            Enraged = false;
+            DespawnCreatures(34362, 100);
+            DespawnCreatures(NPC_ROCKET, 100);
+
             if (Creature* aerial = me->GetCreature(*me, instance->GetData64(DATA_AERIAL_UNIT)))
                 aerial->AI()->DoAction(DO_DESPAWN_SUMMONS);
 
@@ -264,16 +275,6 @@ public:
                         creature->ExitVehicle();
                         creature->AI()->EnterEvadeMode();
                     }
-
-            phase = PHASE_NULL;
-            uiStep = 0;
-            uiPhase_timer = -1;
-            uiBotTimer = 0;
-            MimironHardMode = false;
-            checkBotAlive = true;
-            Enraged = false;
-            DespawnCreatures(34362, 100);
-            DespawnCreatures(NPC_ROCKET, 100);
 
             if (GameObject* go = me->FindNearestGameObject(GO_BIG_RED_BUTTON, 200))
             {
@@ -354,11 +355,12 @@ public:
                 {
                     for (uint8 i = 0; i < 3; ++i)
                         if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                            if (Creature* Flame = me->SummonCreature(NPC_FLAME, target->GetPositionX() + irand(-6,6), target->GetPositionY() + irand(-6,6), target->GetPositionZ(), 0, TEMPSUMMON_MANUAL_DESPAWN))
-                                Flame->AI()->AttackStart(target);
+                            DoCast(target, SPELL_SUMMON_FLAMES_INITIAL, true);
+
                     FlameTimer = 30000;
                 }
-                else FlameTimer -= diff;
+                else
+                    FlameTimer -= diff;
 
             // All sections need to die within 10 seconds, else they respawn
             if (checkBotAlive)
@@ -805,8 +807,7 @@ public:
         void EnterCombat(Unit* /*who*/)
         {
             if (Creature* Mimiron = me->GetCreature(*me, instance ? instance->GetData64(TYPE_MIMIRON) : 0))
-                if (Mimiron->AI()->GetData(DATA_GET_HARD_MODE) == 1)
-                    MimironHardMode = true;
+                MimironHardMode = Mimiron->AI()->GetData(DATA_GET_HARD_MODE);
 
             if (MimironHardMode)
             {
@@ -912,7 +913,7 @@ class boss_leviathan_mk_turret : public CreatureScript
             {
                 SetImmuneToPushPullEffects(true);
                 me->SetReactState(REACT_PASSIVE);
-                _NapalmShell = urand(4000, 8000);
+                _NapalmShell = urand(8000, 12000);
             }
 
             // try to prefer ranged targets
@@ -1096,8 +1097,7 @@ public:
         void EnterCombat(Unit* /*who*/)
         {
             if (Creature* Mimiron = me->GetCreature(*me, instance ? instance->GetData64(TYPE_MIMIRON) : 0))
-                if (Mimiron->AI()->GetData(DATA_GET_HARD_MODE) == 1)
-                    MimironHardMode = true;
+                MimironHardMode = Mimiron->AI()->GetData(DATA_GET_HARD_MODE);
 
             if (MimironHardMode)
             {
@@ -1405,8 +1405,7 @@ public:
         void EnterCombat(Unit * /*who*/)
         {
             if (Creature* Mimiron = me->GetCreature(*me, instance ? instance->GetData64(TYPE_MIMIRON) : 0))
-                if (Mimiron->AI()->GetData(DATA_GET_HARD_MODE) == 1)
-                    MimironHardMode = true;
+                MimironHardMode = Mimiron->AI()->GetData(DATA_GET_HARD_MODE);
 
             if (MimironHardMode)
                 DoCast(me, SPELL_EMERGENCY_MODE);
@@ -1799,11 +1798,11 @@ class npc_mimiron_flame_trigger : public CreatureScript
             {
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
                 me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
-                DoCast(me, SPELL_FLAME, true);
-                _flameTimer = 8000;
+                me->SetInCombatWithZone();
+                _flameTimer = 3000;
             }
 
-            void SpellHit(Unit * /*caster*/, const SpellEntry* spell)
+            void SpellHit(Unit* /*caster*/, SpellEntry const* spell)
             {
                 switch (spell->Id)
                 {
@@ -1824,10 +1823,19 @@ class npc_mimiron_flame_trigger : public CreatureScript
             {
                 if (_flameTimer <= diff)
                 {
+                    DoAttackerAreaInCombat(me, 100.0f);
+
+                    if (Player* nearest = me->SelectNearestPlayer(100.0f))
+                    {
+                        me->GetMotionMaster()->Clear();
+                        me->GetMotionMaster()->MoveChase(nearest);
+                    }
+
                     me->SummonCreature(NPC_FLAME_SPREAD, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
-                    _flameTimer = 8000;
+                    _flameTimer = 5000;
                 }
-                else _flameTimer -= diff;
+                else
+                    _flameTimer -= diff;
             }
 
         private:
@@ -1855,7 +1863,7 @@ class npc_mimiron_flame_spread : public CreatureScript
                 DoCast(me, SPELL_FLAME, true);
             }
 
-            void SpellHit(Unit * /*caster*/, const SpellEntry* spell)
+            void SpellHit(Unit* /*caster*/, SpellEntry const* spell)
             {
                 switch (spell->Id)
                 {
