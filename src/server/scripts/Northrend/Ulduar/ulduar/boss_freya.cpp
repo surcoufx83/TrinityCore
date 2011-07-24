@@ -66,20 +66,10 @@ enum Events
     SPELL_LUMBERJACKED_ACHIEVEMENT_CHECK        = 65296,
 };
 
-enum Archievments
+enum Achievements
 {
     ACHIEVMENT_CON_SPEED_ATORY_10               = 2980,
     ACHIEVMENT_CON_SPEED_ATORY_25               = 2981,
-
-    ACHIEVMENT_GETTING_BACK_TO_NATURE_10        = 2982,
-    ACHIEVMENT_GETTING_BACK_TO_NATURE_25        = 2983,
-
-    ACHIEVMENT_KNOCK_ON_THE_WOOD_10             = 3177, // Defeat Freya while leaving at least 1 Elder alive
-    ACHIEVMENT_KNOCK_ON_THE_WOOD_25             = 3185,
-    ACHIEVMENT_KNOCK_KNOCK_ON_THE_WOOD_10       = 3178, // Defeat Freya while leaving at least 2 Elder alive
-    ACHIEVMENT_KNOCK_KNOCK_ON_THE_WOOD_25       = 3186,
-    ACHIEVMENT_KNOCK_KNOCK_KNOCK_ON_THE_WOOD_10 = 3179, // Defeat Freya while leaving at least 3 Elder alive
-    ACHIEVMENT_KNOCK_KNOCK_KNOCK_ON_THE_WOOD_25 = 3187,
 
     ACHIEVMENT_LUMBERJACKED_10                  = 2979,
     ACHIEVMENT_LUMBERJACKED_25                  = 3118,
@@ -247,7 +237,13 @@ const uint32 WaveSpells[3] =
 
 enum Actions
 {
-    ACTION_ELEMENTAL_DEAD,
+    ACTION_ELEMENTAL_DEAD
+};
+
+enum Data
+{
+    DATA_GETTING_BACK_TO_NATURE,
+    DATA_KNOCK_ON_WOOD
 };
 
 class boss_freya : public CreatureScript
@@ -281,8 +277,10 @@ public:
         uint32 uiSunbeam_Timer;
         uint32 Ground_Tremor_Timer;
         uint32 Iron_Roots_Timer;
+        uint32 unstableEnergyTimer;
         uint32 uiNaturalBomb_Timer;
         uint32 inFightAggroCheck_Timer;
+        uint32 attunedToNature;
 
         uint32 ReviveTimer;
         uint8 ReviveCount;
@@ -312,10 +310,12 @@ public:
                 Ground_Tremor_Timer = 30000;
                 Iron_Roots_Timer = 22000;
                 uiSunbeam_Timer = urand(20000, 30000);
+                unstableEnergyTimer = 15000;
                 Berserk_Timer = 600000;
                 Lifebinders_Gift_Timer = 30000;
                 uiNaturalBomb_Timer = 30000;
                 inFightAggroCheck_Timer = 5000;
+                attunedToNature = 0;
 
                 bIsElderBrightleafAlive = bIsElderIronbranchAlive = bIsElderStonebarkAlive = false;
 
@@ -345,6 +345,19 @@ public:
                 amount = 0;
                 EncounterIsDone();
             }
+        }
+
+        uint32 GetData(uint32 type)
+        {
+            switch (type)
+            {
+                case DATA_GETTING_BACK_TO_NATURE:
+                    return attunedToNature;
+                case DATA_KNOCK_ON_WOOD:
+                    return GetElderCount();
+            }
+
+            return 0;
         }
 
         void DoAction(const int32 action)
@@ -482,17 +495,6 @@ public:
 
             pInstance->SetBossState(TYPE_FREYA, DONE);
 
-            switch (GetElderCount())
-            {
-                case 3:
-                    pInstance->DoCompleteAchievement(RAID_MODE(ACHIEVMENT_KNOCK_KNOCK_KNOCK_ON_THE_WOOD_10, ACHIEVMENT_KNOCK_KNOCK_KNOCK_ON_THE_WOOD_25));
-                case 2:
-                    pInstance->DoCompleteAchievement(RAID_MODE(ACHIEVMENT_KNOCK_KNOCK_ON_THE_WOOD_10, ACHIEVMENT_KNOCK_KNOCK_ON_THE_WOOD_25));
-                case 1:
-                    pInstance->DoCompleteAchievement(RAID_MODE(ACHIEVMENT_KNOCK_ON_THE_WOOD_10, ACHIEVMENT_KNOCK_ON_THE_WOOD_25));
-                    break;
-            }
-
             if (GetElderCount() == 3)
             {
                 me->SummonGameObject(RAID_MODE(GO_FREYA_CHEST_HARD, GO_FREYA_CHEST_HERO_HARD), 2353.18f, -54.5f, 425.86f, 3.14159f, 0, 0, 0, 0, 604800);
@@ -512,15 +514,14 @@ public:
                 }
             }
 
-            if (me->GetAuraCount(SPELL_ATTUNED_TO_NATURE) >= 25)
-                pInstance->DoCompleteAchievement(RAID_MODE(ACHIEVMENT_GETTING_BACK_TO_NATURE_10, ACHIEVMENT_GETTING_BACK_TO_NATURE_25));
+            // getting back to nature achievement
+            attunedToNature = me->GetAuraCount(SPELL_ATTUNED_TO_NATURE);
+
+            // getting back to nature, knock (knock knock) on wood
+            DoCast(me, SPELL_ACHIEVEMENT_CHECK, true);
 
             EnterEvadeMode();
             me->ForcedDespawn(7500);
-
-            // cast is not rewarding the achievement.
-            // DoCast(SPELL_ACHIEVEMENT_CHECK);
-            pInstance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, SPELL_ACHIEVEMENT_CHECK);
 
             Creature* Elder[3];
             for (uint8 n = 0; n < 3; ++n)
@@ -670,6 +671,23 @@ public:
                     else Iron_Roots_Timer = 3000;
                 }
                 else Iron_Roots_Timer -= diff;
+            }
+
+            // Hardmode Elder Brightleaf
+            if (bIsElderBrightleafAlive)
+            {
+                if (unstableEnergyTimer <= diff)
+                {
+                    std::list<Unit*> targets;
+                    SelectTargetList(targets, RAID_MODE<uint32>(1, 3), SELECT_TARGET_RANDOM, 150.0f, true);
+                    if (!targets.empty())
+                        for (std::list<Unit*>::iterator itr = targets.begin(); itr != targets.end(); ++itr)
+                            me->SummonCreature(ENTRY_CREATURE_SUNBEAM, (*itr)->GetPositionX(), (*itr)->GetPositionY(), (*itr)->GetPositionZ());
+
+                    unstableEnergyTimer = urand(25000, 30000);
+                }
+                else
+                    unstableEnergyTimer -= diff;
             }
 
             if (Lifebinders_Gift_Timer <= diff)
@@ -1586,85 +1604,46 @@ public:
     };
 };
 
-
-//Hardmode Elder Brightleaf
-class spell_freya_sunbeam : public SpellScriptLoader
-{
-public:
-    spell_freya_sunbeam() : SpellScriptLoader("spell_freya_sunbeam") { }
-
-    class spell_freya_sunbeam_SpellScript : public SpellScript
-    {
-        PrepareSpellScript(spell_freya_sunbeam_SpellScript);
-
-        Unit* Caster;
-        Unit* Target;
-
-        void OnHitEffect()
-        {
-            Caster = GetCaster();
-            Target = GetHitUnit();
-            if (Caster->FindNearestCreature(ENTRY_CREATURE_ELDER_BRIGHTLEAF, 5000, true))
-                Caster->SummonCreature(ENTRY_CREATURE_SUNBEAM, Target->GetPositionX(), Target->GetPositionY(), Target->GetPositionZ());
-        }
-
-        void Register()
-        {
-            OnHit += SpellHitFn(spell_freya_sunbeam_SpellScript::OnHitEffect);
-        }
-    };
-
-    SpellScript* GetSpellScript() const
-    {
-        return new spell_freya_sunbeam_SpellScript();
-    }
-};
-
-
-//Sunbeam Freya
+// Sunbeam Freya
 class mob_freya_sunbeam : public CreatureScript
 {
-public:
-  mob_freya_sunbeam() : CreatureScript("mob_freya_sunbeam") { }
+    public:
+      mob_freya_sunbeam() : CreatureScript("mob_freya_sunbeam") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new mob_freya_sunbeamAI(pCreature);
-    }
-
-    struct mob_freya_sunbeamAI : public ScriptedAI
-    {
-        mob_freya_sunbeamAI(Creature *pCreature) : ScriptedAI(pCreature) { }
-
-        uint32 Despawn_Timer;
-        uint32 Unstable_Energy_Timer;
-
-        void Reset()
+        struct mob_freya_sunbeamAI : public Scripted_NoMovementAI
         {
-            Unstable_Energy_Timer = 1000;
-            Despawn_Timer = 12000;
-            me->SetReactState(REACT_PASSIVE);
-            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE );
-            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
-            me->SetDisplayId(MODEL_INVISIBLE);
-            me->setFaction(16);
-        }
+            mob_freya_sunbeamAI(Creature* creature) : Scripted_NoMovementAI(creature) { }
 
-        void UpdateAI(const uint32 diff)
-        {
-            if(Despawn_Timer <= diff)
-                me->ForcedDespawn();
-            else Despawn_Timer -= diff;
-
-            if(Unstable_Energy_Timer <= diff)
+            void Reset()
             {
-                DoCast(RAID_MODE(SPELL_FREYA_UNSTABLE_ENERGY_10, SPELL_FREYA_UNSTABLE_ENERGY_25));
-                Unstable_Energy_Timer = 15000;
-                me->AddAura(62216, me);
+                _unstableEnergyTimer = 1000;
+                me->SetReactState(REACT_PASSIVE);
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
+                me->SetDisplayId(MODEL_INVISIBLE);
+                me->setFaction(16);
+                me->ForcedDespawn(12000);
+                DoCast(me, 62216, true); // visual
             }
-            else Unstable_Energy_Timer -= diff;
+
+            void UpdateAI(uint32 const diff)
+            {
+                if (_unstableEnergyTimer <= diff)
+                {
+                    DoCast(RAID_MODE(SPELL_FREYA_UNSTABLE_ENERGY_10, SPELL_FREYA_UNSTABLE_ENERGY_25));
+                    _unstableEnergyTimer = 15000;
+                }
+                else
+                    _unstableEnergyTimer -= diff;
+            }
+
+        private:
+            uint32 _unstableEnergyTimer;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new mob_freya_sunbeamAI(creature);
         }
-    };
 };
 
 //Freya HM and Elder Ironbranch
@@ -1798,6 +1777,86 @@ class spell_elder_brightleafs_essence_targeting : public SpellScriptLoader
         }
 };
 
+class achievement_getting_back_to_nature : public AchievementCriteriaScript
+{
+    public:
+        achievement_getting_back_to_nature() : AchievementCriteriaScript("achievement_getting_back_to_nature")
+        {
+        }
+
+        bool OnCheck(Player* /*player*/, Unit* target)
+        {
+            if (!target)
+                return false;
+
+            if (Creature* Freya = target->ToCreature())
+                if (Freya->AI()->GetData(DATA_GETTING_BACK_TO_NATURE) >= 25)
+                    return true;
+
+            return false;
+        }
+};
+
+class achievement_knock_on_wood : public AchievementCriteriaScript
+{
+   public:
+       achievement_knock_on_wood() : AchievementCriteriaScript("achievement_knock_on_wood")
+       {
+       }
+
+       bool OnCheck(Player* /*player*/, Unit* target)
+       {
+           if (!target)
+               return false;
+
+           if (Creature* Freya = target->ToCreature())
+               if (Freya->AI()->GetData(DATA_KNOCK_ON_WOOD) >= 1)
+                   return true;
+
+           return false;
+       }
+};
+
+class achievement_knock_knock_on_wood : public AchievementCriteriaScript
+{
+   public:
+       achievement_knock_knock_on_wood() : AchievementCriteriaScript("achievement_knock_knock_on_wood")
+       {
+       }
+
+       bool OnCheck(Player* /*player*/, Unit* target)
+       {
+           if (!target)
+               return false;
+
+           if (Creature* Freya = target->ToCreature())
+               if (Freya->AI()->GetData(DATA_KNOCK_ON_WOOD) >= 2)
+                   return true;
+
+           return false;
+       }
+};
+
+class achievement_knock_knock_knock_on_wood : public AchievementCriteriaScript
+{
+   public:
+       achievement_knock_knock_knock_on_wood() : AchievementCriteriaScript("achievement_knock_knock_knock_on_wood")
+       {
+       }
+
+       bool OnCheck(Player* /*player*/, Unit* target)
+       {
+           if (!target)
+               return false;
+
+           if (Creature* Freya = target->ToCreature())
+               if (Freya->AI()->GetData(DATA_KNOCK_ON_WOOD) == 3)
+                   return true;
+
+           return false;
+       }
+};
+
 /*
 UPDATE creature_template SET ScriptName = "boss_freya" WHERE Entry = 32906;
 UPDATE creature_template SET ScriptName = "mob_detonating_lasher" WHERE Entry = 32918;
@@ -1853,9 +1912,12 @@ void AddSC_boss_freya()
     new mob_unstable_sunbeam();
     new mob_eonars_gift();
     new mob_healthy_spore();
-    new spell_freya_sunbeam();
     new mob_freya_sunbeam();
     new mob_iron_roots();
     new spell_elder_ironbranchs_essence_targeting();
     new spell_elder_brightleafs_essence_targeting();
+    new achievement_getting_back_to_nature();
+    new achievement_knock_on_wood();
+    new achievement_knock_knock_on_wood();
+    new achievement_knock_knock_knock_on_wood();
 }
