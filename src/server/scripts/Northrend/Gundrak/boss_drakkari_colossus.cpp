@@ -341,14 +341,14 @@ public:
 
             if (!bGoToColossus && HealthBelowPct(50))
             {
-                if (Creature *pColossus = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_DRAKKARI_COLOSSUS) : 0))
+                if (Creature* colossus = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_DRAKKARI_COLOSSUS) : 0))
                 {
-                    if (!CAST_AI(boss_drakkari_colossus::boss_drakkari_colossusAI,pColossus->AI())->HealthBelowPct(6))
+                    if (!CAST_AI(boss_drakkari_colossus::boss_drakkari_colossusAI, colossus->AI())->HealthBelowPct(6))
                     {
                         me->InterruptNonMeleeSpells(true);
-                        DoCast(pColossus, SPELL_MERGE);
-                        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                        DoCast(colossus, SPELL_MERGE);
+                        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
+                        me->RemoveAurasDueToSpell(DUNGEON_MODE(SPELL_MOJO_VOLLEY, H_SPELL_MOJO_VOLLEY));
                         bGoToColossus = true;
                     }
                 }
@@ -399,11 +399,12 @@ public:
 
         void JustDied(Unit* /*killer*/)
         {
-            if (Creature *pColossus = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_DRAKKARI_COLOSSUS) : 0))
+            me->RemoveAurasDueToSpell(DUNGEON_MODE(SPELL_MOJO_VOLLEY, H_SPELL_MOJO_VOLLEY));
+
+            if (Creature* colossus = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_DRAKKARI_COLOSSUS) : 0))
             {
-                pColossus->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                pColossus->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                pColossus->Kill(pColossus);
+                colossus->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
+                colossus->Kill(colossus);
             }
         }
     };
