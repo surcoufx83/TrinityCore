@@ -636,27 +636,29 @@ public:
         {
             me->SetReactState(REACT_PASSIVE);
 
-            if (Creature* pXT002 = me->GetCreature(*me, _instance->GetData64(TYPE_XT002)))
-                me->GetMotionMaster()->MoveFollow(pXT002, 1, float(2*M_PI*rand_norm()));
+            if (Creature* XT002 = me->GetCreature(*me, _instance->GetData64(TYPE_XT002)))
+                me->GetMotionMaster()->MoveFollow(XT002, 1, float(2*M_PI*rand_norm()));
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             if (nearCheckTimer <= diff)
             {
-                if (Creature* pXT002 = me->GetCreature(*me, _instance->GetData64(TYPE_XT002)))
-                    if (!casted)
-                        if (me->GetDistance2d(pXT002) <= 2)
+                if (Creature* XT002 = me->GetCreature(*me, _instance->GetData64(TYPE_XT002)))
+                    if (!casted && XT002->isAlive())
+                        if (me->GetDistance2d(XT002) <= 2)
                         {
-                            pXT002->MonsterTextEmote(EMOTE_REPAIR, 0, true);
                             casted = true;
-                            pXT002->CastSpell(pXT002, SPELL_HEAL_XT002, true);
-                            pXT002->AI()->DoAction(ACTION_XT002_REACHED);
+                            XT002->MonsterTextEmote(EMOTE_REPAIR, 0, true);
+                            XT002->CastSpell(XT002, SPELL_HEAL_XT002, true);
+                            XT002->AI()->DoAction(ACTION_XT002_REACHED);
                             me->DespawnOrUnsummon(500);
                         }
 
                 nearCheckTimer = 1000;
-            } else nearCheckTimer -= diff;
+            }
+            else
+                nearCheckTimer -= diff;
         }
     };
 };

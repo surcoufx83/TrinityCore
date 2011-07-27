@@ -793,6 +793,7 @@ class boss_stormcaller_brundir : public CreatureScript
                 _forceLand = false;
                 me->RemoveAllAuras();
                 me->RemoveLootMode(LOOT_MODE_DEFAULT);
+                me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, false);
                 if (instance)
                     RespawnEncounter(instance, me);
 
@@ -835,6 +836,7 @@ class boss_stormcaller_brundir : public CreatureScript
                         if (_phase == 3)
                         {
                             me->ResetLootMode();
+                            me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
                             DoCast(me, SPELL_STORMSHIELD, true);
                             events.ScheduleEvent(EVENT_LIGHTNING_TENDRILS_START, urand(40000, 80000));
                         }
@@ -925,9 +927,10 @@ class boss_stormcaller_brundir : public CreatureScript
                     }
                     case POINT_LAND:
                     {
-                        me->SetSpeed(MOVE_RUN, 1.42857f);
+                        me->SetReactState(REACT_AGGRESSIVE);
                         me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, false);
                         me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, false);
+                        me->SetSpeed(MOVE_RUN, 1.42857f);
                         me->RemoveUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
                         me->SendMovementFlagUpdate();
                         if (me->getVictim())
@@ -985,9 +988,10 @@ class boss_stormcaller_brundir : public CreatureScript
                             events.ScheduleEvent(EVENT_THREAT_WIPE, 5000);
                             break;
                         case EVENT_LIGHTNING_TENDRILS_START:
+                            DoCast(RAID_MODE(SPELL_LIGHTNING_TENDRILS, SPELL_LIGHTNING_TENDRILS_H));
+                            me->SetReactState(REACT_PASSIVE);
                             me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
                             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, true);
-                            DoCast(RAID_MODE(SPELL_LIGHTNING_TENDRILS, SPELL_LIGHTNING_TENDRILS_H));
                             me->AddUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
                             me->SendMovementFlagUpdate();
                             me->GetMotionMaster()->MovePoint(POINT_FLY, me->GetPositionX(), me->GetPositionY(), 435.0f);
