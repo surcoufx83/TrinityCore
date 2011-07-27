@@ -208,15 +208,19 @@ public:
     {
         mob_pure_energyAI(Creature* c) : ScriptedAI(c) {}
 
-        void Reset() {}
+        void Reset()
+        {
+            // custom, need proper attack spell and visual
+            me->SetDisplayId(28988);
+        }
 
         void JustDied(Unit* slayer)
         {
+            me->DespawnOrUnsummon(500);
+
             if (Unit* temp = me->GetOwner())
-            {
                 if (temp && temp->isAlive())
                     slayer->CastSpell(slayer, SPELL_ENERGY_FEEDBACK, true, 0, 0, temp->GetGUID());
-            }
         }
 
         void EnterCombat(Unit* /*who*/) {}
