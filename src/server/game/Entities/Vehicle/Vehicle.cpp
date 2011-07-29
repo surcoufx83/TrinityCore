@@ -174,6 +174,9 @@ void Vehicle::ApplyAllImmunities()
             _me->SetControlled(true, UNIT_STAT_ROOT);
             _me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_DECREASE_SPEED, true);
             break;
+        case 303:
+            _me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, false);
+            break;
         case 336:
         case 337:
             _me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, false);
@@ -184,10 +187,6 @@ void Vehicle::ApplyAllImmunities()
         case 338:
             _me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, false);
             _me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, false);
-            break;
-        // temporary (Mimiron - P4 Laser Barrage)
-        case 370:
-            _me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_STUN, false);
             break;
         default:
             break;

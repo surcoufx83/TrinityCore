@@ -4412,6 +4412,11 @@ void SpellMgr::LoadSpellCustomAttr()
             spellInfo->AuraInterruptFlags = AURA_INTERRUPT_FLAG_HITBYSPELL | AURA_INTERRUPT_FLAG_TAKE_DAMAGE;
             ++count;
             break;
+        case 58963: // Archavon - Crushing Leap
+        case 60895: // Archavon - Crushing Leap
+            spellInfo->rangeIndex = 13;
+            ++count;
+            break;
         case 64218: // Emalon - Overcharge
         case 64216: // Emalon - Lightning Nova
         case 65279: // Emalon - Lightning Nova
