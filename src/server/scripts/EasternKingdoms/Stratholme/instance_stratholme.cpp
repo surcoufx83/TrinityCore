@@ -356,8 +356,8 @@ public:
             OUT_SAVE_INST_DATA;
 
             std::ostringstream saveStream;
-            saveStream << Encounter[0] << " " << Encounter[1] << " " << Encounter[2] << " "
-                << Encounter[3] << " " << Encounter[4] << " " << Encounter[5];
+            saveStream << Encounter[0] << ' ' << Encounter[1] << ' ' << Encounter[2] << ' '
+                << Encounter[3] << ' ' << Encounter[4] << ' ' << Encounter[5];
 
             OUT_SAVE_INST_DATA_COMPLETE;
             return saveStream.str();

@@ -372,7 +372,7 @@ class boss_gothik : public CreatureScript
                 return false;
             }
 
-            void SpellHit(Unit* /*caster*/, SpellEntry const* spell)
+            void SpellHit(Unit* /*caster*/, SpellInfo const* spell)
             {
                 if (!phaseTwo)
                 {
@@ -401,7 +401,7 @@ class boss_gothik : public CreatureScript
                     damage = 0;
             }
 
-            void SpellHitTarget(Unit* target, SpellEntry const* spell)
+            void SpellHitTarget(Unit* target, SpellInfo const* spell)
             {
                 if (!me->isInCombat())
                     return;

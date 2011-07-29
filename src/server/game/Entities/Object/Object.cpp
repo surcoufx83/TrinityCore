@@ -155,7 +155,7 @@ std::string Object::_ConcatFields(uint16 startIndex, uint16 size) const
 {
     std::ostringstream ss;
     for (uint16 index = 0; index < size; ++index)
-        ss << GetUInt32Value(index + startIndex) << " ";
+        ss << GetUInt32Value(index + startIndex) << ' ';
     return ss.str();
 }
 
@@ -1967,7 +1967,7 @@ void WorldObject::MonsterTextEmote(int32 textId, uint64 TargetGuid, bool IsBossE
 
 void WorldObject::MonsterWhisper(const char* text, uint64 receiver, bool IsBossWhisper)
 {
-    Player* player = sObjectMgr->GetPlayer(receiver);
+    Player* player = ObjectAccessor::FindPlayer(receiver);
     if (!player || !player->GetSession())
         return;
 
@@ -1981,7 +1981,7 @@ void WorldObject::MonsterWhisper(const char* text, uint64 receiver, bool IsBossW
 
 void WorldObject::MonsterWhisper(int32 textId, uint64 receiver, bool IsBossWhisper)
 {
-    Player* player = sObjectMgr->GetPlayer(receiver);
+    Player* player = ObjectAccessor::FindPlayer(receiver);
     if (!player || !player->GetSession())
         return;
 

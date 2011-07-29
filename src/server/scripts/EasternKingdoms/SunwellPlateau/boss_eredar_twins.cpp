@@ -348,7 +348,7 @@ public:
                 me->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
         }
 
-        void SpellHitTarget(Unit* target,const SpellEntry* spell)
+        void SpellHitTarget(Unit* target, const SpellInfo* spell)
         {
             switch(spell->Id)
             {
@@ -611,7 +611,7 @@ public:
                 me->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
         }
 
-        void SpellHitTarget(Unit* target,const SpellEntry* spell)
+        void SpellHitTarget(Unit* target, const SpellInfo* spell)
         {
             switch(spell->Id)
             {
@@ -779,7 +779,7 @@ public:
 
         void EnterCombat(Unit* /*who*/){}
 
-        void SpellHitTarget(Unit* target,const SpellEntry* spell)
+        void SpellHitTarget(Unit* target, const SpellInfo* spell)
         {
             switch(spell->Id)
             {

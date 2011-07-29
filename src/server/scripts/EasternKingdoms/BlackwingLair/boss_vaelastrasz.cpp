@@ -119,8 +119,8 @@ public:
             HasYelled = false;
             DoingSpeech = false;
 
-        if(pInstance)
-            pInstance->SetData(ENCOUNTER_VAELASTRASZ,NOT_STARTED);
+            if(pInstance)
+                pInstance->SetData(ENCOUNTER_VAELASTRASZ,NOT_STARTED);
         }
 
         void BeginSpeech(Unit* target)
@@ -151,15 +151,17 @@ public:
             DoCast(me, SPELL_ESSENCEOFTHERED);
             DoZoneInCombat();
             me->SetHealth(me->CountPctFromMaxHealth(30));
+            // now drop damage requirement to be able to take loot
+            me->ResetPlayerDamageReq();
 
-        if(pInstance)
-            pInstance->SetData(ENCOUNTER_VAELASTRASZ,IN_PROGRESS);
-    }
+            if(pInstance)
+                pInstance->SetData(ENCOUNTER_VAELASTRASZ,IN_PROGRESS);
+        }
 
-    void JustDied(Unit *killer)
-    {
-        if(pInstance)
-            pInstance->SetData(ENCOUNTER_VAELASTRASZ,DONE);
+        void JustDied(Unit *killer)
+        {
+            if(pInstance)
+                pInstance->SetData(ENCOUNTER_VAELASTRASZ,DONE);
         }
 
         void UpdateAI(const uint32 diff)

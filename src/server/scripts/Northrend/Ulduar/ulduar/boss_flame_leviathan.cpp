@@ -363,7 +363,7 @@ class boss_flame_leviathan : public CreatureScript
                 }
             }
 
-            void SpellHitTarget(Unit* target, SpellEntry const* spell)
+            void SpellHitTarget(Unit* target, SpelInfo const* spell)
             {
                 if (spell->Id == SPELL_PURSUED)
                 {
@@ -374,7 +374,7 @@ class boss_flame_leviathan : public CreatureScript
                 }
             }
 
-            void SpellHit(Unit* /*caster*/, SpellEntry const* spell)
+            void SpellHit(Unit* /*caster*/, SpellInfo const* spell)
             {
                 if (spell->Id == SPELL_START_THE_ENGINE)
                     vehicle->InstallAllAccessories(false);
@@ -898,7 +898,7 @@ class npc_pool_of_tar : public CreatureScript
                 damage = 0;
             }
 
-            void SpellHit(Unit* /*caster*/, SpellEntry const* spell)
+            void SpellHit(Unit* /*caster*/, SpellInfo const* spell)
             {
                 if ((spell->Id == 65044 || spell->Id == 65045) && !me->HasAura(SPELL_BLAZE))
                     DoCast(me, SPELL_BLAZE, true);
@@ -1469,7 +1469,7 @@ class spell_anti_air_rocket : public SpellScriptLoader
         {
             PrepareSpellScript(spell_anti_air_rocket_SpellScript);
 
-            bool Validate(SpellEntry const* /*spell*/)
+            bool Validate(SpellInfo const* /*spell*/)
             {
                 if (!sSpellStore.LookupEntry(SPELL_ANTI_AIR_ROCKET_DMG))
                     return false;

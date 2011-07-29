@@ -122,7 +122,7 @@ public:
             return true;
         }
 
-        void SpellHit(Unit *caster, const SpellEntry *spell)
+        void SpellHit(Unit *caster, const SpellInfo *spell)
         {
             if(spell->Id == SPELL_HURL_SPINE && me->HasAura(SPELL_TIDAL_SHIELD, 0))
             {

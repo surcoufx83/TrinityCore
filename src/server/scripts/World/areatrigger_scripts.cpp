@@ -33,6 +33,8 @@ at_warsong_grainery
 at_torp_farm
 at_warsong_farms                q11686
 at_stormwright_shelf            q12741
+at_last_rites                   q12019
+at_sholazar_waygate             q12548
 EndContentData */
 
 #include "ScriptPCH.h"
@@ -325,48 +327,46 @@ class AreaTrigger_at_last_rites : public AreaTriggerScript
         }
 };
 
-/*#####
+/*######
 ## at_sholazar_waygate
-#####*/
+######*/
 
-enum eAtSholazarWaygate
+enum eWaygate
 {
-	QUEST_THE_ETYMIDIAN						= 12548,
-	QUEST_BACK_THROUGH_THE_WAYGATE			= 12797,
-	SPELL_TELEPORT_SHOLAZAR_TO_UNGORO    	= 52056,
-	SPELL_TELEPORT_UNGORO_TO_SHOLAZAR    	= 52057,
-	AT_SHOLAZAR_WAYGATE                  	= 5046,
-	AT_UNGORO_WAYGATE						= 5047
+    SPELL_SHOLAZAR_TO_UNGORO_TELEPORT           = 52056,
+    SPELL_UNGORO_TO_SHOLAZAR_TELEPORT           = 52057,
+
+    AT_SHOLAZAR                                 = 5046,
+    AT_UNGORO                                   = 5047,
+
+    QUEST_THE_MAKERS_OVERLOOK                   = 12613,
+    QUEST_THE_MAKERS_PERCH                      = 12559,
 };
 
 class AreaTrigger_at_sholazar_waygate : public AreaTriggerScript
 {
-	public :
-		
-		AreaTrigger_at_sholazar_waygate()
-			: AreaTriggerScript("at_sholazar_waygate")
-		{
-		}
+    public:
 
-		bool OnTrigger(Player* player, AreaTriggerEntry const* trigger)
-		{
-			if(!player->isDead())
-			{
-				switch(trigger->id)
-				{
-				case AT_SHOLAZAR_WAYGATE:	
-					player->CastSpell(player,SPELL_TELEPORT_SHOLAZAR_TO_UNGORO,false);
-					break;
-				case AT_UNGORO_WAYGATE:
-					player->CastSpell(player,SPELL_TELEPORT_UNGORO_TO_SHOLAZAR,false);
-					break;
-				}
-			}
-			return false;
-		}
+        AreaTrigger_at_sholazar_waygate()
+            : AreaTriggerScript("at_sholazar_waygate")
+        {
+        }
+
+        bool OnTrigger(Player* player, AreaTriggerEntry const* trigger)
+        {
+            if (player->GetQuestStatus(QUEST_THE_MAKERS_OVERLOOK) == QUEST_STATUS_REWARDED && !player->isDead() &&
+                player->GetQuestStatus(QUEST_THE_MAKERS_PERCH)    == QUEST_STATUS_REWARDED)
+            {
+                switch(trigger->id)
+                {
+                    case AT_SHOLAZAR: player->CastSpell(player, SPELL_SHOLAZAR_TO_UNGORO_TELEPORT, false); break;
+                    case AT_UNGORO:   player->CastSpell(player, SPELL_UNGORO_TO_SHOLAZAR_TELEPORT, false); break;
+                }
+            }
+
+            return false;
+        }
 };
-
-
 
 void AddSC_areatrigger_scripts()
 {
@@ -378,4 +378,5 @@ void AddSC_areatrigger_scripts()
     new AreaTrigger_at_stormwright_shelf();
     new AreaTrigger_at_scent_larkorwi();
     new AreaTrigger_at_last_rites();
+    new AreaTrigger_at_sholazar_waygate();
 }

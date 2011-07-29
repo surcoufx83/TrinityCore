@@ -295,6 +295,7 @@ public:
                     case EVENT_RARE_CACHE:
                         DoScriptText(SAY_HARD_MODE_MISSED, me);
                         RareCache = false;
+                            instance->SetData(DATA_HODIR_RARE_CACHE, 0);
                         events.CancelEvent(EVENT_RARE_CACHE);
                         break;
                     case EVENT_BERSERK:
@@ -763,7 +764,7 @@ public:
             DoCast(me, SPELL_SINGED, true);
         }
 
-        void SpellHit(Unit* /*caster*/, const SpellEntry *spell) 
+            void SpellHit(Unit* /*who*/, const SpellInfo* spell)
         {
             // Toasty fire can be extinguished by falling ice or Flash Freeze
             if (spell->Id == SPELL_BLOCK_OF_ICE || spell->Id == 62457 || spell->Id == 65370)

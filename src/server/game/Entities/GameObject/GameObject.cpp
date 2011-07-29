@@ -669,7 +669,7 @@ void GameObject::SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask)
     // update in loaded data (changing data only in this place)
     GameObjectData& data = sObjectMgr->NewGOData(m_DBTableGuid);
 
-    // data->guid = guid don't must be update at save
+    // data->guid = guid must not be updated at save
     data.id = GetEntry();
     data.mapid = mapid;
     data.phaseMask = phaseMask;
@@ -687,25 +687,25 @@ void GameObject::SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask)
     data.spawnMask = spawnMask;
     data.artKit = GetGoArtKit();
 
-    // updated in DB
+    // update in DB
     std::ostringstream ss;
     ss << "INSERT INTO gameobject VALUES ("
-        << m_DBTableGuid << ", "
-        << GetEntry() << ", "
-        << mapid << ", "
-        << uint32(spawnMask) << ", "                         // cast to prevent save as symbol
-        << uint16(GetPhaseMask()) << ", "                    // prevent out of range error
-        << GetPositionX() << ", "
-        << GetPositionY() << ", "
-        << GetPositionZ() << ", "
-        << GetOrientation() << ", "
-        << GetFloatValue(GAMEOBJECT_PARENTROTATION) << ", "
-        << GetFloatValue(GAMEOBJECT_PARENTROTATION+1) << ", "
-        << GetFloatValue(GAMEOBJECT_PARENTROTATION+2) << ", "
-        << GetFloatValue(GAMEOBJECT_PARENTROTATION+3) << ", "
-        << m_respawnDelayTime << ", "
-        << uint32(GetGoAnimProgress()) << ", "
-        << uint32(GetGoState()) << ")";
+        << m_DBTableGuid << ','
+        << GetEntry() << ','
+        << mapid << ','
+        << uint32(spawnMask) << ','                         // cast to prevent save as symbol
+        << uint16(GetPhaseMask()) << ','                    // prevent out of range error
+        << GetPositionX() << ','
+        << GetPositionY() << ','
+        << GetPositionZ() << ','
+        << GetOrientation() << ','
+        << GetFloatValue(GAMEOBJECT_PARENTROTATION) << ','
+        << GetFloatValue(GAMEOBJECT_PARENTROTATION+1) << ','
+        << GetFloatValue(GAMEOBJECT_PARENTROTATION+2) << ','
+        << GetFloatValue(GAMEOBJECT_PARENTROTATION+3) << ','
+        << m_respawnDelayTime << ','
+        << uint32(GetGoAnimProgress()) << ','
+        << uint32(GetGoState()) << ')';
 
     SQLTransaction trans = WorldDatabase.BeginTransaction();
     trans->PAppend("DELETE FROM gameobject WHERE guid = '%u'", m_DBTableGuid);
@@ -929,21 +929,11 @@ void GameObject::TriggeringLinkedGameObject(uint32 trapEntry, Unit* target)
     if (!trapInfo || trapInfo->type != GAMEOBJECT_TYPE_TRAP)
         return;
 
-    SpellEntry const* trapSpell = sSpellStore.LookupEntry(trapInfo->trap.spellId);
+    SpellInfo const* trapSpell = sSpellMgr->GetSpellInfo(trapInfo->trap.spellId);
     if (!trapSpell)                                          // checked at load already
         return;
 
-    float range;
-    SpellRangeEntry const* srentry = sSpellRangeStore.LookupEntry(trapSpell->rangeIndex);
-    if (GetSpellMaxRangeForHostile(srentry) == GetSpellMaxRangeForFriend(srentry))
-        range = GetSpellMaxRangeForHostile(srentry);
-    else
-        // get owner to check hostility of GameObject
-        if (Unit *owner = GetOwner())
-            range = (float)owner->GetSpellMaxRangeForTarget(target, srentry);
-        else
-            // if no owner assume that object is hostile to target
-            range = GetSpellMaxRangeForHostile(srentry);
+    float range = float(target->GetSpellMaxRangeForTarget(GetOwner(), trapSpell));
 
     // search nearest linked GO
     GameObject* trapGO = NULL;
@@ -1131,7 +1121,7 @@ void GameObject::Use(Unit* user)
 
                 if (itr->second)
                 {
-                    if (Player* ChairUser = sObjectMgr->GetPlayer(itr->second))
+                    if (Player* ChairUser = ObjectAccessor::FindPlayer(itr->second))
                         if (ChairUser->IsSitState() && ChairUser->getStandState() != UNIT_STAND_STATE_SIT && ChairUser->GetExactDist2d(x_i, y_i) < 0.1f)
                             continue;        // This seat is already occupied by ChairUser. NOTE: Not sure if the ChairUser->getStandState() != UNIT_STAND_STATE_SIT check is required.
                         else
@@ -1594,7 +1584,7 @@ void GameObject::Use(Unit* user)
     if (!spellId)
         return;
 
-    SpellEntry const* spellInfo = sSpellStore.LookupEntry(spellId);
+    SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spellId);
     if (!spellInfo)
     {
         if (user->GetTypeId() != TYPEID_PLAYER || !sOutdoorPvPMgr->HandleCustomSpell(user->ToPlayer(), spellId, this))
@@ -1612,14 +1602,14 @@ void GameObject::Use(Unit* user)
 
 void GameObject::CastSpell(Unit* target, uint32 spellId)
 {
-    SpellEntry const* spellInfo = sSpellStore.LookupEntry(spellId);
+    SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spellId);
     if (!spellInfo)
         return;
 
     bool self = false;
     for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
     {
-        if (spellInfo->EffectImplicitTargetA[i] == TARGET_UNIT_CASTER)
+        if (spellInfo->Effects[i].TargetA.GetTarget() == TARGET_UNIT_CASTER)
         {
             self = true;
             break;
@@ -1634,7 +1624,7 @@ void GameObject::CastSpell(Unit* target, uint32 spellId)
     }
 
     //summon world trigger
-    Creature* trigger = SummonTrigger(GetPositionX(), GetPositionY(), GetPositionZ(), 0, GetSpellCastTime(spellInfo) + 100);
+    Creature* trigger = SummonTrigger(GetPositionX(), GetPositionY(), GetPositionZ(), 0, spellInfo->CalcCastTime() + 100);
     if (!trigger)
         return;
 
@@ -1736,6 +1726,10 @@ void GameObject::ModifyHealth(int32 change, Unit* attackerOrHealer /*= NULL*/, u
     if (!GetGOValue()->Building.MaxHealth || !change)
         return;
 
+    // prevent double destructions of the same object
+    if (change < 0 && !GetGOValue()->Building.Health)
+        return;
+
     if (int32(GetGOValue()->Building.Health) + change <= 0)
         GetGOValue()->Building.Health = 0;
     else if (int32(GetGOValue()->Building.Health) + change >= int32(GetGOValue()->Building.MaxHealth))
@@ -1743,6 +1737,7 @@ void GameObject::ModifyHealth(int32 change, Unit* attackerOrHealer /*= NULL*/, u
     else
         GetGOValue()->Building.Health += change;
 
+    // Set the health bar, value = 255 * healthPct;
     SetGoAnimProgress(GetGOValue()->Building.Health * 255 / GetGOValue()->Building.MaxHealth);
 
     Player* player = attackerOrHealer->GetCharmerOrOwnerPlayerOrPlayerItself();
@@ -1760,12 +1755,19 @@ void GameObject::ModifyHealth(int32 change, Unit* attackerOrHealer /*= NULL*/, u
         player->GetSession()->SendPacket(&data);
     }
 
+    GameObjectDestructibleState newState = GetDestructibleState();
+
     if (!GetGOValue()->Building.Health)
-        SetDestructibleState(GO_DESTRUCTIBLE_DESTROYED, player, false);
+        newState = GO_DESTRUCTIBLE_DESTROYED;
     else if (GetGOValue()->Building.Health <= GetGOInfo()->building.damagedNumHits)
-        SetDestructibleState(GO_DESTRUCTIBLE_DAMAGED, player, false);
+        newState = GO_DESTRUCTIBLE_DAMAGED;
     else if (GetGOValue()->Building.Health == GetGOValue()->Building.MaxHealth)
-        SetDestructibleState(GO_DESTRUCTIBLE_INTACT, player, false);
+        newState = GO_DESTRUCTIBLE_INTACT;
+
+    if (newState == GetDestructibleState())
+        return;
+
+    SetDestructibleState(newState, player, false);
 }
 
 void GameObject::SetDestructibleState(GameObjectDestructibleState state, Player* eventInvoker /*= NULL*/, bool setHealth /*= false*/)
@@ -1842,9 +1844,16 @@ void GameObject::SetDestructibleState(GameObjectDestructibleState state, Player*
             break;
         }
         case GO_DESTRUCTIBLE_REBUILDING:
-            RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_DAMAGED | GO_FLAG_DESTROYED);
-            SetUInt32Value(GAMEOBJECT_DISPLAYID, m_goInfo->displayId);
+        {
             EventInform(m_goInfo->building.rebuildingEvent);
+            RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_DAMAGED | GO_FLAG_DESTROYED);
+
+            uint32 modelId = m_goInfo->displayId;
+            if (DestructibleModelDataEntry const* modelData = sDestructibleModelDataStore.LookupEntry(m_goInfo->building.destructibleData))
+                if (modelData->RebuildingDisplayId)
+                    modelId = modelData->RebuildingDisplayId;
+            SetUInt32Value(GAMEOBJECT_DISPLAYID, modelId);
+
             // restores to full health
             if (setHealth)
             {
@@ -1852,5 +1861,6 @@ void GameObject::SetDestructibleState(GameObjectDestructibleState state, Player*
                 SetGoAnimProgress(255);
             }
             break;
+        }
     }
 }

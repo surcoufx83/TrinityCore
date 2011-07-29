@@ -120,7 +120,7 @@ public:
             FireBlast_Timer = 6000;
         }
 
-        void SpellHit(Unit* /*caster*/, const SpellEntry* spell)
+            void SpellHit(Unit*, const SpellInfo *spell)
         {
             if (trigger == 2 && spell->Id == SPELL_BLAZE_TARGET)
             {
@@ -214,7 +214,6 @@ public:
             pInstance = c->GetInstanceScript();
             me->SetFloatValue(UNIT_FIELD_BOUNDINGRADIUS, 10);
             me->SetFloatValue(UNIT_FIELD_COMBATREACH, 10);
-
             me->SetReactState(REACT_PASSIVE);
             me->AddUnitState(UNIT_STAT_STUNNED);
             DoCast(me, SPELL_SHADOW_CAGE_C, true);

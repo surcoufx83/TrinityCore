@@ -86,7 +86,7 @@ public:
                 who->ToPlayer()->KilledMonsterCredit(NPC_RAGECLAW,RageclawGUID);
         }
 
-        void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+        void SpellHit(Unit* pCaster, const SpellInfo* pSpell)
         {
             if (pSpell->Id == SPELL_UNLOCK_SHACKLE)
             {
@@ -149,7 +149,7 @@ public:
 
         void MoveInLineOfSight(Unit* /*who*/){}
 
-        void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell)
+        void SpellHit(Unit* /*pCaster*/, const SpellInfo* pSpell)
         {
             if (pSpell->Id == SPELL_FREE_RAGECLAW)
             {
@@ -1046,14 +1046,14 @@ public:
         uint32 uiElementalSpellTimer;
 
         uint8 uiBossRandom;
-        uint32 uiSpellEntry;
+        uint32 uiSpellInfo;
 
         bool bAddAttack;
 
         void Reset()
         {
             uiBossRandom = 0;
-            uiSpellEntry = 0;
+            uiSpellInfo = 0;
             uiElementalSpellTimer = urand(5000, 8000);
 
             bAddAttack = false;

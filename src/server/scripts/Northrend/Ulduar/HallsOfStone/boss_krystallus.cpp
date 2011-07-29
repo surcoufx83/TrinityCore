@@ -63,7 +63,7 @@ class boss_krystallus : public CreatureScript
             _instance = c->GetInstanceScript();
 
             // temporary to let ground slam effect not be interrupted
-            SpellEntry* tempSpell;
+            SpellInfo* tempSpell;
             tempSpell = GET_SPELL(SPELL_GROUND_SLAM_TRIGGERED);
             if (tempSpell)
                 tempSpell->InterruptFlags = 0;

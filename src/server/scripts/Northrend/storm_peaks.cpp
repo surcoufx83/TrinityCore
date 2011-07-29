@@ -562,7 +562,7 @@ public:
             me->SetCorpseDelay(5);
         }
 
-        void SpellHit(Unit * /*caster*/, const SpellEntry* spell)
+        void SpellHit(Unit * /*caster*/, const SpellInfo* spell)
         {
             if (spell->Id == SPELL_ABLAZE)
                 bBurned = true;
@@ -722,7 +722,7 @@ public:
             me->Respawn();
         }
 
-        void SpellHit(Unit* caster, const SpellEntry* spell) 
+        void SpellHit(Unit* caster, const SpellInfo* spell) 
         {
             if (spell->Id == SPELL_ICE_SHARD)
             {
@@ -1012,7 +1012,7 @@ public:
     {
         npc_dead_irongiantAI(Creature *pCreature) : ScriptedAI(pCreature) {}
 
-        void SpellHit(Unit *caster, const SpellEntry *spell) 
+        void SpellHit(Unit *caster, const SpellInfo *spell) 
         {
             if (spell->Id == SPELL_SALVAGE_CORPSE)
             {

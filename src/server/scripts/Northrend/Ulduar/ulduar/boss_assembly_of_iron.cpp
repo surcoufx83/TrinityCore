@@ -309,7 +309,7 @@ class boss_steelbreaker : public CreatureScript
                 DoScriptText(RAND(SAY_STEELBREAKER_SLAY_1, SAY_STEELBREAKER_SLAY_2), me);
             }
 
-            void SpellHit(Unit* /*from*/, SpellEntry const* spell)
+            void SpellHit(Unit* /*from*/, SpellInfo const* spell)
             {
                 switch (spell->Id)
                 {
@@ -420,7 +420,7 @@ class spell_steelbreaker_static_disruption : public SpellScriptLoader
         {
             PrepareSpellScript(spell_steelbreaker_static_disruption_SpellScript);
 
-            bool Validate(SpellEntry const* /*spell*/)
+            bool Validate(SpellInfo const* /*spell*/)
             {
                 if (!sSpellStore.LookupEntry(61912))
                     return false;
@@ -589,7 +589,7 @@ class boss_runemaster_molgeim : public CreatureScript
                 DoScriptText(RAND(SAY_MOLGEIM_SLAY_1, SAY_MOLGEIM_SLAY_2), me);
             }
 
-            void SpellHit(Unit* /*from*/, const SpellEntry* spell)
+            void SpellHit(Unit* /*from*/, const SpellInfo* spell)
             {
                 if (spell->Id == SPELL_SUPERCHARGE)
                     DoAction(EVENT_UPDATEPHASE);
@@ -905,7 +905,7 @@ class boss_stormcaller_brundir : public CreatureScript
                 DoScriptText(RAND(SAY_BRUNDIR_SLAY_1, SAY_BRUNDIR_SLAY_2), me);
             }
 
-            void SpellHit(Unit* /*from*/, const SpellEntry *spell)
+            void SpellHit(Unit* /*from*/, const SpellInfo *spell)
             {
                 if (spell->Id == SPELL_SUPERCHARGE)
                     DoAction(EVENT_UPDATEPHASE);

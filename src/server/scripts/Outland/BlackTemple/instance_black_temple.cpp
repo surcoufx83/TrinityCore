@@ -335,10 +335,10 @@ public:
                 OUT_SAVE_INST_DATA;
 
                 std::ostringstream saveStream;
-                saveStream << "B T " << Encounters[0] << " " << Encounters[1] << " "
-                    << Encounters[2] << " " << Encounters[3] << " " << Encounters[4]
-                << " " << Encounters[5] << " " << Encounters[6] << " " << Encounters[7]
-                << " " << Encounters[8] << " " << IllidanGateOpend;
+                saveStream << "B T " << Encounters[0] << ' ' << Encounters[1] << ' '
+                    << Encounters[2] << ' ' << Encounters[3] << ' ' << Encounters[4]
+                << ' ' << Encounters[5] << ' ' << Encounters[6] << ' ' << Encounters[7]
+                << ' ' << Encounters[8] << ' ' << IllidanGateOpend;
 
                 str_data = saveStream.str();
 

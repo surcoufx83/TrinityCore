@@ -424,7 +424,7 @@ public:
             Summons.Summon(summoned);
         }
 
-        void SpellHit(Unit* /*caster*/, const SpellEntry* Spell)
+        void SpellHit(Unit* /*caster*/, const SpellInfo* Spell)
         {
             float x,y,z,o;
             me->GetHomePosition(x,y,z,o);
@@ -488,10 +488,10 @@ public:
 
     void EnterCombat(Unit* who){}
 
-    void SpellHit(Unit* caster, const SpellEntry* Spell)
+    void SpellHit(Unit* caster, const SpellInfos[i].Effect* Spell)
         {
             for (uint8 i = 0; i < 3; ++i)
-                if (Spell->Effect[i] == 38)
+                if (Spell->Effects[i].Effect == 38)
             {
                 me->DealDamage(me, me->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
                 me->RemoveCorpse();

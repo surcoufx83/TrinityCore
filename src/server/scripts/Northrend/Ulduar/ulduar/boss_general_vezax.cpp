@@ -105,7 +105,7 @@ class boss_general_vezax : public CreatureScript
             boss_general_vezaxAI(Creature* c) : BossAI(c, TYPE_VEZAX)
             {
                 // add interrupt flag
-                SpellEntry* tempSpell;
+                SpellInfo* tempSpell;
                 tempSpell = GET_SPELL(SPELL_SEARING_FLAMES);
                 if (tempSpell)
                     tempSpell->InterruptFlags |= SPELL_INTERRUPT_FLAG_INTERRUPT;
@@ -139,7 +139,7 @@ class boss_general_vezax : public CreatureScript
                 events.ScheduleEvent(EVENT_BERSERK, 10*MINUTE*IN_MILLISECONDS);
             }
 
-            void SpellHitTarget(Unit* target, SpellEntry const* spell)
+            void SpellHitTarget(Unit* target, SpellInfo const* spell)
             {
                 if (target && target->ToPlayer())
                 {
@@ -472,7 +472,7 @@ public:
     {
         PrepareAuraScript(spell_general_vezax_aura_of_despair_AuraScript);
 
-        bool Validate(SpellEntry const* /*spellInfo*/)
+        bool Validate(SpellInfo const* /*spellInfo*/)
         {
             if (!sSpellStore.LookupEntry(SPELL_AURA_OF_DESPAIR_EFFEKT_DESPAIR))
                 return false;
@@ -528,7 +528,7 @@ public:
     {
         PrepareAuraScript(spell_general_vezax_mark_of_the_faceless_AuraScript);
 
-        bool Validate(SpellEntry const* /*spellInfo*/)
+        bool Validate(SpellInfo const* /*spellInfo*/)
         {
             if (!sSpellStore.LookupEntry(SPELL_MARK_OF_THE_FACELESS_LEECH))
                 return false;

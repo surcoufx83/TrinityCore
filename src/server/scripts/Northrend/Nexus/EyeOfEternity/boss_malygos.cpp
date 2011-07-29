@@ -667,7 +667,7 @@ class boss_malygos : public CreatureScript
                 }
             }
 
-            void SpellHitTarget(Unit* target, SpellEntry const* spell)
+            void SpellHitTarget(Unit* target, SpellInfo const* spell)
             {
                 if (spell->Id == SPELL_ARCANE_BOMB)
                 {
