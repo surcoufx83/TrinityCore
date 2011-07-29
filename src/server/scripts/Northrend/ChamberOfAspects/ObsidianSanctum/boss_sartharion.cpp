@@ -137,8 +137,6 @@ enum eEnums
     H_ACHIEV_TWILIGHT_ZONE                      = 2054
 };
 
-#define DATA_CAN_LOOT   0
-
 struct Waypoint
 {
     float m_fX, m_fY, m_fZ;
@@ -330,7 +328,6 @@ public:
                         {
                             pTenebron->Respawn();
                             pTenebron->GetMotionMaster()->MoveTargetedHome();
-                            pTenebron->AI()->SetData(DATA_CAN_LOOT,0);
                         }
                     }
                 }
@@ -348,7 +345,6 @@ public:
                         {
                             pShadron->Respawn();
                             pShadron->GetMotionMaster()->MoveTargetedHome();
-                            pShadron->AI()->SetData(DATA_CAN_LOOT,0);
                         }
                     }
                 }
@@ -366,7 +362,6 @@ public:
                         {
                             pVesperon->Respawn();
                             pVesperon->GetMotionMaster()->MoveTargetedHome();
-                            pVesperon->AI()->SetData(DATA_CAN_LOOT,0);
                         }
                     }
                 }
@@ -517,34 +512,36 @@ public:
         {
             if (pInstance)
             {
-                if (Creature *pTemp = Unit::GetCreature(*me,pInstance->GetData64(uiDataId)))
+                if (Creature* temp = Unit::GetCreature(*me, pInstance->GetData64(uiDataId)))
                 {
-                    if (pTemp->isAlive() && !pTemp->getVictim())
+                    if (temp->isAlive() && !temp->getVictim())
                     {
-                        if (pTemp->HasUnitMovementFlag(MOVEMENTFLAG_WALKING))
-                            pTemp->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
+                        if (temp->HasUnitMovementFlag(MOVEMENTFLAG_WALKING))
+                            temp->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
 
-                        if (pTemp->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
-                            pTemp->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                        if (temp->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
+                            temp->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
                         int32 iTextId = 0;
 
-                        switch(pTemp->GetEntry())
+                        temp->RemoveLootMode(LOOT_MODE_DEFAULT);
+
+                        switch (temp->GetEntry())
                         {
                             case NPC_TENEBRON:
                                 iTextId = SAY_SARTHARION_CALL_TENEBRON;
-                                pTemp->AddAura(SPELL_POWER_OF_TENEBRON, pTemp);
-                                pTemp->GetMotionMaster()->MovePoint(POINT_ID_LAND, m_aTene[1].m_fX, m_aTene[1].m_fY, m_aTene[1].m_fZ);
+                                temp->AddAura(SPELL_POWER_OF_TENEBRON, temp);
+                                temp->GetMotionMaster()->MovePoint(POINT_ID_LAND, m_aTene[1].m_fX, m_aTene[1].m_fY, m_aTene[1].m_fZ);
                                 break;
                             case NPC_SHADRON:
                                 iTextId = SAY_SARTHARION_CALL_SHADRON;
-                                pTemp->AddAura(SPELL_POWER_OF_SHADRON, pTemp);
-                                pTemp->GetMotionMaster()->MovePoint(POINT_ID_LAND, m_aShad[1].m_fX, m_aShad[1].m_fY, m_aShad[1].m_fZ);
+                                temp->AddAura(SPELL_POWER_OF_SHADRON, temp);
+                                temp->GetMotionMaster()->MovePoint(POINT_ID_LAND, m_aShad[1].m_fX, m_aShad[1].m_fY, m_aShad[1].m_fZ);
                                 break;
                             case NPC_VESPERON:
                                 iTextId = SAY_SARTHARION_CALL_VESPERON;
-                                pTemp->AddAura(SPELL_POWER_OF_VESPERON, pTemp);
-                                pTemp->GetMotionMaster()->MovePoint(POINT_ID_LAND, m_aVesp[1].m_fX, m_aVesp[1].m_fY, m_aVesp[1].m_fZ);
+                                temp->AddAura(SPELL_POWER_OF_VESPERON, temp);
+                                temp->GetMotionMaster()->MovePoint(POINT_ID_LAND, m_aVesp[1].m_fX, m_aVesp[1].m_fY, m_aVesp[1].m_fZ);
                                 break;
                         }
 
@@ -819,7 +816,6 @@ struct dummy_dragonAI : public ScriptedAI
     uint32 m_uiMoveNextTimer;
     int32 m_iPortalRespawnTime;
     bool m_bCanMoveFree;
-    bool m_bCanLoot;
 
     uint64 m_guidPortal;
 
@@ -834,15 +830,10 @@ struct dummy_dragonAI : public ScriptedAI
         m_uiMoveNextTimer = 500;
         m_iPortalRespawnTime = 30000;
         m_bCanMoveFree = false;
-        m_bCanLoot = true;
 
         m_guidPortal = 0;
-    }
 
-    void SetData(uint32 type, uint32 value)
-    {
-        if (type == DATA_CAN_LOOT)
-            m_bCanLoot = value;
+        me->ResetLootMode();
     }
 
     void MovementInform(uint32 uiType, uint32 uiPointId)
@@ -1059,9 +1050,6 @@ struct dummy_dragonAI : public ScriptedAI
 
     void JustDied(Unit* /*pKiller*/)
     {
-        if (!m_bCanLoot)
-            me->SetLootRecipient(NULL);
-
         if(pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
             me->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
 
