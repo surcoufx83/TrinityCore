@@ -87,7 +87,7 @@ class boss_elder_nadox : public CreatureScript
 
             void EnterCombat(Unit* /*who*/)
             {
-                DoScriptText(SAY_DEATH, me);
+                DoScriptText(SAY_AGGRO, me);
 
                 if (_instance)
                     _instance->SetData(DATA_ELDER_NADOX_EVENT, IN_PROGRESS);
@@ -130,7 +130,7 @@ class boss_elder_nadox : public CreatureScript
             void JustDied(Unit* /*killer*/)
             {
                 //_summons.DespawnAll();
-                DoScriptText(SAY_SLAY_3, me);
+                DoScriptText(SAY_DEATH, me);
 
                 if (_instance)
                     _instance->SetData(DATA_ELDER_NADOX_EVENT, DONE);
