@@ -3473,6 +3473,13 @@ void SpellMgr::LoadDbcDataCorrections()
 
         switch (spellInfo->SpellFamilyName)
         {
+            case SPELLFAMILY_PRIEST:
+                // Mind Sear, casting trigger spell fails in Spell::CheckRange if rangeIndex == 1 ?
+                if (spellInfo->SpellFamilyFlags[1] & 0x80000)
+                    spellInfo->rangeIndex = 4;
+                else
+                    break;
+                break;
             case SPELLFAMILY_DRUID:
                 // Starfall Target Selection
                 if (spellInfo->SpellFamilyFlags[2] & 0x100)
