@@ -493,6 +493,7 @@ public:
             {
                 // Event starts
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                events.Reset();
                 DoZoneInCombat();
             }
         }
