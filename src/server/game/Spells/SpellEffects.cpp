@@ -768,6 +768,10 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                     // apply percent damage mods
                     damage = m_caster->SpellDamageBonus(unitTarget, m_spellInfo, damage, SPELL_DIRECT_DAMAGE);
 
+                    // DEBUG
+                    if (damage > 15000 || damage < 1)
+                        sLog->outError("DW_DEBUG: damage after m_caster->SpellDamageBonus: %i", damage);
+
                     switch (m_spellInfo->Id)
                     {
                         case 12162: ApplyPctN(damage, 16); break; // Rank 1
@@ -786,6 +790,14 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                         damage += aurEff->GetAmount() * (ticks - aurEff->GetTickNumber());
 
                     damage = damage / ticks;
+
+                    // DEBUG
+                    if (damage > 7500 || damage < 1)
+                    {
+                        damage = 1;
+                        sLog->outError("DW_DEBUG: final damage: %i, ticks: %u", damage, ticks);
+                    }
+
                     m_caster->CastCustomSpell(unitTarget, 12721, &damage, NULL, NULL, true);
                     return;
                 }
