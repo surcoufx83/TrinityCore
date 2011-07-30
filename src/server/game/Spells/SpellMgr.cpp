@@ -2745,6 +2745,7 @@ void SpellMgr::LoadSpellCustomAttr()
         case 43140: // Flame Breath
         case 43215: // Flame Breath
         case 70461: // Coldflame Trap
+        case 63293: // Mimiron - P3Wx2 Laser Barrage
             spellInfo->AttributesCu |= SPELL_ATTR0_CU_CONE_LINE;
             break;
         case 24340: // Meteor
@@ -2785,7 +2786,33 @@ void SpellMgr::LoadSpellCustomAttr()
         case 71482: // Bloodbolt Splash
         case 71483: // Bloodbolt Splash
         case 71390: // Pact of the Darkfallen
+        case 63025: // XT-002 Gravity Bomb
+        case 64233: // XT-002 Gravity Bomb
             spellInfo->AttributesCu |= SPELL_ATTR0_CU_EXCLUDE_SELF;
+            break;
+        case 28836: //Mark - should not be resistet
+        case 28786: //Locust Swarm
+        case 54022: //Locust Swarm
+        case 57581: //Shadow Fissure - Sartharion Drakes
+        case 59128: //Shadow Fissure - Sartharion Drakes
+        case 57570: //Shadow Breath - Sartharion Drakes
+        case 59126: //Shadow Breath - Sartharion Drakes
+        case 56908: //Fire Breath - Sartharion
+        case 58956: //Fire Breath - Sartharion
+        case 57874: //Twilight Shift Damage - Sartharion
+            spellInfo->AttributesCu |= SPELL_ATTR0_CU_DIRECT_DAMAGE; // spellInfo->AttributesEx4 |= SPELL_ATTR4_FIXED_DAMAGE;
+            spellInfo->AttributesCu |= SPELL_ATTR0_CU_IGNORE_ARMOR;
+            break;
+        case 64218: // Emalon - Overcharge
+        case 64216: // Emalon - Lightning Nova
+        case 65279: // Emalon - Lightning Nova
+        case 62016: // Thorim - Charge Orb
+        case 65210: // Keeper Mimiron Destabilization Matrix - Ignore LoS (because Mimiron stands in a Tube and is out of LoS)
+        case 62042: // Thorim - Stormhammer
+        case 62521: // Freya - Attuned to Nature 25 Dose Reduction
+        case 62524: // Freya - Attuned to Nature 2 Dose Reduction
+        case 62525: // Freya - Attuned to Nature 10 Dose Reduction
+            spellInfo->AttributesCu |= SPELL_ATTR0_CU_IGNORE_LOS;
             break;
         case 18500: // Wing Buffet
         case 33086: // Wild Bite
@@ -2804,6 +2831,9 @@ void SpellMgr::LoadSpellCustomAttr()
         case 74439: // Machine Gun
             spellInfo->AttributesCu |= SPELL_ATTR0_CU_IGNORE_ARMOR;
             break;
+        case 62775: // XT-002 - Tympanic Tantrum
+        case 64443: // Algalon - Big Bang
+        case 64584: // Algalon - Big Bang
         case 63278: // Mark of the Faceless (General Vezax)
             spellInfo->AttributesCu |= SPELL_ATTR0_CU_IGNORE_ARMOR;
             break;
@@ -2909,6 +2939,12 @@ void SpellMgr::LoadDbcDataCorrections()
         case 36350: //They Must Burn Bomb Aura (self)
             spellInfo->EffectTriggerSpell[0] = 36325; // They Must Burn Bomb Drop (DND)
             break;
+        case 32645: // Envenom (Rank 1)
+        case 32684: // Envenom (Rank 2)
+        case 57992: // Envenom (Rank 3)
+        case 57993: // Envenom (Rank 4)
+            spellInfo->Dispel = 0;
+            break;
         case 49838: // Stop Time
             spellInfo->AttributesEx3 |= SPELL_ATTR3_NO_INITIAL_AGGRO;
             break;
@@ -2948,6 +2984,11 @@ void SpellMgr::LoadDbcDataCorrections()
             spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_NEARBY_ENTRY;
             spellInfo->EffectImplicitTargetB[0] = TARGET_DST_NEARBY_ENTRY;
             break;
+        case 46841: // Escape to the Isle of Quel'Danas
+            // not sure why this is needed
+            spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_TARGET_ANY;
+            spellInfo->EffectImplicitTargetB[0] = TARGET_DST_DB;
+            break;
         case 59725: // Improved Spell Reflection - aoe aura
             // Target entry seems to be wrong for this spell :/
             spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_PARTY_CASTER;
@@ -2963,6 +3004,10 @@ void SpellMgr::LoadDbcDataCorrections()
         case 39365: // Thundering Storm
         case 41071: // Raise Dead (HACK)
         case 52124: // Sky Darkener Assault
+        case 41172: // Rapid Shot
+        case 40834: // Agonizing Flames
+        case 45032: // Curse of Agony - Sathrovarr
+        case 45034: // Curse of Agony - Sathrovarr
         case 42442: // Vengeance Landing Cannonfire
         case 45863: // Cosmetic - Incinerate to Random Target
         case 25425: // Shoot
@@ -2970,6 +3015,15 @@ void SpellMgr::LoadDbcDataCorrections()
         case 42611: // Shoot
         case 62374: // Pursued
         case 61588: // Blazing Harpoon
+        case 50988: // Glare of the Tribunal (N)
+        case 59870: // Glare of the Tribunal (H)
+        case 55927: // Sear Beam (N)
+        case 59509: // Sear Beam (H)
+        case 56397: // Arcane Barrage
+        case 64599: // Arcane Barrage
+        case 64607: // Arcane Barrage
+        case 47731: // Critter
+        case 62301: // Cosmic Smash
             spellInfo->MaxAffectedTargets = 1;
             break;
         case 52479: // Gift of the Harvester
@@ -2978,6 +3032,15 @@ void SpellMgr::LoadDbcDataCorrections()
             spellInfo->EffectImplicitTargetA[0] = TARGET_DST_CASTER;
             spellInfo->EffectImplicitTargetA[1] = TARGET_DST_CASTER;
             break;
+        case 57697: //Lavastrike Hack - Sartharion
+            spellInfo->EffectImplicitTargetA[0] = TARGET_DST_TARGET_ENEMY;
+            //spellInfo->EffectImplicitTargetB[0] = TARGET_DEST_TARGET_RANDOM;
+            spellInfo->EffectImplicitTargetB[0] = TARGET_DST_TARGET_ENEMY; //This would be more funny
+            break;
+        case 31225:
+        case 8593:
+            spellInfo->AttributesEx2 |= SPELL_ATTR2_ALLOW_DEAD_TARGET;
+            break; 
         case 41376: // Spite
         case 39992: // Needle Spine
         case 29576: // Multi-Shot
@@ -2989,8 +3052,13 @@ void SpellMgr::LoadDbcDataCorrections()
         case 54172: // Divine Storm (heal)
         case 29213: // Curse of the Plaguebringer - Noth
         case 28542: // Life Drain - Sapphiron
+        case 41357: // L1 Acane Charge
         case 66588: // Flaming Spear
         case 54171: // Divine Storm
+        case 60939: // Surge of Power
+        case 61693: // Arcane Storm
+        case 64598: // Cosmic Smash
+        case 61916: // Lightning Whirl (10N)
             spellInfo->MaxAffectedTargets = 3;
             break;
         case 38310: // Multi-Shot
@@ -3004,6 +3072,7 @@ void SpellMgr::LoadDbcDataCorrections()
         case 45641: // Fire Bloom
         case 55665: // Life Drain - Sapphiron (H)
         case 28796: // Poison Bolt Volly - Faerlina
+        case 29232: // Fungal Creep - Loatheb Spore - Dont know if needed
             spellInfo->MaxAffectedTargets = 5;
             break;
         case 40827: // Sinful Beam
@@ -3012,6 +3081,8 @@ void SpellMgr::LoadDbcDataCorrections()
         case 40861: // Wicked Beam
         case 54835: // Curse of the Plaguebringer - Noth (H)
         case 54098: // Poison Bolt Volly - Faerlina (H)
+        case 61694: // Arcane Storm
+        case 63482: // Lightning Whirl (25N)
             spellInfo->MaxAffectedTargets = 10;
             break;
         case 50312: // Unholy Frenzy
@@ -3063,6 +3134,21 @@ void SpellMgr::LoadDbcDataCorrections()
         case 51904: // Summon Ghouls On Scarlet Crusade (core does not know the triggered spell is summon spell)
             spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
             break;
+        case 45671: // Midsummer - Juggle Torch (Catch, Quest)
+            spellInfo->AttributesEx3 &= ~SPELL_ATTR3_PLAYERS_ONLY;
+            break;
+        case 45907: // Midsummer - Torch Target Picker
+            spellInfo->AttributesEx &= ~SPELL_ATTR1_CANT_TARGET_SELF;
+            break;
+        case 45819: // Midsummer - Throw Torch
+            spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_AREA_ENTRY_DST;
+            spellInfo->EffectRadiusIndex[0] = 15;
+            spellInfo->MaxAffectedTargets = 1;
+            break;
+        case 46363: // Midsummer - Beam Attack against Ahune
+            spellInfo->EffectImplicitTargetA[0] = TARGET_SRC_CASTER;
+            spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_TARGET_ANY;
+            break;
         case 29809: // Desecration Arm - 36 instead of 37 - typo? :/
             spellInfo->EffectRadiusIndex[0] = 37;
             break;
@@ -3076,6 +3162,10 @@ void SpellMgr::LoadDbcDataCorrections()
             break;
         case 48422:
             spellInfo->Stances = 1 << (FORM_TREE - 1);
+
+            break;
+        case 55689: // Glyph of Shadow (to prevent glyph aura loss)
+            spellInfo->Stances = 0;
             break;
         case 47569: // Improved Shadowform (Rank 1)
             // with this spell atrribute aura can be stacked several times
@@ -3119,12 +3209,45 @@ void SpellMgr::LoadDbcDataCorrections()
             // 322-330 switch - effect changed to dummy, target entry not changed in client:(
             spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
             break;
+        case 25771: // Forbearance - wrong mechanic immunity in DBC since 3.0.x
+            spellInfo->EffectMiscValue[0] = MECHANIC_IMMUNE_SHIELD;
+            break;
+        case 53651:
+            spellInfo->AttributesEx3 |= SPELL_ATTR3_NO_INITIAL_AGGRO;
+            break;
+        case 43202:
+            spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_TARGET_ALLY;
+            spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_TARGET_ALLY;
+            break;
+        case 61306:     // Kirin Tor Commendation Badge
+        case 61308:     // Wyrmrest Commendation Badge
+        case 61311:     // Argent Crusade Commendation Badge
+        case 61312:     // Ebon Blade Commendadtion Badge
+        case 69757:     // Sons of Hodir Commendation Badge
+            spellInfo->EffectBasePoints[0] = 519;           // Some suggest a global multiplier is used for rep gain
+                                                            // but basepoints * 1,3 hard coded in the tooltip says
+            break;                                          // otherwise.
+        case 48246: // Ball of Flame
+            spellInfo->MaxAffectedTargets = 1;
+            break;
+        case 48278: // Paralyze
+            spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_TARGET_ENEMY;
+            break;
+        case 28299:
+            spellInfo->Attributes |= SPELL_ATTR0_UNAFFECTED_BY_INVULNERABILITY;
+            break;
         case 63675: // Improved Devouring Plague
             spellInfo->AttributesEx3 |= SPELL_ATTR3_NO_DONE_BONUS;
             break;
         case 8145: // Tremor Totem (instant pulse)
         case 6474: // Earthbind Totem (instant pulse)
             spellInfo->AttributesEx5 |= SPELL_ATTR5_START_PERIODIC_AT_APPLY;
+            break;
+        case 61367: // Windfury, TODO: remove this when spell 32910 works as supposed
+            spellInfo->EffectTriggerSpell[0] = 65976;
+            break;
+        case 56278: // Read Pronouncement, missing EffectApplyAuraName
+            spellInfo->Effect[0] = SPELL_EFFECT_DUMMY;
             break;
         case 53241: // Marked for Death (Rank 1)
         case 53243: // Marked for Death (Rank 2)
@@ -3161,10 +3284,27 @@ void SpellMgr::LoadDbcDataCorrections()
         case 61719: // Easter Lay Noblegarden Egg Aura - Interrupt flags copied from aura which this aura is linked with
             spellInfo->AuraInterruptFlags = AURA_INTERRUPT_FLAG_HITBYSPELL | AURA_INTERRUPT_FLAG_TAKE_DAMAGE;
             break;
+        case 58963: // Archavon - Crushing Leap
+        case 60895: // Archavon - Crushing Leap
+            spellInfo->rangeIndex = 13;
+            break;
         // ULDUAR SPELLS
         //
+        case 62016: // Thorim - Charge Orb
+            spellInfo->MaxAffectedTargets = 1;
+            break;
+        case 62039: // Hodir - Biting Cold - Remove on Move
+            spellInfo->AuraInterruptFlags |= AURA_INTERRUPT_FLAG_MOVE;
+            break;
+        case 62488: // Ignis Activate Construct (only visually)
+        case 65301: // Sara Psychosis
+        case 63830: // Sara Malady of the Mind
+        case 64465: // Yogg Saron Shadow Beacon
         case 63342: // Focused Eyebeam Summon Trigger (Kologarn)
             spellInfo->MaxAffectedTargets = 1;
+            break;
+        case 63802: // Sara Brain Link
+            spellInfo->MaxAffectedTargets = 2;
             break;
         case 62716: // Growth of Nature (Freya)
         case 65584: // Growth of Nature (Freya)
@@ -3184,6 +3324,23 @@ void SpellMgr::LoadDbcDataCorrections()
         // The above situation causes the visual for this spell to be bugged, so we remove the instakill
         // effect and implement a script hack for that.
             spellInfo->Effect[EFFECT_1] = 0;
+            break;
+        case 64600: // Freya - Nature Bomb (GO Visual)
+            spellInfo->DurationIndex = 38;
+            break;
+        case 62056: // Kologarn - some Stone Grip related Spells that have SPELL_ATTR1_IGNORE_IMMUNITY (NYI?)
+        case 63985:
+        case 64224:
+        case 64225:
+        case 62287: // Tar Passive
+            spellInfo->Attributes |= SPELL_ATTR0_UNAFFECTED_BY_INVULNERABILITY;
+            break;
+        case 62711: // Ignis - Grab
+            spellInfo->Attributes |= SPELL_ATTR0_UNAFFECTED_BY_INVULNERABILITY;
+            spellInfo->AttributesEx |= SPELL_ATTR1_CANT_BE_REFLECTED;
+            break;
+        case 62470: // Deafening Thunder - Spell::DoSpellHitOnUnit sends EVADE if speed > 0
+            spellInfo->speed = 0;
             break;
         case 64386: // Terrifying Screech (Auriaya)
         case 64389: // Sentinel Blast (Auriaya)

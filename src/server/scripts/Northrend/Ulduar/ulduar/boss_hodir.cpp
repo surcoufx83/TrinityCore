@@ -295,7 +295,7 @@ public:
                     case EVENT_RARE_CACHE:
                         DoScriptText(SAY_HARD_MODE_MISSED, me);
                         RareCache = false;
-                            instance->SetData(DATA_HODIR_RARE_CACHE, 0);
+                        //instance->SetData(DATA_HODIR_RARE_CACHE, 0);
                         events.CancelEvent(EVENT_RARE_CACHE);
                         break;
                     case EVENT_BERSERK:
@@ -867,7 +867,7 @@ class spell_biting_cold : public SpellScriptLoader
             PreventDefaultAction();
             if (Unit* trigger = GetTarget())
             {
-                if(aurEff->GetSpellProto()->Id == SPELL_BITING_COLD)
+                if(aurEff->GetSpellInfo()->Id == SPELL_BITING_COLD)
                 {
                     if(trigger->ToPlayer())
                     {
@@ -875,7 +875,7 @@ class spell_biting_cold : public SpellScriptLoader
                             trigger->CastSpell(trigger,SPELL_BITING_COLD_TRIGGERED,true,0,0,GetCasterGUID());
                     }
                 }
-                else if(aurEff->GetSpellProto()->Id == SPELL_BITING_COLD_TRIGGERED)
+                else if(aurEff->GetSpellInfo()->Id == SPELL_BITING_COLD_TRIGGERED)
                 {
                     int32 damage = trigger->GetAuraCount(SPELL_BITING_COLD_TRIGGERED);
                     damage *= 400;

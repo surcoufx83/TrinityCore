@@ -105,8 +105,8 @@ class boss_general_vezax : public CreatureScript
             boss_general_vezaxAI(Creature* c) : BossAI(c, TYPE_VEZAX)
             {
                 // add interrupt flag
-                SpellInfo* tempSpell;
-                tempSpell = GET_SPELL(SPELL_SEARING_FLAMES);
+                SpellEntry* tempSpell;
+                tempSpell = (SpellEntry*)sSpellStore.LookupEntry(SPELL_SEARING_FLAMES);
                 if (tempSpell)
                     tempSpell->InterruptFlags |= SPELL_INTERRUPT_FLAG_INTERRUPT;
             }
@@ -474,9 +474,9 @@ public:
 
         bool Validate(SpellInfo const* /*spellInfo*/)
         {
-            if (!sSpellStore.LookupEntry(SPELL_AURA_OF_DESPAIR_EFFEKT_DESPAIR))
+            if (!sSpellMgr->GetSpellInfo(SPELL_AURA_OF_DESPAIR_EFFEKT_DESPAIR))
                 return false;
-            if (!sSpellStore.LookupEntry(SPELL_CORRUPTED_RAGE))
+            if (!sSpellMgr->GetSpellInfo(SPELL_CORRUPTED_RAGE))
                 return false;
             return true;
         }
@@ -530,7 +530,7 @@ public:
 
         bool Validate(SpellInfo const* /*spellInfo*/)
         {
-            if (!sSpellStore.LookupEntry(SPELL_MARK_OF_THE_FACELESS_LEECH))
+            if (!sSpellMgr->GetSpellInfo(SPELL_MARK_OF_THE_FACELESS_LEECH))
                 return false;
             return true;
         }

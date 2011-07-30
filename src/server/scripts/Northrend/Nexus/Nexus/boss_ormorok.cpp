@@ -126,7 +126,7 @@ public:
             DoScriptText(SAY_KILL, me);
         }
 
-        void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell)
+        void SpellHit(Unit* /*pCaster*/, const SpellInfo* pSpell)
         {
             if (me->HasAura(SPELL_SPELL_REFLECTION)) //&& (!pSpell->AttributesEx2 & SPELL_ATTR_EX2_CANT_REFLECTED))
                 uiReflectCount--;

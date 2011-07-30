@@ -67,7 +67,7 @@ class WorldServerSignalHandler : public Trinity::SignalHandler
                 #endif /* _WIN32 */
                     World::StopNow(SHUTDOWN_EXIT_CODE);
                     break;
-                #ifdef WITH_AUTOBACKTRACE
+                /*#ifdef WITH_AUTOBACKTRACE
                 case SIGUSR1:
                     sLog->outError("Start User Backtrace.");
                     char buffer[50]; // 24 chars + pid
@@ -90,7 +90,7 @@ class WorldServerSignalHandler : public Trinity::SignalHandler
                     //exit(CRASH_EXIT_CODE);
                     break;
                 }
-                #endif /* WITH_AUTOBACKTRACE */
+                #endif */ /* WITH_AUTOBACKTRACE */
             }
         }
 };

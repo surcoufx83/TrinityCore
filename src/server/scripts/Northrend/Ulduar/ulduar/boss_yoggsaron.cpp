@@ -798,7 +798,7 @@ public:
             }
         }
 
-        void SpellHitTarget(Unit* target, const SpellEntry* spell)
+        void SpellHitTarget(Unit* target, const SpellInfo* spell)
         {
             if(target && target->ToPlayer())
             {
@@ -1750,7 +1750,7 @@ public:
             m_pInstance = c->GetInstanceScript();
             me->setFaction(14);
 
-            //SpellEntry *TempSpell;
+            //SpellInfo *TempSpell;
             //TempSpell = GET_SPELL(SPELL_SHADOW_NOVA);
             //if (TempSpell)
             //    TempSpell->Effect[1] = 0;
@@ -1759,7 +1759,7 @@ public:
         InstanceScript* m_pInstance;
         uint32 uiDarkVolley_Timer;
 
-        void SpellHitTarget(Unit* target, const SpellEntry* spell)
+        void SpellHitTarget(Unit* target, const SpellInfo* spell)
         {
             if(target && target->ToPlayer())
             {
@@ -2072,7 +2072,7 @@ public:
                 damage = me->GetHealth()-1;
         }
 
-        void SpellHitTarget(Unit *target, const SpellEntry *spell)
+        void SpellHitTarget(Unit *target, const SpellInfo *spell)
         {
             if(!target->ToPlayer())
                 return;
@@ -2162,7 +2162,7 @@ public:
             CreateValanyr();
         }
 
-        void SpellHitTarget(Unit* target, const SpellEntry* spell)
+        void SpellHitTarget(Unit* target, const SpellInfo* spell)
         {
             if(!m_pInstance) return;
 
@@ -2178,7 +2178,7 @@ public:
             }
         }
 
-        void SpellHit(Unit* caster, const SpellEntry* spell)
+        void SpellHit(Unit* caster, const SpellInfo* spell)
         {
             if(spell->Id == SPELL_IN_THE_MAWS_OF_THE_OLD_GOD)
             {
@@ -2327,7 +2327,7 @@ public:
             me->DespawnOrUnsummon(5000);
         }
 
-        void SpellHit(Unit* caster, const SpellEntry* spell)
+        void SpellHit(Unit* caster, const SpellInfo* spell)
         {
             if(spell->Id == 64172) // Titanic Storm
             {
@@ -2652,7 +2652,7 @@ public:
             DoCast(SPELL_LS_LUNATIC_GAZE);
         }
         
-        void SpellHitTarget(Unit* target, const SpellEntry* spell)
+        void SpellHitTarget(Unit* target, const SpellInfo* spell)
         {
             if(!m_pInstance) return;
 
@@ -2853,7 +2853,7 @@ class spell_keeper_support_aura_targeting : public SpellScriptLoader
 
             for(std::list<Unit*>::iterator iter = targetList.begin(); iter != targetList.end(); ++iter)
                 if(!(*iter)->ToPlayer() && (*iter)->GetGUID() != GetCasterGUID() )
-                    (*iter)->RemoveAurasDueToSpell(GetSpellProto()->Id);
+                    (*iter)->RemoveAurasDueToSpell(GetSpellInfo()->Id);
         }
 
         void Register()
@@ -3109,9 +3109,9 @@ public:
     {
         PrepareAuraScript(spell_hodir_protective_gaze_AuraScript);
 
-        bool Validate(SpellEntry const * /*spellEntry*/)
+        bool Validate(SpellInfo const * /*spellEntry*/)
         {
-            return sSpellStore.LookupEntry(SPELL_FLASH_FREEZE_COOLDOWN);
+            return sSpellMgr->GetSpellInfo(SPELL_FLASH_FREEZE_COOLDOWN);
         }
 
         //bool Load()
@@ -3126,7 +3126,7 @@ public:
 
             for(std::list<Unit*>::iterator iter = targetList.begin(); iter != targetList.end(); ++iter)
                 if(!(*iter)->ToPlayer() && (*iter)->GetGUID() != GetCasterGUID() )
-                    (*iter)->RemoveAurasDueToSpell(GetSpellProto()->Id);
+                    (*iter)->RemoveAurasDueToSpell(GetSpellInfo()->Id);
         }
 
         void CalculateAmount(AuraEffect const * /*aurEff*/, int32 & amount, bool & /*canBeRecalculated*/)

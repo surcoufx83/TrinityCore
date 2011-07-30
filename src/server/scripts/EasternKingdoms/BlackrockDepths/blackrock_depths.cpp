@@ -1579,14 +1579,13 @@ public:
         npc_brewmaidenAI(Creature *c) : ScriptedAI(c) 
         {
             //some workarounds
-            SpellEntry* TempSpell;
-            TempSpell = GET_SPELL(SPELL_HAS_BREW);
+            SpellEntry* TempSpell = (SpellEntry*)sSpellStore.LookupEntry(SPELL_HAS_BREW);
             if (TempSpell)
                 TempSpell->DurationIndex = 18; //20 seconds due to item aura issues when item is not equipped
-            TempSpell = GET_SPELL(SPELL_SEND_FIRST_MUG);
+            TempSpell = (SpellEntry*)sSpellStore.LookupEntry(SPELL_SEND_FIRST_MUG);
             if (TempSpell)
                 TempSpell->EffectTriggerSpell[0] = 0; //disable, triggers on main target only
-            TempSpell = GET_SPELL(SPELL_SEND_SECOND_MUG);
+            TempSpell = (SpellEntry*)sSpellStore.LookupEntry(SPELL_SEND_SECOND_MUG);
             if (TempSpell)
                 TempSpell->EffectTriggerSpell[0] = 0; //disable, triggers on main target only
         }
@@ -1644,7 +1643,7 @@ public:
             }
         }
 
-        void SpellHitTarget(Unit *pTarget, const SpellEntry *spell) 
+        void SpellHitTarget(Unit *pTarget, const SpellInfo *spell) 
         {
             if (spell->Id == SPELL_SEND_FIRST_MUG)
             {

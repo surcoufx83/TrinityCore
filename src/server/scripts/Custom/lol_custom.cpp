@@ -29,7 +29,7 @@ public:
         void Reset(){    }
         void EnterCombat(Unit *who) { }
 
-        void SpellHit(Unit* caster, const SpellEntry* spell)
+        void SpellHit(Unit* caster, const SpellInfo* spell)
         {
             if(caster->GetTypeId() == TYPEID_PLAYER)
             {
@@ -157,7 +157,7 @@ struct mob_wyrm_dragonmaw_peonAI : public ScriptedAI
         }
     }
 
-    void SpellHit(Unit* caster, const SpellEntry* spell)
+    void SpellHit(Unit* caster, const SpellInfo* spell)
     {
         if(caster && caster->GetTypeId() == TYPEID_PLAYER)
         {
@@ -290,7 +290,7 @@ public:
         void Reset(){}
         void EnterCombat(Unit *who) { }
 
-        void SpellHit(Unit* caster, const SpellEntry* spell)
+        void SpellHit(Unit* caster, const SpellInfo* spell)
         {
             switch(spell->Id)
             {
@@ -336,7 +336,7 @@ public:
         void Reset(){}
         void EnterCombat(Unit *who) { }
 
-        void SpellHit(Unit* caster, const SpellEntry* spell)
+        void SpellHit(Unit* caster, const SpellInfo* spell)
         {
             if(caster && caster->GetTypeId() == TYPEID_PLAYER)
             {
@@ -533,7 +533,7 @@ public:
              }
         }
 
-        void SpellHit(Unit* caster, const SpellEntry* spell)
+        void SpellHit(Unit* caster, const SpellInfo* spell)
         {
             //error_log("Hitted by spell %d", spell->Id);
 
@@ -1020,7 +1020,7 @@ public:
         }
         void EnterCombat(Unit *who) { }
 
-        void SpellHit(Unit* caster, const SpellEntry* spell)
+        void SpellHit(Unit* caster, const SpellInfo* spell)
         {
             if(caster && caster->GetTypeId() == TYPEID_PLAYER)
             {
@@ -1136,7 +1136,7 @@ public:
 
         void Reset(){}
         void EnterCombat(Unit *who) { }
-        void SpellHitTarget(Unit* target, const SpellEntry* spell)
+        void SpellHitTarget(Unit* target, const SpellInfo* spell)
         {
             //if( target->GetGUID() == me->GetGUID() )
             {
@@ -1208,7 +1208,7 @@ public:
             PlayerGUID = 0;
         }
 
-        void SpellHit(Unit* caster, const SpellEntry* spell)
+        void SpellHit(Unit* caster, const SpellInfo* spell)
         {
             if(!caster)
                 return;
@@ -2044,7 +2044,7 @@ public:
             if(isBanished) uiDamage = 0;
         }
 
-        void SpellHit(Unit *caster, const SpellEntry *spell)
+        void SpellHit(Unit *caster, const SpellInfo *spell)
         {
             if(!isBanished)
                 return;
@@ -2156,7 +2156,7 @@ public:
         }
         void Aggro(Unit *who){}
 
-        void SpellHit(Unit *caster, const SpellEntry *spell)
+        void SpellHit(Unit *caster, const SpellInfo *spell)
         {
             if(caster->GetGUID() != me->GetGUID())
                 return;

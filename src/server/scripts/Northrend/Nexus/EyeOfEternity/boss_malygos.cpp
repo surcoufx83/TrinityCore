@@ -1387,8 +1387,8 @@ class isBadTargetForSpell
 
         bool operator() (Unit* unit)
         {
-            SpellEntry* surge;
-            surge = GET_SPELL(SPELL_SURGE_OF_POWER_25);
+            const SpellInfo* surge;
+            surge = sSpellMgr->GetSpellInfo(SPELL_SURGE_OF_POWER_25);
             if (surge)
                 return unit->IsImmunedToSpell(surge);
 

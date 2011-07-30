@@ -108,7 +108,7 @@ public:
                  pInstance->SetData(DATA_SALRAMM_EVENT, IN_PROGRESS);
         }
 
-        void SpellHitTarget(Unit* pTarget, const SpellEntry* spell) 
+        void SpellHitTarget(Unit* pTarget, const SpellInfo* spell) 
         {
             if (spell->Id == SPELL_STEAL_FLESH)
             {

@@ -422,9 +422,9 @@ class spell_steelbreaker_static_disruption : public SpellScriptLoader
 
             bool Validate(SpellInfo const* /*spell*/)
             {
-                if (!sSpellStore.LookupEntry(61912))
+                if (!sSpellMgr->GetSpellInfo(61912))
                     return false;
-                if (!sSpellStore.LookupEntry(63494))
+                if (!sSpellMgr->GetSpellInfo(63494))
                     return false;
                 return true;
             }
@@ -467,7 +467,7 @@ class spell_steelbreaker_electrical_charge : public SpellScriptLoader
                 Unit* target = GetTarget();
                 Unit* caster = GetCaster();
                 if (target && caster && GetTargetApplication()->GetRemoveMode() == AURA_REMOVE_BY_DEATH)
-                    target->CastSpell(caster, SpellMgr::CalculateSpellEffectAmount(GetSpellProto(), EFFECT_0), true);
+                    target->CastSpell(caster, GetSpellInfo()->Effects[EFFECT_0].CalcValue() , true);
             }
 
             void Register()

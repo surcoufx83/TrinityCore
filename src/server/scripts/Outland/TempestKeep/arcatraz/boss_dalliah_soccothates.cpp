@@ -97,7 +97,7 @@ public:
         }
 
 
-        void SpellHit(Unit *caster, const SpellEntry*spellentry)
+        void SpellHit(Unit *caster, const SpellInfo* spellentry)
         {
             switch(spellentry->Id)
             {
@@ -118,7 +118,7 @@ public:
                 break;
             }
 
-            if ((spellentry->Effect[0]!=SPELL_EFFECT_INTERRUPT_CAST && spellentry->Effect[1]!=SPELL_EFFECT_INTERRUPT_CAST && spellentry->Effect[2]!=SPELL_EFFECT_INTERRUPT_CAST) || !me->IsNonMeleeSpellCasted(false))
+            if ((spellentry->Effects[0].Effect != SPELL_EFFECT_INTERRUPT_CAST && spellentry->Effects[1].Effect != SPELL_EFFECT_INTERRUPT_CAST && spellentry->Effects[2].Effect !=SPELL_EFFECT_INTERRUPT_CAST) || !me->IsNonMeleeSpellCasted(false))
                 return;
 
             if(isHealing)

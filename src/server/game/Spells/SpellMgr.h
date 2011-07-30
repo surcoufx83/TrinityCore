@@ -520,8 +520,6 @@ inline bool IsProfessionSkill(uint32 skill)
     return  IsPrimaryProfessionSkill(skill) || skill == SKILL_FISHING || skill == SKILL_COOKING || skill == SKILL_FIRST_AID;
 }
 
-
-    SPELL_ATTR0_CU_IGNORE_LOS       = 0x10000000,
 inline bool IsProfessionOrRidingSkill(uint32 skill)
 {
     return  IsProfessionSkill(skill) || skill == SKILL_RIDING;

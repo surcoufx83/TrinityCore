@@ -677,7 +677,7 @@ public:
             mob_naxxramas_tashAI::Reset();
         }
 
-        void SpellHit(Unit *target, const SpellEntry *spell)
+        void SpellHit(Unit *target, const SpellInfo *spell)
         {
             if(target == me && spell->Id == RAID_MODE(SPELL_STONESKIN,SPELL_STONESKIN_H))
                 me->SetStandState(UNIT_STAND_STATE_SUBMERGED);

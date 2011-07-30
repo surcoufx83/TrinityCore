@@ -623,7 +623,7 @@ public:
                 }
         }
 
-        void SpellHit(Unit* target, const SpellEntry* spell)
+        void SpellHit(Unit* target, const SpellInfo* spell)
         {
             if(isready)
             {

@@ -70,7 +70,7 @@ public:
         
             // make 55098 interruptable
             SpellEntry* tempSpell;
-            tempSpell = GET_SPELL(SPELL_TRANSFORMATION);
+            tempSpell = (SpellEntry*)sSpellStore.LookupEntry(SPELL_TRANSFORMATION);
             if (tempSpell)
                 tempSpell->InterruptFlags |= SPELL_INTERRUPT_FLAG_INTERRUPT;
         }
@@ -109,10 +109,9 @@ public:
         void AdjustCastSpeed()
         {
             // bad workaround for mojo frenzy aura
-            SpellEntry *TempSpell;
-            TempSpell = GET_SPELL(SPELL_TRANSFORMATION);
+            SpellEntry *TempSpell = (SpellEntry*)sSpellStore.LookupEntry(SPELL_TRANSFORMATION);
             uint32 value = 15;  //spell 55098 default
-        
+
             if (HealthBelowPct(80)) value = 28;
             if (HealthBelowPct(65)) value = 21;
             if (HealthBelowPct(50)) value = 5;

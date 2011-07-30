@@ -788,9 +788,9 @@ public:
     class spell_q11307_plagued_vrykul_dummy_SpellScript : public SpellScript
     {
         PrepareSpellScript(spell_q11307_plagued_vrykul_dummy_SpellScript);
-        bool Validate(SpellEntry const * /*spellEntry*/)
+        bool Validate(SpellInfo const * /*spellEntry*/)
         {
-            if (!sSpellStore.LookupEntry(SPELL_PLAGUE_SPRAY))
+            if (!sSpellMgr->GetSpellInfo(SPELL_PLAGUE_SPRAY))
                 return false;
             return true;
         }

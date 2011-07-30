@@ -4479,7 +4479,7 @@ int32 Unit::GetMaxNegativeAuraModifierByMiscMask(AuraType auratype, uint32 misc_
     return modifier;
 }
 
-int32 Unit::GetTotalAuraModifierByMiscValue(AuraType auratype, int32 misc_value, SpellEntry const * spell) const
+int32 Unit::GetTotalAuraModifierByMiscValue(AuraType auratype, int32 misc_value, SpellInfo const * spell) const
 {
     int32 modifier = 0;
 

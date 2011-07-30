@@ -166,7 +166,7 @@ class boss_ignis : public CreatureScript
                 DoScriptText(SAY_DEATH, me);
             }
 
-            void SpellHitTarget(Unit* target, SpellEntry const* spell)
+            void SpellHitTarget(Unit* target, SpellInfo const* spell)
             {
                 if (spell->Id == SPELL_FLAME_JETS)
                     target->CastSpell(target, SPELL_FLAME_JETS_TRIGGERED, true);

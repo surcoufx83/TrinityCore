@@ -62,7 +62,7 @@ public:
             strCommand = command;
             normalizePlayerName(strCommand);
 
-            pTarget = sObjectMgr->GetPlayer(strCommand.c_str()); //get player by name
+            pTarget = sObjectAccessor->FindPlayerByName(strCommand.c_str()); //get player by name
         }else 
             pTarget = handler->getSelectedPlayer();
 
@@ -101,7 +101,7 @@ public:
             strCommand = command;
             normalizePlayerName(strCommand);
 
-            pTarget = sObjectMgr->GetPlayer(strCommand.c_str()); //get player by name
+            pTarget = sObjectAccessor->FindPlayerByName(strCommand.c_str()); //get player by name
         }else 
             pTarget = handler->getSelectedPlayer();
 
@@ -153,7 +153,7 @@ public:
         else
         {
             normalizePlayerName(strCommand);
-            Player* player = sObjectMgr->GetPlayer(strCommand.c_str()); //get player by name
+            Player* player = sObjectAccessor->FindPlayerByName(strCommand.c_str()); //get player by name
             if (!player)
                 handler->PSendSysMessage("Player doesn't exist");
             else
@@ -180,7 +180,7 @@ public:
             strCommand = command;
 
             normalizePlayerName(strCommand);
-            player = sObjectMgr->GetPlayer(strCommand.c_str()); //get player by name
+            player = sObjectAccessor->FindPlayerByName(strCommand.c_str()); //get player by name
 
             if (player)
                 guid = player->GetGUIDLow();

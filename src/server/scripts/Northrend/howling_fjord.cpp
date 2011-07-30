@@ -349,7 +349,7 @@ public:
             check_Timer = 5000;
         }
 
-        void SpellHit(Unit* caster, const SpellEntry* spell)
+        void SpellHit(Unit* caster, const SpellInfo* spell)
         {
             if (!caster || caster->GetTypeId() != TYPEID_PLAYER)
                 return;
@@ -423,7 +423,7 @@ public:
         }
 
         void EnterCombat(Unit *who) {}
-        void SpellHit(Unit *caster, const SpellEntry *spell)
+        void SpellHit(Unit *caster, const SpellInfo *spell)
         {
             if (spell->Id == 43315)
                 me->SetReactState(REACT_AGGRESSIVE);
@@ -513,7 +513,7 @@ public:
         {
         }
 
-        void SpellHit(Unit *caster, const SpellEntry *spell)
+        void SpellHit(Unit *caster, const SpellInfo *spell)
         {
             if (spell->Id == SPELL_SHINING_LIGHT_HIT) 
             {

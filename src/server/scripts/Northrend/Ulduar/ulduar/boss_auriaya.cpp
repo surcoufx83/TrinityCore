@@ -95,7 +95,7 @@ class boss_auriaya : public CreatureScript
             {
                 // dont interrupt by taking damage
                 SpellEntry* tempSpell;
-                tempSpell = GET_SPELL(RAID_MODE(SPELL_SENTINEL_BLAST_10, SPELL_SENTINEL_BLAST_25));
+                tempSpell = (SpellEntry*)sSpellStore.LookupEntry(RAID_MODE(SPELL_SENTINEL_BLAST_10, SPELL_SENTINEL_BLAST_25));
                 if (tempSpell)
                     tempSpell->ChannelInterruptFlags &= ~AURA_INTERRUPT_FLAG_TAKE_DAMAGE;
             }

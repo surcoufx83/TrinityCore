@@ -2805,7 +2805,7 @@ class npc_torch_tossing_bunny : public CreatureScript
                 _validTarget = false;
             }
 
-            void SpellHit(Unit* caster, SpellEntry const* spell)
+            void SpellHit(Unit* caster, SpellInfo const* spell)
             {
                 if (spell->Id == SPELL_TORCH_TOSS && _validTarget)
                 {

@@ -74,8 +74,8 @@ public:
             pInstance = pCreature->GetInstanceScript();
 
             // 100% too much?
-            SpellInfo* tempSpell;
-            tempSpell = GET_SPELL(SPELL_MORTAL_STRIKE);
+            SpellEntry* tempSpell;
+            tempSpell = (SpellEntry*)sSpellStore.LookupEntry(SPELL_MORTAL_STRIKE);
             if (tempSpell)
                 tempSpell->procChance = 50;
         }
@@ -295,8 +295,8 @@ public:
         {
             pInstance = pCreature->GetInstanceScript();
             
-            SpellInfo* tempSpell;
-            tempSpell = GET_SPELL(DUNGEON_MODE(SPELL_MOJO_VOLLEY_TRIGGERED, H_SPELL_MOJO_VOLLEY_TRIGGERED));
+            SpellEntry* tempSpell;
+            tempSpell = (SpellEntry*)sSpellStore.LookupEntry(DUNGEON_MODE(SPELL_MOJO_VOLLEY_TRIGGERED, H_SPELL_MOJO_VOLLEY_TRIGGERED));
             if (tempSpell)
                 tempSpell->MaxAffectedTargets = 1;
         }
@@ -386,8 +386,8 @@ public:
             if (uiSwitchTimer <= diff)
             {
                 uint8 maxTargets = urand(1, 2);
-                SpellInfo* tempSpell;
-                tempSpell = GET_SPELL(DUNGEON_MODE(SPELL_MOJO_VOLLEY_TRIGGERED, H_SPELL_MOJO_VOLLEY_TRIGGERED));
+                SpellEntry* tempSpell;
+                tempSpell = (SpellEntry*)sSpellStore.LookupEntry(DUNGEON_MODE(SPELL_MOJO_VOLLEY_TRIGGERED, H_SPELL_MOJO_VOLLEY_TRIGGERED));
                 if (tempSpell)
                     tempSpell->MaxAffectedTargets = maxTargets;
 

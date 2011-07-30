@@ -99,8 +99,8 @@ public:
         // Sonic Boom instant damage (needs core fix instead of this)
         void SpellHitTarget(Unit* target, const SpellInfo *spell)
         {
-            if (pTarget && pTarget->isAlive() && spell && spell->Id == uint32(SPELL_SONIC_BOOM_EFFECT))
-                me->DealDamage(pTarget, (pTarget->GetHealth()*90)/100, NULL, SPELL_DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NATURE, spell);
+            if (target && target->isAlive() && spell && spell->Id == uint32(SPELL_SONIC_BOOM_EFFECT))
+                me->DealDamage(target, (target->GetHealth()*90)/100, NULL, SPELL_DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NATURE, spell);
         }
 
         void UpdateAI(const uint32 diff)

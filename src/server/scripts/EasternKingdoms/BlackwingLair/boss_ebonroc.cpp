@@ -80,7 +80,7 @@ public:
             pInstance->SetData(ENCOUNTER_EBONROC,DONE);
     }
 
-    void SpellHitTarget(Unit *pTarget, const SpellEntry *spell)
+    void SpellHitTarget(Unit *pTarget, const SpellInfo *spell)
     {
         if(spell->Id == SPELL_SHADOWFLAME)
         {

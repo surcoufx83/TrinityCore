@@ -450,11 +450,11 @@ class spell_argent_cannon : public SpellScriptLoader
         {
             PrepareSpellScript(spell_argent_cannon_SpellScript);
 
-            bool Validate(SpellEntry const* /*spellInfo*/)
+            bool Validate(SpellInfo const* /*spellInfo*/)
             {
-                if (!sSpellStore.LookupEntry(SPELL_ARGENT_CANNON_SHOOT_TRIGGER))
+                if (!sSpellMgr->GetSpellInfo(SPELL_ARGENT_CANNON_SHOOT_TRIGGER))
                     return false;
-                if (!sSpellStore.LookupEntry(SPELL_RECONING_BOMB_TRIGGER))
+                if (!sSpellMgr->GetSpellInfo(SPELL_RECONING_BOMB_TRIGGER))
                     return false;
                 return true;
             }
@@ -811,7 +811,7 @@ class npc_captured_crusader : public CreatureScript
                 DoCast(me, SPELL_NERUBIAN_WEBS, true);
             }
 
-            void SpellHit(Unit* caster, SpellEntry const* spell)
+            void SpellHit(Unit* caster, SpellInfo const* spell)
             {
                 if (spell->Id == SPELL_GRAB_CAPTURED_CRUSADER)
                 {

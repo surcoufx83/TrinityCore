@@ -348,7 +348,7 @@ public:
             events.ScheduleEvent(EVENT_BERSERK, 15*100*1000);
         }
 
-        void SpellHitTarget(Unit* target, const SpellEntry *spell)
+        void SpellHitTarget(Unit* target, const SpellInfo *spell)
         {
             if(target->GetTypeId() != TYPEID_PLAYER)
                 return;

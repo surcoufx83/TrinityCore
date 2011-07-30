@@ -830,7 +830,7 @@ public:
             DoScriptText(SAY_MALA_DEATH, me);
         }
 
-        //void SpellHit(Unit *caster, const SpellEntry *spell)
+        //void SpellHit(Unit *caster, const SpellInfo *spell)
         //{
         //    if(!me->HasAura(SPELL_REFLECTIVE_SHIELD,0))
         //    {
@@ -930,7 +930,7 @@ public:
             pulse_Timer = 10000;
         }
 
-        void SpellHitTarget(Unit *target, const SpellEntry *spell)
+        void SpellHitTarget(Unit *target, const SpellInfo *spell)
         {
             if(spell->Id != 41485)
             {

@@ -122,8 +122,7 @@ class boss_kologarn : public CreatureScript
                 Reset();
 
                 // should be triggered on caster?
-                SpellEntry* tempSpell;
-                tempSpell = GET_SPELL(SPELL_STONE_SHOUT);
+                SpellEntry* tempSpell = (SpellEntry*)sSpellStore.LookupEntry(SPELL_STONE_SHOUT);
                 if (tempSpell)
                     tempSpell->EffectImplicitTargetA[0] = 1;
             }
@@ -570,7 +569,7 @@ class spell_ulduar_stone_grip_cast_target : public SpellScriptLoader
                     return;
 
                 // Don't send m_originalCasterGUID param here or underlying AuraEffect::HandleAuraControlVehicle will fail on caster == target
-                plr->CastSpell(GetTargetUnit(), GetSpellInfo()->EffectTriggerSpell[i], true);
+                plr->CastSpell(GetTargetUnit(), GetSpellInfo()->Effects[i].TriggerSpell, true);
                 PreventHitEffect(i);
             }
 

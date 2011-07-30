@@ -832,7 +832,7 @@ public:
                 DoCast(protector,SPELL_SWSC_ACTIVATE_PROTECTOR);
         }
 
-        void SpellHitTarget(Unit *target, const SpellEntry *spell)
+        void SpellHitTarget(Unit *target, const SpellInfo *spell)
         {
             if(!isActivating)
                 return;
@@ -1324,7 +1324,7 @@ public:
             mob_sunwell_plateau_tashAI::Reset();
         }
 
-        void SpellHitTarget(Unit *target, const SpellEntry *spell)
+        void SpellHitTarget(Unit *target, const SpellInfo *spell)
         {
             if(spell->Id == SPELL_CCH_CATACLYSM_BREATH && target->GetTypeId() == TYPEID_PLAYER)
             {

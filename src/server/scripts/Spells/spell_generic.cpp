@@ -1172,13 +1172,13 @@ class spell_gen_ribbon_pole_dancer_check : public SpellScriptLoader
         {
             PrepareAuraScript(spell_gen_ribbon_pole_dancer_check_AuraScript);
 
-            bool Validate(SpellEntry const* /*spell*/)
+            bool Validate(SpellInfo const* /*spell*/)
             {
-                if (!sSpellStore.LookupEntry(SPELL_HAS_FULL_MIDSUMMER_SET))
+                if (!sSpellMgr->GetSpellInfo(SPELL_HAS_FULL_MIDSUMMER_SET))
                     return false;
-                if (!sSpellStore.LookupEntry(SPELL_BURNING_HOT_POLE_DANCE))
+                if (!sSpellMgr->GetSpellInfo(SPELL_BURNING_HOT_POLE_DANCE))
                     return false;
-                if (!sSpellStore.LookupEntry(SPELL_RIBBON_DANCE))
+                if (!sSpellMgr->GetSpellInfo(SPELL_RIBBON_DANCE))
                     return false;
                 return true;
             }
@@ -1249,11 +1249,11 @@ class spell_gen_torch_target_picker : public SpellScriptLoader
         {
             PrepareSpellScript(spell_gen_torch_target_picker_SpellScript);
 
-            bool Validate(SpellEntry const* /*spellEntry*/)
+            bool Validate(SpellInfo const* /*spellEntry*/)
             {
-                if (!sSpellStore.LookupEntry(SPELL_FLING_TORCH_MISSILE))
+                if (!sSpellMgr->GetSpellInfo(SPELL_FLING_TORCH_MISSILE))
                     return false;
-                if (!sSpellStore.LookupEntry(SPELL_TOSS_TORCH_SHADOW))
+                if (!sSpellMgr->GetSpellInfo(SPELL_TOSS_TORCH_SHADOW))
                     return false;
                 return true;
             }
@@ -1317,13 +1317,13 @@ class spell_gen_juggle_torch_catch : public SpellScriptLoader
         {
             PrepareSpellScript(spell_gen_juggle_torch_catch_SpellScript);
 
-            bool Validate(SpellEntry const* /*spellEntry*/)
+            bool Validate(SpellInfo const* /*spellEntry*/)
             {
-                if (!sSpellStore.LookupEntry(SPELL_TORCH_TARGET_PICKER))
+                if (!sSpellMgr->GetSpellInfo(SPELL_TORCH_TARGET_PICKER))
                     return false;
-                if (!sSpellStore.LookupEntry(SPELL_TORCHES_COUGHT))
+                if (!sSpellMgr->GetSpellInfo(SPELL_TORCHES_COUGHT))
                     return false;
-                if (!sSpellStore.LookupEntry(SPELL_JUGGLE_TORCH_MISSED))
+                if (!sSpellMgr->GetSpellInfo(SPELL_JUGGLE_TORCH_MISSED))
                     return false;
                 return true;
             }
@@ -1406,15 +1406,15 @@ class spell_gen_throw_torch : public SpellScriptLoader
         {
             PrepareSpellScript(spell_gen_throw_torch_SpellScript);
 
-            bool Validate(SpellEntry const* /*spellEntry*/)
+            bool Validate(SpellInfo const* /*spellEntry*/)
             {
-                if (!sSpellStore.LookupEntry(45638))
+                if (!sSpellMgr->GetSpellInfo(45638))
                     return false;
-                if (!sSpellStore.LookupEntry(45792))
+                if (!sSpellMgr->GetSpellInfo(45792))
                     return false;
-                if (!sSpellStore.LookupEntry(45806))
+                if (!sSpellMgr->GetSpellInfo(45806))
                     return false;
-                if (!sSpellStore.LookupEntry(45816))
+                if (!sSpellMgr->GetSpellInfo(45816))
                     return false;
                 return true;
             }

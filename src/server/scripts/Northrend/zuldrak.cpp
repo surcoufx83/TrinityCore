@@ -1941,7 +1941,7 @@ public:
             collecting = false;
         }
 
-        void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+        void SpellHit(Unit* pCaster, const SpellInfo* pSpell)
         {
             if (pSpell->Id == SPELL_KICK_NASS)
             {

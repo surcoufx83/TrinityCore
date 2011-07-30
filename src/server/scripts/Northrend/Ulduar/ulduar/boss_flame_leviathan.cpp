@@ -363,7 +363,7 @@ class boss_flame_leviathan : public CreatureScript
                 }
             }
 
-            void SpellHitTarget(Unit* target, SpelInfo const* spell)
+            void SpellHitTarget(Unit* target, SpellInfo const* spell)
             {
                 if (spell->Id == SPELL_PURSUED)
                 {
@@ -1471,7 +1471,7 @@ class spell_anti_air_rocket : public SpellScriptLoader
 
             bool Validate(SpellInfo const* /*spell*/)
             {
-                if (!sSpellStore.LookupEntry(SPELL_ANTI_AIR_ROCKET_DMG))
+                if (!sSpellMgr->GetSpellInfo(SPELL_ANTI_AIR_ROCKET_DMG))
                     return false;
                 return true;
             }

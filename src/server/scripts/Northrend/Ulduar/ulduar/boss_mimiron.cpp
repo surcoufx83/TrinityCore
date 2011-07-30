@@ -1646,7 +1646,7 @@ class npc_assault_bot : public CreatureScript
                 DoMeleeAttackIfReady();
             }
 
-            void SpellHit(Unit* /*caster*/, SpellEntry const* spell)
+            void SpellHit(Unit* /*caster*/, SpellInfo const* spell)
             {
                 // Achievement Not-So-Friendly Fire
                 if (spell->Id == SPELL_ROCKET_STRIKE_DMG)
@@ -1797,7 +1797,7 @@ class npc_mimiron_flame_trigger : public CreatureScript
                 _flameTimer = 3000;
             }
 
-            void SpellHit(Unit* /*caster*/, SpellEntry const* spell)
+            void SpellHit(Unit* /*caster*/, SpellInfo const* spell)
             {
                 switch (spell->Id)
                 {
@@ -1858,7 +1858,7 @@ class npc_mimiron_flame_spread : public CreatureScript
                 DoCast(me, SPELL_FLAME, true);
             }
 
-            void SpellHit(Unit* /*caster*/, SpellEntry const* spell)
+            void SpellHit(Unit* /*caster*/, SpellInfo const* spell)
             {
                 switch (spell->Id)
                 {

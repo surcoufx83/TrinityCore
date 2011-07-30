@@ -169,10 +169,10 @@ public:
             pInstance = c->GetInstanceScript();
 
             // wait for core patch be accepted
-            /*SpellEntry *TempSpell = (SpellEntry*)GetSpellStore()->LookupEntry(SPELL_ENCAPSULATE_EFFECT);
+            /*SpellInfo *TempSpell = (SpellInfo*)GetSpellStore()->LookupEntry(SPELL_ENCAPSULATE_EFFECT);
             if(TempSpell->SpellIconID == 2294)
                 TempSpell->SpellIconID = 2295;
-            TempSpell = (SpellEntry*)GetSpellStore()->LookupEntry(SPELL_VAPOR_TRIGGER);
+            TempSpell = (SpellInfo*)GetSpellStore()->LookupEntry(SPELL_VAPOR_TRIGGER);
             if ((TempSpell->Attributes & SPELL_ATTR0_PASSIVE) == 0)
                 TempSpell->Attributes |= SPELL_ATTR0_PASSIVE;
             TempSpell = (SpellEntry*)GetSpellStore()->LookupEntry(SPELL_FOG_CHARM2);
@@ -737,7 +737,7 @@ public:
         InstanceScript *pInstance;
         uint32 fogtrigger_timer;
 
-        void SpellHitTarget(Unit *target, const SpellEntry *spell)
+        void SpellHitTarget(Unit *target, const SpellInfo *spell)
         {
             if(target->GetTypeId() != TYPEID_PLAYER)
                 return;
@@ -778,7 +778,7 @@ public:
                     if (Player* i_pl = i->getSource())
                         if (i_pl->isAlive() && me->IsInDist2d(i_pl,20))
                         {
-                            const SpellEntry *spellinfo = GetSpellStore()->LookupEntry(SPELL_FOG_FORCE);
+                            const SpellInfo *spellinfo = sSpellMgr->GetSpellInfo(SPELL_FOG_FORCE);
                             SpellHitTarget(i_pl,spellinfo);
                         }
                 }

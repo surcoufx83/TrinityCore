@@ -177,7 +177,7 @@ public:
             }
         }
 
-        void SpellHitTarget(Unit *pTarget, const SpellEntry *spell) 
+        void SpellHitTarget(Unit *pTarget, const SpellInfo *spell) 
         {
             if (pTarget->GetTypeId() != TYPEID_PLAYER)
                 return;

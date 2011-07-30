@@ -247,23 +247,23 @@ public:
     class spell_warl_shadow_bite_SpellScript : public SpellScript
     {
         PrepareSpellScript(spell_warl_shadow_bite_SpellScript)
-        bool Validate(SpellEntry const * /*spellEntry*/)
+        bool Validate(SpellInfo const * /*spellEntry*/)
         {
-            if (!sSpellStore.LookupEntry(WARLOCK_FELHUNTER_SHADOWBITE_R1))
+            if (!sSpellMgr->GetSpellInfo(WARLOCK_FELHUNTER_SHADOWBITE_R1))
                 return false;
-            if (!sSpellStore.LookupEntry(WARLOCK_FELHUNTER_SHADOWBITE_R2))
+            if (!sSpellMgr->GetSpellInfo(WARLOCK_FELHUNTER_SHADOWBITE_R2))
                 return false;
-            if (!sSpellStore.LookupEntry(WARLOCK_FELHUNTER_SHADOWBITE_R3))
+            if (!sSpellMgr->GetSpellInfo(WARLOCK_FELHUNTER_SHADOWBITE_R3))
                 return false;
-            if (!sSpellStore.LookupEntry(WARLOCK_FELHUNTER_SHADOWBITE_R4))
+            if (!sSpellMgr->GetSpellInfo(WARLOCK_FELHUNTER_SHADOWBITE_R4))
                 return false;
-            if (!sSpellStore.LookupEntry(WARLOCK_FELHUNTER_SHADOWBITE_R5))
+            if (!sSpellMgr->GetSpellInfo(WARLOCK_FELHUNTER_SHADOWBITE_R5))
                 return false;
-            if (!sSpellStore.LookupEntry(WARLOCK_IMPROVED_FELHUNTER_R1))
+            if (!sSpellMgr->GetSpellInfo(WARLOCK_IMPROVED_FELHUNTER_R1))
                 return false;
-            if (!sSpellStore.LookupEntry(WARLOCK_IMPROVED_FELHUNTER_R2))
+            if (!sSpellMgr->GetSpellInfo(WARLOCK_IMPROVED_FELHUNTER_R2))
                 return false;
-            if (!sSpellStore.LookupEntry(WARLOCK_IMPROVED_FELHUNTER_EFFECT))
+            if (!sSpellMgr->GetSpellInfo(WARLOCK_IMPROVED_FELHUNTER_EFFECT))
                 return false;
             return true;
         }

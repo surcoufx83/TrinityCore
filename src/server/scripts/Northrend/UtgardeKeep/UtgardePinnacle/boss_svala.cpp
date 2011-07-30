@@ -385,7 +385,7 @@ public:
             summons.Despawn(summon);
         }
     
-        void SpellHitTarget(Unit *pTarget, const SpellEntry *spell) 
+        void SpellHitTarget(Unit *pTarget, const SpellInfo *spell) 
         {
             if (spell->Id == SPELL_RITUAL_STRIKE_DOT)
                 if (IsHeroic())

@@ -4646,7 +4646,7 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                         return;
 
                     //[*Hack*]
-                    SpellEntry *triggeredSpellInfo = (SpellEntry*)GetSpellStore()->LookupEntry(41363);
+                    SpellInfo *triggeredSpellInfo = (SpellInfo*)sSpellMgr->GetSpellInfo(41363);
                     triggeredSpellInfo->AttributesEx = SPELL_ATTR1_NO_THREAT;
 
                     m_caster->CastSpell(unitTarget, triggeredSpellInfo, true);

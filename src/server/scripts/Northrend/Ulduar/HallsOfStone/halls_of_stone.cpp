@@ -155,8 +155,7 @@ public:
             SetCombatMovement(false);
 
             //temporary
-            SpellEntry *TempSpell;
-            TempSpell = GET_SPELL(SPELL_SEARING_GAZE_DUMMY);
+            SpellEntry *TempSpell = (SpellEntry*)sSpellStore.LookupEntry(SPELL_SEARING_GAZE_DUMMY);
             if (TempSpell)
             { 
                 TempSpell->EffectImplicitTargetA[0] = 6;
@@ -165,7 +164,7 @@ public:
                 TempSpell->EffectImplicitTargetB[1] = 0;
                 TempSpell->Effect[1] = 0;
             }
-            TempSpell = GET_SPELL(SPELL_DARK_MATTER_DUMMY);
+            TempSpell = (SpellEntry*)sSpellStore.LookupEntry(SPELL_DARK_MATTER_DUMMY);
             if (TempSpell)
             { 
                 TempSpell->EffectImplicitTargetA[0] = 6;

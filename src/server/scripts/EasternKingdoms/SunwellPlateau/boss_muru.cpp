@@ -268,7 +268,7 @@ public:
                 pInstance->SetData(DATA_MURU_EVENT, IN_PROGRESS);
         }
 
-        void SpellHit(Unit *caster, const SpellEntry *spell)
+        void SpellHit(Unit *caster, const SpellInfo *spell)
         {
             if(spell->Id == 45996)
             {
@@ -486,16 +486,16 @@ public:
             me->AddUnitState(UNIT_STAT_STUNNED);
         }
 
-    void EnterCombat(Unit* who){}
+        void EnterCombat(Unit* who){}
 
-    void SpellHit(Unit* caster, const SpellInfos[i].Effect* Spell)
+        void SpellHit(Unit* caster, const SpellInfo* Spell)
         {
             for (uint8 i = 0; i < 3; ++i)
                 if (Spell->Effects[i].Effect == 38)
-            {
-                me->DealDamage(me, me->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-                me->RemoveCorpse();
-            }
+                {
+                    me->DealDamage(me, me->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                    me->RemoveCorpse();
+                }
         }
 
         void UpdateAI(const uint32 diff)

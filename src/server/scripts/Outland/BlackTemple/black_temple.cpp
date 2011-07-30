@@ -1230,7 +1230,7 @@ public:
                 taskmaster->CastSpell(taskmaster,SPELL_FURY,false);
         }
 
-        void SpellHit(Unit* caster, const SpellEntry* spell)
+        void SpellHit(Unit* caster, const SpellInfo* spell)
         {
             if(spell->Id == SPELL_DISGRUNTLED)
                 me->SetHealth(me->GetMaxHealth());
@@ -2031,8 +2031,7 @@ public:
         mob_ashtongue_cyclone_totemAI(Creature *c) : NullCreatureAI(c) {}
         void Reset()
         {
-            SpellEntry *spellInfo;
-            spellInfo = (SpellEntry*)GetSpellStore()->LookupEntry(SPELL_CYCLONE_TOTEM_EFFEKT);
+            SpellInfo *spellInfo = (SpellInfo*)sSpellMgr->GetSpellInfo(SPELL_CYCLONE_TOTEM_EFFEKT);
             if(spellInfo)
             {
                 spellInfo->MaxAffectedTargets = 5;
@@ -3245,12 +3244,12 @@ public:
             if(AuraStack > (me->HasAura(SPELL_CHAOTIC_CHARGE,0) ? me->GetAura(SPELL_CHAOTIC_CHARGE,0)->GetStackAmount() : 0))
             {
                 int32 damage =  rand()%374 + 2313;
-                SpellEntry *spellInfo;
-                spellInfo = (SpellEntry*)GetSpellStore()->LookupEntry(SPELL_CHAOTIC_CHARGE_DMG);
+                SpellInfo *spellInfo;
+                spellInfo = (SpellInfo*)sSpellMgr->GetSpellInfo(SPELL_CHAOTIC_CHARGE_DMG);
                 if(spellInfo)
                 {
                     spellInfo->MaxAffectedTargets = AuraStack;
-                    spellInfo->EffectBasePoints[0] = damage + 1000*AuraStack;
+                    spellInfo->Effects[0].BasePoints = damage + 1000*AuraStack;
                     me->CastSpell(me,spellInfo,false);
                 }
                 AuraStack = 0;

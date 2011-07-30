@@ -515,7 +515,7 @@ public:
         //    }
         //}
 
-        void SpellHitTarget(Unit *target, const SpellEntry *spell)
+        void SpellHitTarget(Unit *target, const SpellInfo *spell)
         {
             if(spell->Id != SPELL_SHADOW_OF_DEATH)
                 return;
@@ -616,8 +616,7 @@ public:
             {
                 if(!me->IsNonMeleeSpellCasted(false))
                 {
-                    SpellEntry *spellInfo;
-                    spellInfo = (SpellEntry*)GetSpellStore()->LookupEntry(SPELL_CRUSHING_SHADOWS);
+                    SpellInfo *spellInfo = (SpellInfo*)sSpellMgr->GetSpellInfo(SPELL_CRUSHING_SHADOWS);
                     if(spellInfo)
                     {
                         spellInfo->MaxAffectedTargets = 5;
@@ -639,11 +638,10 @@ public:
                     if(target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER && !target->HasAura(SPELL_SHADOW_OF_DEATH,1) )
                     {
                         // Custom ... becaus Effekt is not needed
-                        SpellEntry *spellInfo;
-                        spellInfo = (SpellEntry*)GetSpellStore()->LookupEntry(SPELL_SHADOW_OF_DEATH);
+                        SpellInfo *spellInfo = (SpellInfo*)sSpellMgr->GetSpellInfo(SPELL_SHADOW_OF_DEATH);
                         if(spellInfo)
                         {
-                            spellInfo->Effect[0] = 0;
+                            spellInfo->Effects[0].Effect = 0;
                             me->CastSpell(target,spellInfo,false);
                         }
 

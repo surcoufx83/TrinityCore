@@ -104,7 +104,7 @@ public:
             }
         }
 
-        void SpellHitTarget(Unit * pTarget, const SpellEntry * spell)
+        void SpellHitTarget(Unit * pTarget, const SpellInfo * spell)
         {
             if (spell->Id==SPELL_ARC_LIGHTNING && bHit)
                 if (rand()%100<DUNGEON_MODE(65,80))

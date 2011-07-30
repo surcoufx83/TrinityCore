@@ -204,7 +204,7 @@ public:
 
         void Reset()
         {
-        KillCharmedPlayer();
+            KillCharmedPlayer();
             CheckChannelers();
             BanishTimer = 1000;
             Whirlwind_Timer = 15000;
@@ -543,7 +543,7 @@ public:
                             {
                                 demon->AI()->AttackStart((*itr));
                                 CAST_AI(mob_inner_demon::mob_inner_demonAI, demon->AI())->victimGUID = (*itr)->GetGUID();
-                            demon->getThreatManager().addThreat((*itr),1000000);
+                                demon->getThreatManager().addThreat((*itr),1000000);
 
                                 (*itr)->AddAura(SPELL_INSIDIOUS_WHISPER, *itr);
 
@@ -585,8 +585,8 @@ public:
                 Creature* Copy = NULL;
                 Copy = DoSpawnCreature(DEMON_FORM, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 6000);
                 if (Copy)
-                 {
-                     Demon = Copy->GetGUID();
+                {
+                    Demon = Copy->GetGUID();
                     if (me->getVictim())
                         Copy->AI()->AttackStart(me->getVictim());
                 }

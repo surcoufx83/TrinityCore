@@ -87,13 +87,12 @@ public:
 
             //SPELL_BLOODTHIRST should trigger effect 1 on self
             //TODO: move to core
-            SpellEntry *TempSpell;
-            TempSpell = GET_SPELL(SPELL_BLOODTHIRST);
+            SpellEntry *TempSpell = (SpellEntry*)sSpellStore.LookupEntry(SPELL_BLOODTHIRST);
             if (TempSpell)
                 TempSpell->EffectImplicitTargetA[1] = 1;
 
             //below may need another adjustment
-            TempSpell = GET_SPELL(DUNGEON_MODE(SPELL_FLAME_SPHERE_PERIODIC, H_SPELL_FLAME_SPHERE_PERIODIC));
+            TempSpell = (SpellEntry*)sSpellStore.LookupEntry(DUNGEON_MODE(SPELL_FLAME_SPHERE_PERIODIC, H_SPELL_FLAME_SPHERE_PERIODIC));
             if (TempSpell)
                 TempSpell->EffectAmplitude[0] = 500;
         }

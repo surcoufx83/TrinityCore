@@ -137,10 +137,10 @@ class boss_algalon : public CreatureScript
                 _firstTime = true;
 
                 // spell gets triggered from caster, should be triggered from destination?
-                SpellEntry* tempSpell;
-                tempSpell = GET_SPELL(RAID_MODE(62311, 64596));
-                if (tempSpell)
-                    tempSpell->rangeIndex = 13;
+                //const SpellInfo* tempSpell;
+                //tempSpell = sSpellMgr->GetSpellInfo(RAID_MODE(62311, 64596));
+                //if (tempSpell)
+                //    tempSpell->RangeEntry = 13;
             }
 
             void Reset()
@@ -260,7 +260,7 @@ class boss_algalon : public CreatureScript
                 }
             }
 
-            void SpellHitTarget(Unit* target, SpellEntry const* spell)
+            void SpellHitTarget(Unit* target, SpellInfo const* spell)
             {
                 if (spell->Id == SPELL_PHASE_PUNCH)
                 {
@@ -819,11 +819,11 @@ class spell_remove_player_from_phase : public SpellScriptLoader
         {
             PrepareAuraScript(spell_remove_player_from_phaseScript);
 
-            bool Validate(SpellEntry const* /*spellInfo*/)
+            bool Validate(SpellInfo const* /*spellInfo*/)
             {
-                if (!sSpellStore.LookupEntry(SPELL_BLACK_HOLE_PHASE))
+                if (!sSpellMgr->GetSpellInfo(SPELL_BLACK_HOLE_PHASE))
                     return false;
-                if (!sSpellStore.LookupEntry(SPELL_PHASE_PUNCH_PHASE))
+                if (!sSpellMgr->GetSpellInfo(SPELL_PHASE_PUNCH_PHASE))
                     return false;
                 return true;
             }
