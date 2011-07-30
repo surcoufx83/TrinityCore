@@ -3353,6 +3353,10 @@ void SpellMgr::LoadDbcDataCorrections()
             // that will be clear if we get more spells with problem like this
             spellInfo->AttributesEx |= SPELL_ATTR1_DISPEL_AURAS_ON_IMMUNITY;
             break;
+        case 62311: // Algalon - Cosmic Smash
+        case 64596: // Algalon - Cosmic Smash
+            spellInfo->rangeIndex = 13;
+            break;
         // ENDOF ULDUAR SPELLS
         //
         // TRIAL OF THE CRUSADER SPELLS
