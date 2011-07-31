@@ -104,11 +104,9 @@ class boss_general_vezax : public CreatureScript
         {
             boss_general_vezaxAI(Creature* c) : BossAI(c, TYPE_VEZAX)
             {
-                // add interrupt flag
-                SpellEntry* tempSpell;
-                tempSpell = (SpellEntry*)sSpellStore.LookupEntry(SPELL_SEARING_FLAMES);
-                if (tempSpell)
-                    tempSpell->InterruptFlags |= SPELL_INTERRUPT_FLAG_INTERRUPT;
+                SpellInfo* spell = (SpellInfo*)sSpellMgr->GetSpellInfo(SPELL_SEARING_FLAMES);
+                if (spell)
+                    spell->InterruptFlags |= SPELL_INTERRUPT_FLAG_INTERRUPT;
             }
 
             void Reset()

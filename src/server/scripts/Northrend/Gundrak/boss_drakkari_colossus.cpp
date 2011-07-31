@@ -74,10 +74,9 @@ public:
             pInstance = pCreature->GetInstanceScript();
 
             // 100% too much?
-            SpellEntry* tempSpell;
-            tempSpell = (SpellEntry*)sSpellStore.LookupEntry(SPELL_MORTAL_STRIKE);
-            if (tempSpell)
-                tempSpell->procChance = 50;
+            SpellInfo* spell = (SpellInfo*)sSpellMgr->GetSpellInfo(SPELL_MORTAL_STRIKE);
+            if (spell)
+                spell->ProcChance = 50;
         }
 
         InstanceScript* pInstance;
@@ -294,11 +293,6 @@ public:
         boss_drakkari_elementalAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
             pInstance = pCreature->GetInstanceScript();
-            
-            SpellEntry* tempSpell;
-            tempSpell = (SpellEntry*)sSpellStore.LookupEntry(DUNGEON_MODE(SPELL_MOJO_VOLLEY_TRIGGERED, H_SPELL_MOJO_VOLLEY_TRIGGERED));
-            if (tempSpell)
-                tempSpell->MaxAffectedTargets = 1;
         }
 
         InstanceScript* pInstance;
@@ -382,14 +376,13 @@ public:
                 }
             } else uiMojoWaveTimer -= diff;
             
-            // switch mojo volley max targets
+            // switch mojo volley max targets, TODO: move to script
             if (uiSwitchTimer <= diff)
             {
                 uint8 maxTargets = urand(1, 2);
-                SpellEntry* tempSpell;
-                tempSpell = (SpellEntry*)sSpellStore.LookupEntry(DUNGEON_MODE(SPELL_MOJO_VOLLEY_TRIGGERED, H_SPELL_MOJO_VOLLEY_TRIGGERED));
-                if (tempSpell)
-                    tempSpell->MaxAffectedTargets = maxTargets;
+                SpellInfo* spell = (SpellInfo*)sSpellMgr->GetSpellInfo(DUNGEON_MODE(SPELL_MOJO_VOLLEY_TRIGGERED, H_SPELL_MOJO_VOLLEY_TRIGGERED));
+                if (spell)
+                    spell->MaxAffectedTargets = maxTargets;
 
                 uiSwitchTimer = 2*IN_MILLISECONDS;
             } else uiSwitchTimer -= diff;

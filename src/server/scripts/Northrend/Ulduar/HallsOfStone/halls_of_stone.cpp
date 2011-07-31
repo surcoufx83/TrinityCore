@@ -153,25 +153,6 @@ public:
         {
             pInstance = c->GetInstanceScript();
             SetCombatMovement(false);
-
-            //temporary
-            SpellEntry *TempSpell = (SpellEntry*)sSpellStore.LookupEntry(SPELL_SEARING_GAZE_DUMMY);
-            if (TempSpell)
-            { 
-                TempSpell->EffectImplicitTargetA[0] = 6;
-                TempSpell->EffectImplicitTargetA[1] = 6;
-                TempSpell->EffectImplicitTargetB[0] = 0;
-                TempSpell->EffectImplicitTargetB[1] = 0;
-                TempSpell->Effect[1] = 0;
-            }
-            TempSpell = (SpellEntry*)sSpellStore.LookupEntry(SPELL_DARK_MATTER_DUMMY);
-            if (TempSpell)
-            { 
-                TempSpell->EffectImplicitTargetA[0] = 6;
-                TempSpell->EffectImplicitTargetA[1] = 6;
-                TempSpell->EffectImplicitTargetB[0] = 0;
-                TempSpell->EffectImplicitTargetB[1] = 0;
-            }
         }
 
         InstanceScript* pInstance;

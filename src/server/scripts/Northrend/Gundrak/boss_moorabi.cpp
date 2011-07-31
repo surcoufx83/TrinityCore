@@ -69,10 +69,9 @@ public:
             pInstance = creature->GetInstanceScript();
         
             // make 55098 interruptable
-            SpellEntry* tempSpell;
-            tempSpell = (SpellEntry*)sSpellStore.LookupEntry(SPELL_TRANSFORMATION);
-            if (tempSpell)
-                tempSpell->InterruptFlags |= SPELL_INTERRUPT_FLAG_INTERRUPT;
+            SpellInfo* spell = (SpellInfo*)sSpellMgr->GetSpellInfo(SPELL_TRANSFORMATION);
+            if (spell)
+                spell->InterruptFlags |= SPELL_INTERRUPT_FLAG_INTERRUPT;
         }
 
         InstanceScript* pInstance;
@@ -106,6 +105,7 @@ public:
                 pInstance->SetData(DATA_MOORABI_EVENT, IN_PROGRESS);
         }
 
+        /*
         void AdjustCastSpeed()
         {
             // bad workaround for mojo frenzy aura
@@ -124,6 +124,7 @@ public:
             if (TempSpell && value)
                 TempSpell->CastingTimeIndex = value;
         }
+        */
 
         void UpdateAI(const uint32 uiDiff)
         {
@@ -170,7 +171,7 @@ public:
             {
                 DoScriptText(EMOTE_TRANSFORM, me);
                 DoScriptText(SAY_TRANSFORM, me);
-                AdjustCastSpeed(); //FIXME
+                //AdjustCastSpeed(); //FIXME
                 DoCast(me, SPELL_TRANSFORMATION, false);
                 uiTransformationTimer = 10*IN_MILLISECONDS;
             } else uiTransformationTimer -= uiDiff;
@@ -186,8 +187,8 @@ public:
             {
                 pInstance->SetData(DATA_MOORABI_EVENT, DONE);
             
-                if (IsHeroic() && !bPhase)
-                    pInstance->DoCompleteAchievement(ACHIEV_LESS_RABI);
+                //if (IsHeroic() && !bPhase)
+                //    pInstance->DoCompleteAchievement(ACHIEV_LESS_RABI);
             }
         }
 

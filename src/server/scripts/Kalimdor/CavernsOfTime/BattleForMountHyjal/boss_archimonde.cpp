@@ -240,9 +240,9 @@ public:
             pInstance = c->GetInstanceScript();
 
             // prevent SPELL_HAND_OF_DEATH deal damage to units affected by SPELL_PROTECTION_OF_ELUNE
-            SpellEntry* tempSpell = (SpellEntry*)sSpellStore.LookupEntry(SPELL_HAND_OF_DEATH);
-            if (tempSpell)
-                tempSpell->Attributes &= ~SPELL_ATTR0_UNAFFECTED_BY_INVULNERABILITY;
+            SpellInfo* spell = (SpellInfo*)sSpellMgr->GetSpellInfo(SPELL_HAND_OF_DEATH);
+            if (spell)
+                spell->Attributes &= ~SPELL_ATTR0_UNAFFECTED_BY_INVULNERABILITY;
         }
 
         InstanceScript* pInstance;
