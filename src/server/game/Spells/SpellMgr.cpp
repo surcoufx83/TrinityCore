@@ -2816,6 +2816,7 @@ void SpellMgr::LoadSpellCustomAttr()
             break;
         case 18500: // Wing Buffet
         case 33086: // Wild Bite
+        case 28375: // Decimate
         case 49749: // Piercing Blow
         case 52890: // Penetrating Strike
         case 53454: // Impale
