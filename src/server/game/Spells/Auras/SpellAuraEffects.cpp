@@ -5707,19 +5707,19 @@ void AuraEffect::HandlePeriodicDummyAuraTick(Unit* target, Unit* caster) const
             {
                 case 41404: // Dementia
                 {
-                  uint32 trigger_spell_id;
-                  if(rand()%2)
-                      trigger_spell_id = 41406;
-                  else
-                      trigger_spell_id = 41409;
+                    uint32 trigger_spell_id;
+                    if (rand()%2)
+                        trigger_spell_id = 41406;
+                    else
+                        trigger_spell_id = 41409;
 
-                 // Must be Tested
-                 target->CastSpell(target, trigger_spell_id, true, 0, this, GetCasterGUID());
-                 break;
+                    // Must be Tested
+                    target->CastSpell(target, trigger_spell_id, true, 0, this, GetCasterGUID());
+                    break;
                 }
                 case 47407: // Direbrew's Disarm (precast)
                     caster->CastSpell(caster, 47409, true);
-                break;
+                    break;
                 case 54798: // FLAMING Arrow Triggered Effect
                 {
                     if (!caster || !target || !target->ToCreature() || !caster->IsVehicle() || target->HasAura(54683))
