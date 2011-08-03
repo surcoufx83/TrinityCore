@@ -2380,7 +2380,7 @@ public:
             if(uiDrainLife_Timer < diff)
             {
                 DoCast(me->getVictim(),RAID_MODE(SPELL_DRAIN_LIFE_10,SPELL_DRAIN_LIFE_25));
-                uiDrainLife_Timer = 10000 + (rand()%20000);
+                uiDrainLife_Timer = 35000;
             }else uiDrainLife_Timer -= diff;
 
             DoMeleeAttackIfReady();

@@ -198,7 +198,11 @@ class boss_algalon : public CreatureScript
             void FinishEncounter()
             {
                 if (instance)
+                {
                     instance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, SPELL_BOSS_FINISHED);
+                    instance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, me->GetEntry(), 1);
+                }
+
             }
 
             void KilledUnit(Unit* /*victim*/)
