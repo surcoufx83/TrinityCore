@@ -13257,6 +13257,10 @@ void Unit::ModSpellCastTime(SpellInfo const* spellProto, int32 & castTime, Spell
         castTime = int32(float(castTime) * m_modAttackSpeedPct[RANGED_ATTACK]);
     else if (spellProto->SpellVisual[0] == 3881 && HasAura(67556)) // cooking with Chef Hat.
         castTime = 500;
+
+    // Moorabi - Transformation
+    if (spellProto->Id == 55098)
+        castTime = int32(spellProto->CastTimeEntry->CastTime * GetHealthPct() / 100);
 }
 
 DiminishingLevels Unit::GetDiminishing(DiminishingGroup group)

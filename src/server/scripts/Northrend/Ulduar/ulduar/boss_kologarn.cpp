@@ -120,11 +120,6 @@ class boss_kologarn : public CreatureScript
                 DoCast(SPELL_KOLOGARN_REDUCE_PARRY);
                 SetCombatMovement(false);
                 Reset();
-
-                // should be triggered on caster?
-                SpellEntry* tempSpell = (SpellEntry*)sSpellStore.LookupEntry(SPELL_STONE_SHOUT);
-                if (tempSpell)
-                    tempSpell->EffectImplicitTargetA[0] = 1;
             }
 
             Vehicle* vehicle;

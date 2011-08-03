@@ -1646,51 +1646,50 @@ class mob_freya_sunbeam : public CreatureScript
         }
 };
 
-//Freya HM and Elder Ironbranch
+// Freya HM and Elder Ironbranch
 class mob_iron_roots : public CreatureScript
 {
-public:
-   mob_iron_roots() : CreatureScript("mob_iron_roots") { }
+    public:
+        mob_iron_roots() : CreatureScript("mob_iron_roots") { }
 
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return new mob_iron_rootsAI(creature);
-    }
-
-    struct mob_iron_rootsAI : public ScriptedAI
-    {
-        mob_iron_rootsAI(Creature* creature) : ScriptedAI(creature)
+        struct mob_iron_rootsAI : public ScriptedAI
         {
-            SetImmuneToPushPullEffects(true);
-        }
-
-        uint64 RootsGUID;
-
-        void Reset()
-        {
-            std::list<Player*> plrList = me->GetNearestPlayersList(20);
-            for (std::list<Player*>::const_iterator itr = plrList.begin(); itr != plrList.end(); ++itr)
+            mob_iron_rootsAI(Creature* creature) : ScriptedAI(creature)
             {
-                if((*itr) && ((*itr)->HasAura(RAID_MODE(SPELL_IRON_ROOTS_10, SPELL_IRON_ROOTS_25)) || (*itr)->HasAura(RAID_MODE(SPELL_FREYA_IRON_ROOTS_10, SPELL_FREYA_IRON_ROOTS_25))) )
+                SetImmuneToPushPullEffects(true);
+            }
+
+            void Reset()
+            {
+                std::list<Player*> plrList = me->GetNearestPlayersList(20);
+                for (std::list<Player*>::const_iterator itr = plrList.begin(); itr != plrList.end(); ++itr)
+                    if ((*itr) && ((*itr)->HasAura(RAID_MODE(SPELL_IRON_ROOTS_10, SPELL_IRON_ROOTS_25)) || (*itr)->HasAura(RAID_MODE(SPELL_FREYA_IRON_ROOTS_10, SPELL_FREYA_IRON_ROOTS_25))))
+                        _RootsGUID = (*itr)->GetGUID();
+            }
+
+            void JustDied(Unit* /*killer*/)
+            {
+                if (Unit* Roots = Unit::GetUnit((*me), _RootsGUID))
                 {
-                    RootsGUID = (*itr)->GetGUID();
+                    if (Roots->HasAura(RAID_MODE(SPELL_IRON_ROOTS_10, SPELL_IRON_ROOTS_25)))
+                        Roots->RemoveAura(RAID_MODE(SPELL_IRON_ROOTS_10, SPELL_IRON_ROOTS_25));
+                    if (Roots->HasAura(RAID_MODE(SPELL_FREYA_IRON_ROOTS_10, SPELL_FREYA_IRON_ROOTS_25)))
+                        Roots->RemoveAura(RAID_MODE(SPELL_FREYA_IRON_ROOTS_10, SPELL_FREYA_IRON_ROOTS_25));
                 }
-            }
-        }
 
-        void JustDied(Unit* )
+                me->DespawnOrUnsummon(2000);
+            }
+
+            void UpdateAI(uint32 const /*diff*/) { }
+
+        private:
+            uint64 _RootsGUID;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
         {
-            if(Unit* Roots = Unit::GetUnit((*me),RootsGUID))
-            {
-                if(Roots->HasAura(RAID_MODE(SPELL_IRON_ROOTS_10, SPELL_IRON_ROOTS_25)))
-                    Roots->RemoveAura(RAID_MODE(SPELL_IRON_ROOTS_10, SPELL_IRON_ROOTS_25));
-                if(Roots->HasAura(RAID_MODE(SPELL_FREYA_IRON_ROOTS_10, SPELL_FREYA_IRON_ROOTS_25)))
-                    Roots->RemoveAura(RAID_MODE(SPELL_FREYA_IRON_ROOTS_10, SPELL_FREYA_IRON_ROOTS_25));
-            }
-
-            me->DespawnOrUnsummon(2000);
+            return new mob_iron_rootsAI(creature);
         }
-    };
 };
 
 class IsNoAllyOfNature
@@ -1774,6 +1773,43 @@ class spell_elder_brightleafs_essence_targeting : public SpellScriptLoader
         SpellScript* GetSpellScript() const
         {
             return new spell_elder_brightleafs_essence_targeting_SpellScript();
+        }
+};
+
+// temporary to trigger spell on proper target
+class spell_elder_brightleaf_unstable_sun_beam : public SpellScriptLoader
+{
+    public:
+        spell_elder_brightleaf_unstable_sun_beam() : SpellScriptLoader("spell_elder_brightleaf_unstable_sun_beam") { }
+
+        class spell_elder_brightleaf_unstable_sun_beam_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_elder_brightleaf_unstable_sun_beam_SpellScript);
+
+            void HandleForceCast(SpellEffIndex effIndex)
+            {
+                PreventHitDefaultEffect(effIndex);
+
+                Unit* caster = GetCaster();
+                Unit* target = GetHitUnit();
+
+                uint32 triggered_spell_id = GetSpellInfo()->Effects[effIndex].TriggerSpell;
+
+                if (caster && target && triggered_spell_id)
+                    target->CastSpell(target, triggered_spell_id, true, NULL, NULL, caster->GetGUID());
+            }
+
+            void Register()
+            {
+                OnEffect += SpellEffectFn(spell_elder_brightleaf_unstable_sun_beam_SpellScript::HandleForceCast, EFFECT_1, SPELL_EFFECT_FORCE_CAST);
+            }
+
+            std::list<Unit*> sharedUnitList;
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_elder_brightleaf_unstable_sun_beam_SpellScript();
         }
 };
 
@@ -1916,6 +1952,7 @@ void AddSC_boss_freya()
     new mob_iron_roots();
     new spell_elder_ironbranchs_essence_targeting();
     new spell_elder_brightleafs_essence_targeting();
+    new spell_elder_brightleaf_unstable_sun_beam();
     new achievement_getting_back_to_nature();
     new achievement_knock_on_wood();
     new achievement_knock_knock_on_wood();

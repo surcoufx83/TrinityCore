@@ -94,10 +94,9 @@ class boss_auriaya : public CreatureScript
             boss_auriayaAI(Creature* creature) : BossAI(creature, TYPE_AURIAYA)
             {
                 // dont interrupt by taking damage
-                SpellEntry* tempSpell;
-                tempSpell = (SpellEntry*)sSpellStore.LookupEntry(RAID_MODE(SPELL_SENTINEL_BLAST_10, SPELL_SENTINEL_BLAST_25));
-                if (tempSpell)
-                    tempSpell->ChannelInterruptFlags &= ~AURA_INTERRUPT_FLAG_TAKE_DAMAGE;
+                SpellInfo* spell = (SpellInfo*)sSpellMgr->GetSpellInfo(RAID_MODE(SPELL_SENTINEL_BLAST_10, SPELL_SENTINEL_BLAST_25));
+                if (spell)
+                    spell->ChannelInterruptFlags &= ~AURA_INTERRUPT_FLAG_TAKE_DAMAGE;
             }
 
             void Reset()

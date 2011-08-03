@@ -42,8 +42,7 @@ enum Yells
 
 enum Events
 {
-    EVENT_NONE,
-    EVENT_BOULDER_TOSS,
+    EVENT_BOULDER_TOSS = 1,
     EVENT_GROUND_SPIKE,
     EVENT_GROUND_SLAM,
     EVENT_STOMP,
@@ -63,10 +62,9 @@ class boss_krystallus : public CreatureScript
             _instance = c->GetInstanceScript();
 
             // temporary to let ground slam effect not be interrupted
-            SpellEntry* tempSpell;
-            tempSpell = (SpellEntry*)sSpellStore.LookupEntry(SPELL_GROUND_SLAM_TRIGGERED);
-            if (tempSpell)
-                tempSpell->InterruptFlags = 0;
+            SpellInfo* spell = (SpellInfo*)sSpellMgr->GetSpellInfo(SPELL_GROUND_SLAM_TRIGGERED);
+            if (spell)
+                spell->InterruptFlags = 0;
         }
 
         void Reset()

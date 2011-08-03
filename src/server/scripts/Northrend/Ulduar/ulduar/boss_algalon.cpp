@@ -135,12 +135,6 @@ class boss_algalon : public CreatureScript
             boss_algalonAI(Creature* c) : BossAI(c, TYPE_ALGALON)
             {
                 _firstTime = true;
-
-                // spell gets triggered from caster, should be triggered from destination?
-                //const SpellInfo* tempSpell;
-                //tempSpell = sSpellMgr->GetSpellInfo(RAID_MODE(62311, 64596));
-                //if (tempSpell)
-                //    tempSpell->RangeEntry = 13;
             }
 
             void Reset()

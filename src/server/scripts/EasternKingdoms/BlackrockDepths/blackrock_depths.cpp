@@ -1578,7 +1578,7 @@ public:
     {
         npc_brewmaidenAI(Creature *c) : ScriptedAI(c) 
         {
-            //some workarounds
+            /*/some workarounds
             SpellEntry* TempSpell = (SpellEntry*)sSpellStore.LookupEntry(SPELL_HAS_BREW);
             if (TempSpell)
                 TempSpell->DurationIndex = 18; //20 seconds due to item aura issues when item is not equipped
@@ -1588,6 +1588,7 @@ public:
             TempSpell = (SpellEntry*)sSpellStore.LookupEntry(SPELL_SEND_SECOND_MUG);
             if (TempSpell)
                 TempSpell->EffectTriggerSpell[0] = 0; //disable, triggers on main target only
+            */
         }
         
         uint32 Brew_Timer;

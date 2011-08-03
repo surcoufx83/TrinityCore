@@ -2816,6 +2816,7 @@ void SpellMgr::LoadSpellCustomAttr()
             break;
         case 18500: // Wing Buffet
         case 33086: // Wild Bite
+        case 28375: // Decimate
         case 49749: // Piercing Blow
         case 52890: // Penetrating Strike
         case 53454: // Impale
@@ -3134,6 +3135,22 @@ void SpellMgr::LoadDbcDataCorrections()
         case 51904: // Summon Ghouls On Scarlet Crusade (core does not know the triggered spell is summon spell)
             spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
             break;
+        case 51001: // Tribunal of Ages - Dark Matter
+            spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_TARGET_ENEMY;
+            spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_TARGET_ENEMY;
+            spellInfo->EffectImplicitTargetB[0] = 0;
+            spellInfo->EffectImplicitTargetB[1] = 0;
+            break;
+        case 51136: // Tribunal of Ages - Searing Gaze
+            spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_TARGET_ENEMY;
+            spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_TARGET_ENEMY;
+            spellInfo->EffectImplicitTargetB[0] = 0;
+            spellInfo->EffectImplicitTargetB[1] = 0;
+            spellInfo->Effect[1] = 0;
+            break;
+        case 55968: // Prince Taldaram - Bloodthirst
+            spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_CASTER;
+            break;
         case 45671: // Midsummer - Juggle Torch (Catch, Quest)
             spellInfo->AttributesEx3 &= ~SPELL_ATTR3_PLAYERS_ONLY;
             break;
@@ -3162,7 +3179,6 @@ void SpellMgr::LoadDbcDataCorrections()
             break;
         case 48422:
             spellInfo->Stances = 1 << (FORM_TREE - 1);
-
             break;
         case 55689: // Glyph of Shadow (to prevent glyph aura loss)
             spellInfo->Stances = 0;
@@ -3311,20 +3327,14 @@ void SpellMgr::LoadDbcDataCorrections()
         case 64381: // Strength of the Pack (Auriaya)
             spellInfo->AttributesEx3 |= SPELL_ATTR3_STACK_FOR_DIFF_CASTERS;
             break;
-        case 63018: // Searing Light (XT-002)
-        case 65121: // Searing Light (25m) (XT-002)
-        case 63024: // Gravity Bomb (XT-002)
-        case 64234: // Gravity Bomb (25m) (XT-002)
-            spellInfo->MaxAffectedTargets = 1;
-            break;
-        case 62834: // Boom (XT-002)
+        //case 62834: // Boom (XT-002)
         // This hack is here because we suspect our implementation of spell effect execution on targets
         // is done in the wrong order. We suspect that EFFECT_0 needs to be applied on all targets,
         // then EFFECT_1, etc - instead of applying each effect on target1, then target2, etc.
         // The above situation causes the visual for this spell to be bugged, so we remove the instakill
         // effect and implement a script hack for that.
-            spellInfo->Effect[EFFECT_1] = 0;
-            break;
+        //    spellInfo->Effect[EFFECT_1] = 0;
+        //    break;
         case 64600: // Freya - Nature Bomb (GO Visual)
             spellInfo->DurationIndex = 38;
             break;
@@ -3334,6 +3344,10 @@ void SpellMgr::LoadDbcDataCorrections()
         case 64225:
         case 62287: // Tar Passive
             spellInfo->Attributes |= SPELL_ATTR0_UNAFFECTED_BY_INVULNERABILITY;
+            break;
+        case 63716: // Kologarn - Stone Shout
+        case 64005:
+            spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
             break;
         case 62711: // Ignis - Grab
             spellInfo->Attributes |= SPELL_ATTR0_UNAFFECTED_BY_INVULNERABILITY;
@@ -3356,6 +3370,10 @@ void SpellMgr::LoadDbcDataCorrections()
         case 62311: // Algalon - Cosmic Smash
         case 64596: // Algalon - Cosmic Smash
             spellInfo->rangeIndex = 13;
+            break;
+        case 61915: // Lightning Whirl (Brundir)
+        case 63483: // Lightning Whirl (Brundir)
+            spellInfo->InterruptFlags |= SPELL_INTERRUPT_FLAG_INTERRUPT;
             break;
         // ENDOF ULDUAR SPELLS
         //

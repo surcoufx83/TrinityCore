@@ -85,16 +85,10 @@ public:
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
-            //SPELL_BLOODTHIRST should trigger effect 1 on self
-            //TODO: move to core
-            SpellEntry *TempSpell = (SpellEntry*)sSpellStore.LookupEntry(SPELL_BLOODTHIRST);
-            if (TempSpell)
-                TempSpell->EffectImplicitTargetA[1] = 1;
-
-            //below may need another adjustment
-            TempSpell = (SpellEntry*)sSpellStore.LookupEntry(DUNGEON_MODE(SPELL_FLAME_SPHERE_PERIODIC, H_SPELL_FLAME_SPHERE_PERIODIC));
-            if (TempSpell)
-                TempSpell->EffectAmplitude[0] = 500;
+            // below may need another adjustment
+            SpellInfo* spell = (SpellInfo*)sSpellMgr->GetSpellInfo(DUNGEON_MODE(SPELL_FLAME_SPHERE_PERIODIC, H_SPELL_FLAME_SPHERE_PERIODIC));
+            if (spell)
+                spell->Effects[0].Amplitude = 500;
         }
 
         uint32 uiBloodthirstTimer;
