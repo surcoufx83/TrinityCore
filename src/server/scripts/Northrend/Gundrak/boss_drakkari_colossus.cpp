@@ -48,414 +48,390 @@ enum Creatures
     CREATURE_MOJO                                 = 29830
 };
 
+enum Action
+{
+    ACTION_FREEZE = 1,
+    ACTION_UNFREEZE,
+    DATA_EMERGED
+};
+
 static Position SpawnLoc[]=
 {
-  {1669.98f, 753.686f, 143.074f, 4.95674f},
-  {1680.67f, 737.104f, 143.083f, 2.53073f},
-  {1680.63f, 750.682f, 143.074f, 3.87463f},
-  {1663.1f,  743.665f, 143.078f, 6.19592f},
-  {1670.39f, 733.493f, 143.073f, 1.27409f}
+    {1669.98f, 753.686f, 143.074f, 4.95674f},
+    {1680.67f, 737.104f, 143.083f, 2.53073f},
+    {1680.63f, 750.682f, 143.074f, 3.87463f},
+    {1663.1f,  743.665f, 143.078f, 6.19592f},
+    {1670.39f, 733.493f, 143.073f, 1.27409f}
 };
 
 class boss_drakkari_colossus : public CreatureScript
 {
-public:
-    boss_drakkari_colossus() : CreatureScript("boss_drakkari_colossus") { }
+    public:
+        boss_drakkari_colossus() : CreatureScript("boss_drakkari_colossus") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new boss_drakkari_colossusAI (pCreature);
-    }
-
-    struct boss_drakkari_colossusAI : public ScriptedAI
-    {
-        boss_drakkari_colossusAI(Creature* pCreature) : ScriptedAI(pCreature)
+        struct boss_drakkari_colossusAI : public ScriptedAI
         {
-            pInstance = pCreature->GetInstanceScript();
+            boss_drakkari_colossusAI(Creature* creature) : ScriptedAI(creature)
+            {
+                _instance = creature->GetInstanceScript();
 
-            // 100% too much?
-            SpellInfo* spell = (SpellInfo*)sSpellMgr->GetSpellInfo(SPELL_MORTAL_STRIKE);
-            if (spell)
-                spell->ProcChance = 50;
-        }
+                // 100% too much?
+                SpellInfo* spell = (SpellInfo*)sSpellMgr->GetSpellInfo(SPELL_MORTAL_STRIKE);
+                if (spell)
+                    spell->ProcChance = 50;
+            }
 
-        InstanceScript* pInstance;
+            void Reset()
+            {
+                if (_instance)
+                    _instance->SetData(DATA_DRAKKARI_COLOSSUS_EVENT, NOT_STARTED);
 
-        bool bHealth;
-        bool bHealth1;
-
-        uint8 MojoEventPhase;
-        uint32 MightyBlowTimer;
-        uint32 MojoEventTimer;
-        uint64 MojoGUID[5];
-
-        void Reset()
-        {
-            if (pInstance)
-                pInstance->SetData(DATA_DRAKKARI_COLOSSUS_EVENT, NOT_STARTED);
-            if (!me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE))
                 me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                DoDespawnMojo();
+                DoSpawnMojo();
 
-            MightyBlowTimer = 10*IN_MILLISECONDS;
-            bHealth = false;
-            bHealth1 = false;
+                _mightyBlowTimer = 10*IN_MILLISECONDS;
+                _phase = 0;
+                _mojoDespawnTimer = 2*IN_MILLISECONDS;
 
-            DespawnMojo(); // make sure no mojo is left
-            SpawnMojo();
-
-            MojoEventPhase = 0;
-            MojoEventTimer = 2*IN_MILLISECONDS;
-
-            CreatureState(me, true);
-        }
-
-        void JustReachedHome()
-        {
-            DoCast(me, SPELL_FREEZE_ANIM);
-        }
-
-        void EnterCombat(Unit* /*who*/)
-        {
-            if (pInstance)
-                pInstance->SetData(DATA_DRAKKARI_COLOSSUS_EVENT, IN_PROGRESS);
-       
-            me->RemoveAura(SPELL_FREEZE_ANIM);
-            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
-
-            MojoEventPhase = 1;
-        }
-        
-        void SpawnMojo()
-        {
-            Creature *pCreature = NULL;
-            for (uint8 i = 0; i < 5; ++i)
-            {
-                pCreature = me->SummonCreature(CREATURE_MOJO, SpawnLoc[i], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 1*IN_MILLISECONDS);
-                if (pCreature)
-                {
-                    MojoGUID[i] = pCreature->GetGUID();
-                    pCreature->SetVisible(true);
-                    pCreature->SetReactState(REACT_PASSIVE);
-                    pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                }
+                DoAction(ACTION_UNFREEZE);
             }
-        }
 
-        void DespawnMojo()
-        {
-            for (uint8 i = 0; i < 5; ++i)
+            void JustReachedHome()
             {
-                if (MojoGUID[i])
-                {
-                    Creature* pCreature = Unit::GetCreature((*me), MojoGUID[i]);
-                    if (pCreature && pCreature->isAlive())
+                DoCast(me, SPELL_FREEZE_ANIM);
+            }
+
+            void DoSpawnMojo()
+            {
+                for (uint8 i = 0; i < 5; ++i)
+                    if (Creature* mojo = me->SummonCreature(CREATURE_MOJO, SpawnLoc[i], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 1*IN_MILLISECONDS))
                     {
-                        pCreature->SetVisible(false);
-                        pCreature->DespawnOrUnsummon();
+                        _mojoGUID[i] = mojo->GetGUID();
+                        mojo->SetVisible(true);
+                        mojo->SetReactState(REACT_PASSIVE);
+                        mojo->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     }
-                }
-                MojoGUID[i] = 0;
             }
-        }
 
-        void CreatureState(Creature* pWho, bool bRestore = true)
-        {
-            if (!pWho)
-                return;
-
-            if (bRestore)
+            void DoDespawnMojo()
             {
-                pWho->ClearUnitState(UNIT_STAT_STUNNED | UNIT_STAT_ROOT);
-                pWho->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                pWho->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                if (pWho == me)
-                    me->RemoveAura(SPELL_FREEZE_ANIM);
-                DoCast(me,SPELL_MORTAL_STRIKE);
-            }else
-            {
-                pWho->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                pWho->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                pWho->AddUnitState(UNIT_STAT_STUNNED | UNIT_STAT_ROOT);
-                if (pWho == me)
-                    DoCast(me,SPELL_FREEZE_ANIM);
-            }
-        }
-       
-        void EnterEvadeMode()
-        {
-            me->ClearUnitState(UNIT_STAT_STUNNED | UNIT_STAT_ROOT);
-            _EnterEvadeMode();
-            me->GetMotionMaster()->MoveTargetedHome();
-            Reset();
-        }
-
-        void UpdateAI(const uint32 diff)
-        {
-            //Return since we have no target
-            if (!UpdateVictim())
-                return;
-
-            if (MojoEventPhase == 1)
-            {
-                me->GetMotionMaster()->Clear();
-                me->GetMotionMaster()->MoveIdle();
-                CreatureState(me, false);
-
                 for (uint8 i = 0; i < 5; ++i)
                 {
-                    if (MojoGUID[i])
+                    if (_mojoGUID[i])
                     {
-                        Creature* pCreature = Unit::GetCreature((*me), MojoGUID[i]);
-                        if (pCreature && pCreature->isAlive())
+                        Creature* mojo = Unit::GetCreature((*me), _mojoGUID[i]);
+                        if (mojo && mojo->isAlive())
                         {
-                            pCreature->GetMotionMaster()->Clear();
-                            pCreature->GetMotionMaster()->MovePoint(0,me->GetPositionX(),me->GetPositionY(),me->GetPositionZ());
+                            mojo->SetVisible(false);
+                            mojo->DespawnOrUnsummon();
                         }
                     }
+                    _mojoGUID[i] = 0;
                 }
-                MojoEventPhase = 2;
             }
 
-            if (MojoEventPhase == 2)
+            void DoMoveMojo()
             {
-                if (MojoEventTimer <= diff)
+                for (uint8 i = 0; i < 5; ++i)
+                    if (_mojoGUID[i])
+                    {
+                        Creature* mojo = Unit::GetCreature((*me), _mojoGUID[i]);
+                        if (mojo && mojo->isAlive())
+                        {
+                            mojo->GetMotionMaster()->Clear();
+                            mojo->GetMotionMaster()->MovePoint(0, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
+                        }
+                    }
+            }
+
+            void EnterEvadeMode()
+            {
+                me->ClearUnitState(UNIT_STAT_STUNNED | UNIT_STAT_ROOT);
+                _EnterEvadeMode();
+                me->GetMotionMaster()->MoveTargetedHome();
+                Reset();
+            }
+
+            uint32 GetData(uint32 data)
+            {
+                if (data == DATA_EMERGED)
+                    return (_phase == 4) ? 1 : 0;
+
+                return 0;
+            }
+
+            void DoAction(int32 const action)
+            {
+                switch (action)
                 {
-                    DespawnMojo();
-                    CreatureState(me, true);
-                    me->GetMotionMaster()->MoveChase(me->getVictim());
-                    MojoEventPhase = 3;
-                } else MojoEventTimer -= diff;
+                    case ACTION_FREEZE:
+                        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
+                        me->AddUnitState(UNIT_STAT_STUNNED | UNIT_STAT_ROOT);
+                        DoCast(SPELL_FREEZE_ANIM);
+                        break;
+                    case ACTION_UNFREEZE:
+                        me->ClearUnitState(UNIT_STAT_STUNNED | UNIT_STAT_ROOT);
+                        me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
+                        me->RemoveAura(SPELL_FREEZE_ANIM);
+                        DoCast(SPELL_MORTAL_STRIKE);
+                        break;
+                }
             }
 
-            if (!bHealth && HealthBelowPct(50) && !HealthBelowPct(5))
+            void EnterCombat(Unit* /*who*/)
             {
-                CreatureState(me, false);
-                DoCast(me, SPELL_EMERGE);
-                bHealth = true;
-                me->RemoveAllAuras();
+                if (_instance)
+                    _instance->SetData(DATA_DRAKKARI_COLOSSUS_EVENT, IN_PROGRESS);
+           
+                me->RemoveAura(SPELL_FREEZE_ANIM);
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                _phase = 1;
             }
 
-            if (!bHealth1 && HealthBelowPct(5))
+            void DamageTaken(Unit* /*attacker*/, uint32 &damage)
             {
-                CreatureState(me, false);
-                DoCast(me, SPELL_EMERGE);
-                bHealth1 = true;
-                me->RemoveAllAuras();
+                if (damage >= me->GetHealth())
+                    damage = me->GetHealth() - 1;
             }
 
-            if (me->HasUnitState(UNIT_STAT_STUNNED))
-                return;
-
-            if (MightyBlowTimer <= diff)
+            void JustDied(Unit* /*killer*/)
             {
-                DoCast(me->getVictim(), SPELL_MIGHTY_BLOW, true);
-                MightyBlowTimer = 15*IN_MILLISECONDS;
-            } else MightyBlowTimer -= diff;
+                if (_instance)
+                    _instance->SetData(DATA_DRAKKARI_COLOSSUS_EVENT, DONE);
+            }
 
-            DoMeleeAttackIfReady();
-        }
+            void JustSummoned(Creature* summon)
+            {
+                if (HealthBelowPct(5))
+                    summon->DealDamage(summon, uint32(summon->GetHealth() * 0.5), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                summon->AI()->AttackStart(me->getVictim());
+            }
 
-        // can't die by damage
-        void DamageTaken(Unit * /*done_by*/, uint32 &damage)
+            void UpdateAI(uint32 const diff)
+            {
+                if (!UpdateVictim())
+                    return;
+
+                if (_phase == 1)
+                {
+                    me->GetMotionMaster()->Clear();
+                    me->GetMotionMaster()->MoveIdle();
+                    DoAction(ACTION_FREEZE);
+                    DoMoveMojo();
+                    ++_phase;
+                }
+
+                if (_phase == 2)
+                {
+                    if (_mojoDespawnTimer <= diff)
+                    {
+                        DoDespawnMojo();
+                        DoAction(ACTION_UNFREEZE);
+                        me->GetMotionMaster()->MoveChase(me->getVictim());
+                        ++_phase;
+                    }
+                    else
+                        _mojoDespawnTimer -= diff;
+                }
+
+                if (_phase == 3 && HealthBelowPct(50) || _phase == 4 && HealthBelowPct(5))
+                {
+                    DoAction(ACTION_FREEZE);
+                    DoCast(me, SPELL_EMERGE);
+                    ++_phase;
+                    me->RemoveAllAuras();
+                }
+
+                if (me->HasUnitState(UNIT_STAT_STUNNED))
+                    return;
+
+                if (_mightyBlowTimer <= diff)
+                {
+                    DoCastVictim(SPELL_MIGHTY_BLOW);
+                    _mightyBlowTimer = 15*IN_MILLISECONDS;
+                }
+                else
+                    _mightyBlowTimer -= diff;
+
+                DoMeleeAttackIfReady();
+            }
+
+        private:
+            InstanceScript* _instance;
+            uint8 _phase;
+            uint32 _mightyBlowTimer;
+            uint32 _mojoDespawnTimer;
+            uint64 _mojoGUID[5];
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
         {
-            if (damage >= me->GetHealth())
-                damage = me->GetHealth() - 1;
+            return new boss_drakkari_colossusAI(creature);
         }
-
-        void JustDied(Unit* /*killer*/)
-        {
-            if (pInstance)
-                pInstance->SetData(DATA_DRAKKARI_COLOSSUS_EVENT, DONE);
-        }
-
-        void JustSummoned(Creature* pSummon)
-        {
-            if (HealthBelowPct(5))
-                pSummon->DealDamage(pSummon, uint32(pSummon->GetHealth() * 0.5), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-            pSummon->AI()->AttackStart(me->getVictim());
-        }
-    };
-
 };
 
 class boss_drakkari_elemental : public CreatureScript
 {
-public:
-    boss_drakkari_elemental() : CreatureScript("boss_drakkari_elemental") { }
+    public:
+        boss_drakkari_elemental() : CreatureScript("boss_drakkari_elemental") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new boss_drakkari_elementalAI (pCreature);
-    }
-
-    struct boss_drakkari_elementalAI : public ScriptedAI
-    {
-        boss_drakkari_elementalAI(Creature* pCreature) : ScriptedAI(pCreature)
+        struct boss_drakkari_elementalAI : public ScriptedAI
         {
-            pInstance = pCreature->GetInstanceScript();
-        }
-
-        InstanceScript* pInstance;
-
-        uint32 uiSurgeTimer;
-        uint32 uiDisappearTimer;
-        uint32 uiMojoWaveTimer;
-        uint32 uiSwitchTimer;
-
-        bool bGoToColossus;
-
-        void Reset()
-        {
-            uiSurgeTimer = 15000;
-            uiDisappearTimer = 2500;
-            uiMojoWaveTimer = 7000;
-            uiSwitchTimer = 2000;
-            bGoToColossus = false;
-        }
-
-        void EnterEvadeMode()
-        {
-            if (Creature *pColossus = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_DRAKKARI_COLOSSUS) : 0))
-               CAST_AI(boss_drakkari_colossus::boss_drakkari_colossusAI, pColossus->AI())->CreatureState(pColossus, true);
-        
-            me->SetVisible(false);
-            me->DisappearAndDie();
-        }
-   
-        void EnterCombat(Unit* /*who*/)
-        {
-            DoCast(me, DUNGEON_MODE(SPELL_MOJO_VOLLEY,H_SPELL_MOJO_VOLLEY));
-        }
-
-        void UpdateAI(const uint32 diff)
-        {
-            //Return since we have no target
-            if (!UpdateVictim())
-                return;
-
-            if (!bGoToColossus && HealthBelowPct(50))
+            boss_drakkari_elementalAI(Creature* creature) : ScriptedAI(creature)
             {
-                if (Creature* colossus = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_DRAKKARI_COLOSSUS) : 0))
-                {
-                    if (!CAST_AI(boss_drakkari_colossus::boss_drakkari_colossusAI, colossus->AI())->HealthBelowPct(6))
-                    {
-                        me->InterruptNonMeleeSpells(true);
-                        DoCast(colossus, SPELL_MERGE);
-                        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
-                        me->RemoveAurasDueToSpell(DUNGEON_MODE(SPELL_MOJO_VOLLEY, H_SPELL_MOJO_VOLLEY));
-                        bGoToColossus = true;
-                    }
-                }
+                _instance = creature->GetInstanceScript();
             }
 
-            if (bGoToColossus)
+            void Reset()
             {
-                if (uiDisappearTimer <= diff)
-                {
-                    if (Creature *pColossus = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_DRAKKARI_COLOSSUS) : 0))
-                    {
-                        CAST_AI(boss_drakkari_colossus::boss_drakkari_colossusAI, pColossus->AI())->CreatureState(pColossus, true);
-                        CAST_AI(boss_drakkari_colossus::boss_drakkari_colossusAI, pColossus->AI())->bHealth1 = false;
-                    }
-                    me->DisappearAndDie();
-                } else uiDisappearTimer -= diff;
+                _surgeTimer = 15000;
+                _disappearTimer = 2500;
+                _mojoWaveTimer = 7000;
+                _merging = false;
             }
 
-            if (uiSurgeTimer <= diff)
+            void EnterEvadeMode()
             {
-                DoCast(me->getVictim(), SPELL_SURGE);
-                uiSurgeTimer = urand(15000, 25000);
-            } else uiSurgeTimer -= diff;
-
-            if (uiMojoWaveTimer <= diff)
-            {
-                if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                {
-                    DoCast(pTarget, DUNGEON_MODE(SPELL_MOJO_WAVE, H_SPELL_MOJO_WAVE));
-                    uiMojoWaveTimer = urand(10000, 20000);
-                }
-            } else uiMojoWaveTimer -= diff;
+                if (Creature* colossus = Unit::GetCreature(*me, _instance ? _instance->GetData64(DATA_DRAKKARI_COLOSSUS) : 0))
+                    colossus->AI()->DoAction(ACTION_UNFREEZE);
             
-            // switch mojo volley max targets, TODO: move to script
-            if (uiSwitchTimer <= diff)
-            {
-                uint8 maxTargets = urand(1, 2);
-                SpellInfo* spell = (SpellInfo*)sSpellMgr->GetSpellInfo(DUNGEON_MODE(SPELL_MOJO_VOLLEY_TRIGGERED, H_SPELL_MOJO_VOLLEY_TRIGGERED));
-                if (spell)
-                    spell->MaxAffectedTargets = maxTargets;
-
-                uiSwitchTimer = 2*IN_MILLISECONDS;
-            } else uiSwitchTimer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
-
-        void JustDied(Unit* /*killer*/)
-        {
-            me->RemoveAurasDueToSpell(DUNGEON_MODE(SPELL_MOJO_VOLLEY, H_SPELL_MOJO_VOLLEY));
-
-            if (Creature* colossus = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_DRAKKARI_COLOSSUS) : 0))
-            {
-                colossus->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
-                colossus->Kill(colossus);
+                me->SetVisible(false);
+                me->DisappearAndDie();
             }
-        }
-    };
+       
+            void EnterCombat(Unit* /*who*/)
+            {
+                DoCast(me, DUNGEON_MODE(SPELL_MOJO_VOLLEY, H_SPELL_MOJO_VOLLEY));
+            }
 
+            void JustDied(Unit* /*killer*/)
+            {
+                me->RemoveAurasDueToSpell(DUNGEON_MODE(SPELL_MOJO_VOLLEY, H_SPELL_MOJO_VOLLEY));
+
+                if (Creature* colossus = Unit::GetCreature(*me, _instance ? _instance->GetData64(DATA_DRAKKARI_COLOSSUS) : 0))
+                {
+                    colossus->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
+                    colossus->Kill(colossus);
+                }
+            }
+
+            void UpdateAI(uint32 const diff)
+            {
+                if (!UpdateVictim())
+                    return;
+
+                if (!_merging && HealthBelowPct(50))
+                    if (Creature* colossus = Unit::GetCreature(*me, _instance ? _instance->GetData64(DATA_DRAKKARI_COLOSSUS) : 0))
+                        if (colossus->AI()->GetData(DATA_EMERGED))
+                        {
+                            me->InterruptNonMeleeSpells(true);
+                            DoCast(colossus, SPELL_MERGE);
+                            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
+                            me->RemoveAurasDueToSpell(DUNGEON_MODE(SPELL_MOJO_VOLLEY, H_SPELL_MOJO_VOLLEY));
+                            _merging = true;
+                        }
+
+                if (_merging)
+                    if (_disappearTimer <= diff)
+                    {
+                        if (Creature* colossus = Unit::GetCreature(*me, _instance ? _instance->GetData64(DATA_DRAKKARI_COLOSSUS) : 0))
+                            colossus->AI()->DoAction(ACTION_UNFREEZE);
+
+                        me->DisappearAndDie();
+                    }
+                    else
+                        _disappearTimer -= diff;
+
+                if (_surgeTimer <= diff)
+                {
+                    DoCastVictim(SPELL_SURGE);
+                    _surgeTimer = urand(15000, 25000);
+                }
+                else
+                    _surgeTimer -= diff;
+
+                if (_mojoWaveTimer <= diff)
+                {
+                    if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                    {
+                        DoCast(target, DUNGEON_MODE(SPELL_MOJO_WAVE, H_SPELL_MOJO_WAVE));
+                        _mojoWaveTimer = urand(10000, 20000);
+                    }
+                }
+                else
+                    _mojoWaveTimer -= diff;
+
+                DoMeleeAttackIfReady();
+            }
+
+        private:
+            InstanceScript* _instance;
+            uint32 _surgeTimer;
+            uint32 _disappearTimer;
+            uint32 _mojoWaveTimer;
+            bool _merging;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new boss_drakkari_elementalAI(creature);
+        }
 };
 
 class npc_living_mojo : public CreatureScript
 {
-public:
-    npc_living_mojo() : CreatureScript("npc_living_mojo") { }
+    public:
+        npc_living_mojo() : CreatureScript("npc_living_mojo") { }
 
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return new npc_living_mojoAI (creature);
-    }
-
-    struct npc_living_mojoAI : public ScriptedAI
-    {
-        npc_living_mojoAI(Creature* pCreature) : ScriptedAI(pCreature)
+        struct npc_living_mojoAI : public ScriptedAI
         {
-            pInstance = pCreature->GetInstanceScript();
-        }
-
-        InstanceScript* pInstance;
-
-        uint32 uiMojoWaveTimer;
-        uint32 uiMojoPuddleTimer;
-
-        void Reset()
-        {
-            uiMojoWaveTimer = 5*IN_MILLISECONDS;
-            uiMojoPuddleTimer = 10*IN_MILLISECONDS;
-        }
-
-        void UpdateAI(const uint32 diff)
-        {
-            //Return since we have no target
-            if (!UpdateVictim())
-                return;
-
-            if (uiMojoWaveTimer <= diff)
+            npc_living_mojoAI(Creature* creature) : ScriptedAI(creature)
             {
-                if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+            }
+
+            void Reset()
+            {
+                _mojoWaveTimer = 5*IN_MILLISECONDS;
+                _mojoPuddleTimer = 10*IN_MILLISECONDS;
+            }
+
+            void UpdateAI(uint32 const diff)
+            {
+                if (!UpdateVictim())
+                    return;
+
+                if (_mojoWaveTimer <= diff)
                 {
-                    DoCast(me->getVictim(), DUNGEON_MODE(SPELL_MOJO_WAVE, H_SPELL_MOJO_WAVE));
-                    uiMojoWaveTimer = 10*IN_MILLISECONDS;
+                    if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                    {
+                        DoCastVictim(DUNGEON_MODE(SPELL_MOJO_WAVE, H_SPELL_MOJO_WAVE));
+                        _mojoWaveTimer = 10*IN_MILLISECONDS;
+                    }
                 }
-            } else uiMojoWaveTimer -= diff;
+                else
+                    _mojoWaveTimer -= diff;
 
-            if (uiMojoPuddleTimer <= diff)
-            {
-                DoCast(H_SPELL_MOJO_VOLLEY_TRIGGERED);
-                uiMojoPuddleTimer = DUNGEON_MODE(20*IN_MILLISECONDS, 10*IN_MILLISECONDS);
-            } else uiMojoPuddleTimer -= diff;
+                if (_mojoPuddleTimer <= diff)
+                {
+                    DoCast(H_SPELL_MOJO_VOLLEY_TRIGGERED);
+                    _mojoPuddleTimer = DUNGEON_MODE(20*IN_MILLISECONDS, 10*IN_MILLISECONDS);
+                }
+                else
+                    _mojoPuddleTimer -= diff;
 
-            DoMeleeAttackIfReady();
+                DoMeleeAttackIfReady();
+            }
+
+        private:
+            uint32 _mojoWaveTimer;
+            uint32 _mojoPuddleTimer;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new npc_living_mojoAI (creature);
         }
-    };
 };
 
 class spell_mojo_volley_targeting : public SpellScriptLoader
@@ -492,10 +468,41 @@ class spell_mojo_volley_targeting : public SpellScriptLoader
         }
 };
 
+class spell_mojo_volley_trigger : public SpellScriptLoader
+{
+    public:
+        spell_mojo_volley_trigger() : SpellScriptLoader("spell_mojo_volley_trigger") { }
+
+        class spell_mojo_volley_trigger_AuraScript : public AuraScript
+        {
+            PrepareAuraScript(spell_mojo_volley_trigger_AuraScript);
+
+            void PeriodicTick(AuraEffect const* /*aurEff*/)
+            {
+                PreventDefaultAction();
+                uint32 triggerSpellId = GetSpellInfo()->Effects[EFFECT_0].TriggerSpell;
+
+                if (Unit* caster = GetCaster())
+                    caster->CastCustomSpell(triggerSpellId, SPELLVALUE_MAX_TARGETS, irand(1, 2), caster, true);
+            }
+
+            void Register()
+            {
+                OnEffectPeriodic += AuraEffectPeriodicFn(spell_mojo_volley_trigger_AuraScript::PeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+            }
+        };
+
+        AuraScript* GetAuraScript() const
+        {
+            return new spell_mojo_volley_trigger_AuraScript();
+        }
+};
+
 void AddSC_boss_drakkari_colossus()
 {
     new boss_drakkari_colossus();
     new boss_drakkari_elemental();
     new npc_living_mojo();
     new spell_mojo_volley_targeting();
+    new spell_mojo_volley_trigger();
 }
