@@ -248,22 +248,6 @@ public:
             }
         }
 
-        void OnPlayerEnter(Player* player)
-        {
-            // I try to remove Achievement Progress in Boss Kills without Dying on Enter without a PermBind ...
-            // This will work for 90% of all Players ... someone will found the backdoor (and i try to close this later)
-            if (InstancePlayerBind* bind = player->GetBoundInstance(instance->GetId(),instance->GetDifficulty()))
-            {
-                if (bind->perm)
-                    return;
-
-                uint32 achievement = instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL? ACHIEVEMENT_CHAMPION_OF_ULDUAR : ACHIEVEMENT_CONQUEROR_OF_ULDUAR;
-
-                if (!player->HasAchieved(achievement))
-                   player->GetAchievementMgr().RemoveAchievement(achievement);
-            }
-        }
-
         bool CheckAchievementCriteriaMeet(uint32 criteria_id, Player const* /*source*/, Unit const* /*target = NULL*/, uint32 /*miscvalue1 = 0*/)
         {
             switch (criteria_id)
@@ -1087,8 +1071,28 @@ public:
     }
 };
 
+// Remove ChampionOfUlduar Progress on Bind to Instance (needs more tests)
+class ChampionOfUlduarPlayerScript : public PlayerScript
+{
+public:
+    ChampionOfUlduarPlayerScript() : PlayerScript("ChampionOfUlduarPlayerScript") { }
+
+    void OnBindToInstance(Player* player, Difficulty diff, uint32 mapid, bool permanent)
+    {
+        if(mapid != 603)
+            return;
+
+        uint32 achievement = diff == RAID_DIFFICULTY_10MAN_NORMAL? ACHIEVEMENT_CHAMPION_OF_ULDUAR : ACHIEVEMENT_CONQUEROR_OF_ULDUAR;
+
+        if (!player->HasAchieved(achievement))
+            player->GetAchievementMgr().RemoveAchievement(achievement);
+    }
+};
+
+
 void AddSC_instance_ulduar()
 {
     new instance_ulduar();
     new go_call_tram();
+    new ChampionOfUlduarPlayerScript();
 }
