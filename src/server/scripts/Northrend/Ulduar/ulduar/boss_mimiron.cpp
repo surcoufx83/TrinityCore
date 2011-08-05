@@ -18,6 +18,7 @@
 #include "ScriptPCH.h"
 #include "ulduar.h"
 #include "Unit.h"
+#include "Vehicle.h"
 
 enum Yells
 {

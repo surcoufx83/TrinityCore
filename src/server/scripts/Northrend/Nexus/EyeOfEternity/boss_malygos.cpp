@@ -17,6 +17,7 @@
 
 #include "ScriptPCH.h"
 #include "eye_of_eternity.h"
+#include "Vehicle.h"
 
 enum Yells
 {
