@@ -424,7 +424,7 @@ public:
                 m_bAchievement = false;
         }
 
-        void DespawnBoatGhosts(uint64& m_uiCreatureGUID)
+        void DespawnBoatGhosts(uint64 m_uiCreatureGUID)
         {
             if (m_uiCreatureGUID)
                 if (Creature* pTemp = (Creature*)Unit::GetUnit(*me, m_uiCreatureGUID))

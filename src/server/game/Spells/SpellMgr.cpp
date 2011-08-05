@@ -517,7 +517,8 @@ uint32 SpellMgr::GetLastSpellInChain(uint32 spell_id) const
 uint32 SpellMgr::GetNextSpellInChain(uint32 spell_id) const
 {
     if (SpellChainNode const* node = GetSpellChainNode(spell_id))
-        return node->next ? node->next->Id : NULL;
+        if (node->next)
+            return node->next->Id;
 
     return 0;
 }
@@ -525,7 +526,8 @@ uint32 SpellMgr::GetNextSpellInChain(uint32 spell_id) const
 uint32 SpellMgr::GetPrevSpellInChain(uint32 spell_id) const
 {
     if (SpellChainNode const* node = GetSpellChainNode(spell_id))
-        return node->prev ? node->prev->Id : NULL;
+        if (node->prev)
+            return node->prev->Id;
 
     return 0;
 }
@@ -1148,7 +1150,7 @@ void SpellMgr::LoadSpellRanks()
                 break;
         }
         // check if chain is made with valid first spell
-        SpellInfo const* first = sSpellMgr->GetSpellInfo(lastSpell);
+        SpellInfo const* first = GetSpellInfo(lastSpell);
         if (!first)
         {
             sLog->outErrorDb("Spell rank identifier(first_spell_id) %u listed in `spell_ranks` does not exist!", lastSpell);
@@ -1165,7 +1167,7 @@ void SpellMgr::LoadSpellRanks()
         // check spells in chain
         for (std::list<std::pair<int32, int32> >::iterator itr = rankChain.begin() ; itr!= rankChain.end(); ++itr)
         {
-            SpellInfo const* spell = sSpellMgr->GetSpellInfo(itr->first);
+            SpellInfo const* spell = GetSpellInfo(itr->first);
             if (!spell)
             {
                 sLog->outErrorDb("Spell %u (rank %u) listed in `spell_ranks` for chain %u does not exist!", itr->first, itr->second, lastSpell);
@@ -1236,13 +1238,13 @@ void SpellMgr::LoadSpellRequired()
         uint32 spell_id =  fields[0].GetUInt32();
         uint32 spell_req = fields[1].GetUInt32();
         // check if chain is made with valid first spell
-        SpellInfo const* spell = sSpellMgr->GetSpellInfo(spell_id);
+        SpellInfo const* spell = GetSpellInfo(spell_id);
         if (!spell)
         {
             sLog->outErrorDb("spell_id %u in `spell_required` table is not found in dbcs, skipped", spell_id);
             continue;
         }
-        SpellInfo const* req_spell = sSpellMgr->GetSpellInfo(spell_req);
+        SpellInfo const* req_spell = GetSpellInfo(spell_req);
         if (!req_spell)
         {
             sLog->outErrorDb("req_spell %u in `spell_required` table is not found in dbcs, skipped", spell_req);
@@ -1278,7 +1280,7 @@ void SpellMgr::LoadSpellLearnSkills()
     uint32 dbc_count = 0;
     for (uint32 spell = 0; spell < sSpellMgr->GetSpellInfoStoreSize(); ++spell)
     {
-        SpellInfo const* entry = sSpellMgr->GetSpellInfo(spell);
+        SpellInfo const* entry = GetSpellInfo(spell);
 
         if (!entry)
             continue;
@@ -1335,13 +1337,13 @@ void SpellMgr::LoadSpellLearnSpells()
         node.active     = fields[2].GetBool();
         node.autoLearned= false;
 
-        if (!sSpellMgr->GetSpellInfo(spell_id))
+        if (!GetSpellInfo(spell_id))
         {
             sLog->outErrorDb("Spell %u listed in `spell_learn_spell` does not exist", spell_id);
             continue;
         }
 
-        if (!sSpellMgr->GetSpellInfo(node.spell))
+        if (!GetSpellInfo(node.spell))
         {
             sLog->outErrorDb("Spell %u listed in `spell_learn_spell` learning not existed spell %u", spell_id, node.spell);
             continue;
@@ -1360,9 +1362,9 @@ void SpellMgr::LoadSpellLearnSpells()
 
     // search auto-learned spells and add its to map also for use in unlearn spells/talents
     uint32 dbc_count = 0;
-    for (uint32 spell = 0; spell < sSpellMgr->GetSpellInfoStoreSize(); ++spell)
+    for (uint32 spell = 0; spell < GetSpellInfoStoreSize(); ++spell)
     {
-        SpellInfo const* entry = sSpellMgr->GetSpellInfo(spell);
+        SpellInfo const* entry = GetSpellInfo(spell);
 
         if (!entry)
             continue;
@@ -1376,7 +1378,7 @@ void SpellMgr::LoadSpellLearnSpells()
                 dbc_node.active = true;                     // all dbc based learned spells is active (show in spell book or hide by client itself)
 
                 // ignore learning not existed spells (broken/outdated/or generic learnig spell 483
-                if (!sSpellMgr->GetSpellInfo(dbc_node.spell))
+                if (!GetSpellInfo(dbc_node.spell))
                     continue;
 
                 // talent or passive spells or skill-step spells auto-casted and not need dependent learning,
@@ -1455,7 +1457,7 @@ void SpellMgr::LoadSpellTargetPositions()
             continue;
         }
 
-        SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(Spell_ID);
+        SpellInfo const* spellInfo = GetSpellInfo(Spell_ID);
         if (!spellInfo)
         {
             sLog->outErrorDb("Spell (ID:%u) listed in `spell_target_position` does not exist.", Spell_ID);
@@ -1583,7 +1585,7 @@ void SpellMgr::LoadSpellGroups()
         }
         else
         {
-            SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(itr->second);
+            SpellInfo const* spellInfo = GetSpellInfo(itr->second);
 
             if (!spellInfo)
             {
@@ -1686,7 +1688,7 @@ void SpellMgr::LoadSpellProcEvents()
 
         uint32 entry = fields[0].GetUInt32();
 
-        SpellInfo const* spell = sSpellMgr->GetSpellInfo(entry);
+        SpellInfo const* spell = GetSpellInfo(entry);
         if (!spell)
         {
             sLog->outErrorDb("Spell %u listed in `spell_proc_event` does not exist", entry);
@@ -1757,7 +1759,7 @@ void SpellMgr::LoadSpellProcs()
             spellId = -spellId;
         }
 
-        SpellInfo const* spellEntry = sSpellMgr->GetSpellInfo(spellId);
+        SpellInfo const* spellEntry = GetSpellInfo(spellId);
         if (!spellEntry)
         {
             sLog->outErrorDb("Spell %u listed in `spell_proc` does not exist", spellId);
@@ -1766,7 +1768,7 @@ void SpellMgr::LoadSpellProcs()
 
         if (allRanks)
         {
-            if (sSpellMgr->GetFirstSpellInChain(spellId) != uint32(spellId))
+            if (GetFirstSpellInChain(spellId) != uint32(spellId))
             {
                 sLog->outErrorDb("Spell %u listed in `spell_proc` is not first rank of spell.", fields[0].GetInt32());
                 continue;
@@ -1856,8 +1858,8 @@ void SpellMgr::LoadSpellProcs()
 
             if (allRanks)
             {
-                spellId = sSpellMgr->GetNextSpellInChain(spellId);
-                spellEntry = sSpellMgr->GetSpellInfo(spellId);
+                spellId = GetNextSpellInChain(spellId);
+                spellEntry = GetSpellInfo(spellId);
             }
             else
                 break;
@@ -1889,7 +1891,7 @@ void SpellMgr::LoadSpellBonusess()
         Field *fields = result->Fetch();
         uint32 entry = fields[0].GetUInt32();
 
-        SpellInfo const* spell = sSpellMgr->GetSpellInfo(entry);
+        SpellInfo const* spell = GetSpellInfo(entry);
         if (!spell)
         {
             sLog->outErrorDb("Spell %u listed in `spell_bonus_data` does not exist", entry);
@@ -1921,7 +1923,7 @@ void SpellMgr::LoadSpellThreats()
     QueryResult result = WorldDatabase.Query("SELECT entry, Threat FROM spell_threat");
     if (!result)
     {
-        sLog->outString(">> Loaded %u aggro generating spells", count);
+        sLog->outString(">> Loaded 0 aggro generating spells");
         sLog->outString();
         return;
     }
@@ -1933,7 +1935,7 @@ void SpellMgr::LoadSpellThreats()
         uint32 entry = fields[0].GetUInt32();
         uint16 Threat = fields[1].GetUInt16();
 
-        if (!sSpellMgr->GetSpellInfo(entry))
+        if (!GetSpellInfo(entry))
         {
             sLog->outErrorDb("Spell %u listed in `spell_threat` does not exist", entry);
             continue;
@@ -2001,7 +2003,7 @@ void SpellMgr::LoadSpellPetAuras()
             itr->second.AddAura(pet, aura);
         else
         {
-            SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell);
+            SpellInfo const* spellInfo = GetSpellInfo(spell);
             if (!spellInfo)
             {
                 sLog->outErrorDb("Spell %u listed in `spell_pet_auras` does not exist", spell);
@@ -2015,7 +2017,7 @@ void SpellMgr::LoadSpellPetAuras()
                 continue;
             }
 
-            SpellInfo const* spellInfo2 = sSpellMgr->GetSpellInfo(aura);
+            SpellInfo const* spellInfo2 = GetSpellInfo(aura);
             if (!spellInfo2)
             {
                 sLog->outErrorDb("Aura %u listed in `spell_pet_auras` does not exist", aura);
@@ -2145,13 +2147,13 @@ void SpellMgr::LoadSpellLinked()
         int32 effect =  fields[1].GetInt32();
         int32 type =    fields[2].GetInt32();
 
-        SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(abs(trigger));
+        SpellInfo const* spellInfo = GetSpellInfo(abs(trigger));
         if (!spellInfo)
         {
             sLog->outErrorDb("Spell %u listed in `spell_linked_spell` does not exist", abs(trigger));
             continue;
         }
-        spellInfo = sSpellMgr->GetSpellInfo(abs(effect));
+        spellInfo = GetSpellInfo(abs(effect));
         if (!spellInfo)
         {
             sLog->outErrorDb("Spell %u listed in `spell_linked_spell` does not exist", abs(effect));
@@ -2210,7 +2212,7 @@ void SpellMgr::LoadPetLevelupSpellMap()
                 if (skillLine->learnOnGetSkill != ABILITY_LEARNED_ON_GET_RACE_OR_CLASS_SKILL)
                     continue;
 
-                SpellInfo const* spell = sSpellMgr->GetSpellInfo(skillLine->spellId);
+                SpellInfo const* spell = GetSpellInfo(skillLine->spellId);
                 if (!spell) // not exist or triggered or talent
                     continue;
 
@@ -2321,7 +2323,7 @@ void SpellMgr::LoadPetDefaultSpells()
     // different summon spells
     for (uint32 i = 0; i < GetSpellInfoStoreSize(); ++i)
     {
-        SpellInfo const* spellEntry = sSpellMgr->GetSpellInfo(i);
+        SpellInfo const* spellEntry = GetSpellInfo(i);
         if (!spellEntry)
             continue;
 
@@ -2398,7 +2400,7 @@ void SpellMgr::LoadSpellAreas()
         spellArea.gender              = Gender(fields[7].GetUInt8());
         spellArea.autocast            = fields[8].GetBool();
 
-        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell))
+        if (SpellInfo const* spellInfo = GetSpellInfo(spell))
         {
             if (spellArea.autocast)
                 const_cast<SpellInfo*>(spellInfo)->Attributes |= SPELL_ATTR0_CANT_CANCEL;
@@ -2468,7 +2470,7 @@ void SpellMgr::LoadSpellAreas()
 
         if (spellArea.auraSpell)
         {
-            SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(abs(spellArea.auraSpell));
+            SpellInfo const* spellInfo = GetSpellInfo(abs(spellArea.auraSpell));
             if (!spellInfo)
             {
                 sLog->outErrorDb("Spell %u listed in `spell_area` have wrong aura spell (%u) requirement", spell, abs(spellArea.auraSpell));
@@ -2679,120 +2681,120 @@ void SpellMgr::LoadSpellCustomAttr()
 
         switch (spellInfo->Id)
         {
-        case 1776: // Gouge
-        case 1777:
-        case 8629:
-        case 11285:
-        case 11286:
-        case 12540:
-        case 13579:
-        case 24698:
-        case 28456:
-        case 29425:
-        case 34940:
-        case 36862:
-        case 38764:
-        case 38863:
-        case 52743: // Head Smack
-            spellInfo->AttributesCu |= SPELL_ATTR0_CU_REQ_TARGET_FACING_CASTER;
-            break;
-        case 53: // Backstab
-        case 2589:
-        case 2590:
-        case 2591:
-        case 8721:
-        case 11279:
-        case 11280:
-        case 11281:
-        case 25300:
-        case 26863:
-        case 48656:
-        case 48657:
-        case 703: // Garrote
-        case 8631:
-        case 8632:
-        case 8633:
-        case 11289:
-        case 11290:
-        case 26839:
-        case 26884:
-        case 48675:
-        case 48676:
-        case 5221: // Shred
-        case 6800:
-        case 8992:
-        case 9829:
-        case 9830:
-        case 27001:
-        case 27002:
-        case 48571:
-        case 48572:
-        case 8676: // Ambush
-        case 8724:
-        case 8725:
-        case 11267:
-        case 11268:
-        case 11269:
-        case 27441:
-        case 48689:
-        case 48690:
-        case 48691:
-        case 21987: // Lash of Pain
-        case 23959: // Test Stab R50
-        case 24825: // Test Backstab
-        case 58563: // Assassinate Restless Lookout
-            spellInfo->AttributesCu |= SPELL_ATTR0_CU_REQ_CASTER_BEHIND_TARGET;
-            break;
-        case 26029: // Dark Glare
-        case 37433: // Spout
-        case 43140: // Flame Breath
-        case 43215: // Flame Breath
-        case 70461: // Coldflame Trap
+            case 1776: // Gouge
+            case 1777:
+            case 8629:
+            case 11285:
+            case 11286:
+            case 12540:
+            case 13579:
+            case 24698:
+            case 28456:
+            case 29425:
+            case 34940:
+            case 36862:
+            case 38764:
+            case 38863:
+            case 52743: // Head Smack
+                spellInfo->AttributesCu |= SPELL_ATTR0_CU_REQ_TARGET_FACING_CASTER;
+                break;
+            case 53: // Backstab
+            case 2589:
+            case 2590:
+            case 2591:
+            case 8721:
+            case 11279:
+            case 11280:
+            case 11281:
+            case 25300:
+            case 26863:
+            case 48656:
+            case 48657:
+            case 703: // Garrote
+            case 8631:
+            case 8632:
+            case 8633:
+            case 11289:
+            case 11290:
+            case 26839:
+            case 26884:
+            case 48675:
+            case 48676:
+            case 5221: // Shred
+            case 6800:
+            case 8992:
+            case 9829:
+            case 9830:
+            case 27001:
+            case 27002:
+            case 48571:
+            case 48572:
+            case 8676: // Ambush
+            case 8724:
+            case 8725:
+            case 11267:
+            case 11268:
+            case 11269:
+            case 27441:
+            case 48689:
+            case 48690:
+            case 48691:
+            case 21987: // Lash of Pain
+            case 23959: // Test Stab R50
+            case 24825: // Test Backstab
+            case 58563: // Assassinate Restless Lookout
+                spellInfo->AttributesCu |= SPELL_ATTR0_CU_REQ_CASTER_BEHIND_TARGET;
+                break;
+            case 26029: // Dark Glare
+            case 37433: // Spout
+            case 43140: // Flame Breath
+            case 43215: // Flame Breath
+            case 70461: // Coldflame Trap
         case 63293: // Mimiron - P3Wx2 Laser Barrage
-            spellInfo->AttributesCu |= SPELL_ATTR0_CU_CONE_LINE;
-            break;
-        case 24340: // Meteor
-        case 26558: // Meteor
-        case 28884: // Meteor
-        case 36837: // Meteor
-        case 38903: // Meteor
-        case 41276: // Meteor
-        case 57467: // Meteor
-        case 26789: // Shard of the Fallen Star
-        case 31436: // Malevolent Cleave
-        case 35181: // Dive Bomb
-        case 40810: // Saber Lash
-        case 43267: // Saber Lash
-        case 43268: // Saber Lash
-        case 42384: // Brutal Swipe
-        case 45150: // Meteor Slash
-        case 64688: // Sonic Screech
-        case 72373: // Shared Suffering
-        case 71904: // Chaos Bane
-        case 70492: // Ooze Eruption
-        case 72505: // Ooze Eruption
-        case 72624: // Ooze Eruption
-        case 72625: // Ooze Eruption
-            // ONLY SPELLS WITH SPELLFAMILY_GENERIC and EFFECT_SCHOOL_DAMAGE
-            spellInfo->AttributesCu |= SPELL_ATTR0_CU_SHARE_DAMAGE;
-            break;
-        case 27820: // Mana Detonation
-        case 69782: // Ooze Flood
-        case 69796: // Ooze Flood
-        case 69798: // Ooze Flood
-        case 69801: // Ooze Flood
-        case 69538: // Ooze Combine
-        case 69553: // Ooze Combine
-        case 69610: // Ooze Combine
-        case 71447: // Bloodbolt Splash
-        case 71481: // Bloodbolt Splash
-        case 71482: // Bloodbolt Splash
-        case 71483: // Bloodbolt Splash
-        case 71390: // Pact of the Darkfallen
+                spellInfo->AttributesCu |= SPELL_ATTR0_CU_CONE_LINE;
+                break;
+            case 24340: // Meteor
+            case 26558: // Meteor
+            case 28884: // Meteor
+            case 36837: // Meteor
+            case 38903: // Meteor
+            case 41276: // Meteor
+            case 57467: // Meteor
+            case 26789: // Shard of the Fallen Star
+            case 31436: // Malevolent Cleave
+            case 35181: // Dive Bomb
+            case 40810: // Saber Lash
+            case 43267: // Saber Lash
+            case 43268: // Saber Lash
+            case 42384: // Brutal Swipe
+            case 45150: // Meteor Slash
+            case 64688: // Sonic Screech
+            case 72373: // Shared Suffering
+            case 71904: // Chaos Bane
+            case 70492: // Ooze Eruption
+            case 72505: // Ooze Eruption
+            case 72624: // Ooze Eruption
+            case 72625: // Ooze Eruption
+                // ONLY SPELLS WITH SPELLFAMILY_GENERIC and EFFECT_SCHOOL_DAMAGE
+                spellInfo->AttributesCu |= SPELL_ATTR0_CU_SHARE_DAMAGE;
+                break;
+            case 27820: // Mana Detonation
+            case 69782: // Ooze Flood
+            case 69796: // Ooze Flood
+            case 69798: // Ooze Flood
+            case 69801: // Ooze Flood
+            case 69538: // Ooze Combine
+            case 69553: // Ooze Combine
+            case 69610: // Ooze Combine
+            case 71447: // Bloodbolt Splash
+            case 71481: // Bloodbolt Splash
+            case 71482: // Bloodbolt Splash
+            case 71483: // Bloodbolt Splash
+            case 71390: // Pact of the Darkfallen
         case 63025: // XT-002 Gravity Bomb
         case 64233: // XT-002 Gravity Bomb
-            spellInfo->AttributesCu |= SPELL_ATTR0_CU_EXCLUDE_SELF;
-            break;
+                spellInfo->AttributesCu |= SPELL_ATTR0_CU_EXCLUDE_SELF;
+                break;
         case 28836: //Mark - should not be resistet
         case 28786: //Locust Swarm
         case 54022: //Locust Swarm
@@ -2817,34 +2819,34 @@ void SpellMgr::LoadSpellCustomAttr()
         case 62525: // Freya - Attuned to Nature 10 Dose Reduction
             spellInfo->AttributesCu |= SPELL_ATTR0_CU_IGNORE_LOS;
             break;
-        case 18500: // Wing Buffet
-        case 33086: // Wild Bite
+            case 18500: // Wing Buffet
+            case 33086: // Wild Bite
         case 28375: // Decimate
-        case 49749: // Piercing Blow
-        case 52890: // Penetrating Strike
-        case 53454: // Impale
-        case 59446: // Impale
-        case 62383: // Shatter
-        case 64777: // Machine Gun
-        case 65239: // Machine Gun
-        case 65919: // Impale
-        case 67858: // Impale
-        case 67859: // Impale
-        case 67860: // Impale
-        case 69293: // Wing Buffet
-        case 74439: // Machine Gun
-            spellInfo->AttributesCu |= SPELL_ATTR0_CU_IGNORE_ARMOR;
-            break;
+            case 49749: // Piercing Blow
+            case 52890: // Penetrating Strike
+            case 53454: // Impale
+            case 59446: // Impale
+            case 62383: // Shatter
+            case 64777: // Machine Gun
+            case 65239: // Machine Gun
+            case 65919: // Impale
+            case 67858: // Impale
+            case 67859: // Impale
+            case 67860: // Impale
+            case 69293: // Wing Buffet
+            case 74439: // Machine Gun
+                spellInfo->AttributesCu |= SPELL_ATTR0_CU_IGNORE_ARMOR;
+                break;
         case 62775: // XT-002 - Tympanic Tantrum
         case 64443: // Algalon - Big Bang
         case 64584: // Algalon - Big Bang
-        case 63278: // Mark of the Faceless (General Vezax)
-            spellInfo->AttributesCu |= SPELL_ATTR0_CU_IGNORE_ARMOR;
-            break;
-        case 64422: // Sonic Screech (Auriaya)
-            spellInfo->AttributesCu |= SPELL_ATTR0_CU_SHARE_DAMAGE;
-            spellInfo->AttributesCu |= SPELL_ATTR0_CU_IGNORE_ARMOR;
-            break;
+            case 63278: // Mark of the Faceless (General Vezax)
+                spellInfo->AttributesCu |= SPELL_ATTR0_CU_IGNORE_ARMOR;
+                break;
+            case 64422: // Sonic Screech (Auriaya)
+                spellInfo->AttributesCu |= SPELL_ATTR0_CU_SHARE_DAMAGE;
+                spellInfo->AttributesCu |= SPELL_ATTR0_CU_IGNORE_ARMOR;
+                break;
         }
 
         switch (spellInfo->SpellFamilyName)
@@ -2912,9 +2914,7 @@ void SpellMgr::LoadDbcDataCorrections()
         }
 
         if (spellInfo->activeIconID == 2158)  // flight
-        {
             spellInfo->Attributes |= SPELL_ATTR0_PASSIVE;
-        }
 
         switch (spellInfo->Id)
         {
@@ -3227,6 +3227,10 @@ void SpellMgr::LoadDbcDataCorrections()
         case 31687: // Summon Water Elemental
             // 322-330 switch - effect changed to dummy, target entry not changed in client:(
             spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
+            break;
+        case 57994: // Wind Shear - improper data for EFFECT_1 in 3.3.5 DBC, but is correct in 4.x
+            spellInfo->Effect[EFFECT_1] = SPELL_EFFECT_MODIFY_THREAT_PERCENT;
+            spellInfo->EffectBasePoints[EFFECT_1] = -6; // -5%
             break;
         case 25771: // Forbearance - wrong mechanic immunity in DBC since 3.0.x
             spellInfo->EffectMiscValue[0] = MECHANIC_IMMUNE_SHIELD;
