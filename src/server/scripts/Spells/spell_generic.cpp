@@ -1568,6 +1568,49 @@ class spell_gen_soul_preserver : public SpellScriptLoader
         }    
 };
 
+enum BoneGryphon
+{
+    NPC_GRYPHON_RIDER = 29333
+};
+
+class GryphonRiderCheck
+{
+    public:
+        bool operator() (Unit* unit)
+        {
+            if (unit->ToCreature() && unit->GetEntry() == NPC_GRYPHON_RIDER)
+                return false;
+
+            return true;
+        }
+};
+
+class spell_gen_bone_gryphon_frost_breath : public SpellScriptLoader
+{
+    public:
+        spell_gen_bone_gryphon_frost_breath() : SpellScriptLoader("spell_gen_bone_gryphon_frost_breath") { }
+
+        class spell_gen_bone_gryphon_frost_breath_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_gen_bone_gryphon_frost_breath_SpellScript);
+
+            void FilterTargets(std::list<Unit*>& unitList)
+            {
+                unitList.remove_if(GryphonRiderCheck());
+            }
+
+            void Register()
+            {
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_gen_bone_gryphon_frost_breath_SpellScript::FilterTargets, EFFECT_0, TARGET_UNIT_AREA_ENEMY_DST);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_gen_bone_gryphon_frost_breath_SpellScript();
+        }
+};
+
 class spell_gen_vehicle_scaling : public SpellScriptLoader
 {
     public:
@@ -1654,4 +1697,5 @@ void AddSC_generic_spell_scripts()
     new spell_gen_launch();
     new spell_gen_soul_preserver();
     new spell_gen_vehicle_scaling();
+    new spell_gen_bone_gryphon_frost_breath();
 }
