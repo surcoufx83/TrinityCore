@@ -2726,7 +2726,7 @@ public:
             {
                 if (Killer->ToPlayer()->GetQuestStatus(QUEST_POWER_OF_ELEMENTS) == QUEST_STATUS_INCOMPLETE)
                 {
-                    if (Unit* pTotem = me->FindNearestCreature(ENTRY_WINDSOUL_TOTEM, 15.0f))
+                    if (Unit* pTotem = me->FindNearestCreature(ENTRY_WINDSOUL_TOTEM, 25.0f))
                     {
                         DoCast(pTotem, SPELL_ENERGY_TRANSFER, true);
                         Killer->ToPlayer()->RewardPlayerAndGroupAtEvent(ENTRY_WINDSOUL_TOTEM, Killer);
