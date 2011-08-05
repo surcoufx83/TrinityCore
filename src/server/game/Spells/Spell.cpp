@@ -5745,7 +5745,7 @@ bool Spell::CanAutoCast(Unit* target)
 SpellCastResult Spell::CheckRange(bool strict)
 {
     // try to keep this
-    if (m_spellInfo->RangeEntry->ID == 1)
+    if (m_spellInfo->RangeEntry && m_spellInfo->RangeEntry->ID == 1)
         return SPELL_CAST_OK;
 
     Unit* target = m_targets.GetUnitTarget();
