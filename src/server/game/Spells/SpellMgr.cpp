@@ -3311,6 +3311,11 @@ void SpellMgr::LoadDbcDataCorrections()
         case 60895: // Archavon - Crushing Leap
             spellInfo->rangeIndex = 13;
             break;
+        case 64745: // Item - Death Knight T8 Tank 4P Bonus
+        case 64936: // Item - Warrior T8 Protection 4P Bonus
+            spellInfo->EffectBasePoints[EFFECT_0] = 100;
+            ++count;
+            break;
         // ULDUAR SPELLS
         //
         case 62016: // Thorim - Charge Orb
