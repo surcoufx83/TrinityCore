@@ -467,7 +467,7 @@ class spell_steelbreaker_electrical_charge : public SpellScriptLoader
                 Unit* target = GetTarget();
                 Unit* caster = GetCaster();
                 if (target && caster && GetTargetApplication()->GetRemoveMode() == AURA_REMOVE_BY_DEATH)
-                    target->CastSpell(caster, GetSpellInfo()->Effects[EFFECT_0].CalcValue() , true);
+                    target->CastSpell(caster, GetSpellInfo()->Effects[EFFECT_0].CalcValue(), true);
             }
 
             void Register()
