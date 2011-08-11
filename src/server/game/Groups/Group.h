@@ -233,7 +233,6 @@ class Group
         MemberSlotList const& GetMemberSlots() const;
         GroupReference* GetFirstMember();
         uint32 GetMembersCount() const;
-
         uint8 GetMemberGroup(uint64 guid) const;
 
         void ConvertToLFG();

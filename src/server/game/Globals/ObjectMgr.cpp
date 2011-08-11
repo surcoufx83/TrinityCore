@@ -5808,7 +5808,7 @@ WorldSafeLocsEntry const *ObjectMgr::GetClosestGraveYard(float x, float y, float
         if (data.team != 0 && team != 0 && data.team != team)
             continue;
 
-        if(playerclass != 0 && data.safeLocId == 1405 && playerclass != CLASS_DEATH_KNIGHT)
+        if (playerclass != 0 && data.safeLocId == 1405 && playerclass != CLASS_DEATH_KNIGHT)
             continue;
 
         // find now nearest graveyard at other map

@@ -269,7 +269,7 @@ class BossAI : public ScriptedAI
         BossAI(Creature* creature, uint32 bossId);
         virtual ~BossAI() {}
 
-    uint32 inFightAggroCheck_Timer;
+        uint32 inFightAggroCheck_Timer;
         InstanceScript* const instance;
         BossBoundaryMap const* GetBoundary() const { return _boundary; }
 
@@ -307,6 +307,7 @@ class BossAI : public ScriptedAI
 
         bool CheckBoundary(Unit* who);
         void TeleportCheaters();
+
         EventMap events;
         SummonList summons;
 

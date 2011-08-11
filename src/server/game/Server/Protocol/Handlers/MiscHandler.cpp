@@ -498,7 +498,7 @@ void WorldSession::HandleSetSelectionOpcode(WorldPacket & recv_data)
     Unit* unit = ObjectAccessor::GetUnit(*_player, guid);
     if (!unit)
         return;
-        
+
     _player->SetSelection(guid);
 
     if (FactionTemplateEntry const* factionTemplateEntry = sFactionTemplateStore.LookupEntry(unit->getFaction()))

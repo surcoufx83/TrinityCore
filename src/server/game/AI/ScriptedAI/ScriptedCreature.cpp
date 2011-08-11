@@ -474,7 +474,7 @@ bool ScriptedAI::EnterEvadeIfOutOfCombatArea(uint32 const diff)
             if (fX > 3218.86f && fX < 3275.69f && fY < 572.40f && fY > 484.68f)
                 return false;
             break;
-        case NPC_LEVIATHAN:                                          // flame leviathan (calculate box)
+        case NPC_LEVIATHAN:                                           // flame leviathan (calculate box)
             if (fX > 145.14f && fX < 447.26f && fY < 83.29f && fY > -149.73f)
                 return false;
             break;
@@ -534,12 +534,14 @@ void BossAI::_JustDied()
 
 void BossAI::_DoAggroPulse(const uint32 diff)
 {
-    if(inFightAggroCheck_Timer < diff)
+    if (inFightAggroCheck_Timer < diff)
     {
-        if(me->getVictim() && me->getVictim()->ToPlayer())
+        if (me->getVictim() && me->getVictim()->ToPlayer())
             DoAttackerGroupInCombat(me->getVictim()->ToPlayer());
         inFightAggroCheck_Timer = MAX_AGGRO_PULSE_TIMER;
-    }else inFightAggroCheck_Timer -= diff;
+    }
+    else
+        inFightAggroCheck_Timer -= diff;
 }
 
 void BossAI::_EnterCombat()

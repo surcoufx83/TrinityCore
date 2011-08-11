@@ -142,15 +142,15 @@ void CreatureAI::DoAttackerAreaInCombat(Unit* attacker, float range, Unit* pUnit
 
 void CreatureAI::DoAttackerGroupInCombat(Player* attacker)
 {
-    if(attacker)
+    if (attacker)
     {
-        if( Group *pGroup = attacker->GetGroup() )
+        if (Group* pGroup = attacker->GetGroup() )
         {
-            for(GroupReference *itr = pGroup->GetFirstMember(); itr != NULL; itr = itr->next())
+            for (GroupReference* itr = pGroup->GetFirstMember(); itr != NULL; itr = itr->next())
             {
-                Player *pGroupGuy = itr->getSource();
+                Player* pGroupGuy = itr->getSource();
 
-                if(pGroupGuy && pGroupGuy->isAlive() && pGroupGuy->GetMapId() == me->GetMapId())
+                if (pGroupGuy && pGroupGuy->isAlive() && pGroupGuy->GetMapId() == me->GetMapId())
                 {
                     me->SetInCombatWith(pGroupGuy);
                     pGroupGuy->SetInCombatWith(me);

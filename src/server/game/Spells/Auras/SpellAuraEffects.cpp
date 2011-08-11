@@ -1342,25 +1342,24 @@ void AuraEffect::PeriodicTick(AuraApplication * aurApp, Unit* caster) const
             HandlePeriodicPowerBurnManaAuraTick(target, caster);
             break;
         case SPELL_AURA_DUMMY:
-            
-            switch(GetId())
+            switch (GetId())
             {
-            case 7057: // Haunting Spirits
-                target->CastSpell((Unit*)NULL , GetAmount(), true);
-                break;
-            case 58600: // No fly Zone - Dalaran
-                if (GetTickNumber() == 10)
-                {
-                    target->RemoveAurasByType(SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED);
-                    target->RemoveAurasByType(SPELL_AURA_FLY);
-                }
-                break;
-            case 68614: // Concentrated Irresistible Cologne Spill
-                caster->CastSpell(target, 68934, false);
-                break;
-            case 68798: // Concentrated Alluring Perfume Spill
-                caster->CastSpell(target, 68927, false);
-                break;
+                case 7057: // Haunting Spirits
+                    target->CastSpell((Unit*)NULL, GetAmount(), true);
+                    break;
+                case 58600: // No fly Zone - Dalaran
+                    if (GetTickNumber() == 10)
+                    {
+                        target->RemoveAurasByType(SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED);
+                        target->RemoveAurasByType(SPELL_AURA_FLY);
+                    }
+                    break;
+                case 68614: // Concentrated Irresistible Cologne Spill
+                    caster->CastSpell(target, 68934, false);
+                    break;
+                case 68798: // Concentrated Alluring Perfume Spill
+                    caster->CastSpell(target, 68927, false);
+                    break;
             }
         default:
             break;
@@ -3305,7 +3304,7 @@ void AuraEffect::HandleAuraControlVehicle(AuraApplication const* aurApp, uint8 m
         return;
 
     if (apply)
-    {   
+    {
         caster->_EnterVehicle(target->GetVehicleKit(), m_amount - 1, aurApp);
     }
     else
@@ -4973,13 +4972,13 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
                         case 46308: // Burning Winds casted only at creatures at spawn
                             target->CastSpell(target, 47287, true, NULL, this);
                             break;
-                        case 58600: // Restricted Flight Area
-                            if (aurApp->GetRemoveMode() == AURA_REMOVE_BY_EXPIRE)
-                                target->CastSpell(target, 58601, true);
-                            break;
                         case 52172:  // Coyote Spirit Despawn Aura
                         case 60244:  // Blood Parrot Despawn Aura
                             target->CastSpell((Unit*)NULL, GetAmount(), true, NULL, this);
+                            break;
+                        case 58600: // Restricted Flight Area
+                            if (aurApp->GetRemoveMode() == AURA_REMOVE_BY_EXPIRE)
+                                target->CastSpell(target, 58601, true);
                             break;
                     }
                     break;
@@ -5180,18 +5179,17 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
                     break;
                 }
                 case 57806: // Sprinkle Holy Water - Quest 13110
-                        if(target->GetTypeId() == TYPEID_UNIT)
+                    if (target->GetTypeId() == TYPEID_UNIT)
+                    {
+                        if (apply)
                         {
-                            if(apply)
+                            if(caster && caster->ToPlayer())
                             {
-                                if(caster && caster->ToPlayer())
-                                {
-                                    target->CastSpell(caster,57808,true);
-                                    caster->ToPlayer()->CastedCreatureOrGO(30546,target->GetGUID(),57806);
-                                }
+                                target->CastSpell(caster, 57808, true);
+                                caster->ToPlayer()->CastedCreatureOrGO(30546, target->GetGUID(), 57806);
                             }
-
                         }
+                    }
                     break;
                 // LK Intro VO (1)
                 case 58204:

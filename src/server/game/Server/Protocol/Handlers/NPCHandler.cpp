@@ -278,7 +278,7 @@ void WorldSession::HandleTrainerBuySpellOpcode(WorldPacket & recv_data)
         return;
 
     _player->ModifyMoney(-int32(nSpellCost));
-    
+
     unit->SendPlaySpellVisual(179); // 53 SpellCastDirected
     unit->SendPlaySpellImpact(_player->GetGUID(), 362); // 113 EmoteSalute
 

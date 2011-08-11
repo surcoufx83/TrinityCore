@@ -525,7 +525,7 @@ inline void KillRewarder::_RewardXP(Player* player, float rate)
     {
         boostItem = player->HasItemOrGemWithIdEquipped(sWorld->getIntConfig(CONFIG_XP_BOOST_ITEMID), 1);
     }
-    
+
     if (xp)
     {
         // 4.2.2. Apply auras modifying rewarded XP (SPELL_AURA_MOD_XP_PCT).
@@ -1451,7 +1451,7 @@ void Player::HandleDrowning(uint32 time_diff)
                         EnvironmentalDamage(DAMAGE_SLIME, damage);
 
                     if (m_mapId == 533 && !HasAura(28801))
-                        CastSpell(this,28801,true);
+                        CastSpell(this, 28801, true);
                 }
             }
         }
@@ -1459,7 +1459,7 @@ void Player::HandleDrowning(uint32 time_diff)
     else
     {
         m_MirrorTimer[FIRE_TIMER] = DISABLED_MIRROR_TIMER;
-        if(m_mapId == 533)
+        if (m_mapId == 533)
             RemoveAurasDueToSpell(28801);
     }
 
@@ -2505,7 +2505,7 @@ void Player::Regenerate(Powers power)
     uint32 curValue = GetPower(power);
 
     // TODO: possible use of miscvalueb instead of amount
-    if(HasAuraTypeWithValue(SPELL_AURA_PREVENT_REGENERATE_POWER, power))
+    if (HasAuraTypeWithValue(SPELL_AURA_PREVENT_REGENERATE_POWER, power))
     {
         // This is a hack
         // Client regenerate mana but server not ... we must try to disable client regeneration
@@ -7438,7 +7438,7 @@ void Player::UpdateArea(uint32 newArea)
     }
     else
         RemoveByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_SANCTUARY);
-        
+
     // no-fly zones
     if (area)
     {
@@ -18275,7 +18275,7 @@ void Player::SaveToDB()
 
     std::string sql_name = m_name;
     CharacterDatabase.EscapeString(sql_name);
-    
+
     std::ostringstream ss;
     ss << "REPLACE INTO characters (guid, account, name, race, class, gender, level, xp, money, playerBytes, playerBytes2, playerFlags, "
         "map, instance_id, instance_mode_mask, position_x, position_y, position_z, orientation, "
@@ -24817,11 +24817,3 @@ void Player::CreateWowarmoryFeed(uint32 type, uint32 data, uint32 item_guid, uin
     sLog->outDebug(LOG_FILTER_UNITS, "[Wowarmory]: create wowarmory feed (GUID: %u, type: %d, data: %u).", feed.guid, feed.type, feed.data);
     m_wowarmory_feeds.push_back(feed);
 }
-
-//
-//void Player::SendClearFocus(Unit* target)
-//{
-//    WorldPacket data(SMSG_BREAK_TARGET, target->GetPackGUID().size());
-//    data.append(target->GetPackGUID());
-//    GetSession()->SendPacket(&data);
-//}
