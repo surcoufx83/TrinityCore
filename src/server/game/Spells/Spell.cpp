@@ -55,7 +55,6 @@
 #include <InstanceSaveMgr.h>
 #include "SpellInfo.h"
 
-
 extern pEffect SpellEffects[TOTAL_SPELL_EFFECTS];
 
 SpellCastTargets::SpellCastTargets() : m_elevation(0), m_speed(0)
@@ -1358,15 +1357,15 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
                     p->CastedCreatureOrGO(spellHitTarget->GetEntry(), spellHitTarget->GetGUID(), m_spellInfo->Id);
         }
 
-        if(m_originalCaster)
+        if (m_originalCaster)
         {
-            if(m_originalCaster->GetTypeId() == TYPEID_UNIT && m_originalCaster->ToCreature()->IsAIEnabled)
+            if (m_originalCaster->GetTypeId() == TYPEID_UNIT && m_originalCaster->ToCreature()->IsAIEnabled)
                 m_originalCaster->ToCreature()->AI()->SpellHitTarget(spellHitTarget, m_spellInfo);
-        }else
+        }
+        else
         {
-            if(m_caster && m_caster->GetTypeId() == TYPEID_UNIT && m_caster->ToCreature()->IsAIEnabled)
+            if (m_caster && m_caster->GetTypeId() == TYPEID_UNIT && m_caster->ToCreature()->IsAIEnabled)
                 m_caster->ToCreature()->AI()->SpellHitTarget(spellHitTarget, m_spellInfo);
-
         }
 
         // Needs to be called after dealing damage/healing to not remove breaking on damage auras
@@ -6365,7 +6364,10 @@ SpellCastResult Spell::CheckItems()
                 // gnomish army knife
                 if (m_spellInfo->Id == 54732)
                     if (p_caster->GetSkillValue(SKILL_ENGINERING) < 350)
-                        return SPELL_FAILED_LOW_CASTLEVEL;
+                    {
+                        m_customError = SPELL_CUSTOM_ERROR_REQUIRES_350_ENGINEERING;
+                        return SPELL_FAILED_CUSTOM_ERROR;
+                    }
                 break;
             }
             default:
@@ -6655,7 +6657,7 @@ bool Spell::CheckTarget(Unit* target, uint32 eff)
                 caster = m_caster;
             if (target->GetEntry() == 5925)
                 return true;
-            if (target != m_caster && !(m_spellInfo->AttributesCu & SPELL_ATTR0_CU_IGNORE_LOS) &&!target->IsWithinLOSInMap(caster))
+            if (target != m_caster && !(m_spellInfo->AttributesCu & SPELL_ATTR0_CU_IGNORE_LOS) && !target->IsWithinLOSInMap(caster))
                 return false;
             break;
     }

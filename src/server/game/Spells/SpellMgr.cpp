@@ -3151,6 +3151,12 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectImplicitTargetB[1] = 0;
                 spellInfo->Effect[1] = 0;
                 break;
+            case 54680: // Monstrous Bite - Rank 1 (Devilsaur)
+            case 55495: // Monstrous Bite - Rank 2 (Devilsaur)
+            case 55496: // Monstrous Bite - Rank 3 (Devilsaur)
+            case 55497: // Monstrous Bite - Rank 4 (Devilsaur)
+            case 55498: // Monstrous Bite - Rank 5 (Devilsaur)
+            case 55499: // Monstrous Bite - Rank 6 (Devilsaur)
             case 55968: // Prince Taldaram - Bloodthirst
                 spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_CASTER;
                 break;

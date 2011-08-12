@@ -2382,7 +2382,6 @@ class Player : public Unit, public GridObject<Player>
         void InitWowarmoryFeeds();
         /* World of Warcraft Armory */
 
-
         /*********************************************************/
         /***                 INSTANCE SYSTEM                   ***/
         /*********************************************************/
@@ -2826,7 +2825,6 @@ class Player : public Unit, public GridObject<Player>
         uint32 m_timeSyncServer;
         // World of Warcraft Armory Feeds
         WowarmoryFeeds m_wowarmory_feeds;
-
 
         InstanceTimeMap _instanceResetTimes;
         InstanceSave* _pendingBind;

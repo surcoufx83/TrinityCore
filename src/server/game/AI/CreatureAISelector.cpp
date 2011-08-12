@@ -37,7 +37,7 @@ namespace FactorySelector
             ai_factory = ai_registry.GetRegistryItem("PetAI");
 
         //scriptname in db
-        if((!creature->isPet() || !((Pet*)creature)->isControlled()) && !creature->isCharmed())
+        if ((!creature->isPet() || !((Pet*)creature)->isControlled()) && !creature->isCharmed())
             if (CreatureAI* scriptedAI = sScriptMgr->GetCreatureAI(creature))
                 return scriptedAI;
 

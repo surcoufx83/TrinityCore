@@ -3075,7 +3075,8 @@ void Spell::EffectSummonType(SpellEffIndex effIndex)
 
                     uint32 amount = damage > 0 ? damage : 1;
 
-                    switch (m_spellInfo->Id) {
+                    switch (m_spellInfo->Id)
+                    {
                         case 4073:  // Mechanical Dragonling
                         case 12749: // Mithril Mechanical Dragonling
                         case 18662: // Curse of Doom
@@ -4294,7 +4295,7 @@ void Spell::EffectSummonObjectWild(SpellEffIndex effIndex)
 
     ExecuteLogEffectSummonObject(effIndex, pGameObj);
 
-    if(m_originalCaster && m_originalCaster->GetTypeId() != TYPEID_PLAYER && pGameObj->GetGoType() != GAMEOBJECT_TYPE_CHEST)
+    if (m_originalCaster && m_originalCaster->GetTypeId() != TYPEID_PLAYER && pGameObj->GetGoType() != GAMEOBJECT_TYPE_CHEST)
         pGameObj->SetOwnerGUID(m_originalCasterGUID);
 
     // Wild object not have owner and check clickable by players
@@ -4507,19 +4508,19 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                 // Random Costume
                 case 24720:
                 {
-                    if(!unitTarget || !unitTarget->isAlive())
+                    if (!unitTarget || !unitTarget->isAlive())
                         return;
 
                     uint32 spellId;
-                    switch(urand(0, 6))
+                    switch (urand(0, 6))
                     {
-                    case 0: spellId = 24717; break; // Pirate Costume
-                    case 1: spellId = 24741; break; // Wisp Costume
-                    case 2: spellId = 24724; break; // Skeleton Costume
-                    case 3: spellId = 24719; break; // Leper Gnome Costume
-                    case 4: spellId = 24718; break; // Ninja Costume
-                    case 5: spellId = 24737; break; // Ghost Costume
-                    case 6: spellId = 24733; break; // Bat Costume
+                        case 0: spellId = 24717; break; // Pirate Costume
+                        case 1: spellId = 24741; break; // Wisp Costume
+                        case 2: spellId = 24724; break; // Skeleton Costume
+                        case 3: spellId = 24719; break; // Leper Gnome Costume
+                        case 4: spellId = 24718; break; // Ninja Costume
+                        case 5: spellId = 24737; break; // Ghost Costume
+                        case 6: spellId = 24733; break; // Bat Costume
                     }
                     m_caster->CastSpell(unitTarget, spellId, true);
                 }
@@ -4527,49 +4528,49 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                 // Pirate Costume
                 case 24717:
                 {
-                    if(!unitTarget || !unitTarget->isAlive())
+                    if (!unitTarget || !unitTarget->isAlive())
                         return;
 
-                    if(unitTarget->getGender() == GENDER_MALE)
-                        m_caster->CastSpell(unitTarget,24708,true);
+                    if (unitTarget->getGender() == GENDER_MALE)
+                        m_caster->CastSpell(unitTarget, 24708, true);
                     else
-                        m_caster->CastSpell(unitTarget,24709,true);
+                        m_caster->CastSpell(unitTarget, 24709, true);
                 }
                 break;
                 // Ninja Costume
                 case 24718:
                 {
-                    if(!unitTarget || !unitTarget->isAlive())
+                    if (!unitTarget || !unitTarget->isAlive())
                         return;
 
-                    if(unitTarget->getGender() == GENDER_MALE)
-                        m_caster->CastSpell(unitTarget,24711,true);
+                    if (unitTarget->getGender() == GENDER_MALE)
+                        m_caster->CastSpell(unitTarget, 24711, true);
                     else
-                        m_caster->CastSpell(unitTarget,24710,true);
+                        m_caster->CastSpell(unitTarget, 24710, true);
                 }
                 break;
                 // Leper Gnome Costume
                 case 24719:
                 {
-                    if(!unitTarget || !unitTarget->isAlive())
+                    if (!unitTarget || !unitTarget->isAlive())
                         return;
 
-                    if(unitTarget->getGender() == GENDER_MALE)
-                        m_caster->CastSpell(unitTarget,24712,true);
+                    if (unitTarget->getGender() == GENDER_MALE)
+                        m_caster->CastSpell(unitTarget, 24712, true);
                     else
-                        m_caster->CastSpell(unitTarget,24713,true);
+                        m_caster->CastSpell(unitTarget, 24713, true);
                 }
                 break;
                 // Ghost Costume
                 case 24737:
                 {
-                    if(!unitTarget || !unitTarget->isAlive())
+                    if (!unitTarget || !unitTarget->isAlive())
                         return;
 
-                    if(unitTarget->getGender() == GENDER_MALE)
-                        m_caster->CastSpell(unitTarget,24735,true);
+                    if (unitTarget->getGender() == GENDER_MALE)
+                        m_caster->CastSpell(unitTarget, 24735, true);
                     else
-                        m_caster->CastSpell(unitTarget,24736,true);
+                        m_caster->CastSpell(unitTarget, 24736, true);
                 }
                 break;
                 // Piccolo of the Flaming Fire
@@ -4642,11 +4643,11 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                     break;
                 case 32314:
                 {
-                    Player *p_caster = dynamic_cast<Player*>(m_caster);
+                    Player* p_caster = m_caster->ToPlayer();
                     if (!p_caster)
                         break;
                     p_caster->RewardPlayerAndGroupAtEvent(18393, unitTarget);
-                    Creature *cTarget = dynamic_cast<Creature*>(unitTarget);
+                    Creature* cTarget = unitTarget->ToCreature();
                     if (!cTarget)
                         break;
                     cTarget->setDeathState(CORPSE);
@@ -4658,11 +4659,11 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                 case 34789:
                 case 41362:
                 {
-                    if(!unitTarget)
+                    if (!unitTarget)
                         return;
 
                     //[*Hack*]
-                    SpellInfo *triggeredSpellInfo = (SpellInfo*)sSpellMgr->GetSpellInfo(41363);
+                    SpellInfo* triggeredSpellInfo = (SpellInfo*)sSpellMgr->GetSpellInfo(41363);
                     triggeredSpellInfo->AttributesEx = SPELL_ATTR1_NO_THREAT;
 
                     m_caster->CastSpell(unitTarget, triggeredSpellInfo, true);
@@ -4791,29 +4792,30 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                 }
                 case 43375: // Mixing Blood - Quest 11306
                 {
-                    if(!unitTarget && unitTarget->GetTypeId() != TYPEID_PLAYER)
+                    if (!unitTarget && unitTarget->GetTypeId() != TYPEID_PLAYER)
                         return;
 
                     uint32 spellid = 0;
-                    switch(rand()% 4)
+                    switch (rand()% 4)
                     {
-                    case 0:
-                        spellid = 43378; // Summon Slime
-                        break;
-                    case 1:
-                        spellid = 43970; // Knockback and Damage
-                        break;
-                    case 2:
-                        spellid = 43376; // Fail without effekt
-                        break;
-                    //case 3:
-                    //    spellid = 43374; // Unstable Potion
-                    //    break;
-                    case 3:
-                        spellid = 43377; // Success
+                        case 0:
+                            spellid = 43378; // Summon Slime
+                            break;
+                        case 1:
+                            spellid = 43970; // Knockback and Damage
+                            break;
+                        case 2:
+                            spellid = 43376; // Fail without effekt
+                            break;
+                        //case 3:
+                        //    spellid = 43374; // Unstable Potion
+                        //    break;
+                        case 3:
+                            spellid = 43377; // Success
+                            break;
                     }
 
-                    unitTarget->CastSpell(unitTarget,spellid,true);
+                    unitTarget->CastSpell(unitTarget, spellid, true);
                     break;
                 }
                 // Brutallus - Burn
@@ -5695,7 +5697,7 @@ void Spell::EffectStuck(SpellEffIndex /*effIndex*/)
     Player* pTarget = (Player*)unitTarget;
 
     sLog->outDebug(LOG_FILTER_SPELLS_AURAS, "Spell Effect: Stuck");
-    if(pTarget && pTarget->getClass() == CLASS_DEATH_KNIGHT)
+    if (pTarget && pTarget->getClass() == CLASS_DEATH_KNIGHT)
         return;
 
     sLog->outDetail("Player %s (guid %u) used auto-unstuck future at map %u (%f, %f, %f)", pTarget->GetName(), pTarget->GetGUIDLow(), m_caster->GetMapId(), m_caster->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ());
@@ -6281,7 +6283,7 @@ void Spell::EffectKnockBack(SpellEffIndex effIndex)
 void Spell::EffectLeapBack(SpellEffIndex effIndex)
 {
     float speedxy = float(m_spellInfo->Effects[effIndex].MiscValue)/10;
-    
+
     //if (m_caster->ToPlayer())
     //    sAnticheatMgr->DisableAnticheatDetection(m_caster->ToPlayer());
 

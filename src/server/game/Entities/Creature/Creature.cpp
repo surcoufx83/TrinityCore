@@ -1594,14 +1594,6 @@ void Creature::Respawn(bool force)
 
         if (m_originalEntry != GetEntry())
             UpdateEntry(m_originalEntry);
-        // Need Check if needed
-        //if (!m_isDeadByDefault)
-        //    if (isTotem() || isTrigger() || GetCreatureType() == CREATURE_TYPE_CRITTER)
-        //        SetReactState(REACT_PASSIVE);
-        //    /*else if (isCivilian())
-        //        SetReactState(REACT_DEFENSIVE);*/
-        //    else
-        //        SetReactState(REACT_AGGRESSIVE);
 
         CreatureTemplate const *cinfo = GetCreatureInfo();
         SelectLevel(cinfo);

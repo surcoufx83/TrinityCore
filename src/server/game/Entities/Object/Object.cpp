@@ -2400,7 +2400,8 @@ Player* WorldObject::FindNearestPlayer(float range, bool alive)
     return player;
 }
 
-std::list<Player*> WorldObject::GetNearestPlayersList(float range, bool alive) {
+std::list<Player*> WorldObject::GetNearestPlayersList(float range, bool alive)
+{
     std::list<Player*> players;
     Trinity::AnyPlayerInObjectRangeCheck checker(this, range, alive);
     Trinity::PlayerListSearcher<Trinity::AnyPlayerInObjectRangeCheck> searcher(this, players, checker);
@@ -2741,7 +2742,7 @@ void WorldObject::DestroyForNearbyPlayers()
         return;
 
     std::list<Player*> targets;
-    Trinity::AnyPlayerInObjectRangeCheck check(this, GetVisibilityRange(),true);
+    Trinity::AnyPlayerInObjectRangeCheck check(this, GetVisibilityRange(), true);
     Trinity::PlayerListSearcher<Trinity::AnyPlayerInObjectRangeCheck> searcher(this, targets, check);
     VisitNearbyWorldObject(GetVisibilityRange(), searcher);
     for (std::list<Player*>::const_iterator iter = targets.begin(); iter != targets.end(); ++iter)
