@@ -421,6 +421,7 @@ class boss_algalon : public CreatureScript
                                 break;
                             case 6:
                                 me->DisappearAndDie();
+                                FinishEncounter();
                                 break;
                         }
                     }

@@ -494,6 +494,7 @@ public:
                 return;
 
             pInstance->SetBossState(TYPE_FREYA, DONE);
+            pInstance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, 65074);
 
             if (GetElderCount() == 3)
             {
