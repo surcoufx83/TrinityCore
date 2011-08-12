@@ -5808,10 +5808,6 @@ bool Spell::CanAutoCast(Unit* target)
 
 SpellCastResult Spell::CheckRange(bool /*strict*/)
 {
-    // try to keep this
-    if (m_spellInfo->RangeEntry && m_spellInfo->RangeEntry->ID == 1)
-        return SPELL_CAST_OK;
-
     Unit* target = m_targets.GetUnitTarget();
     float max_range = m_caster->GetSpellMaxRangeForTarget(target, m_spellInfo);
     float min_range = m_caster->GetSpellMinRangeForTarget(target, m_spellInfo);
