@@ -845,6 +845,187 @@ class npc_captured_crusader : public CreatureScript
         }
 };
 
+/*########
+## npc_the_ocular
+#########*/
+         
+enum TheOcularSpells
+{
+    SPELL_THE_OCULAR_TRANSFORM                              = 55162,        // Done by creature_template_addon
+    SPELL_DEATHLY_STARE                                     = 55269,      
+    SPELL_ITS_ALL_FUN_AND_GAMES_THE_OCULAR_ON_DEATH         = 55288,
+    SPELL_ITS_ALL_FUN_AND_GAMES_THE_OCULAR_KILL_CREDIT      = 55289
+};
+         
+enum ReqCreatures
+{
+   NPC_THE_OCULAR                                  = 29747,
+   NPC_THE_OCULAR_DESTROYED_KILL_CREDIT_BUNNY      = 29803
+};
+
+class npc_the_ocular : public CreatureScript
+{
+public:
+    npc_the_ocular() : CreatureScript("npc_the_ocular") { }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_the_ocularAI (pCreature);
+    }
+
+    struct npc_the_ocularAI : public Scripted_NoMovementAI
+    {
+        npc_the_ocularAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { }
+
+        uint32 uiDeathlyStareTimer;
+
+        void Reset()
+        {
+            uiDeathlyStareTimer = (urand (5000,7000));
+        }
+
+        void JustDied (Unit* killer)
+        {
+            if(killer && killer->ToPlayer())
+                killer->ToPlayer()->KilledMonsterCredit(NPC_THE_OCULAR_DESTROYED_KILL_CREDIT_BUNNY, 0);
+            me->RemoveCorpse();
+        }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            if (uiDeathlyStareTimer <= uiDiff)
+            {
+                DoCastVictim(SPELL_DEATHLY_STARE);
+                uiDeathlyStareTimer = (urand (7000,9000));
+            }
+            else uiDeathlyStareTimer -= uiDiff;
+        }
+    };
+};
+/*
+DELETE FROM `creature_ai_scripts` WHERE `creature_id`=29747;
+DELETE FROM `smart_scripts` WHERE `entryorguid`=29747;
+UPDATE `creature_template` SET `unit_flags`=`unit_flags`|268435456,`AIName`='',`InhabitType`=`InhabitType`|4,`ScriptName`='npc_the_ocular' WHERE `entry`=29747;
+UPDATE `creature_model_info` SET `combat_reach`=100 WHERE `modelid`=26533;
+
+DELETE FROM `creature_template_addon` WHERE `entry`=29747;
+INSERT INTO `creature_template_addon` (`entry`,`path_id`,`mount`,`bytes1`,`bytes2`,`emote`,`auras`) VALUES
+(29747,0,0,0,0,0,'55162'); -- The Ocular: Transform
+
+UPDATE `creature_template` SET `unit_flags`=`unit_flags`|2|33554432 WHERE `entry`=29790;
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry`=30740;
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceGroup`,`SourceEntry`,`ElseGroup`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`ConditionValue3`,`ErrorTextId`,`ScriptName`,`Comment`) VALUES
+(13,0,30740,0,18,1,29747,0,63,'','Eyesore Blaster only target The Oculus');
+*/
+
+enum eGeneralLightsbaneSpells
+{
+    SPELL_CLEAVE                = 15284,
+    SPELL_DEATH_AND_DECAY       = 60160,
+    SPELL_PLAGUE_STRIKE         = 60186,
+};
+
+enum eNpcs
+{
+    ENTRY_VILE                  = 29860,
+    ENTRY_THE_LEAPER            = 29859,
+    ENTRY_LADY_NIGHTSWOOD       = 29858,
+};
+
+/*
+UPDATE `creature_template` SET faction_A = 2050, faction_H = 2050 WHERE `entry` in (29860,29859,29858);
+UPDATE `creature_template` SET AIName='', `ScriptName`='npc_general_lightsbane' WHERE `entry` = 29851;
+*/
+
+class npc_general_lightsbane : public CreatureScript
+{
+public:
+    npc_general_lightsbane() : CreatureScript("npc_general_lightsbane") { }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_general_lightsbaneAI (pCreature);
+    }
+
+    struct npc_general_lightsbaneAI : public ScriptedAI
+    {
+        npc_general_lightsbaneAI(Creature* pCreature) : ScriptedAI(pCreature) { }
+
+        uint32 uiCleave_Timer;
+        uint32 uiDeathDecay_Timer;
+        uint32 uiPlagueStrike_Timer;
+        uint32 uiSummonSupport_Timer;
+        bool supportSummoned;
+
+        void Reset()
+        {
+            uiCleave_Timer = urand (2000,3000);
+            uiDeathDecay_Timer = urand (15000,20000);
+            uiPlagueStrike_Timer = urand (5000,10000);
+
+            std::list<Creature*> TargetList;
+            me->GetCreatureListWithEntryInGrid(TargetList,me->GetEntry(), 100.0f);
+            if(TargetList.size() > 1)
+            {
+                me->DespawnOrUnsummon(1000);
+            }
+
+            uiSummonSupport_Timer = 5000;
+            supportSummoned = false;
+        }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            if(!supportSummoned)
+                if (uiSummonSupport_Timer <= uiDiff)
+                {
+                    Creature* temp = DoSummon(ENTRY_VILE,me,5,20000,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT);
+                    temp->AI()->AttackStart(me);
+                    
+                    temp = DoSummon(ENTRY_THE_LEAPER,me,5,20000,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT);
+                    temp->AI()->AttackStart(me);
+
+                    temp = DoSummon(ENTRY_LADY_NIGHTSWOOD,me,5,20000,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT);
+                    temp->AI()->AttackStart(me);
+
+                    uiSummonSupport_Timer = (urand (4000,5000));
+                    supportSummoned = true;
+                }
+                else uiSummonSupport_Timer -= uiDiff;
+
+            if (uiCleave_Timer <= uiDiff)
+            {
+                DoCastVictim(SPELL_CLEAVE);
+                uiCleave_Timer = (urand (4000,5000));
+            }
+            else uiCleave_Timer -= uiDiff;
+
+            if (uiDeathDecay_Timer <= uiDiff)
+            {
+                DoCastVictim(SPELL_DEATH_AND_DECAY);
+                uiDeathDecay_Timer = urand (15000,20000);
+            }
+            else uiDeathDecay_Timer -= uiDiff;
+
+            if (uiPlagueStrike_Timer <= uiDiff)
+            {
+                DoCastVictim(SPELL_PLAGUE_STRIKE);
+                uiPlagueStrike_Timer = urand (5000,10000);
+            }
+            else uiPlagueStrike_Timer -= uiDiff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
+};
+
+
 void AddSC_icecrown()
 {
     new npc_arete();
@@ -857,4 +1038,6 @@ void AddSC_icecrown()
     new spell_argent_cannon();
     new npc_blessed_banner();
     new npc_captured_crusader();
+    new npc_the_ocular();
+    new npc_general_lightsbane();
 }
