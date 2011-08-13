@@ -1071,28 +1071,8 @@ public:
     }
 };
 
-// Remove ChampionOfUlduar Progress on Bind to Instance (needs more tests)
-class ChampionOfUlduarPlayerScript : public PlayerScript
-{
-public:
-    ChampionOfUlduarPlayerScript() : PlayerScript("ChampionOfUlduarPlayerScript") { }
-
-    void OnBindToInstance(Player* player, Difficulty diff, uint32 mapid, bool permanent)
-    {
-        if(mapid != 603)
-            return;
-
-        uint32 achievement = diff == RAID_DIFFICULTY_10MAN_NORMAL? ACHIEVEMENT_CHAMPION_OF_ULDUAR : ACHIEVEMENT_CONQUEROR_OF_ULDUAR;
-
-        if (!player->HasAchieved(achievement))
-            player->GetAchievementMgr().RemoveAchievement(achievement);
-    }
-};
-
-
 void AddSC_instance_ulduar()
 {
     new instance_ulduar();
     new go_call_tram();
-    new ChampionOfUlduarPlayerScript();
 }
