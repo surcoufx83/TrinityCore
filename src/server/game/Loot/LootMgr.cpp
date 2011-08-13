@@ -1501,6 +1501,8 @@ void LoadLootTemplates_Fishing()
             if (ids_set.find(areaEntry->ID) != ids_set.end())
                 ids_set.erase(areaEntry->ID);
 
+    ids_set.erase(FISHING_JUNK_ID);
+
     // output error for any still listed (not referenced from appropriate table) ids
     LootTemplates_Fishing.ReportUnusedIds(ids_set);
 

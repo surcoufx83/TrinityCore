@@ -53,6 +53,8 @@ enum RollMask
 #define MAX_NR_QUEST_ITEMS 32
 // unrelated to the number of quest items shown, just for reserve
 
+#define FISHING_JUNK_ID 5000
+
 enum LootMethod
 {
     FREE_FOR_ALL      = 0,

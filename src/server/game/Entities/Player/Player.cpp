@@ -8712,7 +8712,7 @@ void Player::SendLootRelease(uint64 guid)
     SendDirectMessage(&data);
 }
 
-void Player::SendLoot(uint64 guid, LootType loot_type)
+void Player::SendLoot(uint64 guid, LootType loot_type, bool junk)
 {
     if (uint64 lguid = GetLootGUID())
         m_session->DoLootRelease(lguid);
@@ -8769,7 +8769,7 @@ void Player::SendLoot(uint64 guid, LootType loot_type)
             }
 
             if (loot_type == LOOT_FISHING)
-                go->getFishLoot(loot, this);
+                go->getFishLoot(loot, this, junk);
 
             if (go->GetGOInfo()->type == GAMEOBJECT_TYPE_CHEST && go->GetGOInfo()->chest.groupLootRules)
             {

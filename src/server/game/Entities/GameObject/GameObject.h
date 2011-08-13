@@ -698,7 +698,7 @@ class GameObject : public WorldObject, public GridObject<GameObject>
         uint32 GetRespawnDelay() const { return m_respawnDelayTime; }
         void Refresh();
         void Delete();
-        void getFishLoot(Loot *loot, Player* loot_owner);
+        void getFishLoot(Loot* loot, Player* loot_owner, bool junk = false);
         GameobjectTypes GetGoType() const { return GameobjectTypes(GetByteValue(GAMEOBJECT_BYTES_1, 1)); }
         void SetGoType(GameobjectTypes type) { SetByteValue(GAMEOBJECT_BYTES_1, 1, type); }
         GOState GetGoState() const { return GOState(GetByteValue(GAMEOBJECT_BYTES_1, 0)); }

@@ -630,12 +630,15 @@ void GameObject::Delete()
         AddObjectToRemoveList();
 }
 
-void GameObject::getFishLoot(Loot *fishloot, Player* loot_owner)
+void GameObject::getFishLoot(Loot* fishloot, Player* loot_owner, bool junk)
 {
     fishloot->clear();
 
     uint32 zone, subzone;
     GetZoneAndAreaId(zone, subzone);
+
+    if (junk)
+        subzone = FISHING_JUNK_ID;
 
     // if subzone loot exist use it
     if (!fishloot->FillLoot(subzone, LootTemplates_Fishing, loot_owner, true, true))
@@ -1291,15 +1294,15 @@ void GameObject::Use(Unit* user)
 
                     sLog->outStaticDebug("Fishing check (skill: %i zone min skill: %i chance %i roll: %i", skill, zone_skill, chance, roll);
 
-                    // but you will likely cause junk in areas that require a high fishing skill (not yet implemented)
+                    player->UpdateFishingSkill();
+
+                    // prevent removing GO at spell cancel
+                    player->RemoveGameObject(this, false);
+                    SetOwnerGUID(player->GetGUID());
+
+                    // but you will likely cause junk in areas that require a high fishing skill
                     if (chance >= roll)
                     {
-                        player->UpdateFishingSkill();
-
-                        // prevent removing GO at spell cancel
-                        player->RemoveGameObject(this, false);
-                        SetOwnerGUID(player->GetGUID());
-
                         //TODO: find reasonable value for fishing hole search
                         GameObject* ok = LookupFishingHoleAround(20.0f + CONTACT_DISTANCE);
                         if (ok)
@@ -1310,7 +1313,8 @@ void GameObject::Use(Unit* user)
                         else
                             player->SendLoot(GetGUID(), LOOT_FISHING);
                     }
-                    // TODO: else: junk
+                    else
+                        player->SendLoot(GetGUID(), LOOT_FISHING, true);
 
                     break;
                 }
