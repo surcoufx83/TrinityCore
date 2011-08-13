@@ -5737,10 +5737,11 @@ void ObjectMgr::LoadGraveyardZones()
     sLog->outString(">> Loaded %u graveyard-zone links in %u ms", count, GetMSTimeDiffToNow(oldMSTime));
     sLog->outString();
 }
-WorldSafeLocsEntry const *ObjectMgr::GetClosestGraveYard(Player* player)
-{
-    return GetClosestGraveYard(player->GetPositionX(),player->GetPositionY(),player->GetPositionZ(),player->GetMapId(),player->GetTeam(),player->getClass());
-}
+
+//WorldSafeLocsEntry const *ObjectMgr::GetClosestGraveYard(Player* player)
+//{
+//    return GetClosestGraveYard(player->GetPositionX(),player->GetPositionY(),player->GetPositionZ(),player->GetMapId(),player->GetTeam(),player->getClass());
+//}
 
 WorldSafeLocsEntry const *ObjectMgr::GetDefaultGraveYard(uint32 team)
 {
