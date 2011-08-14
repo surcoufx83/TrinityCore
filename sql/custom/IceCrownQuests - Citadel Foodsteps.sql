@@ -94,7 +94,7 @@ UPDATE quest_template SET PrevQuestId = 13144, NextQuestId = 0, ExclusiveGroup =
 -- He's Gone to Pieces ... Prev: Killing Two Scourge With One Skeleton ... NextQuestInChain: Putting Olakin Back Together Again
 UPDATE quest_template SET PrevQuestId = 13144, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 13220 WHERE entry = 13212;
 -- Putting Olakin Back Together Again ... Prev: He's Gone to Pieces ... NextQuestInChain: The Flesh Giant Champion
-UPDATE quest_template SET PrevQuestId = 13212, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 13220 WHERE entry = 13220;
+UPDATE quest_template SET PrevQuestId = 13212, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 13235 WHERE entry = 13220;
 -- The Flesh Giant Champion ... Prev: Putting Olakin Back Together Again
 UPDATE quest_template SET PrevQuestId = 13220, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 13235;
 
@@ -147,7 +147,7 @@ UPDATE quest_template SET PrevQuestId = 13402, NextQuestId = 0, ExclusiveGroup =
 
 -- ####################################################
 
--- Opportunity ... Prev: Orgrim's Hammer AND The ShadowVault ... NextQuestInChain: Securing the Perimeter
+-- Opportunity ... Prev: Orgrim's Hammer AND The ShadowVault ... NextQuestInChain: Establishing Superiority
 UPDATE quest_template SET PrevQuestId = 0, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 13259 WHERE entry = 13258;
 DELETE FROM conditions WHERE SourceEntry = 13258 AND SourceTypeOrReferenceId IN (20,19);
 INSERT INTO conditions VALUES
