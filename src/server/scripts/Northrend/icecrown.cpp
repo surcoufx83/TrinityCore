@@ -875,25 +875,31 @@ public:
 
     struct npc_the_ocularAI : public Scripted_NoMovementAI
     {
-        npc_the_ocularAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { }
+        npc_the_ocularAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature){ }
 
         uint32 uiDeathlyStareTimer;
 
         void Reset()
         {
-            DoCast(SPELL_THE_OCULAR_TRANSFORM);
             uiDeathlyStareTimer = (urand (5000,7000));
+        }
+
+        void DamageTaken(Unit* attacker, uint32 &damage)
+        {
+            me->LowerPlayerDamageReq(damage);
         }
 
         void JustDied (Unit* killer)
         {
             if(killer && killer->ToPlayer())
-                killer->ToPlayer()->KilledMonsterCredit(NPC_THE_OCULAR_DESTROYED_KILL_CREDIT_BUNNY, me->GetGUID());
-            me->RemoveCorpse();
+                killer->ToPlayer()->CastSpell(killer,SPELL_ITS_ALL_FUN_AND_GAMES_THE_OCULAR_KILL_CREDIT,true);
         }
 
         void UpdateAI(const uint32 uiDiff)
         {
+            if(!me->HasAura(SPELL_THE_OCULAR_TRANSFORM))
+                DoCast(me,SPELL_THE_OCULAR_TRANSFORM,true);
+
             if (!UpdateVictim())
                 return;
 
