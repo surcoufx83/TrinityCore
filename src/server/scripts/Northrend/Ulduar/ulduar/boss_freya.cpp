@@ -494,7 +494,6 @@ public:
                 return;
 
             pInstance->SetBossState(TYPE_FREYA, DONE);
-            pInstance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, 65074);
 
             if (GetElderCount() == 3)
             {
@@ -515,14 +514,14 @@ public:
                 }
             }
 
+            EnterEvadeMode();
+            me->ForcedDespawn(7500);
+
             // getting back to nature achievement
             attunedToNature = me->GetAuraCount(SPELL_ATTUNED_TO_NATURE);
 
-            // getting back to nature, knock (knock knock) on wood
+            // achievements credit
             DoCast(me, SPELL_ACHIEVEMENT_CHECK, true);
-
-            EnterEvadeMode();
-            me->ForcedDespawn(7500);
 
             Creature* Elder[3];
             for (uint8 n = 0; n < 3; ++n)

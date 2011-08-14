@@ -1200,6 +1200,11 @@ public:
                     {
                         float orient = me->GetOrientation();
                         me->SetFacing(orient + (direction ? M_PI/60 : -M_PI/60));
+                        float x, y, z;
+                        z = me->GetPositionZ();
+                        me->GetNearPoint2D(x, y, 10.0f, me->GetOrientation());
+                        if (Creature* temp = me->SummonCreature(NPC_BURST_TARGET, x, y, z, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 250))
+                            me->SetTarget(temp->GetGUID());
                     }
                     spinTimer = 250;
                 }
@@ -1242,7 +1247,8 @@ public:
                             break;
                         case EVENT_LASER_BARRAGE_END:
                             me->SetReactState(REACT_AGGRESSIVE);
-                            AttackStart(me->getVictim());
+                            if (me->getVictim())
+                                AttackStart(me->getVictim());
                             spinning = false;
                             break;
                         case EVENT_ROCKET_STRIKE:

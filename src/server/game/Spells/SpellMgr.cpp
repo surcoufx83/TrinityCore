@@ -2750,7 +2750,7 @@ void SpellMgr::LoadSpellCustomAttr()
             case 43140: // Flame Breath
             case 43215: // Flame Breath
             case 70461: // Coldflame Trap
-        case 63293: // Mimiron - P3Wx2 Laser Barrage
+            case 63293: // Mimiron - P3Wx2 Laser Barrage
                 spellInfo->AttributesCu |= SPELL_ATTR0_CU_CONE_LINE;
                 break;
             case 24340: // Meteor
@@ -2791,37 +2791,37 @@ void SpellMgr::LoadSpellCustomAttr()
             case 71482: // Bloodbolt Splash
             case 71483: // Bloodbolt Splash
             case 71390: // Pact of the Darkfallen
-        case 63025: // XT-002 Gravity Bomb
-        case 64233: // XT-002 Gravity Bomb
+            case 63025: // XT-002 Gravity Bomb
+            case 64233: // XT-002 Gravity Bomb
                 spellInfo->AttributesCu |= SPELL_ATTR0_CU_EXCLUDE_SELF;
                 break;
-        case 28836: //Mark - should not be resistet
-        case 28786: //Locust Swarm
-        case 54022: //Locust Swarm
-        case 57581: //Shadow Fissure - Sartharion Drakes
-        case 59128: //Shadow Fissure - Sartharion Drakes
-        case 57570: //Shadow Breath - Sartharion Drakes
-        case 59126: //Shadow Breath - Sartharion Drakes
-        case 56908: //Fire Breath - Sartharion
-        case 58956: //Fire Breath - Sartharion
-        case 57874: //Twilight Shift Damage - Sartharion
-            spellInfo->AttributesCu |= SPELL_ATTR0_CU_DIRECT_DAMAGE; // spellInfo->AttributesEx4 |= SPELL_ATTR4_FIXED_DAMAGE;
-            spellInfo->AttributesCu |= SPELL_ATTR0_CU_IGNORE_ARMOR;
-            break;
-        case 64218: // Emalon - Overcharge
-        case 64216: // Emalon - Lightning Nova
-        case 65279: // Emalon - Lightning Nova
-        case 62016: // Thorim - Charge Orb
-        case 65210: // Keeper Mimiron Destabilization Matrix - Ignore LoS (because Mimiron stands in a Tube and is out of LoS)
-        case 62042: // Thorim - Stormhammer
-        case 62521: // Freya - Attuned to Nature 25 Dose Reduction
-        case 62524: // Freya - Attuned to Nature 2 Dose Reduction
-        case 62525: // Freya - Attuned to Nature 10 Dose Reduction
-            spellInfo->AttributesCu |= SPELL_ATTR0_CU_IGNORE_LOS;
-            break;
+            case 28836: //Mark - should not be resistet
+            case 28786: //Locust Swarm
+            case 54022: //Locust Swarm
+            case 57581: //Shadow Fissure - Sartharion Drakes
+            case 59128: //Shadow Fissure - Sartharion Drakes
+            case 57570: //Shadow Breath - Sartharion Drakes
+            case 59126: //Shadow Breath - Sartharion Drakes
+            case 56908: //Fire Breath - Sartharion
+            case 58956: //Fire Breath - Sartharion
+            case 57874: //Twilight Shift Damage - Sartharion
+                spellInfo->AttributesCu |= SPELL_ATTR0_CU_DIRECT_DAMAGE; // spellInfo->AttributesEx4 |= SPELL_ATTR4_FIXED_DAMAGE;
+                spellInfo->AttributesCu |= SPELL_ATTR0_CU_IGNORE_ARMOR;
+                break;
+            case 64218: // Emalon - Overcharge
+            case 64216: // Emalon - Lightning Nova
+            case 65279: // Emalon - Lightning Nova
+            case 62016: // Thorim - Charge Orb
+            case 65210: // Keeper Mimiron Destabilization Matrix - Ignore LoS (because Mimiron stands in a Tube and is out of LoS)
+            case 62042: // Thorim - Stormhammer
+            case 62521: // Freya - Attuned to Nature 25 Dose Reduction
+            case 62524: // Freya - Attuned to Nature 2 Dose Reduction
+            case 62525: // Freya - Attuned to Nature 10 Dose Reduction
+                spellInfo->AttributesCu |= SPELL_ATTR0_CU_IGNORE_LOS;
+                break;
             case 18500: // Wing Buffet
             case 33086: // Wild Bite
-        case 28375: // Decimate
+            case 28375: // Decimate
             case 49749: // Piercing Blow
             case 52890: // Penetrating Strike
             case 53454: // Impale
@@ -2837,9 +2837,9 @@ void SpellMgr::LoadSpellCustomAttr()
             case 74439: // Machine Gun
                 spellInfo->AttributesCu |= SPELL_ATTR0_CU_IGNORE_ARMOR;
                 break;
-        case 62775: // XT-002 - Tympanic Tantrum
-        case 64443: // Algalon - Big Bang
-        case 64584: // Algalon - Big Bang
+            case 62775: // XT-002 - Tympanic Tantrum
+            case 64443: // Algalon - Big Bang
+            case 64584: // Algalon - Big Bang
             case 63278: // Mark of the Faceless (General Vezax)
                 spellInfo->AttributesCu |= SPELL_ATTR0_CU_IGNORE_ARMOR;
                 break;
@@ -3392,6 +3392,11 @@ void SpellMgr::LoadDbcDataCorrections()
             case 63483: // Lightning Whirl (Brundir)
                 spellInfo->InterruptFlags |= SPELL_INTERRUPT_FLAG_INTERRUPT;
                 break;
+            case 63414: // Mimiron - Spinning Up
+            case 63274: // Mimiron - Laser Barrage
+                // temporary remove channeled flag due to facing issues when casting on self
+                spellInfo->AttributesEx &= ~SPELL_ATTR1_CHANNELED_1;
+                break;
             // ENDOF ULDUAR SPELLS
             //
             // TRIAL OF THE CRUSADER SPELLS
@@ -3455,12 +3460,12 @@ void SpellMgr::LoadDbcDataCorrections()
             case 72675: // Mutated Strength (Professor Putricide)
                 spellInfo->Effect[1] = 0;
                 break;
-        case 72454: // Mutated Plague (Professor Putricide)
-        case 72464: // Mutated Plague (Professor Putricide)
-        case 72506: // Mutated Plague (Professor Putricide)
-        case 72507: // Mutated Plague (Professor Putricide)
-            spellInfo->EffectRadiusIndex[0] = 28;   // 50000yd
-            break;
+            case 72454: // Mutated Plague (Professor Putricide)
+            case 72464: // Mutated Plague (Professor Putricide)
+            case 72506: // Mutated Plague (Professor Putricide)
+            case 72507: // Mutated Plague (Professor Putricide)
+                spellInfo->EffectRadiusIndex[0] = 28;   // 50000yd
+                break;
             case 70911: // Unbound Plague (Professor Putricide)
             case 72854: // Unbound Plague (Professor Putricide)
             case 72855: // Unbound Plague (Professor Putricide)
