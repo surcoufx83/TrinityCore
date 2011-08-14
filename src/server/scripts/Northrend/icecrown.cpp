@@ -851,8 +851,8 @@ class npc_captured_crusader : public CreatureScript
          
 enum TheOcularSpells
 {
-    SPELL_THE_OCULAR_TRANSFORM                              = 55162,        // Done by creature_template_addon
-    SPELL_DEATHLY_STARE                                     = 55269,      
+    SPELL_THE_OCULAR_TRANSFORM                              = 55162,
+    SPELL_DEATHLY_STARE                                     = 55269,
     SPELL_ITS_ALL_FUN_AND_GAMES_THE_OCULAR_ON_DEATH         = 55288,
     SPELL_ITS_ALL_FUN_AND_GAMES_THE_OCULAR_KILL_CREDIT      = 55289
 };
@@ -881,13 +881,14 @@ public:
 
         void Reset()
         {
+            DoCast(SPELL_THE_OCULAR_TRANSFORM);
             uiDeathlyStareTimer = (urand (5000,7000));
         }
 
         void JustDied (Unit* killer)
         {
             if(killer && killer->ToPlayer())
-                killer->ToPlayer()->KilledMonsterCredit(NPC_THE_OCULAR_DESTROYED_KILL_CREDIT_BUNNY, 0);
+                killer->ToPlayer()->KilledMonsterCredit(NPC_THE_OCULAR_DESTROYED_KILL_CREDIT_BUNNY, me->GetGUID());
             me->RemoveCorpse();
         }
 
