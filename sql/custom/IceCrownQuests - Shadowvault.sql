@@ -22,19 +22,37 @@ INSERT INTO conditions VALUES
 -- Honor Challenge ... Prev: The Duke ... NextInChain: Shadow Vault Decree
 UPDATE quest_template SET PrevQuestId = 12938, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 12943 WHERE entry = 12939;
 -- Shadow Vault Decree ... Prev: Honor Challenge
-UPDATE quest_template SET PrevQuestId = 12939, NextQuestId = 0, ExclusiveGroup = -12943, NextQuestInChain = 0 WHERE entry = 12943;
+UPDATE quest_template SET PrevQuestId = 12939, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 12943;
 
 -- Get the Key ... Prev: Honor Challenge ... NextInChain: Let the Baron Know
-UPDATE quest_template SET PrevQuestId = 12938, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 12951 WHERE entry = 12943;
+UPDATE quest_template SET PrevQuestId = 12938, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 12951 WHERE entry = 12949;
 -- Let the Baron Know ... Prev: Get the Key 
-UPDATE quest_template SET PrevQuestId = 12943, NextQuestId = 0, ExclusiveGroup = -12943, NextQuestInChain = 0 WHERE entry = 12951;
+UPDATE quest_template SET PrevQuestId = 12949, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 12951;
 
 -- Vandalizing Jotunheim ... Prev: Let the Baron Know AND Shadow Vault Decree 
 UPDATE quest_template SET PrevQuestId = 12943, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 13084;
+DELETE FROM conditions WHERE SourceEntry = 13084 AND SourceTypeOrReferenceId IN (20,19);
+INSERT INTO conditions VALUES
+(20,0,13084,0,8,12951,0,0,0,'',''),
+(19,0,13084,0,8,12951,0,0,0,'',''),
+(20,0,13084,0,8,12943,0,0,0,'',''),
+(19,0,13084,0,8,12943,0,0,0,'','');
 -- Leave Our Mark ... Prev: Let the Baron Know AND Shadow Vault Decree 
 UPDATE quest_template SET PrevQuestId = 12943, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 12995;
+DELETE FROM conditions WHERE SourceEntry = 12995 AND SourceTypeOrReferenceId IN (20,19);
+INSERT INTO conditions VALUES
+(20,0,12995,0,8,12951,0,0,0,'',''),
+(19,0,12995,0,8,12951,0,0,0,'',''),
+(20,0,12995,0,8,12943,0,0,0,'',''),
+(19,0,12995,0,8,12943,0,0,0,'','');
 -- Crush Dem Vrykuls! ... Prev: Let the Baron Know AND Shadow Vault Decree ... NextInChain: Vile Like Fire!
 UPDATE quest_template SET PrevQuestId = 12943, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 13071 WHERE entry = 12992;
+DELETE FROM conditions WHERE SourceEntry = 12992 AND SourceTypeOrReferenceId IN (20,19);
+INSERT INTO conditions VALUES
+(20,0,12992,0,8,12951,0,0,0,'',''),
+(19,0,12992,0,8,12951,0,0,0,'',''),
+(20,0,12992,0,8,12943,0,0,0,'',''),
+(19,0,12992,0,8,12943,0,0,0,'','');
 -- -- Vile Like Fire! ... Prev: Crush Dem Vrykuls!
 UPDATE quest_template SET PrevQuestId = 13071, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 13071;
 
