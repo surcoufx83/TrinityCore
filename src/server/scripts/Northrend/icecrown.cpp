@@ -1210,6 +1210,208 @@ public:
     };
 };
 
+/*########
+## Saronite Mine Slave
+#########*/
+
+enum eEntrysSlaveToSaronite
+{
+    QUEST_SLAVES_TO_SARONITE_ALLIANCE       = 13300,
+    QUEST_SLAVES_TO_SARONITE_HORDE          = 13302,
+
+    ENTRY_SLAVE_QUEST_CREDIT                = 31866,
+
+    SPELL_SLAVE_ENRAGE                      = 8599,
+    SPELL_HEAD_CRACK                        = 3148,
+
+    ACTION_ENRAGED                          = 0,
+    ACTION_INSANE                           = 1,
+    ACTION_FREED                            = 2,
+};
+
+const Position FreedPos[2] = 
+{
+    { 7030.0f,  1862.0f, 533.2f, 0.0f },
+    { 6947.0f,  2027.0f, 519.7f, 0.0f }
+};
+
+#define GOSSIP_OPTION_FREE  "Go on, you're free. Get out of here!"
+
+#define SAY_SLAVE_AGGRO_1 "AHAHAHAHA... you'll join us soon enough!"
+#define SAY_SLAVE_AGGRO_2 "I don't want to leave! I want to stay here!"
+#define SAY_SLAVE_AGGRO_3 "I won't leave!"
+#define SAY_SLAVE_AGGRO_4 "NO! You're wrong! The voices in my head are beautiful!"
+
+#define SAY_SLAVE_INSANE_1 "I must get further underground to where he is. I must jump!"
+#define SAY_SLAVE_INSANE_2 "I'll never return. The whole reason for my existence awaits below!"
+#define SAY_SLAVE_INSANE_3 "I'm coming, master!"
+#define SAY_SLAVE_INSANE_4 "My life for you!"
+
+// UPDATE `creature_template` SET ScriptName = 'npc_saronite_mine_slave' WHERE `entry` = 31397;
+
+class npc_saronite_mine_slave : public CreatureScript
+{
+public:
+    npc_saronite_mine_slave() : CreatureScript("npc_saronite_mine_slave") { }
+
+    bool OnGossipHello(Player* player, Creature* creature)
+    {
+        if ((player->GetQuestStatus(QUEST_SLAVES_TO_SARONITE_HORDE) == QUEST_STATUS_INCOMPLETE) || (player->GetQuestStatus(QUEST_SLAVES_TO_SARONITE_ALLIANCE) == QUEST_STATUS_INCOMPLETE) )
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_OPTION_FREE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+        player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
+        return true;
+    }
+
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
+    {
+        player->PlayerTalkClass->ClearMenus();
+        player->CLOSE_GOSSIP_MENU();
+
+        if (uiAction == (GOSSIP_ACTION_INFO_DEF + 1))
+        {
+            creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
+            if(urand(0,1) == 0)
+            {
+                creature->AI()->DoAction(ACTION_FREED);
+                player->KilledMonsterCredit(ENTRY_SLAVE_QUEST_CREDIT,0);
+            }else
+            {
+                if(urand(0,1) == 0)
+                {
+                    creature->AI()->DoAction(ACTION_ENRAGED);
+                    creature->setFaction(16);
+                    creature->CastSpell(creature,SPELL_SLAVE_ENRAGE);
+                    creature->AI()->AttackStart(player);
+                }else creature->AI()->DoAction(ACTION_INSANE);
+            }
+        }
+        return true;
+    }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_saronite_mine_slaveAI (pCreature);
+    }
+
+    struct npc_saronite_mine_slaveAI : public ScriptedAI
+    {
+        npc_saronite_mine_slaveAI(Creature* pCreature) : ScriptedAI(pCreature)
+        {
+            alreadyFreed = false;
+            enraged = false;
+        }
+
+        bool enraged;
+        bool alreadyFreed;
+
+        uint32 uiHeadCrack_Timer;
+
+        void DoAction(const int32 action)
+        {
+            switch(action)
+            {
+            case ACTION_ENRAGED:
+                enraged = true;
+                alreadyFreed = true;
+                switch(urand(0,3))
+                {
+                case 0:
+                    me->MonsterYell(SAY_SLAVE_AGGRO_1,LANG_UNIVERSAL,me->GetGUID());
+                    break;
+                case 1:
+                    me->MonsterYell(SAY_SLAVE_AGGRO_2,LANG_UNIVERSAL,me->GetGUID());
+                    break;
+                case 2:
+                    me->MonsterYell(SAY_SLAVE_AGGRO_3,LANG_UNIVERSAL,me->GetGUID());
+                    break;
+                case 3:
+                    me->MonsterYell(SAY_SLAVE_AGGRO_4,LANG_UNIVERSAL,me->GetGUID());
+                    break;
+                }
+                break;
+            case ACTION_FREED:
+                alreadyFreed = true;
+                me->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
+                me->GetMotionMaster()->MovePoint(0,FreedPos[0]);
+                me->DespawnOrUnsummon(15000);
+                break;
+            case ACTION_INSANE:
+                alreadyFreed = true;
+                switch(urand(0,3))
+                {
+                case 0:
+                    me->MonsterYell(SAY_SLAVE_INSANE_1,LANG_UNIVERSAL,me->GetGUID());
+                    break;
+                case 1:
+                    me->MonsterYell(SAY_SLAVE_INSANE_2,LANG_UNIVERSAL,me->GetGUID());
+                    break;
+                case 2:
+                    me->MonsterYell(SAY_SLAVE_INSANE_3,LANG_UNIVERSAL,me->GetGUID());
+                    break;
+                case 3:
+                    me->MonsterYell(SAY_SLAVE_INSANE_4,LANG_UNIVERSAL,me->GetGUID());
+                    break;
+                }
+                me->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
+                me->GetMotionMaster()->MovePoint(0,FreedPos[1]);
+                me->DespawnOrUnsummon(15000);
+                break;
+            }
+        }
+
+        void MoveInLineOfSight(Unit* mover)
+        {
+            if(!enraged)
+                return;
+
+            ScriptedAI::MoveInLineOfSight(mover);
+        }
+
+        void AttackStart(Unit* attacker)
+        {
+            if(!enraged)
+                return;
+
+            ScriptedAI::AttackStart(attacker);
+        }
+
+        void Reset()
+        {
+            if(alreadyFreed)
+            {
+                alreadyFreed = false;
+                me->DespawnOrUnsummon(10000);
+            }else
+            {
+                me->RestoreFaction();
+                me->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+                alreadyFreed = false;
+                enraged = false;
+            }
+        }
+
+        void EnterCombat(Unit* who)
+        {
+            uiHeadCrack_Timer = urand(5000,7000);
+        }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            if (uiHeadCrack_Timer <= uiDiff)
+            {
+                DoCastVictim(SPELL_HEAD_CRACK);
+                uiHeadCrack_Timer = (urand (7000,9000));
+            }
+            else uiHeadCrack_Timer -= uiDiff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
+};
 
 void AddSC_icecrown()
 {
@@ -1226,4 +1428,5 @@ void AddSC_icecrown()
     new npc_the_ocular();
     new npc_general_lightsbane();
     new npc_free_your_mind();
+    new npc_saronite_mine_slave();
 }
