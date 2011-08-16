@@ -574,7 +574,7 @@ class boss_malygos : public CreatureScript
 
                         // remove remaining free sparks
                         if (phase == PHASE_ADDS)
-                            spark->DespawnOrUnsummon();
+                            spark->DespawnOrUnsummon(1000);
                     }
             }
 
