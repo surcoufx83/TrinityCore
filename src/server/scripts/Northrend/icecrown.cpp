@@ -1378,13 +1378,13 @@ public:
 
         void Reset()
         {
+            me->RestoreFaction();
             if(alreadyFreed)
             {
                 alreadyFreed = false;
                 me->DespawnOrUnsummon(10000);
             }else
             {
-                me->RestoreFaction();
                 me->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
                 alreadyFreed = false;
                 enraged = false;

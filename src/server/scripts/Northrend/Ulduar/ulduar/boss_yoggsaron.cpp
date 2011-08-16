@@ -438,7 +438,7 @@ const Position KeeperSpawnLocation[4] =
 const Position FreyaSanityWellLocation[5] = 
 {
     {1901.21f, -48.69f, 332.00f, 0}, 
-    {1901.90f,  -2.78f, 332.00f, 0},
+    {1901.90f,  -2.78f, 332.30f, 0},
     {1993.58f,  45.56f, 332.00f, 0},
     {1985.87f, -91.10f, 330.20f, 0},
     {2040.12f, -39.16f, 329.00f, 0},

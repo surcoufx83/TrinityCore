@@ -45,6 +45,16 @@ INSERT INTO conditions VALUES
 (19,0,12995,0,8,12951,0,0,0,'',''),
 (20,0,12995,0,8,12943,0,0,0,'',''),
 (19,0,12995,0,8,12943,0,0,0,'','');
+
+/*
+DELETE FROM conditions WHERE SourceTypeOrReferenceId = 13 AND SourceEntry = 23301;
+INSERT INTO conditions VALUES
+(13,0,23301,0,18,2,29880,0,0,'',''),
+(13,0,23301,0,18,2,30243,0,0,'',''),
+(13,0,23301,0,18,2,30632,0,0,'',''),
+(13,0,23301,0,18,2,30725,0,0,'','');
+*/
+
 -- Crush Dem Vrykuls! ... Prev: Let the Baron Know AND Shadow Vault Decree ... NextInChain: Vile Like Fire!
 UPDATE quest_template SET PrevQuestId = 12943, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 13071 WHERE entry = 12992;
 DELETE FROM conditions WHERE SourceEntry = 12992 AND SourceTypeOrReferenceId IN (20,19);
@@ -54,7 +64,7 @@ INSERT INTO conditions VALUES
 (20,0,12992,0,8,12943,0,0,0,'',''),
 (19,0,12992,0,8,12943,0,0,0,'','');
 -- -- Vile Like Fire! ... Prev: Crush Dem Vrykuls!
-UPDATE quest_template SET PrevQuestId = 13071, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 13071;
+UPDATE quest_template SET PrevQuestId = 12992, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 13071;
 
 -- Vaelen Has Returned ... Prev: Let the Baron Know AND Shadow Vault Decree ... NextInChain: Ebon Blade Prisoners
 UPDATE quest_template SET PrevQuestId = 12943, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 12982 WHERE entry = 13085;
@@ -74,12 +84,12 @@ UPDATE quest_template SET PrevQuestId = 12810, NextQuestId = 0, ExclusiveGroup =
 
 -- -- From Their Corpses, Rise! ... Prev: The Story Thus Far...
 UPDATE quest_template SET PrevQuestId = 12807, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 12813;
--- -- No Fly Zone ... Prev: The Story Thus Far...
-UPDATE quest_template SET PrevQuestId = 12807, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 12815;
+-- -- No Fly Zone ... Prev: You'll Need a Gryphon
+UPDATE quest_template SET PrevQuestId = 12814, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 12815;
 -- -- Intelligence Gathering ... Prev: The Story Thus Far...
 UPDATE quest_template SET PrevQuestId = 12807, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 12838;
--- -- -- The Grand (Admiral's) Plan ... Prev: Intelligence Gathering ... NextInChain: In Strict Confidence
-UPDATE quest_template SET PrevQuestId = 12838, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 12840 WHERE entry = 12839;
+-- -- -- The Grand (Admiral's) Plan ... Prev:  The Story Thus Far... ... NextInChain: In Strict Confidence
+UPDATE quest_template SET PrevQuestId = 12807, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 12840 WHERE entry = 12839;
 -- -- -- In Strict Confidence ... Prev: The Grand (Admiral's) Plan ... NextInChain: Second Chances
 UPDATE quest_template SET PrevQuestId = 12839, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 12847 WHERE entry = 12840;
 -- -- -- Second Chances ... Prev: In Strict Confidence ... NextInChain: The Admiral Revealed

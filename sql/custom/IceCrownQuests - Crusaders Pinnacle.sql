@@ -80,6 +80,15 @@ INSERT INTO conditions VALUES
 (20,0,13135,1,8,13105,0,0,0,'',''),
 (19,0,13135,1,8,13105,0,0,0,'','');
 
+-- The Stone That Started A Revolution ... Prev: Once More Unto The Breach, Hero ODER Once More Unto The Breach, Hero DK only
+UPDATE quest_template SET PrevQuestId = 0, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 13130;
+DELETE FROM conditions WHERE SourceEntry = 13130 AND SourceTypeOrReferenceId IN (20,19);
+INSERT INTO conditions VALUES
+(20,0,13130,0,8,13104,0,0,0,'',''),
+(19,0,13130,0,8,13104,0,0,0,'',''),
+(20,0,13130,1,8,13105,0,0,0,'',''),
+(19,0,13130,1,8,13105,0,0,0,'','');
+
 -- The Air Stands Still ... Prev: The Scourgestone UND The Purging Of Scourgeholme
 UPDATE quest_template SET NextQuestId = 13125, ExclusiveGroup = -13122 WHERE entry = 13122;
 UPDATE quest_template SET NextQuestId = 13125, ExclusiveGroup = -13122 WHERE entry = 13118;
@@ -89,7 +98,7 @@ UPDATE quest_template SET PrevQuestId = 0, NextQuestId = 0, ExclusiveGroup = 0, 
 -- NextQuestInChain: The Battle For Crusaders' Pinnacle
 UPDATE quest_template SET NextQuestId = 13139, ExclusiveGroup = -13135 WHERE entry = 13135;
 UPDATE quest_template SET NextQuestId = 13139, ExclusiveGroup = -13135 WHERE entry = 13110;
-UPDATE quest_template SET NextQuestId = 13139, ExclusiveGroup = -13135 WHERE entry = 13118;
+UPDATE quest_template SET NextQuestId = 13139, ExclusiveGroup = -13135 WHERE entry = 13130;
 UPDATE quest_template SET NextQuestId = 13139, ExclusiveGroup = -13135 WHERE entry = 13125;
 UPDATE quest_template SET PrevQuestId = 0, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 13141 WHERE entry = 13139;
 
