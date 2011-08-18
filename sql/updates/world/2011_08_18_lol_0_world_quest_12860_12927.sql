@@ -12,4 +12,4 @@ INSERT INTO `spell_scripts` (`id`,`effIndex`,`delay`,`command`,`datalong`,`datal
 
 DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=17 AND `SourceEntry`=51161;
 INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceGroup`,`SourceEntry`,`ElseGroup`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`ConditionValue3`,`ErrorTextId`,`ScriptName`,`Comment`) VALUES
-(17,0,51161,0,29,29746,20,0,0,'','Spell Retrieve Data will only be cast near Databank'); 
+(17,0,55161,0,29,29746,20,0,0,'','Spell Retrieve Data will only be cast near Databank'); 
