@@ -11880,9 +11880,6 @@ void Unit::MeleeDamageBonus(Unit* victim, uint32 *pdamage, WeaponAttackType attT
             else if (player->HasItemFitToSpellRequirements((*i)->GetSpellInfo()))
                 AddPctN(DoneTotalMod, (*i)->GetAmount());
         }
-        // creature melee attack?
-        else if (ToCreature() && (*i)->GetMiscValue() & SPELL_SCHOOL_MASK_NORMAL)
-            AddPctN(DoneTotalMod, (*i)->GetAmount());
 
     AuraEffectList const& mDamageDoneVersus = GetAuraEffectsByType(SPELL_AURA_MOD_DAMAGE_DONE_VERSUS);
     for (AuraEffectList::const_iterator i = mDamageDoneVersus.begin(); i != mDamageDoneVersus.end(); ++i)
