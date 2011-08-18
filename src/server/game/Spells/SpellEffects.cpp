@@ -4387,23 +4387,16 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                     if (!unitTarget || !m_caster)
                         return;
 
-                    if(!m_caster->IsVehicle())
-                        return;
-
-                    Unit* caster = m_caster->GetVehicleKit()->GetPassenger(0);
-
-                    if(caster)
+                    switch(m_spellInfo->Id)
                     {
-                        switch(m_spellInfo->Id)
-                        {
-                        case 66480: // 10k Damage
-                            caster->CastSpell(unitTarget,64590,true);
-                            break;
-                        case 62575: // 2k Damage
-                            caster->CastSpell(unitTarget,62626,true);
-                            break; 
-                        }
+                    case 66480: // 10k Damage
+                        m_caster->CastSpell(unitTarget,64590,true);
+                        break;
+                    case 62575: // 2k Damage
+                        m_caster->CastSpell(unitTarget,62626,true);
+                        break; 
                     }
+
                     return;
                 }
                 //Shield Breaker Trigger

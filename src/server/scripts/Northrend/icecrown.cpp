@@ -28,6 +28,7 @@ npc_arete
 EndContentData */
 
 #include "ScriptPCH.h"
+#include "Vehicle.h"
 
 /*######
 ## npc_arete
@@ -1522,23 +1523,40 @@ public:
 
         void SpellHit(Unit* caster, const SpellInfo* spell)
         {
+            Player* playercaster = NULL;
             if(!caster || !caster->ToPlayer())
+            {
+                if(caster->IsVehicle() && caster->ToCreature())
+                {
+                    Creature* creatureVec = caster->ToCreature();
+                    if(Unit* passager = creatureVec->GetVehicleKit()->GetPassenger(0))
+                    {
+                        if(passager->ToPlayer())
+                            playercaster = passager->ToPlayer();
+                    }
+                }
+            }else
+            {
+                playercaster = caster->ToPlayer();
+            }
+
+            if(!playercaster)
                 return;
 
             switch(spell->Id)
             {
             case 62544:
                 if(me->GetEntry() == ENTRY_MELEE_DUMMY)
-                    me->CastSpell(caster,SPELL_TOURNAMENT_BLOCK_CREDIT,true);
+                    me->CastSpell(playercaster,SPELL_TOURNAMENT_BLOCK_CREDIT,true);
                 break;
             case 62626:
                 if(me->GetEntry() == ENTRY_RANGE_DUMMY)
                     if(me->GetAura(62665))
-                        me->CastSpell(caster,SPELL_TOURNAMENT_SPECIAL_CREDIT,true);
+                        me->CastSpell(playercaster,SPELL_TOURNAMENT_SPECIAL_CREDIT,true);
                 break;
             case 68321:
                 if(me->GetEntry() == ENTRY_CHARGE_DUMMY)
-                    me->CastSpell(caster,SPELL_TOURNAMENT_CHARGE_CREDIT,true);
+                    me->CastSpell(playercaster,SPELL_TOURNAMENT_CHARGE_CREDIT,true);
                 break;
             }
         }
