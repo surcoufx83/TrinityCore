@@ -10,6 +10,6 @@ DELETE FROM `spell_scripts` WHERE `id`=59728;
 INSERT INTO `spell_scripts` (`id`,`effIndex`,`delay`,`command`,`datalong`,`datalong2`,`dataint`,`x`,`y`,`z`,`o`) VALUES
 (59728,0,0,8,29752,0,0,0,0,0,0); -- Give quest credit
 
-DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=17 AND `SourceEntry`=51161;
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=17 AND `SourceEntry`=55161;
 INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceGroup`,`SourceEntry`,`ElseGroup`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`ConditionValue3`,`ErrorTextId`,`ScriptName`,`Comment`) VALUES
 (17,0,55161,0,29,29746,20,0,0,'','Spell Retrieve Data will only be cast near Databank'); 
