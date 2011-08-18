@@ -926,72 +926,72 @@ const Position HyldsmeetProtodrakeWaypoints[11] =
     {7397.71f, -540.00f, 1927.81f, 0.0f}
 };
 
-class npc_hyldsmeet_protodrake : public CreatureScript
-{
-public:
-    npc_hyldsmeet_protodrake() : CreatureScript("npc_hyldsmeet_protodrake") { }
-
-    struct npc_hyldsmeet_protodrakeAI : public ScriptedAI
-    {
-        npc_hyldsmeet_protodrakeAI(Creature* pCreature) : ScriptedAI(pCreature) { }
-
-        uint8 count;
-        bool wp_reached;
-
-        void Reset()
-        {
-            count = 0;
-            wp_reached = false;
-        }
-
-        void PassengerBoarded(Unit* who, int8 /*seatId*/, bool apply) 
-        {
-            if (who && apply)
-            {
-                    wp_reached = true;
-                    me->SetFlying(true);
-                    me->SetSpeed(MOVE_FLIGHT, 5.0f);
-            }
-        }
-
-        void MovementInform(uint32 type, uint32 id)
-        {
-            if (type != POINT_MOTION_TYPE || id != count)
-                return;
-
-            if (id < 10)
-            {
-                ++count;
-                wp_reached = true;
-            }
-            else // TODO: remove this and loop waypoints around the hill
-            {
-                Unit* player = me->GetVehicleKit()->GetPassenger(0);
-                if (player && player->GetTypeId() == TYPEID_PLAYER)
-                {
-                    for (uint8 i = 0; i < 10; ++i)
-                        player->ToPlayer()->KilledMonsterCredit(ENTRY_DRAKE_RIDER, 0);
-                    player->ExitVehicle();
-                    me->DespawnOrUnsummon(5000);
-                }
-            }
-        }
-
-        void UpdateAI(const uint32 /*diff*/)
-        {
-            if (wp_reached)
-            {
-                wp_reached = false;
-                me->GetMotionMaster()->MovePoint(count, HyldsmeetProtodrakeWaypoints[count]);
-            }
-        }
-    };
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_hyldsmeet_protodrakeAI(pCreature);
-    }
-};
+//class npc_hyldsmeet_protodrake : public CreatureScript
+//{
+//public:
+//    npc_hyldsmeet_protodrake() : CreatureScript("npc_hyldsmeet_protodrake") { }
+//
+//    struct npc_hyldsmeet_protodrakeAI : public ScriptedAI
+//    {
+//        npc_hyldsmeet_protodrakeAI(Creature* pCreature) : ScriptedAI(pCreature) { }
+//
+//        uint8 count;
+//        bool wp_reached;
+//
+//        void Reset()
+//        {
+//            count = 0;
+//            wp_reached = false;
+//        }
+//
+//        void PassengerBoarded(Unit* who, int8 /*seatId*/, bool apply) 
+//        {
+//            if (who && apply)
+//            {
+//                    wp_reached = true;
+//                    me->SetFlying(true);
+//                    me->SetSpeed(MOVE_FLIGHT, 5.0f);
+//            }
+//        }
+//
+//        void MovementInform(uint32 type, uint32 id)
+//        {
+//            if (type != POINT_MOTION_TYPE || id != count)
+//                return;
+//
+//            if (id < 10)
+//            {
+//                ++count;
+//                wp_reached = true;
+//            }
+//            else // TODO: remove this and loop waypoints around the hill
+//            {
+//                Unit* player = me->GetVehicleKit()->GetPassenger(0);
+//                if (player && player->GetTypeId() == TYPEID_PLAYER)
+//                {
+//                    for (uint8 i = 0; i < 10; ++i)
+//                        player->ToPlayer()->KilledMonsterCredit(ENTRY_DRAKE_RIDER, 0);
+//                    player->ExitVehicle();
+//                    me->DespawnOrUnsummon(5000);
+//                }
+//            }
+//        }
+//
+//        void UpdateAI(const uint32 /*diff*/)
+//        {
+//            if (wp_reached)
+//            {
+//                wp_reached = false;
+//                me->GetMotionMaster()->MovePoint(count, HyldsmeetProtodrakeWaypoints[count]);
+//            }
+//        }
+//    };
+//
+//    CreatureAI* GetAI(Creature* pCreature) const
+//    {
+//        return new npc_hyldsmeet_protodrakeAI(pCreature);
+//    }
+//};
 
 /*######
 ## Quest: Forging a Head (12985)
@@ -1099,7 +1099,7 @@ void AddSC_storm_peaks()
     new npc_roxi_ramrocket();
     new npc_quest_12851();
     new npc_freed_protodrake();
-    new npc_hyldsmeet_protodrake;
+    new npc_hyldsmeet_protodrake();
     new npc_brunnhildar_prisoner();
     new npc_injured_icemaw();
     new npc_harnessed_icemaw();

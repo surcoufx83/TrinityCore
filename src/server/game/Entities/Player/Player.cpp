@@ -24813,6 +24813,12 @@ void Player::_SaveInstanceTimeRestrictions(SQLTransaction& trans)
     }
 }
 
+void Player::InitWowarmoryFeeds()
+{
+   // Clear feeds
+   m_wowarmory_feeds.clear();
+}
+
 void Player::CreateWowarmoryFeed(uint32 type, uint32 data, uint32 item_guid, uint32 item_quality)
 {
     /*

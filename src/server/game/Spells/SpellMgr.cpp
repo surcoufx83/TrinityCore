@@ -2991,7 +2991,7 @@ void SpellMgr::LoadDbcDataCorrections()
             case 46841: // Escape to the Isle of Quel'Danas
                 // not sure why this is needed
                 spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_TARGET_ANY;
-                spellInfo->EffectImplicitTargetB[0] = TARGET_DST_DB;
+                spellInfo->EffectImplicitTargetB[0] = TARGET_DEST_DB;
                 break;
             case 59725: // Improved Spell Reflection - aoe aura
                 // Target entry seems to be wrong for this spell :/
@@ -3037,13 +3037,13 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectImplicitTargetA[1] = TARGET_DEST_CASTER;
                 break;
             case 57697: //Lavastrike Hack - Sartharion
-                spellInfo->EffectImplicitTargetA[0] = TARGET_DST_TARGET_ENEMY;
+                spellInfo->EffectImplicitTargetA[0] = TARGET_DEST_TARGET_ENEMY;
                 //spellInfo->EffectImplicitTargetB[0] = TARGET_DEST_TARGET_RANDOM;
-                spellInfo->EffectImplicitTargetB[0] = TARGET_DST_TARGET_ENEMY; //This would be more funny
+                spellInfo->EffectImplicitTargetB[0] = TARGET_DEST_TARGET_ENEMY; //This would be more funny
                 break;
             case 31225:
             case 8593:
-                spellInfo->AttributesEx2 |= SPELL_ATTR2_ALLOW_DEAD_TARGET;
+                spellInfo->AttributesEx2 |= SPELL_ATTR2_CAN_TARGET_DEAD;
                 break; 
             case 41376: // Spite
             case 39992: // Needle Spine
@@ -3161,13 +3161,13 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_CASTER;
                 break;
             case 45671: // Midsummer - Juggle Torch (Catch, Quest)
-                spellInfo->AttributesEx3 &= ~SPELL_ATTR3_PLAYERS_ONLY;
+                spellInfo->AttributesEx3 &= ~SPELL_ATTR3_ONLY_TARGET_PLAYERS;
                 break;
             case 45907: // Midsummer - Torch Target Picker
                 spellInfo->AttributesEx &= ~SPELL_ATTR1_CANT_TARGET_SELF;
                 break;
             case 45819: // Midsummer - Throw Torch
-                spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_AREA_ENTRY_DST;
+                spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_DEST_AREA_ENTRY;
                 spellInfo->EffectRadiusIndex[0] = 15;
                 spellInfo->MaxAffectedTargets = 1;
                 break;

@@ -477,7 +477,7 @@ bool ScriptedAI::EnterEvadeIfOutOfCombatArea(uint32 const diff)
                 return false;
             break;
         case NPC_LEVIATHAN:                                           // flame leviathan (calculate box)
-            if (fX > 145.14f && fX < 447.26f && fY < 83.29f && fY > -149.73f)
+            if (x > 145.14f && x < 447.26f && y < 83.29f && y > -149.73f)
                 return false;
             break;
         default:
