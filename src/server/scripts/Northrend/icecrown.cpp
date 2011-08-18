@@ -1413,6 +1413,163 @@ public:
     };
 };
 
+/*
+DELETE FROM spell_script_names WHERE spell_id = 62552;
+INSERT INTO spell_script_names VALUES
+(62552,'spell_tournament_defend');
+*/
+
+class spell_tournament_defend : public SpellScriptLoader
+{
+    public:
+        spell_tournament_defend() : SpellScriptLoader("spell_tournament_defend") { }
+
+        class spell_tournament_defend_AuraScript : public AuraScript
+        {
+            PrepareAuraScript(spell_tournament_defend_AuraScript);
+
+            void OnStackChange(AuraEffect const* aurEff, AuraEffectHandleModes mode)
+            {
+                if(Unit* target = GetTarget())
+                {
+                    target->RemoveAurasDueToSpell(63130);
+                    target->RemoveAurasDueToSpell(63131);
+                    target->RemoveAurasDueToSpell(63132);
+
+                    switch(GetStackAmount())
+                    {
+                    case 1:
+                        target->CastSpell(target,63130,true,0,aurEff);
+                        break;
+                    case 2:
+                        target->CastSpell(target,63131,true,0,aurEff);
+                        break;
+                    case 3:
+                        target->CastSpell(target,63132,true,0,aurEff);
+                        break;
+                    }
+                }
+            }
+
+            void OnAuraRemoved(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
+            {
+                if(Unit* target = GetTarget())
+                {
+                    target->RemoveAurasDueToSpell(63130);
+                    target->RemoveAurasDueToSpell(63131);
+                    target->RemoveAurasDueToSpell(63132);
+                }
+            }
+
+            void Register()
+            {
+                AfterEffectApply += AuraEffectApplyFn(spell_tournament_defend_AuraScript::OnStackChange, EFFECT_2, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_CHANGE_AMOUNT);
+                AfterEffectApply += AuraEffectApplyFn(spell_tournament_defend_AuraScript::OnStackChange, EFFECT_2, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_REAL);
+                AfterEffectRemove += AuraEffectRemoveFn(spell_tournament_defend_AuraScript::OnAuraRemoved, EFFECT_2, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_REAL);
+            }
+        };
+
+        AuraScript* GetAuraScript() const
+        {
+            return new spell_tournament_defend_AuraScript();
+        }
+};
+
+/*########
+## npc_tournament_dummy
+#########*/
+         
+enum TournamentDummySpells
+{
+    SPELL_TOURNAMENT_CHARGE_CREDIT                          = 62658, // Mastery Of The Charge
+    SPELL_TOURNAMENT_BLOCK_CREDIT                           = 62672, // Mastery Of Melee
+    SPELL_TOURNAMENT_SPECIAL_CREDIT                         = 62673, // Mastery Of The Shield-Breaker
+
+    SPELL_DEFEND_AURA_PERIODIC                              = 64223, // 10sec
+};
+
+enum TorunamentDummyEntrys
+{
+    ENTRY_MELEE_DUMMY                                       = 33229,
+    ENTRY_CHARGE_DUMMY                                      = 33272,
+    ENTRY_RANGE_DUMMY                                       = 33243,
+};
+
+/*
+UPDATE creature_template SET scriptname = 'npc_tournament_dummy' WHERE entry IN (33229,33272,33243);
+*/
+
+class npc_tournament_dummy : public CreatureScript
+{
+public:
+    npc_tournament_dummy() : CreatureScript("npc_tournament_dummy") { }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_tournament_dummyAI (pCreature);
+    }
+
+    struct npc_tournament_dummyAI : public Scripted_NoMovementAI
+    {
+        npc_tournament_dummyAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature){ }
+
+                uint32 ResetTimer;
+
+        void Reset()
+        {
+            ResetTimer = 10000;
+        }
+
+        void SpellHit(Unit* caster, const SpellInfo* spell)
+        {
+            if(!caster || !caster->ToPlayer())
+                return;
+
+            switch(spell->Id)
+            {
+            case 62544:
+                if(me->GetEntry() == ENTRY_MELEE_DUMMY)
+                    me->CastSpell(caster,SPELL_TOURNAMENT_BLOCK_CREDIT,true);
+                break;
+            case 62626:
+                if(me->GetEntry() == ENTRY_RANGE_DUMMY)
+                    if(me->GetAura(62665))
+                        me->CastSpell(caster,SPELL_TOURNAMENT_SPECIAL_CREDIT,true);
+                break;
+            case 68321:
+                if(me->GetEntry() == ENTRY_CHARGE_DUMMY)
+                    me->CastSpell(caster,SPELL_TOURNAMENT_CHARGE_CREDIT,true);
+                break;
+            }
+        }
+
+        void DamageTaken(Unit *done_by, uint32 &damage)
+        {
+            damage = 0;
+
+            if(done_by->GetTypeId() != TYPEID_PLAYER && (done_by->GetTypeId() != TYPEID_UNIT || ( !done_by->isGuardian() && !done_by->isPet())))
+                return;
+
+            ResetTimer = 10000;
+        }
+
+        void MoveInLineOfSight(Unit *who) { return; }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            if (ResetTimer <= uiDiff)
+            {
+                EnterEvadeMode();
+                ResetTimer = 10000;
+                return;
+            }else  ResetTimer -= uiDiff;
+        }
+    };
+};
+
 void AddSC_icecrown()
 {
     new npc_arete();
@@ -1429,4 +1586,6 @@ void AddSC_icecrown()
     new npc_general_lightsbane();
     new npc_free_your_mind();
     new npc_saronite_mine_slave();
+    new spell_tournament_defend();
+    new npc_tournament_dummy();
 }

@@ -4380,6 +4380,92 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
 
                     return;
                 }
+                //Shield Breaker
+                case 62575:
+                case 66480:
+                {
+                    if (!unitTarget || !m_caster)
+                        return;
+
+                    if(!m_caster->IsVehicle())
+                        return;
+
+                    Unit* caster = m_caster->GetVehicleKit()->GetPassenger(0);
+
+                    if(caster)
+                    {
+                        switch(m_spellInfo->Id)
+                        {
+                        case 66480: // 10k Damage
+                            caster->CastSpell(unitTarget,64590,true);
+                            break;
+                        case 62575: // 2k Damage
+                            caster->CastSpell(unitTarget,62626,true);
+                            break; 
+                        }
+                    }
+                    return;
+                }
+                //Shield Breaker Trigger
+                case 62626:
+                case 64590:
+                {
+                    if (!unitTarget || !m_caster)
+                        return;
+
+                    if(unitTarget->HasAura(62552))
+                    {
+                        Aura* defendaura = unitTarget->GetAura(62552);
+                        if(defendaura->GetStackAmount() == 1)
+                        {
+                            unitTarget->RemoveAurasDueToSpell(62552,0,0,AURA_REMOVE_BY_ENEMY_SPELL);
+                        }
+                        else
+                        {
+                            defendaura->ModStackAmount(defendaura->GetStackAmount()-1,AURA_REMOVE_BY_ENEMY_SPELL);
+                        }
+                    }
+
+                    if(unitTarget->HasAura(66482))
+                    {
+                        Aura* defendaura = unitTarget->GetAura(66482);
+                        if(defendaura->GetStackAmount() == 1)
+                        {
+                            unitTarget->RemoveAurasDueToSpell(66482,0,0,AURA_REMOVE_BY_ENEMY_SPELL);
+                        }
+                        else
+                        {
+                            defendaura->ModStackAmount(defendaura->GetStackAmount()-1,AURA_REMOVE_BY_ENEMY_SPELL);
+                        }
+                    }
+
+                    if(unitTarget->HasAura(64100))
+                    {
+                        Aura* defendaura = unitTarget->GetAura(64100);
+                        if(defendaura->GetStackAmount() == 1)
+                        {
+                            unitTarget->RemoveAurasDueToSpell(64100,0,0,AURA_REMOVE_BY_ENEMY_SPELL);
+                        }
+                        else
+                        {
+                            defendaura->ModStackAmount(defendaura->GetStackAmount()-1,AURA_REMOVE_BY_ENEMY_SPELL);
+                        }
+                    }
+
+                    if(unitTarget->HasAura(62719))
+                    {
+                        Aura* defendaura = unitTarget->GetAura(62719);
+                        if(defendaura->GetStackAmount() == 1)
+                        {
+                            unitTarget->RemoveAurasDueToSpell(62719,0,0,AURA_REMOVE_BY_ENEMY_SPELL);
+                        }
+                        else
+                        {
+                            defendaura->ModStackAmount(defendaura->GetStackAmount()-1,AURA_REMOVE_BY_ENEMY_SPELL);
+                        }
+                    }
+                    return;
+                }
                 // Glyph of Backstab
                 case 63975:
                 {
