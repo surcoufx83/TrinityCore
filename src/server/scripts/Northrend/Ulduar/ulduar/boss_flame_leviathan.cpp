@@ -36,67 +36,67 @@
 
 enum Spells
 {
-    SPELL_PURSUED                               = 62374,
-    SPELL_GATHERING_SPEED                       = 62375,
-    SPELL_BATTERING_RAM                         = 62376,
-    SPELL_FLAME_VENTS                           = 62396,
-    SPELL_MISSILE_BARRAGE                       = 62400,
-    SPELL_SYSTEMS_SHUTDOWN                      = 62475,
-    SPELL_OVERLOAD_CIRCUIT                      = 62399,
-    SPELL_START_THE_ENGINE                      = 62472,
-    SPELL_SEARING_FLAME                         = 62402,
-    SPELL_BLAZE                                 = 62292,
-    SPELL_TAR_PASSIVE                           = 62288,
-    SPELL_SMOKE_TRAIL                           = 63575,
-    SPELL_ELECTROSHOCK                          = 62522,
-    SPELL_NAPALM                                = 63666,
+    SPELL_PURSUED                  = 62374,
+    SPELL_GATHERING_SPEED          = 62375,
+    SPELL_BATTERING_RAM            = 62376,
+    SPELL_FLAME_VENTS              = 62396,
+    SPELL_MISSILE_BARRAGE          = 62400,
+    SPELL_SYSTEMS_SHUTDOWN         = 62475,
+    SPELL_OVERLOAD_CIRCUIT         = 62399,
+    SPELL_START_THE_ENGINE         = 62472,
+    SPELL_SEARING_FLAME            = 62402,
+    SPELL_BLAZE                    = 62292,
+    SPELL_TAR_PASSIVE              = 62288,
+    SPELL_SMOKE_TRAIL              = 63575,
+    SPELL_ELECTROSHOCK             = 62522,
+    SPELL_NAPALM                   = 63666,
     SPELL_INVIS_AND_STEALTH_DETECT = 18950, // Passive
     //TOWER Additional SPELLS
-    SPELL_THORIM_S_HAMMER                       = 62911, // Tower of Storms
-    SPELL_MIMIRON_S_INFERNO                     = 62909, // Tower of Flames
-    SPELL_HODIR_S_FURY                          = 62533, // Tower of Frost
-    SPELL_FREYA_S_WARD                          = 62906, // Tower of Nature
-    SPELL_FREYA_SUMMONS                         = 62947, // Tower of Nature
+    SPELL_THORIM_S_HAMMER          = 62911, // Tower of Storms
+    SPELL_MIMIRON_S_INFERNO        = 62909, // Tower of Flames
+    SPELL_HODIR_S_FURY             = 62533, // Tower of Frost
+    SPELL_FREYA_S_WARD             = 62906, // Tower of Nature
+    SPELL_FREYA_SUMMONS            = 62947, // Tower of Nature
     //TOWER ap & health spells
-    SPELL_BUFF_TOWER_OF_STORMS                  = 65076,
-    SPELL_BUFF_TOWER_OF_FLAMES                  = 65075,
-    SPELL_BUFF_TOWER_OF_FR0ST                   = 65077,
-    SPELL_BUFF_TOWER_OF_LIFE                    = 64482,
+    SPELL_BUFF_TOWER_OF_STORMS     = 65076,
+    SPELL_BUFF_TOWER_OF_FLAMES     = 65075,
+    SPELL_BUFF_TOWER_OF_FR0ST      = 65077,
+    SPELL_BUFF_TOWER_OF_LIFE       = 64482,
     //Additional Spells
-    SPELL_LASH                                  = 65062,
-    SPELL_FREYA_S_WARD_EFFECT_1                 = 62947,
-    SPELL_FREYA_S_WARD_EFFECT_2                 = 62907,
-    SPELL_AUTO_REPAIR                           = 62705,
-    AURA_DUMMY_BLUE                             = 63294,
-    AURA_DUMMY_GREEN                            = 63295,
-    AURA_DUMMY_YELLOW                           = 63292,
-    SPELL_LIQUID_PYRITE                         = 62494,
-    SPELL_DUSTY_EXPLOSION                       = 63360,
-    SPELL_DUST_CLOUD_IMPACT                     = 54740,
-    AURA_STEALTH_DETECTION                      = 18950,
-    SPELL_RIDE_VEHICLE                          = 46598,
-    SPELL_ANTI_AIR_ROCKET_DMG                   = 62363,
-    SPELL_GROUND_SLAM                           = 62625
+    SPELL_LASH                     = 65062,
+    SPELL_FREYA_S_WARD_EFFECT_1    = 62947,
+    SPELL_FREYA_S_WARD_EFFECT_2    = 62907,
+    SPELL_AUTO_REPAIR              = 62705,
+    AURA_DUMMY_BLUE                = 63294,
+    AURA_DUMMY_GREEN               = 63295,
+    AURA_DUMMY_YELLOW              = 63292,
+    SPELL_LIQUID_PYRITE            = 62494,
+    SPELL_DUSTY_EXPLOSION          = 63360,
+    SPELL_DUST_CLOUD_IMPACT        = 54740,
+    AURA_STEALTH_DETECTION         = 18950,
+    SPELL_RIDE_VEHICLE             = 46598,
+    SPELL_ANTI_AIR_ROCKET_DMG      = 62363,
+    SPELL_GROUND_SLAM              = 62625
 };
 
 enum Creatures
 {
-    NPC_SEAT                                    = 33114,
-    NPC_MECHANOLIFT                             = 33214,
-    NPC_LIQUID                                  = 33189,
-    NPC_CONTAINER                               = 33218,
-    NPC_THORIM_BEACON                           = 33365,
-    NPC_MIMIRON_BEACON                          = 33370,
-    NPC_HODIR_BEACON                            = 33212,
-    NPC_FREYA_BEACON                            = 33367,
-    NPC_THORIM_TARGET_BEACON                    = 33364,
-    NPC_MIMIRON_TARGET_BEACON                   = 33369,
-    NPC_HODIR_TARGET_BEACON                     = 33108,
-    NPC_FREYA_TARGET_BEACON                     = 33366,
-    NPC_LOREKEEPER                              = 33686, // Hard mode starter
-    NPC_BRANZ_BRONZBEARD                        = 33579,
-    NPC_DELORAH                                 = 33701,
-    NPC_ULDUAR_GAUNTLET_GENERATOR               = 33571, // Trigger tied to towers
+    NPC_SEAT                       = 33114,
+    NPC_MECHANOLIFT                = 33214,
+    NPC_LIQUID                     = 33189,
+    NPC_CONTAINER                  = 33218,
+    NPC_THORIM_BEACON              = 33365,
+    NPC_MIMIRON_BEACON             = 33370,
+    NPC_HODIR_BEACON               = 33212,
+    NPC_FREYA_BEACON               = 33367,
+    NPC_THORIM_TARGET_BEACON       = 33364,
+    NPC_MIMIRON_TARGET_BEACON      = 33369,
+    NPC_HODIR_TARGET_BEACON        = 33108,
+    NPC_FREYA_TARGET_BEACON        = 33366,
+    NPC_LOREKEEPER                 = 33686, // Hard mode starter
+    NPC_BRANZ_BRONZBEARD           = 33579,
+    NPC_DELORAH                    = 33701,
+    NPC_ULDUAR_GAUNTLET_GENERATOR  = 33571, // Trigger tied to towers
 };
 
 enum Towers
@@ -126,17 +126,17 @@ enum Events
 
 enum Seats
 {
-    SEAT_PLAYER                                 = 0,
-    SEAT_TURRET                                 = 1,
-    SEAT_DEVICE                                 = 2,
-    SEAT_CANNON                                 = 7,
+    SEAT_PLAYER             = 0,
+    SEAT_TURRET             = 1,
+    SEAT_DEVICE             = 2,
+    SEAT_CANNON             = 7,
 };
 
 enum Vehicles
 {
-    VEHICLE_SIEGE                             = 33060,
-    VEHICLE_CHOPPER                           = 33062,
-    VEHICLE_DEMOLISHER                        = 33109,
+    VEHICLE_SIEGE           = 33060,
+    VEHICLE_CHOPPER         = 33062,
+    VEHICLE_DEMOLISHER      = 33109,
 };
 
 #define EMOTE_PURSUE          "Flame Leviathan pursues $N."
@@ -147,44 +147,44 @@ enum Vehicles
 
 enum Yells
 {
-    SAY_AGGRO                                   = -1603060,
-    SAY_SLAY                                    = -1603061,
-    SAY_DEATH                                   = -1603062,
-    SAY_TARGET_1                                = -1603063,
-    SAY_TARGET_2                                = -1603064,
-    SAY_TARGET_3                                = -1603065,
-    SAY_HARDMODE                                = -1603066,
-    SAY_TOWER_NONE                              = -1603067,
-    SAY_TOWER_FROST                             = -1603068,
-    SAY_TOWER_FLAME                             = -1603069,
-    SAY_TOWER_NATURE                            = -1603070,
-    SAY_TOWER_STORM                             = -1603071,
-    SAY_PLAYER_RIDING                           = -1603072,
-    SAY_OVERLOAD_1                              = -1603073,
-    SAY_OVERLOAD_2                              = -1603074,
-    SAY_OVERLOAD_3                              = -1603075,
+    SAY_AGGRO               = -1603060,
+    SAY_SLAY                = -1603061,
+    SAY_DEATH               = -1603062,
+    SAY_TARGET_1            = -1603063,
+    SAY_TARGET_2            = -1603064,
+    SAY_TARGET_3            = -1603065,
+    SAY_HARDMODE            = -1603066,
+    SAY_TOWER_NONE          = -1603067,
+    SAY_TOWER_FROST         = -1603068,
+    SAY_TOWER_FLAME         = -1603069,
+    SAY_TOWER_NATURE        = -1603070,
+    SAY_TOWER_STORM         = -1603071,
+    SAY_PLAYER_RIDING       = -1603072,
+    SAY_OVERLOAD_1          = -1603073,
+    SAY_OVERLOAD_2          = -1603074,
+    SAY_OVERLOAD_3          = -1603075,
 };
 
 enum AchievementData
 {
-    ACHIEV_10_NUKED_FROM_ORBIT                  = 2915,
-    ACHIEV_25_NUKED_FROM_ORBIT                  = 2917,
-    ACHIEV_10_ORBITAL_BOMBARDMENT               = 2913,
-    ACHIEV_25_ORBITAL_BOMBARDMENT               = 2918,
-    ACHIEV_10_ORBITAL_DEVASTATION               = 2914,
-    ACHIEV_25_ORBITAL_DEVASTATION               = 2916,
-    ACHIEV_10_ORBIT_UARY                        = 3056,
-    ACHIEV_25_ORBIT_UARY                        = 3057,
-    ACHIEV_10_SIEGE_OF_ULDUAR                   = 2886,
-    ACHIEV_25_SIEGE_OF_ULDUAR                   = 2887,
+    ACHIEV_10_NUKED_FROM_ORBIT     = 2915,
+    ACHIEV_25_NUKED_FROM_ORBIT     = 2917,
+    ACHIEV_10_ORBITAL_BOMBARDMENT  = 2913,
+    ACHIEV_25_ORBITAL_BOMBARDMENT  = 2918,
+    ACHIEV_10_ORBITAL_DEVASTATION  = 2914,
+    ACHIEV_25_ORBITAL_DEVASTATION  = 2916,
+    ACHIEV_10_ORBIT_UARY           = 3056,
+    ACHIEV_25_ORBIT_UARY           = 3057,
+    ACHIEV_10_SIEGE_OF_ULDUAR      = 2886,
+    ACHIEV_25_SIEGE_OF_ULDUAR      = 2887,
 };
 
 enum actions
 {
-    ACTION_TOWER_OF_STORM_DESTROYED             = 1,
-    ACTION_TOWER_OF_FROST_DESTROYED             = 2,
-    ACTION_TOWER_OF_FLAMES_DESTROYED            = 3,
-    ACTION_TOWER_OF_LIFE_DESTROYED              = 4,
+    ACTION_TOWER_OF_STORM_DESTROYED  = 1,
+    ACTION_TOWER_OF_FROST_DESTROYED  = 2,
+    ACTION_TOWER_OF_FLAMES_DESTROYED = 3,
+    ACTION_TOWER_OF_LIFE_DESTROYED   = 4,
 };
 
 Position const Center[]=

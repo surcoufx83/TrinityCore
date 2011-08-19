@@ -1030,16 +1030,20 @@ class spell_shield_of_runes : public SpellScriptLoader
         {
             PrepareAuraScript(spell_shield_of_runes_AuraScript);
 
-            void OnRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
+            void OnAbsorb(AuraEffect* /*aurEff*/, DamageInfo& dmgInfo, uint32& absorbAmount)
             {
+                uint32 damage = dmgInfo.GetDamage();
+
+                if (absorbAmount > damage)
+                    return;
+
                 if (Unit* caster = GetCaster())
-                    if (GetTargetApplication()->GetRemoveMode() != AURA_REMOVE_BY_EXPIRE)
-                        caster->CastSpell(caster, SPELL_SHIELD_OF_RUNES_BUFF, false);
+                    caster->CastSpell(caster, SPELL_SHIELD_OF_RUNES_BUFF, true);
             }
 
             void Register()
             {
-                AfterEffectRemove += AuraEffectRemoveFn(spell_shield_of_runes_AuraScript::OnRemove, EFFECT_0, SPELL_AURA_SCHOOL_ABSORB, AURA_EFFECT_HANDLE_REAL);
+                OnEffectAbsorb += AuraEffectAbsorbFn(spell_shield_of_runes_AuraScript::OnAbsorb, EFFECT_0);
             }
         };
 

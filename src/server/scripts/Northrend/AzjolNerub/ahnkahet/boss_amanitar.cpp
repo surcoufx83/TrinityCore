@@ -16,7 +16,7 @@
  */
 
 /*
- * Comment:  Find correct mushrooms spell to make them visible - buffs of the mushrooms not ever applied to the users...
+ * Comment:  Find correct mushrooms spell
  */
 
 #include "ScriptPCH.h"
@@ -76,39 +76,21 @@ public:
 
             if (pInstance)
             {
-                DoRemoveAurasDueToSpellOnPlayersAndPets(SPELL_MINI);
+                pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_MINI);
                 pInstance->SetData(DATA_AMANITAR_EVENT, NOT_STARTED);
             }
         }
 
-        void JustDied(Unit * /*Killer*/)
+        void JustDied(Unit* /*Killer*/)
         {
             if (pInstance)
             {
                 pInstance->SetData(DATA_AMANITAR_EVENT, DONE);
-                DoRemoveAurasDueToSpellOnPlayersAndPets(SPELL_MINI);
+                pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_MINI);
             }
         }
 
-        void DoRemoveAurasDueToSpellOnPlayersAndPets(uint32 spell)
-        {
-            if (!pInstance)
-                return;
-
-            Map::PlayerList const &PlayerList = pInstance->instance->GetPlayers();
-
-            if (!PlayerList.isEmpty())
-                for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
-                    if (Player* pPlayer = i->getSource())
-                    {
-                        pPlayer->RemoveAurasDueToSpell(spell);
-
-                        if (Pet* pPet = pPlayer->GetPet())
-                            pPet->RemoveAurasDueToSpell(spell);
-                    }
-        }
-
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             if (pInstance)
                 pInstance->SetData(DATA_AMANITAR_EVENT, IN_PROGRESS);
@@ -143,9 +125,8 @@ public:
             }
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
-            //Return since we have no target
             if (!UpdateVictim())
                 return;
 
@@ -227,16 +208,16 @@ public:
             uiAuraTimer = 1*IN_MILLISECONDS;
         }
 
-        void JustDied(Unit *killer)
+        void JustDied(Unit* killer)
         {
             if (me->GetEntry() == NPC_HEALTHY_MUSHROOM)
                 DoCast(me, SPELL_HEALTHY_MUSHROOM_POTENT_FUNGUS, true);
         }
 
-        void EnterCombat(Unit * /*who*/) {}
-        void AttackStart(Unit * /*victim*/) {}
+        void EnterCombat(Unit* /*who*/) {}
+        void AttackStart(Unit* /*victim*/) {}
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             if (me->GetEntry() == NPC_POISONOUS_MUSHROOM)
             {
