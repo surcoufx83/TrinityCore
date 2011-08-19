@@ -1589,39 +1589,6 @@ public:
 };
 
 /*######
-## npc_vendor_sunreavers_silver_confidant
-######*/
-
-enum eAchievementsSunreaverSilverConfidant
-{
-    ACHIEVEMENT_SUNREAVERS              = 3677,
-    ACHIEVEMENT_SILVER_CONDFIDANT       = 3676
-};
-
-class npc_vendor_sunreavers_silver_confidant : public CreatureScript
-{
-public:
-    npc_vendor_sunreavers_silver_confidant() : CreatureScript("npc_vendor_sunreavers_silver_confidant") { }
-
-    bool OnGossipHello(Player* player, Creature* creature)
-    {
-        if (player->HasAchieved(ACHIEVEMENT_SUNREAVERS) || player->HasAchieved(ACHIEVEMENT_SILVER_CONDFIDANT))
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-
-        player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
-        return true;
-    }
-
-    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
-    {
-        player->PlayerTalkClass->ClearMenus();
-        if (uiAction == GOSSIP_ACTION_TRADE)
-            player->GetSession()->SendListInventory(creature->GetGUID());
-        return true;
-    }
-};
-
-/*######
 ## npc_vendor_tournament_fraction_champion
 ######*/
 
@@ -1655,6 +1622,10 @@ enum eNPCVendorEntrys
     ENTRY_UNDERCITY_VENDOR                  = 33555,
 
 };
+
+/*
+UPDATE creature_template SET scriptname = 'npc_vendor_tournament_fraction_champion' WHERE entry IN (33657,33650,33653,33307,33310,33553,33554,33557,33556,33555);
+*/
 
 class npc_vendor_tournament_fraction_champion : public CreatureScript
 {
@@ -1700,9 +1671,10 @@ public:
         }
 
         if (showVendor)
+        {
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-
-        player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
+            player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
+        }
         return true;
     }
 
@@ -1733,6 +1705,5 @@ void AddSC_icecrown()
     new npc_saronite_mine_slave();
     new spell_tournament_defend();
     new npc_tournament_dummy();
-    new npc_vendor_sunreavers_silver_confidant();
     new npc_vendor_tournament_fraction_champion();
 }

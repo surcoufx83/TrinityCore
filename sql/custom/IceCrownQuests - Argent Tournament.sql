@@ -666,7 +666,7 @@ UPDATE quest_template SET PrevQuestId = 13795, NextQuestId = 0, ExclusiveGroup =
 DELETE FROM conditions WHERE SourceTypeOrReferenceId IN (-2782,-2788,-2817,-2816,-3676,-3677);
 DELETE FROM conditions WHERE 
 SourceTypeOrReferenceId IN (19,20) AND SourceEntry IN
-(13846,14101,14102,14104,14105,13810,13862,13811,13794,14140,14143,14144,14136,14092,14107,14108,14141,14145,13707,13708,13709,13710,13711,13795,14080,14074,14077,14142,14152,14076,14090,14112,13684,13688,13685,13690,13689);
+(13846,14101,14102,14104,14105,13810,13862,13811,13794,14140,14143,14144,14096,14136,14092,14107,14108,14141,14145,13707,13708,13709,13710,13711,13795,14080,14074,14077,14142,14152,14076,14090,14112,13684,13688,13685,13690,13689);
 INSERT INTO conditions
 VALUES 
 (-2782,0,0,0,17,2782,0,0,0,"","needs Champion"),
@@ -793,3 +793,56 @@ VALUES
 (20,0,13690,0,-2782,0,0,0,0,"","Valiant Of Exodar - Quest needs Champion"),
 (19,0,13689,0,-2782,0,0,0,0,"","Valiant Of Darnassus - Quest needs Champion"),
 (20,0,13689,0,-2782,0,0,0,0,"","Valiant Of Darnassus - Quest needs Champion");
+
+-- The Sunreavers * The Silver Covenant Quests
+DELETE FROM pool_template WHERE entry IN (34880,34771);
+INSERT INTO pool_template VALUES
+(34880,2,'Tournament - Champion - The Silver Covenant - Sea'),
+(34771,2,'Tournament - Champion - The Sunreavers - Sea');
+
+DELETE FROM pool_quest WHERE pool_entry IN (34880,34771);
+INSERT INTO pool_quest VALUES 
+(14074,34880,'Tournament - Champion - The Silver Covenant - Sea - A Leg Up'),
+(14152,34880,'Tournament - Champion - The Silver Covenant - Sea - Rescue At Sea'),
+(14077,34880,'Tournament - Champion - The Silver Covenant - Sea - The Lights Mercy'),
+(14080,34880,'Tournament - Champion - The Silver Covenant - Sea - Stop the Aggression'),
+(14096,34880,'Tournament - Champion - The Silver Covenant - Sea - Youve Really Done It This Time, Kul'),
+(14143,34771,'Tournament - Champion - The Sunreavers - Sea - A Leg Up'),
+(14136,34771,'Tournament - Champion - The Sunreavers - Sea - Rescue At Sea'),
+(14144,34771,'Tournament - Champion - The Sunreavers - Sea - The Lights Mercy'),
+(14140,34771,'Tournament - Champion - The Sunreavers - Sea - Stop the Aggression'),
+(14142,34771,'Tournament - Champion - The Sunreavers - Sea - Youve Really Done It This Time, Kul');
+
+DELETE FROM pool_template WHERE entry IN (34912,34914);
+INSERT INTO pool_template VALUES
+(34912,1,'Tournament - Champion - The Silver Covenant - Tournament'),
+(34914,1,'Tournament - Champion - The Sunreavers - Tournament');
+
+DELETE FROM pool_quest WHERE pool_entry IN (34912,34914);
+INSERT INTO pool_quest VALUES 
+(14092,34912,'Tournament - Champion - The Silver Covenant - Tournament - Breakfast Of Champions'),
+(14141,34912,'Tournament - Champion - The Silver Covenant - Tournament - Gormok Wants His Snobolds'),
+(14145,34912,'Tournament - Champion - The Silver Covenant - Tournament - What Do You Feed a Yeti, Anyway?'),
+(14076,34914,'Tournament - Champion - The Sunreavers - Tournament - Breakfast Of Champions'),
+(14090,34914,'Tournament - Champion - The Sunreavers - Tournament - Gormok Wants His Snobolds'),
+(14112,34914,'Tournament - Champion - The Sunreavers - Tournament - What Do You Feed a Yeti, Anyway?');
+
+DELETE FROM pool_template WHERE entry IN (34882);
+INSERT INTO pool_template VALUES
+(34882,1,'Tournament - Champion - The Argent Crusade - Defeat');
+
+DELETE FROM pool_quest WHERE pool_entry IN (34882);
+INSERT INTO pool_quest VALUES 
+(14101,34882,'Tournament - Champion - The Argent Crusade - Defeat - Drottinn Hrothgar'),
+(14102,34882,'Tournament - Champion - The Argent Crusade - Defeat - Mistcaller Yngvar'),
+(14104,34882,'Tournament - Champion - The Argent Crusade - Defeat - Ornolf The Scarred'),
+(14105,34882,'Tournament - Champion - The Argent Crusade - Defeat - Deathspeaker Kharos');
+
+DELETE FROM pool_template WHERE entry IN (35094);
+INSERT INTO pool_template VALUES
+(35094,1,'Tournament - Champion - The Argent Crusade - Kraken');
+
+DELETE FROM pool_quest WHERE pool_entry IN (34882);
+INSERT INTO pool_quest VALUES 
+(14107,35094,'Tournament - Champion - The Argent Crusade - Kraken - The Fate Of The Fallen'),
+(14108,35094,'Tournament - Champion - The Argent Crusade - Kraken - Get Kraken!');
