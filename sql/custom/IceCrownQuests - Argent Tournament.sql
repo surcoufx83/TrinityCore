@@ -815,8 +815,8 @@ INSERT INTO pool_quest VALUES
 
 DELETE FROM pool_template WHERE entry IN (34912,34914);
 INSERT INTO pool_template VALUES
-(34912,2,'Tournament - Champion - The Silver Covenant - Tournament'),
-(34914,2,'Tournament - Champion - The Sunreavers - Tournament');
+(34912,1,'Tournament - Champion - The Silver Covenant - Tournament'),
+(34914,1,'Tournament - Champion - The Sunreavers - Tournament');
 
 DELETE FROM pool_quest WHERE pool_entry IN (34912,34914);
 INSERT INTO pool_quest VALUES 
@@ -827,3 +827,22 @@ INSERT INTO pool_quest VALUES
 (14090,34914,'Tournament - Champion - The Sunreavers - Tournament - Gormok Wants His Snobolds'),
 (14112,34914,'Tournament - Champion - The Sunreavers - Tournament - What Do You Feed a Yeti, Anyway?');
 
+DELETE FROM pool_template WHERE entry IN (34882);
+INSERT INTO pool_template VALUES
+(34882,1,'Tournament - Champion - The Argent Crusade - Defeat');
+
+DELETE FROM pool_quest WHERE pool_entry IN (34882);
+INSERT INTO pool_quest VALUES 
+(14101,34882,'Tournament - Champion - The Argent Crusade - Defeat - Drottinn Hrothgar'),
+(14102,34882,'Tournament - Champion - The Argent Crusade - Defeat - Mistcaller Yngvar'),
+(14104,34882,'Tournament - Champion - The Argent Crusade - Defeat - Ornolf The Scarred'),
+(14105,34882,'Tournament - Champion - The Argent Crusade - Defeat - Deathspeaker Kharos');
+
+DELETE FROM pool_template WHERE entry IN (35094);
+INSERT INTO pool_template VALUES
+(35094,1,'Tournament - Champion - The Argent Crusade - Kraken');
+
+DELETE FROM pool_quest WHERE pool_entry IN (34882);
+INSERT INTO pool_quest VALUES 
+(14107,35094,'Tournament - Champion - The Argent Crusade - Kraken - The Fate Of The Fallen'),
+(14108,35094,'Tournament - Champion - The Argent Crusade - Kraken - Get Kraken!');

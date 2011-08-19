@@ -4399,9 +4399,22 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
 
                     return;
                 }
+                // Charge 
+                case 62960:
+                {
+                    if (!unitTarget || !m_caster)
+                        return;
+
+                    m_caster->CastSpell(unitTarget,63661,true);
+                    m_caster->CastSpell(unitTarget,68321,true);
+
+                    return;
+                }
                 //Shield Breaker Trigger
                 case 62626:
                 case 64590:
+                //Charge Effekt 
+                case 68321:
                 {
                     if (!unitTarget || !m_caster)
                         return;
