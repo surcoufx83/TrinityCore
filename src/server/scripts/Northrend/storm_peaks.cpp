@@ -541,7 +541,7 @@ public:
 
 enum eQuest_12851
 {
-    SPELL_ABLAZE          = 54683
+    SPELL_ABLAZE = 54683
 };
 
 class npc_quest_12851 : public CreatureScript
@@ -551,7 +551,7 @@ public:
 
     struct npc_quest_12851AI : public ScriptedAI
     {
-        npc_quest_12851AI(Creature* pCreature) : ScriptedAI(pCreature) {}
+        npc_quest_12851AI(Creature* creature) : ScriptedAI(creature) {}
 
         bool bBurned;
         uint32 uiDespawnTimer;
@@ -563,13 +563,13 @@ public:
             me->SetCorpseDelay(5);
         }
 
-        void SpellHit(Unit * /*caster*/, const SpellInfo* spell)
+        void SpellHit(Unit* /*caster*/, SpellInfo const* spell)
         {
             if (spell->Id == SPELL_ABLAZE)
                 bBurned = true;
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             // keep this until icefang uses waypoint movement
             if (bBurned && me->isAlive())
@@ -598,9 +598,9 @@ public:
 
 enum eColdHearted
 {
-    SPELL_KILL_CREDIT_PRISONER          = 55144,
-    SPELL_KILL_CREDIT_DRAKE             = 55143,
-    SPELL_SUMMON_LIBERATED              = 55073
+    SPELL_KILL_CREDIT_PRISONER = 55144,
+    SPELL_KILL_CREDIT_DRAKE    = 55143,
+    SPELL_SUMMON_LIBERATED     = 55073
 };
 
 const Position FreedDrakeWaypoints[6] =
@@ -620,7 +620,7 @@ public:
 
     struct npc_freed_protodrakeAI : public ScriptedAI
     {
-        npc_freed_protodrakeAI(Creature* pCreature) : ScriptedAI(pCreature) { }
+        npc_freed_protodrakeAI(Creature* creature) : ScriptedAI(creature) { }
 
         uint8 count;
         bool wp_reached;
@@ -666,7 +666,7 @@ public:
             }
         }
 
-        void UpdateAI(const uint32 /*diff*/)
+        void UpdateAI(uint32 const /*diff*/)
         {
             if (!me->isCharmed() && !movementStarted)
             {
@@ -683,9 +683,9 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new npc_freed_protodrakeAI(pCreature);
+        return new npc_freed_protodrakeAI(creature);
     }
 };
 
@@ -693,11 +693,11 @@ public:
 ## npc_brunnhildar_prisoner
 ######*/
 
-enum eBrunnhildarPrisoner
+enum BrunnhildarPrisoner
 {
-    SPELL_ICE_BLOCK                   = 54894,
-    SPELL_ICE_SHARD                   = 55046,
-    SPELL_ICE_SHARD_IMPACT            = 55047
+    SPELL_ICE_BLOCK        = 54894,
+    SPELL_ICE_SHARD        = 55046,
+    SPELL_ICE_SHARD_IMPACT = 55047
 };
 
 class npc_brunnhildar_prisoner : public CreatureScript
@@ -723,7 +723,7 @@ public:
             me->Respawn();
         }
 
-        void SpellHit(Unit* caster, const SpellInfo* spell) 
+        void SpellHit(Unit* caster, SpellInfo const* spell) 
         {
             if (spell->Id == SPELL_ICE_SHARD)
             {
@@ -742,7 +742,7 @@ public:
             }
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             if (uiCheckTimer < diff)
             {
@@ -778,11 +778,11 @@ public:
 ## Quest: The Last of Her Kind (12983)
 ######*/
 
-enum eIcemawMatriarch
+enum IcemawMatriarch
 {
-    QUEST_LAST_OF_HER_KIND         = 12983,
-    ENTRY_INJURED_ICEMAW           = 29563,
-    SPELL_HARNESSED_ICEMAW         = 56795
+    QUEST_LAST_OF_HER_KIND = 12983,
+    ENTRY_INJURED_ICEMAW   = 29563,
+    SPELL_HARNESSED_ICEMAW = 56795
 };
 
 const Position HarnessedIcemawWaypoints[17] =
@@ -813,7 +813,7 @@ public:
 
     struct npc_injured_icemawAI : public ScriptedAI
     {
-        npc_injured_icemawAI(Creature* pCreature) : ScriptedAI(pCreature) { }
+        npc_injured_icemawAI(Creature* creature) : ScriptedAI(creature) { }
 
         void MoveInLineOfSight(Unit* who)
         {
@@ -832,9 +832,9 @@ public:
 
     };
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new npc_injured_icemawAI(pCreature);
+        return new npc_injured_icemawAI(creature);
     }
 };
 
@@ -845,7 +845,7 @@ public:
 
     struct npc_harnessed_icemawAI : public ScriptedAI
     {
-        npc_harnessed_icemawAI(Creature* pCreature) : ScriptedAI(pCreature) { }
+        npc_harnessed_icemawAI(Creature* creature) : ScriptedAI(creature) { }
 
         uint8 count;
         bool wp_reached;
@@ -879,7 +879,7 @@ public:
             }
         }
 
-        void UpdateAI(const uint32 /*diff*/)
+        void UpdateAI(uint32 const /*diff*/)
         {
             if (!me->isCharmed() && !movementStarted)
             {
@@ -895,9 +895,9 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new npc_harnessed_icemawAI(pCreature);
+        return new npc_harnessed_icemawAI(creature);
     }
 };
 
@@ -905,10 +905,10 @@ public:
 ## Quest: The Drakkensryd (12886)
 ######*/
 
-enum eHyldsmeetProtodrake
+enum HyldsmeetProtodrakeTransport
 {
-    //QUEST_DRAKKENSRYD              = 12886,
-    ENTRY_DRAKE_RIDER              = 29800
+    //QUEST_DRAKKENSRYD = 12886,
+    ENTRY_DRAKE_RIDER   = 29800
 };
 
 const Position HyldsmeetProtodrakeWaypoints[11] =
@@ -926,82 +926,82 @@ const Position HyldsmeetProtodrakeWaypoints[11] =
     {7397.71f, -540.00f, 1927.81f, 0.0f}
 };
 
-//class npc_hyldsmeet_protodrake : public CreatureScript
-//{
-//public:
-//    npc_hyldsmeet_protodrake() : CreatureScript("npc_hyldsmeet_protodrake") { }
-//
-//    struct npc_hyldsmeet_protodrakeAI : public ScriptedAI
-//    {
-//        npc_hyldsmeet_protodrakeAI(Creature* pCreature) : ScriptedAI(pCreature) { }
-//
-//        uint8 count;
-//        bool wp_reached;
-//
-//        void Reset()
-//        {
-//            count = 0;
-//            wp_reached = false;
-//        }
-//
-//        void PassengerBoarded(Unit* who, int8 /*seatId*/, bool apply) 
-//        {
-//            if (who && apply)
-//            {
-//                    wp_reached = true;
-//                    me->SetFlying(true);
-//                    me->SetSpeed(MOVE_FLIGHT, 5.0f);
-//            }
-//        }
-//
-//        void MovementInform(uint32 type, uint32 id)
-//        {
-//            if (type != POINT_MOTION_TYPE || id != count)
-//                return;
-//
-//            if (id < 10)
-//            {
-//                ++count;
-//                wp_reached = true;
-//            }
-//            else // TODO: remove this and loop waypoints around the hill
-//            {
-//                Unit* player = me->GetVehicleKit()->GetPassenger(0);
-//                if (player && player->GetTypeId() == TYPEID_PLAYER)
-//                {
-//                    for (uint8 i = 0; i < 10; ++i)
-//                        player->ToPlayer()->KilledMonsterCredit(ENTRY_DRAKE_RIDER, 0);
-//                    player->ExitVehicle();
-//                    me->DespawnOrUnsummon(5000);
-//                }
-//            }
-//        }
-//
-//        void UpdateAI(const uint32 /*diff*/)
-//        {
-//            if (wp_reached)
-//            {
-//                wp_reached = false;
-//                me->GetMotionMaster()->MovePoint(count, HyldsmeetProtodrakeWaypoints[count]);
-//            }
-//        }
-//    };
-//
-//    CreatureAI* GetAI(Creature* pCreature) const
-//    {
-//        return new npc_hyldsmeet_protodrakeAI(pCreature);
-//    }
-//};
+class npc_hyldsmeet_protodrake_transport : public CreatureScript
+{
+public:
+    npc_hyldsmeet_protodrake_transport() : CreatureScript("npc_hyldsmeet_protodrake_transport") { }
+
+    struct npc_hyldsmeet_protodrake_transportAI : public ScriptedAI
+    {
+        npc_hyldsmeet_protodrake_transportAI(Creature* creature) : ScriptedAI(creature) { }
+
+        uint8 count;
+        bool wp_reached;
+
+        void Reset()
+        {
+            count = 0;
+            wp_reached = false;
+        }
+
+        void PassengerBoarded(Unit* who, int8 /*seatId*/, bool apply) 
+        {
+            if (who && apply)
+            {
+                    wp_reached = true;
+                    me->SetFlying(true);
+                    me->SetSpeed(MOVE_FLIGHT, 5.0f);
+            }
+        }
+
+        void MovementInform(uint32 type, uint32 id)
+        {
+            if (type != POINT_MOTION_TYPE || id != count)
+                return;
+
+            if (id < 10)
+            {
+                ++count;
+                wp_reached = true;
+            }
+            else
+            {
+                Unit* player = me->GetVehicleKit()->GetPassenger(0);
+                if (player && player->GetTypeId() == TYPEID_PLAYER)
+                {
+                    for (uint8 i = 0; i < 10; ++i)
+                        player->ToPlayer()->KilledMonsterCredit(ENTRY_DRAKE_RIDER, 0);
+                    player->ExitVehicle();
+                    me->DespawnOrUnsummon(5000);
+                }
+            }
+        }
+
+        void UpdateAI(uint32 const /*diff*/)
+        {
+            if (wp_reached)
+            {
+                wp_reached = false;
+                me->GetMotionMaster()->MovePoint(count, HyldsmeetProtodrakeWaypoints[count]);
+            }
+        }
+    };
+
+    CreatureAI* GetAI(Creature* creature) const
+    {
+        return new npc_hyldsmeet_protodrake_transportAI(creature);
+    }
+};
 
 /*######
 ## Quest: Forging a Head (12985)
 ######*/
 
-enum eDeadIrongiant
+enum DeadIrongiant
 {
-    ENTRY_AMBUSHER              = 30208,
-    SPELL_SALVAGE_CORPSE        = 56227,
-    SPELL_CREATE_EYES           = 56230
+    ENTRY_AMBUSHER       = 30208,
+    SPELL_SALVAGE_CORPSE = 56227,
+    SPELL_CREATE_EYES    = 56230
 };
 
 class npc_dead_irongiant : public CreatureScript
@@ -1011,29 +1011,27 @@ public:
 
     struct npc_dead_irongiantAI : public ScriptedAI
     {
-        npc_dead_irongiantAI(Creature *pCreature) : ScriptedAI(pCreature) {}
+        npc_dead_irongiantAI(Creature* creature) : ScriptedAI(creature) {}
 
-        void SpellHit(Unit *caster, const SpellInfo *spell) 
+        void SpellHit(Unit* caster, SpellInfo const* spell) 
         {
             if (spell->Id == SPELL_SALVAGE_CORPSE)
             {
                 if (!urand(0,2))
                 {
                     for (uint8 i = 0; i < 3; ++i)
-                        if (Creature *temp = me->SummonCreature(ENTRY_AMBUSHER, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60*IN_MILLISECONDS))
+                        if (Creature* temp = me->SummonCreature(ENTRY_AMBUSHER, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60*IN_MILLISECONDS))
                             temp->AI()->AttackStart(caster);
                 }
                 else
-                {
                     me->CastSpell(caster, SPELL_CREATE_EYES, true);
-                }
 
                 me->DespawnOrUnsummon(500);
             }
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
         return new npc_dead_irongiantAI(creature);
     }
@@ -1099,7 +1097,7 @@ void AddSC_storm_peaks()
     new npc_roxi_ramrocket();
     new npc_quest_12851();
     new npc_freed_protodrake();
-    new npc_hyldsmeet_protodrake();
+    new npc_hyldsmeet_protodrake_transport();
     new npc_brunnhildar_prisoner();
     new npc_injured_icemaw();
     new npc_harnessed_icemaw();
