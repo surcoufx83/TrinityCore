@@ -534,15 +534,15 @@ class mob_zerekethvoidzone : public CreatureScript
             : CreatureScript("mob_zerekethvoidzone")
         {
         }
-        struct mob_zerekethvoidzoneAI : public ScriptedAI
+        struct mob_zerekethvoidzoneAI : public Scripted_NoMovementAI
         {
-            mob_zerekethvoidzoneAI(Creature* creature) : ScriptedAI(creature) {}
+            mob_zerekethvoidzoneAI(Creature* creature) : Scripted_NoMovementAI(creature) {}
 
             void Reset()
             {
                 me->SetUInt32Value(UNIT_NPC_FLAGS, 0);
                 me->setFaction(16);
-                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
 
                 DoCast(me, SPELL_VOID_ZONE_DAMAGE);
             }

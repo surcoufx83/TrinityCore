@@ -123,10 +123,14 @@ class boss_harbinger_skyriss : public CreatureScript
             {
                 if (!summon)
                     return;
+
+                summon->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+
                 if (IsImage66)
                     summon->SetHealth(summon->CountPctFromMaxHealth(33));
                 else
                     summon->SetHealth(summon->CountPctFromMaxHealth(66));
+
                 if (me->getVictim())
                     if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
                         summon->AI()->AttackStart(target);
