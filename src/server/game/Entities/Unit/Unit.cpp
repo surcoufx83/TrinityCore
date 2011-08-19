@@ -10937,6 +10937,10 @@ uint32 Unit::SpellDamageBonus(Unit* victim, SpellInfo const* spellProto, uint32 
 
     tmpDamage = (tmpDamage + TakenTotal) * TakenTotalMod;
 
+    // DEBUG
+    if ((spellProto->Id == 12162 || spellProto->Id == 12850 || spellProto->Id == 12868) && tmpDamage > 15000)
+        sLog->outError("DW_DEBUG: Unit::SpellDamageBonus - tmpDamage: %f, TakenAdvertisedBenefit: %i", tmpDamage, TakenAdvertisedBenefit ? TakenAdvertisedBenefit : 0);
+
     return uint32(std::max(tmpDamage, 0.0f));
 }
 
