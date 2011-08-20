@@ -654,13 +654,14 @@ public:
                             if (prisoner->GetTypeId() != TYPEID_UNIT)
                                 return;
 
-                            DoCast(player, SPELL_KILL_CREDIT_PRISONER, true);
+                            player->CastSpell(player, SPELL_KILL_CREDIT_PRISONER, true);
                             //DoCast(player, SPELL_SUMMON_LIBERATED, true);
                             prisoner->ExitVehicle();
                             prisoner->ToCreature()->AI()->DoAction(0);
                         }
 
-                    DoCast(player, SPELL_KILL_CREDIT_DRAKE, true);
+                    player->ToPlayer()->KilledMonsterCredit(29709, 0);
+                    //DoCast(player, SPELL_KILL_CREDIT_DRAKE, true);
                     player->ExitVehicle();
                 }
             }
