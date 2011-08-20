@@ -43,7 +43,7 @@ enum UlduarTypes
     TYPE_BRAIN_DOOR_2,
     TYPE_BRAIN_DOOR_3,
     DATA_KEEPER_SUPPORT_YOGG,
-    
+
     // Assembly of Iorn
     DATA_STEELBREAKER,
     DATA_MOLGEIM,
@@ -286,7 +286,7 @@ enum UlduarBossDeadFlags
     DEAD_XT002                          = 0x0008,
     DEAD_ASSEMBLY                       = 0x0010,
     DEAD_KOLOGARN                       = 0x0020,
-    DEAD_AURIAYA                        = 0x0040, 
+    DEAD_AURIAYA                        = 0x0040,
     DEAD_HODIR                          = 0x0080,
     DEAD_THORIM                         = 0x0100,
     DEAD_FREYA                          = 0x0200,

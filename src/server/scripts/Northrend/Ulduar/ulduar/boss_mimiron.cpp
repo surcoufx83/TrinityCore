@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License along
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 #include "ScriptPCH.h"
 #include "ulduar.h"
 #include "Unit.h"
@@ -713,7 +713,7 @@ public:
         return new boss_leviathan_mkAI(creature);
     }
 
-    struct boss_leviathan_mkAI : public BossAI 
+    struct boss_leviathan_mkAI : public BossAI
     {
         boss_leviathan_mkAI(Creature* creature) : BossAI(creature, TYPE_MIMIRON), phase(PHASE_NULL), vehicle(creature->GetVehicleKit())
         {
@@ -905,7 +905,7 @@ class boss_leviathan_mk_turret : public CreatureScript
 
         struct boss_leviathan_mk_turretAI : public ScriptedAI
         {
-            boss_leviathan_mk_turretAI(Creature* c) : ScriptedAI(c) 
+            boss_leviathan_mk_turretAI(Creature* c) : ScriptedAI(c)
             {
                 SetImmuneToPushPullEffects(true);
                 me->SetReactState(REACT_PASSIVE);
@@ -945,7 +945,7 @@ class boss_leviathan_mk_turret : public CreatureScript
                 else
                     return NULL;
             }
-            
+
             void UpdateAI(uint32 const diff)
             {
                 if (!UpdateVictim())

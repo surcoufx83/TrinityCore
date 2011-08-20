@@ -21,7 +21,7 @@
 
 enum Spells
 {
-    //Auriaya 
+    //Auriaya
     SPELL_TERRIFYING_SCREECH          = 64386,
     SPELL_SENTINEL_BLAST_10           = 64389,
     SPELL_SENTINEL_BLAST_25           = 64678,
@@ -279,7 +279,7 @@ class mob_feral_defender: public CreatureScript
 
                 DoMeleeAttackIfReady();
             }
-        
+
         private:
             uint32 _feralRushTimer;
             uint32 _feralPounceTimer;

@@ -535,7 +535,7 @@ class mob_collapsing_star : public CreatureScript
             {
                 if (_loseHealthTimer <= diff)
                 {
-                    me->DealDamage(me, me->CountPctFromMaxHealth(1)); 
+                    me->DealDamage(me, me->CountPctFromMaxHealth(1));
                     _loseHealthTimer = 1*IN_MILLISECONDS;
                 }
                 else

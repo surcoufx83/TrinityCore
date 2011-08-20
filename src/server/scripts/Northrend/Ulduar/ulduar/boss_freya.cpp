@@ -380,7 +380,7 @@ public:
                 elementalList.clear();
             else
             {
-                if (!elementalList.empty())   
+                if (!elementalList.empty())
                     for (std::set<uint64>::const_iterator itr = elementalList.begin(); itr != elementalList.end(); ++itr)
                         if (Creature* temp = me->GetCreature(*me, *itr))
                         {
@@ -996,7 +996,7 @@ public:
     {
         return new mob_storm_lasherAI (pCreature);
     }
-    
+
     struct mob_storm_lasherAI : public ScriptedAI
     {
         mob_storm_lasherAI(Creature *pCreature) : ScriptedAI(pCreature)

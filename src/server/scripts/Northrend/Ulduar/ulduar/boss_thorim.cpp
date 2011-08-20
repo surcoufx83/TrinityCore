@@ -402,7 +402,7 @@ public:
 
             if (me->HasUnitState(UNIT_STAT_CASTING))
                 return;
-            
+
             if (phase == PHASE_1)
             {
                 while (uint32 eventId = events.ExecuteEvent())
@@ -1213,7 +1213,7 @@ UPDATE `creature_template` SET `unit_flags` = 33685508 WHERE `entry` = 33378;
 
 -- Gate
 DELETE FROM `gameobject_scripts` WHERE `id`=55194;
-INSERT INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`, `x`, `y`, `z`, `o`) VALUES 
+INSERT INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`, `x`, `y`, `z`, `o`) VALUES
 (55194, 0, 11, 34155, 15, '0', 0, 0, 0, 0);
 DELETE FROM `gameobject_template` WHERE `entry`=194265;
 INSERT INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`, `WDBVerified`) VALUES

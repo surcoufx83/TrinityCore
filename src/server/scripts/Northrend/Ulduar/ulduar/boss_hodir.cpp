@@ -43,7 +43,7 @@ enum Spells
     SPELL_FALL_DAMAGE                           = 62236,
     SPELL_FALL_SNOWDRIFT                        = 62460,
     SPELL_BERSERK                               = 47008,
-    
+
     // Druids
     SPELL_WRATH                                 = 62793,
     SPELL_STARLIGHT                             = 62807,
@@ -152,9 +152,9 @@ public:
         void Reset()
         {
             _Reset();
-        
+
             me->SetReactState(REACT_PASSIVE);
-        
+
             // Spawn NPC Helpers
             for (uint8 i = 0; i < RAID_MODE(NORMAL_COUNT, RAID_COUNT); ++i)
             {
@@ -173,9 +173,9 @@ public:
         void JustDied(Unit * /*victim*/)
         {
             DoScriptText(SAY_DEATH, me);
-        
+
             me->setFaction(35);
-        
+
             if (instance)
             {
                 // Kill credit
@@ -222,16 +222,16 @@ public:
         {
             if (!UpdateVictim())
                 return;
-            
+
             if (me->getVictim() && !me->getVictim()->GetCharmerOrOwnerPlayerOrPlayerItself())
                 me->Kill(me->getVictim());
 
             events.Update(diff);
             _DoAggroPulse(diff);
-        
+
             if (me->HasUnitState(UNIT_STAT_CASTING))
                 return;
-                    
+
             if (uiCheckIntenseColdTimer < diff && !bMoreThanTwoIntenseCold)
             {
                 std::list<HostileReference*> ThreatList = me->getThreatManager().getThreatList();
@@ -329,7 +329,7 @@ public:
                     {
                         if (GetClosestCreatureWithEntry(pTarget, ENTRY_NPC_ICICLE_TARGET, 5.0f))
                             continue;
-                        
+
                         else if (Creature *pIceBlock = pTarget->SummonCreature(ENTRY_NPC_FLASH_FREEZE,pTarget->GetPositionX(),pTarget->GetPositionY(),pTarget->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN,105000))
                         {
                             if (pTarget->GetTypeId() == TYPEID_PLAYER)
@@ -339,7 +339,7 @@ public:
                 }
             }
         }
-    
+
         void DoAction(const int32 action)
         {
             switch(action)
@@ -519,7 +519,7 @@ public:
                 HealTimer = urand(12000, 14000);
             }
             else HealTimer -= uiDiff;
-        
+
             if (DispelTimer < uiDiff)
             {
                 std::list<Player*> players;
@@ -598,7 +598,7 @@ public:
                 me->VisitNearbyWorldObject(30, searcher);
                 if (!players.empty())
                 {
-                    std::list<Player*>::iterator iter = players.begin(); 
+                    std::list<Player*>::iterator iter = players.begin();
                     DoCast((*iter), SPELL_STORM_CLOUD, true);
                 }
                 StormTimer = urand(15000, 20000);
@@ -716,7 +716,7 @@ public:
                 FireTimer = urand(25000, 30000);
             }
             else FireTimer -= uiDiff;
-        
+
             if (MeltIceTimer < uiDiff)
             {
                 if (Creature *pShard = me->FindNearestCreature(ENTRY_NPC_FLASH_FREEZE,50,true))

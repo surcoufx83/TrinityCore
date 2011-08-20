@@ -234,7 +234,7 @@ public:
             return return_value;
         }
 
-        void OnPlayerKilled(Player* /*player*/) 
+        void OnPlayerKilled(Player* /*player*/)
         {
             for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
             {
@@ -296,7 +296,7 @@ public:
                 case ACHIEVEMENT_CRITERIA_KILL_WITHOUT_DEATHS_ALGALON_25:
                     return !(uiAlgalonKillCount);
             }
-           
+
             // Yogg-Saron
             switch (criteria_id)
             {

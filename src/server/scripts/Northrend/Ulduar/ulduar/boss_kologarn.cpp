@@ -451,7 +451,7 @@ class npc_kologarn_arm : public CreatureScript
                 if (kologarn && !kologarn->isInCombat())
                     kologarn->AI()->AttackStart(who);
             }
-            
+
             void UpdateAI(uint32 const /*diff*/) { }
         };
 
@@ -556,7 +556,7 @@ class spell_ulduar_stone_grip_cast_target : public SpellScriptLoader
             {
                 unitList = m_unitList;
             }
-            
+
             void HandleForceCast(SpellEffIndex i)
             {
                 Player* plr = GetHitPlayer();
