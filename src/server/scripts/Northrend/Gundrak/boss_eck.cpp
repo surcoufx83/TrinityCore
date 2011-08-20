@@ -91,9 +91,9 @@ public:
                     me->AddThreat(pUnit, 0.1f);
                 }
             }
-            
+
             //needed?
-            if (pVictim && pVictim->isAlive()) 
+            if (pVictim && pVictim->isAlive())
             {
                 AttackStart(pVictim);
                 me->AddThreat(pVictim, 10.0f);
@@ -124,7 +124,7 @@ public:
                 if (target && target->GetTypeId() == TYPEID_PLAYER)
                 {
                     if (me->GetExactDist(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ()) < 35)
-                    { 
+                    {
                         DoCast(target, SPELL_ECK_SPRING);
                         EckResetThread(target); //test
 
@@ -223,7 +223,7 @@ public:
                 if (pInstance->GetData(DATA_ALIVE_RUIN_DWELLERS) == 0)
                     me->SummonCreature(CREATURE_ECK, EckSpawnPoint, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 300*IN_MILLISECONDS);
             } */
-        } 
+        }
     };
 
 };

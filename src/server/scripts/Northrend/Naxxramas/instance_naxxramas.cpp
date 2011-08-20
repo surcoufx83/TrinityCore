@@ -218,7 +218,7 @@ public:
             return false;
         }
 
-        void OnPlayerKilled(Player *pPlayer) 
+        void OnPlayerKilled(Player *pPlayer)
         {
             if(IsEncounterInProgress())
                 m_PlayerDeathCount++;

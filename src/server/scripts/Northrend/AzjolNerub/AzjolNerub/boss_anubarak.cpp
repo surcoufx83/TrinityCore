@@ -369,7 +369,7 @@ public:
             }
         }
 
-        void SpellHitTarget(Unit *pTarget, const SpellInfo *spell) 
+        void SpellHitTarget(Unit *pTarget, const SpellInfo *spell)
         {
             if (spell->Id == DUNGEON_MODE(SPELL_POUND, SPELL_POUND_H))
                 pTarget->CastSpell(pTarget, DUNGEON_MODE(SPELL_POUND_DMG, SPELL_POUND_DMG_H), true);

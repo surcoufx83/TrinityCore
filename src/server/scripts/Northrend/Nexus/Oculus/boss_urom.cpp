@@ -297,12 +297,12 @@ public:
                 if (timeBombTimer <= uiDiff)
                 {
                     if (Unit* pUnit = SelectTarget(SELECT_TARGET_RANDOM))
-					{
+                    {
                         if(me->GetMap()->IsHeroic())
                            DoCast(pUnit, SPELL_TIME_BOMB_2);
                         else
                             DoCast(pUnit, SPELL_TIME_BOMB);
-					}
+                    }
 
                     timeBombTimer = urand(20000, 25000);
                 } else timeBombTimer -= uiDiff;

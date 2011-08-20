@@ -1514,7 +1514,7 @@ public:
         uint32 m_uiTimer;                 //Timer until phase transition
         uint64 StarterGUID;
         uint32 Next_Incedient;
-    
+
         bool hasFound;
         bool shortbreak;
 
@@ -1639,7 +1639,7 @@ public:
                         }
                     }
                     else m_uiTimer -= uiDiff;
-                }else 
+                }else
                 {
                     EnterEvadeMode();
                     return;
@@ -1898,7 +1898,7 @@ public:
         {
             pPlayer->CLOSE_GOSSIP_MENU();
             pPlayer->KilledMonsterCredit(ENTRY_BLOODROSE_CREDIT, pCreature->GetGUID());
-         
+
             pAI->stepping = true;
             pAI->uiStep = 1;
         }

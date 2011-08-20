@@ -514,7 +514,7 @@ enum BlessedBannerSummondNPCs
 };
 
 
-const Position CrusaderPos[8] = 
+const Position CrusaderPos[8] =
 {
     {6418.31f,  423.00f, 511.2f, 5.945f}, // Banner
 
@@ -528,7 +528,7 @@ const Position CrusaderPos[8] =
     {6386.99f,  440.60f, 511.28f, 2.601f}  // Matron 3
 };
 
-const Position ScourgePos = 
+const Position ScourgePos =
 {
     6460.16f,  403.45f, 490.07f, 2.700f //Scourge Spawn
 };
@@ -676,7 +676,7 @@ public:
                             break;
                         }
                         says++;
-                        
+
                     }else say_Timer -= diff;
 
 
@@ -849,7 +849,7 @@ class npc_captured_crusader : public CreatureScript
 /*########
 ## npc_the_ocular
 #########*/
-         
+
 enum TheOcularSpells
 {
     SPELL_THE_OCULAR_TRANSFORM                              = 55162,
@@ -857,7 +857,7 @@ enum TheOcularSpells
     SPELL_ITS_ALL_FUN_AND_GAMES_THE_OCULAR_ON_DEATH         = 55288,
     SPELL_ITS_ALL_FUN_AND_GAMES_THE_OCULAR_KILL_CREDIT      = 55289
 };
-         
+
 enum ReqCreatures
 {
    NPC_THE_OCULAR                                  = 29747,
@@ -1000,7 +1000,7 @@ public:
                 {
                     Creature* temp = DoSummon(ENTRY_VILE,me,5,20000,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT);
                     temp->AI()->AttackStart(me);
-                    
+
                     temp = DoSummon(ENTRY_THE_LEAPER,me,5,20000,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT);
                     temp->AI()->AttackStart(me);
 
@@ -1095,7 +1095,7 @@ public:
         uint32 uiSpell2Entry_Timer;
         uint32 uiSpell1Entry;
         uint32 uiSpell2Entry;
-        
+
         void Reset()
         {
             switch(me->GetEntry())
@@ -1230,7 +1230,7 @@ enum eEntrysSlaveToSaronite
     ACTION_FREED                            = 2,
 };
 
-const Position FreedPos[2] = 
+const Position FreedPos[2] =
 {
     { 7030.0f,  1862.0f, 533.2f, 0.0f },
     { 6947.0f,  2027.0f, 519.7f, 0.0f }
@@ -1479,7 +1479,7 @@ class spell_tournament_defend : public SpellScriptLoader
 /*########
 ## npc_tournament_dummy
 #########*/
-         
+
 enum TournamentDummySpells
 {
     SPELL_TOURNAMENT_CHARGE_CREDIT                          = 62658, // Mastery Of The Charge

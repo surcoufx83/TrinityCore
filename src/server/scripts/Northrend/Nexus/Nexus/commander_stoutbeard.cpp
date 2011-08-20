@@ -58,7 +58,7 @@ public:
         uint32 uiFearTimer;
         uint32 uiWhirlwindTimer;
 
-        void Reset() 
+        void Reset()
         {
             bChargePause=false;
             uiChargePauseTimer=0;
@@ -101,7 +101,7 @@ public:
                 uiBattleShoutTimer=120000;
             } else
                 uiBattleShoutTimer-=diff;
-        
+
             if (uiWhirlwindTimer<=diff)
             {
                 DoCast(me,SPELL_WHIRLWIND_2);

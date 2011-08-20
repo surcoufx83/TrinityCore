@@ -71,7 +71,7 @@ public:
         void AttackGluth(Creature* who)
         {
             who->SetReactState(REACT_PASSIVE);
-            who->AddThreat(me, 9999999);                                    
+            who->AddThreat(me, 9999999);
             who->AI()->AttackStart(me);
             who->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
             who->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, true);
@@ -109,12 +109,12 @@ public:
             {
                 if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
                     summon->AI()->AttackStart(target);
-                
+
                 me->SetInCombatWith(summon);
                 summon->SetInCombatWith(me);
                 me->AddThreat(summon, 0.0f);
             }
-       
+
             //summon->CastSpell(summon,SPELL_INFECTED_WOUND,true);
             summons.Summon(summon);
         }
@@ -213,7 +213,7 @@ public:
                  }
             }
             else
-                DoCast(victim, SPELL_INFECTED_TRIGGERED);  // else add aura        
+                DoCast(victim, SPELL_INFECTED_TRIGGERED);  // else add aura
         }
 
         void UpdateAI(uint32 const diff)

@@ -566,7 +566,7 @@ public:
             || pPlayer->GetQuestStatus(QUEST_GODS_LIKE_SHINEY_THINGS) == QUEST_STATUS_NONE)
             || pPlayer->GetQuestStatus(QUEST_MAKING_PEACE) == QUEST_STATUS_INCOMPLETE)
             pPlayer->ADD_GOSSIP_ITEM_EXTENDED(0, GOSSIP_LAFOO_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1, "", 0, false);
-   
+
         if (pPlayer->GetQuestStatus(QUEST_BACK_SO_SOON) == QUEST_STATUS_INCOMPLETE
             || pPlayer->GetQuestStatus(QUEST_FORCED_HAND) == QUEST_STATUS_INCOMPLETE
             || pPlayer->GetQuestStatus(QUEST_THE_LOST_MISTWHISPER_TRESURE) == QUEST_STATUS_INCOMPLETE)
@@ -619,7 +619,7 @@ public:
         bool bForceDespawn;
         uint32 AuraTimer;
 
-        void Reset() 
+        void Reset()
         {
             me->SetReactState(REACT_PASSIVE);
             me->SetDisplayId(17519); //Fix for future db changes, should be always invisible for Player
@@ -656,7 +656,7 @@ public:
             return NULL;
         }
 
-        void UpdateAI(const uint32 diff) 
+        void UpdateAI(const uint32 diff)
         {
             if (initial_cast)
             {
@@ -671,9 +671,9 @@ public:
             {
                 if (AuraTimer <= diff)
                 {
-                    if (GetNearPlayer()) 
+                    if (GetNearPlayer())
                     {
-                        if (!AuraRemoved) 
+                        if (!AuraRemoved)
                         {
                             if (!me->FindNearestCreature(NPC_ORACLE_MOODLE_ID, TRIGGER_SIGHT_DIST) && !me->FindNearestCreature(NPC_ORACLE_JALOOT_ID, TRIGGER_SIGHT_DIST) && !me->FindNearestCreature(NPC_ORACLE_LAFOO_ID, TRIGGER_SIGHT_DIST)) {
                                 me->RemoveAllAuras();
@@ -688,7 +688,7 @@ public:
                                 Reset();
                             }
                         }
-                    } else 
+                    } else
                     {
                         me->RemoveAllAuras();
                         AuraRemoved = true;
@@ -720,7 +720,7 @@ static const char * Special_sayings[] = { "Home good, but not stay long! More ad
 
 static const char * Seeker_sayings[] = { "Ooh! Shinies!", "Maybe more shiny bugs! We like bugs!", "Treasure for me! Treasure for shrine!", "Dig, dig, dig...", "Shiny things! Shiny things! Not as shiny as my crystal, but still shiny!", "More treasures! Treasures of all kinds! Yay treasures!", "Can never have too many shiny crystals! Nope!", "We are fast digger! Really fast! See... all done! That was fast, huh?", "Yay... more dirt.", "Here I am, digging up some useless bauble on the will of someone I just met...does that seem right to you?", "I'm done here" };
 
-enum oracle_specific 
+enum oracle_specific
 {
     TRIGGER_ID = 28088, // bad id, just not used
     TRIGGER_SEARCH_DIST = 10,
@@ -792,9 +792,9 @@ public:
                 case DIG_UP_GLINTING_BUG:
                 case DIG_UP_SPARKLING_HARE:
                 case DIG_UP_GLINTING_ARMOR:
-                case DIG_UP_GLOWING_GEM: 
+                case DIG_UP_GLOWING_GEM:
                 case DIG_UP_POLISHED_PLATTER:
-                case DIG_UP_SHINING_CRYSTAL: 
+                case DIG_UP_SHINING_CRYSTAL:
                 case DIG_UP_SPARKLING_TREASURE:
                     break;
                 default:
@@ -1147,7 +1147,7 @@ public:
             return true;
         }
 
-        void Aggro() 
+        void Aggro()
         {
 
         }
@@ -1420,8 +1420,8 @@ enum TipsyMcManus
     GO_JUNGLE_PUNCH            = 190643
 };
 
-static uint32 const goEntry[5] = 
-{   
+static uint32 const goEntry[5] =
+{
     190635,
     190636,
     190637,

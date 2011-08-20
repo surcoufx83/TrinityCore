@@ -177,11 +177,11 @@ public:
             }
         }
 
-        void SpellHitTarget(Unit *pTarget, const SpellInfo *spell) 
+        void SpellHitTarget(Unit *pTarget, const SpellInfo *spell)
         {
             if (pTarget->GetTypeId() != TYPEID_PLAYER)
                 return;
-            
+
             if (spell->Id == SPELL_INTENSE_COLD_TRIGGERED)
                  if (Aura* pColdAura = pTarget->GetAura(SPELL_INTENSE_COLD_TRIGGERED))
                      if (pColdAura->GetStackAmount() > 2)

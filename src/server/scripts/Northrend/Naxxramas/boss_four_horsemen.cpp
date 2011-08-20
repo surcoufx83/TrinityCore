@@ -434,7 +434,7 @@ public:
 
                     if (!pTemp)
                         DoCastAOE(SPELL_PUNISH[id], true);
-    
+
                     doDelayPunish = false;
                 }
                 punishTimer = 2000;

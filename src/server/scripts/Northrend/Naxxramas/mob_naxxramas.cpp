@@ -309,7 +309,7 @@ public:
         }
     }
     // Dread Creeper - 15974
-    struct mob_dread_creeperAI : mob_naxxramas_tashAI 
+    struct mob_dread_creeperAI : mob_naxxramas_tashAI
     {
         mob_dread_creeperAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -321,7 +321,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -337,7 +337,7 @@ public:
         }
     };
     // Carrion Spinner - 15975
-    struct mob_carrion_spinnerAI : mob_naxxramas_tashAI 
+    struct mob_carrion_spinnerAI : mob_naxxramas_tashAI
     {
         mob_carrion_spinnerAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -350,7 +350,7 @@ public:
             uiPoisonSpray_Timer = 10000;
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -372,7 +372,7 @@ public:
         }
     };
     // Venom Stalker - 15976
-    struct mob_venom_stalkerAI : mob_naxxramas_tashAI 
+    struct mob_venom_stalkerAI : mob_naxxramas_tashAI
     {
         mob_venom_stalkerAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -384,7 +384,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -401,7 +401,7 @@ public:
         }
     };
     // Crypt Reaver - 15978
-    struct mob_crypt_reaverAI : mob_naxxramas_tashAI 
+    struct mob_crypt_reaverAI : mob_naxxramas_tashAI
     {
         mob_crypt_reaverAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -413,7 +413,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -435,7 +435,7 @@ public:
         }
     };
     // Tomb Horror - 15979
-    struct mob_tomb_horrorAI : mob_naxxramas_tashAI 
+    struct mob_tomb_horrorAI : mob_naxxramas_tashAI
     {
         mob_tomb_horrorAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -449,7 +449,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -471,7 +471,7 @@ public:
         }
     };
     // Naxxramas Cultist - 15980
-    struct mob_naxxramas_cultistAI : mob_naxxramas_tashAI 
+    struct mob_naxxramas_cultistAI : mob_naxxramas_tashAI
     {
         mob_naxxramas_cultistAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -483,7 +483,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -499,7 +499,7 @@ public:
         }
     };
     // Naxxramas Acolyte - 15981
-    struct mob_naxxramas_acolyteAI : mob_naxxramas_tashAI 
+    struct mob_naxxramas_acolyteAI : mob_naxxramas_tashAI
     {
         mob_naxxramas_acolyteAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -513,7 +513,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -535,7 +535,7 @@ public:
         }
     };
     // Vigilant Shade - 30085
-    struct mob_vigilant_shadeAI : mob_naxxramas_tashAI 
+    struct mob_vigilant_shadeAI : mob_naxxramas_tashAI
     {
         mob_vigilant_shadeAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -554,7 +554,7 @@ public:
         {
             me->RemoveAurasDueToSpell(SPELL_INVISIBLE);
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -570,7 +570,7 @@ public:
         }
     };
     // Plague Slime - 16243
-    struct mob_plague_slimeAI : mob_naxxramas_tashAI 
+    struct mob_plague_slimeAI : mob_naxxramas_tashAI
     {
         mob_plague_slimeAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -595,7 +595,7 @@ public:
 
             mob_naxxramas_tashAI::EnterCombat(who);
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -608,7 +608,7 @@ public:
                     TankGuid = me->getVictim()->GetGUID();
 
                     uint32 NewSpell = 0;
-                    do 
+                    do
                     {
                         NewSpell = RAND(SPELL_PLAGUE_SLIME_BLACK,SPELL_PLAGUE_SLIME_BLUE,SPELL_PLAGUE_SLIME_GREEN,SPELL_PLAGUE_SLIME_RED);
                     }while (NewSpell == CurrentSpell);
@@ -622,7 +622,7 @@ public:
         }
     };
     // Infectious Ghoul - 16244
-    struct mob_infectious_ghoulAI : mob_naxxramas_tashAI 
+    struct mob_infectious_ghoulAI : mob_naxxramas_tashAI
     {
         mob_infectious_ghoulAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -636,7 +636,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -664,7 +664,7 @@ public:
         }
     };
     // Stoneskin Gargoyle - 16168
-    struct mob_stoneskin_gargoyleAI : mob_naxxramas_tashAI 
+    struct mob_stoneskin_gargoyleAI : mob_naxxramas_tashAI
     {
         mob_stoneskin_gargoyleAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -708,7 +708,7 @@ public:
         }
     };
     // Mutated Grub - 16297
-    struct mob_mutated_grubAI : mob_naxxramas_tashAI 
+    struct mob_mutated_grubAI : mob_naxxramas_tashAI
     {
         mob_mutated_grubAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -720,7 +720,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -736,7 +736,7 @@ public:
         }
     };
     // Frenzied Bat - 16036
-    struct mob_frenzied_batAI : mob_naxxramas_tashAI 
+    struct mob_frenzied_batAI : mob_naxxramas_tashAI
     {
         mob_frenzied_batAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -748,7 +748,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -764,7 +764,7 @@ public:
         }
     };
     // Eye Stalk - 16236
-    struct mob_eye_stalkAI : mob_naxxramas_tashAI 
+    struct mob_eye_stalkAI : mob_naxxramas_tashAI
     {
         mob_eye_stalkAI(Creature *c) : mob_naxxramas_tashAI(c)
         {
@@ -801,7 +801,7 @@ public:
         }
     };
     // Patchwork Golem - 16017
-    struct mob_patchwork_golemAI : mob_naxxramas_tashAI 
+    struct mob_patchwork_golemAI : mob_naxxramas_tashAI
     {
         mob_patchwork_golemAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -819,7 +819,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -848,7 +848,7 @@ public:
         }
     };
     // Bile Retcher - 16018
-    struct mob_bile_retcherAI : mob_naxxramas_tashAI 
+    struct mob_bile_retcherAI : mob_naxxramas_tashAI
     {
         mob_bile_retcherAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -860,7 +860,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -876,7 +876,7 @@ public:
         }
     };
     // Mad Scientist - 16020
-    struct mob_mad_scientistAI : mob_naxxramas_tashAI 
+    struct mob_mad_scientistAI : mob_naxxramas_tashAI
     {
         mob_mad_scientistAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -890,7 +890,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -900,7 +900,7 @@ public:
             {
                 Unit* target = DoSelectLowestHpFriendly(40);
                 if(!target) target = me;
-                
+
                 if(TryDoCast(target,RAID_MODE(SPELL_GREAT_HEAL,SPELL_GREAT_HEAL_H)))
                     uiHeal_Timer = urand(15000,30000);
             }else uiHeal_Timer -= diff;
@@ -919,7 +919,7 @@ public:
         }
     };
     // Living Monstrosity - 16021
-    struct mob_living_monstrosityAI : mob_naxxramas_tashAI 
+    struct mob_living_monstrosityAI : mob_naxxramas_tashAI
     {
         mob_living_monstrosityAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -933,7 +933,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -955,7 +955,7 @@ public:
         }
     };
     // Surgical Assistant - 16022
-    struct mob_surgical_assistantAI : mob_naxxramas_tashAI 
+    struct mob_surgical_assistantAI : mob_naxxramas_tashAI
     {
         mob_surgical_assistantAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -967,7 +967,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -983,7 +983,7 @@ public:
         }
     };
     // Embalming Slime - 16024
-    struct mob_embalming_slimeAI : mob_naxxramas_tashAI 
+    struct mob_embalming_slimeAI : mob_naxxramas_tashAI
     {
         mob_embalming_slimeAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -995,7 +995,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -1011,7 +1011,7 @@ public:
         }
     };
     // Stitched Giant - 16025
-    struct mob_stitched_giantAI : mob_naxxramas_tashAI 
+    struct mob_stitched_giantAI : mob_naxxramas_tashAI
     {
         mob_stitched_giantAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -1024,7 +1024,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -1046,7 +1046,7 @@ public:
         }
     };
     // Stitched Colossus - 30071
-    struct mob_stitched_colossusAI : mob_naxxramas_tashAI 
+    struct mob_stitched_colossusAI : mob_naxxramas_tashAI
     {
         mob_stitched_colossusAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -1059,7 +1059,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -1081,7 +1081,7 @@ public:
         }
     };
     // Living Poison - 16027
-    struct mob_living_poisonAI : mob_naxxramas_tashAI 
+    struct mob_living_poisonAI : mob_naxxramas_tashAI
     {
         mob_living_poisonAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -1101,14 +1101,14 @@ public:
         {
             return;
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             return;
         }
     };
     // Deathcharger Steed - 16067
-    struct mob_deathcharger_steedAI : mob_naxxramas_tashAI 
+    struct mob_deathcharger_steedAI : mob_naxxramas_tashAI
     {
         mob_deathcharger_steedAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -1120,7 +1120,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -1137,7 +1137,7 @@ public:
         }
     };
     // Death Knight Captain - 16145
-    struct mob_death_knight_captainAI : mob_naxxramas_tashAI 
+    struct mob_death_knight_captainAI : mob_naxxramas_tashAI
     {
         mob_death_knight_captainAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -1180,7 +1180,7 @@ public:
         }
     };
     // Death Knight - 16146
-    struct mob_death_knightAI : mob_naxxramas_tashAI 
+    struct mob_death_knightAI : mob_naxxramas_tashAI
     {
         mob_death_knightAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -1235,7 +1235,7 @@ public:
         }
     };
     // Risen Squire- 16154
-    struct mob_risen_squireAI : mob_naxxramas_tashAI 
+    struct mob_risen_squireAI : mob_naxxramas_tashAI
     {
         mob_risen_squireAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -1247,7 +1247,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -1263,7 +1263,7 @@ public:
         }
     };
     // Dark Touched Warrior - 16156
-    struct mob_dark_touched_warriorAI : mob_naxxramas_tashAI 
+    struct mob_dark_touched_warriorAI : mob_naxxramas_tashAI
     {
         mob_dark_touched_warriorAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -1275,7 +1275,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -1291,7 +1291,7 @@ public:
         }
     };
     // Death Knight Cavalier - 16163
-    struct mob_death_knight_cavalierAI : mob_naxxramas_tashAI 
+    struct mob_death_knight_cavalierAI : mob_naxxramas_tashAI
     {
         mob_death_knight_cavalierAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -1315,7 +1315,7 @@ public:
 
             mob_naxxramas_tashAI::JustDied(victim);
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -1343,7 +1343,7 @@ public:
         }
     };
     // Shade of Naxxramas - 16164
-    struct mob_shade_of_naxxramasAI : mob_naxxramas_tashAI 
+    struct mob_shade_of_naxxramasAI : mob_naxxramas_tashAI
     {
         mob_shade_of_naxxramasAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -1357,7 +1357,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -1379,7 +1379,7 @@ public:
         }
     };
     // Bony Construct - 16167
-    struct mob_bony_constructAI : mob_naxxramas_tashAI 
+    struct mob_bony_constructAI : mob_naxxramas_tashAI
     {
         mob_bony_constructAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -1391,7 +1391,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -1407,7 +1407,7 @@ public:
         }
     };
     // Skeletal Smith - 16193
-    struct mob_skeletal_smithAI : mob_naxxramas_tashAI 
+    struct mob_skeletal_smithAI : mob_naxxramas_tashAI
     {
         mob_skeletal_smithAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -1421,7 +1421,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -1443,7 +1443,7 @@ public:
         }
     };
     // Unholy Axe - 16194
-    struct mob_unholy_axeAI : mob_naxxramas_tashAI 
+    struct mob_unholy_axeAI : mob_naxxramas_tashAI
     {
         mob_unholy_axeAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -1457,7 +1457,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -1479,7 +1479,7 @@ public:
         }
     };
     // Unholy Staff - 16215
-    struct mob_unholy_staffAI : mob_naxxramas_tashAI 
+    struct mob_unholy_staffAI : mob_naxxramas_tashAI
     {
         mob_unholy_staffAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -1495,7 +1495,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -1524,7 +1524,7 @@ public:
         }
     };
     // Unholy Swords - 16216
-    struct mob_unholy_swordsAI : mob_naxxramas_tashAI 
+    struct mob_unholy_swordsAI : mob_naxxramas_tashAI
     {
         mob_unholy_swordsAI(Creature *c) : mob_naxxramas_tashAI(c){}
 
@@ -1538,7 +1538,7 @@ public:
 
             mob_naxxramas_tashAI::Reset();
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )

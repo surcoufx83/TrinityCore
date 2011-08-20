@@ -183,7 +183,7 @@ class boss_drakkari_colossus : public CreatureScript
             {
                 if (_instance)
                     _instance->SetData(DATA_DRAKKARI_COLOSSUS_EVENT, IN_PROGRESS);
-           
+
                 me->RemoveAura(SPELL_FREEZE_ANIM);
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
                 _phase = 1;
@@ -295,11 +295,11 @@ class boss_drakkari_elemental : public CreatureScript
             {
                 if (Creature* colossus = Unit::GetCreature(*me, _instance ? _instance->GetData64(DATA_DRAKKARI_COLOSSUS) : 0))
                     colossus->AI()->DoAction(ACTION_UNFREEZE);
-            
+
                 me->SetVisible(false);
                 me->DisappearAndDie();
             }
-       
+
             void EnterCombat(Unit* /*who*/)
             {
                 DoCast(me, DUNGEON_MODE(SPELL_MOJO_VOLLEY, H_SPELL_MOJO_VOLLEY));

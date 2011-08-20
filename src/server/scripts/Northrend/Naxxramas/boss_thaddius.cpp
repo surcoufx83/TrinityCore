@@ -361,7 +361,7 @@ public:
 
                         // reset aggro to be sure that feugen will not follow the jump
                         pFeugen->getThreatManager().addThreat(pStalaggVictim, pFeugen->getThreatManager().getThreat(pFeugenVictim));
-                        me->getThreatManager().addThreat(pFeugenVictim, me->getThreatManager().getThreat(pStalaggVictim));                      
+                        me->getThreatManager().addThreat(pFeugenVictim, me->getThreatManager().getThreat(pStalaggVictim));
                         pFeugen->getThreatManager().modifyThreatPercent(pFeugenVictim, -100);
                         me->getThreatManager().modifyThreatPercent(pStalaggVictim, -100);
 

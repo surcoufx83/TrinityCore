@@ -363,7 +363,7 @@ public:
 
             if(instance && uiAbosKilled >= 18)
                 instance->DoCompleteAchievement(RAID_MODE(ACHIEVEMENT_JUST_CANT_GET_ENOUGH_10,ACHIEVEMENT_JUST_CANT_GET_ENOUGH_25));
-                
+
         }
 
         void DoAction(const int32 action)
@@ -784,7 +784,7 @@ public:
         }
     }
 
-    struct mob_soldier_of_frozen_wasteAI : ScriptedAI 
+    struct mob_soldier_of_frozen_wasteAI : ScriptedAI
     {
         mob_soldier_of_frozen_wasteAI(Creature *c) : ScriptedAI(c){}
 
@@ -793,7 +793,7 @@ public:
         {
             DoCast(me,SPELL_DARK_BLAST,true);
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )
@@ -803,7 +803,7 @@ public:
         }
     };
 
-    struct mob_unstoppable_abominationAI : ScriptedAI 
+    struct mob_unstoppable_abominationAI : ScriptedAI
     {
         mob_unstoppable_abominationAI(Creature *c) : ScriptedAI(c)
         {
@@ -834,7 +834,7 @@ public:
         {
             if (!UpdateVictim() )
                 return;
-            
+
             if(uiMortalWound_Timer <= diff)
             {
                 DoCast(me->getVictim(),SPELL_MORTAL_WOUND);
@@ -851,7 +851,7 @@ public:
         }
     };
 
-    struct mob_soul_weaverAI : ScriptedAI 
+    struct mob_soul_weaverAI : ScriptedAI
     {
         mob_soul_weaverAI(Creature *c) : ScriptedAI(c){}
 
@@ -860,7 +860,7 @@ public:
         {
             DoCast(me,SPELL_WAILS_OF_SOUL,true);
         }
-        
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() )

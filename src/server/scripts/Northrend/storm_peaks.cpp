@@ -723,7 +723,7 @@ public:
             me->Respawn();
         }
 
-        void SpellHit(Unit* caster, SpellInfo const* spell) 
+        void SpellHit(Unit* caster, SpellInfo const* spell)
         {
             if (spell->Id == SPELL_ICE_SHARD)
             {
@@ -944,7 +944,7 @@ public:
             wp_reached = false;
         }
 
-        void PassengerBoarded(Unit* who, int8 /*seatId*/, bool apply) 
+        void PassengerBoarded(Unit* who, int8 /*seatId*/, bool apply)
         {
             if (who && apply)
             {
@@ -1013,7 +1013,7 @@ public:
     {
         npc_dead_irongiantAI(Creature* creature) : ScriptedAI(creature) {}
 
-        void SpellHit(Unit* caster, SpellInfo const* spell) 
+        void SpellHit(Unit* caster, SpellInfo const* spell)
         {
             if (spell->Id == SPELL_SALVAGE_CORPSE)
             {
@@ -1073,7 +1073,7 @@ class npc_hyldsmeet_protodrake : public CreatureScript
                     else
                         _accessoryRespawnTimer -= diff;
                 }
-            
+
             private:
                 uint32 _accessoryRespawnTimer;
                 Vehicle* _vehicleKit;

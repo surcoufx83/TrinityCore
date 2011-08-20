@@ -235,7 +235,7 @@ public:
                         tempTarget->SetDisplayId(DISPLAY_INVISIBLE);
                         tempTarget->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE|UNIT_FLAG_PASSIVE|UNIT_FLAG_NOT_SELECTABLE);
                         me->CastSpell(tempTarget, bIsUndead ? SPELL_DARK_SMASH : DUNGEON_MODE(SPELL_SMASH,H_SPELL_SMASH), false);
-                    }                    
+                    }
                     uiSmashTimer = 10000;
                 }
             } else uiSmashTimer -= diff;

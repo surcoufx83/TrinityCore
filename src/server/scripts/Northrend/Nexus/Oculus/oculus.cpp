@@ -49,8 +49,8 @@ enum Drakes
     NPC_BELGARISTRASZ                             = 27658,
     NPC_ETERNOS                                   = 27659,
 
-	SPELL_SHOCK_CHARGE                            = 49836,
-	SPELL_MARTYR                                  = 50253
+    SPELL_SHOCK_CHARGE                            = 49836,
+    SPELL_MARTYR                                  = 50253
 };
 
 class npc_oculus_drake : public CreatureScript
@@ -335,7 +335,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const
     {
-	    return new npc_oculus_drakesAI(creature);
+        return new npc_oculus_drakesAI(creature);
     }
 };
 

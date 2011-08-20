@@ -269,7 +269,7 @@ public:
                     case AREA_CARRION_FIELDS:
                     case AREA_DRAGONBLIGHT:
                         break;
-                    default: 
+                    default:
                         me->DealDamage(me,me->GetHealth());
                         break;
                     }
@@ -312,7 +312,7 @@ public:
 
     struct npc_warsong_battle_standardAI : public Scripted_NoMovementAI
     {
-        npc_warsong_battle_standardAI(Creature *c) : Scripted_NoMovementAI(c) 
+        npc_warsong_battle_standardAI(Creature *c) : Scripted_NoMovementAI(c)
         {
             part = 1;
             part_Timer = 5000;
@@ -406,7 +406,7 @@ public:
 
     struct npc_wintergarde_mine_bombAI : public Scripted_NoMovementAI
     {
-        npc_wintergarde_mine_bombAI(Creature *c) : Scripted_NoMovementAI(c) 
+        npc_wintergarde_mine_bombAI(Creature *c) : Scripted_NoMovementAI(c)
         {
             Explote_Timer = 13000;
         }
@@ -482,7 +482,7 @@ public:
         return new npc_devout_bodyguardAI(_Creature);
     }
 
-    struct npc_devout_bodyguardAI: public ScriptedAI 
+    struct npc_devout_bodyguardAI: public ScriptedAI
     {
             npc_devout_bodyguardAI(Creature *c) : ScriptedAI(c) {}
 
@@ -674,7 +674,7 @@ public:
                                 me->GetMotionMaster()->MoveJump(HighAbbotLandgrenJumpPos[0][0][0], HighAbbotLandgrenJumpPos[0][0][1], HighAbbotLandgrenJumpPos[0][0][2], 0.5f, 8.0f);
                                 EndSequenceTimer = 2000;
                             }
-                            if (EndSayCount == 7) 
+                            if (EndSayCount == 7)
                             {
                                 me->MonsterSay(HighAbbotText[6], LANG_UNIVERSAL, 0);
                                 EndSequenceTimer = 2000;
@@ -971,7 +971,7 @@ public:
                     case AREA_WINTERGARD_MAUSOLEUM:
                     case AREA_THORSONS_POINT:
                         break;
-                    default: 
+                    default:
                         me->DealDamage(me,me->GetHealth());
                         break;
                     }

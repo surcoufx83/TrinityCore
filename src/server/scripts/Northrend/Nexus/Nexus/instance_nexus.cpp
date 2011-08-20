@@ -85,7 +85,7 @@ public:
                     if (GetData(DATA_ORMOROK_EVENT) == DONE)
                     {
                         creature->UpdateEntry(29911);
-                        creature->setFaction(35); 
+                        creature->setFaction(35);
                     }
                     else
                     {
@@ -167,7 +167,7 @@ public:
 
         void ConvertFrayer()
         {
-            if (!FrayerGUIDlist.empty())   
+            if (!FrayerGUIDlist.empty())
                 for (std::set<uint64>::const_iterator itr = FrayerGUIDlist.begin(); itr != FrayerGUIDlist.end(); ++itr)
                 {
                     Creature* pFrayer = instance->GetCreature(*itr);

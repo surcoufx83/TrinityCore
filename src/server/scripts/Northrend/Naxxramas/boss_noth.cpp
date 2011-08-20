@@ -259,7 +259,7 @@ public:
         }
     }
 
-    struct mob_plagued_warriorAI : ScriptedAI 
+    struct mob_plagued_warriorAI : ScriptedAI
     {
         mob_plagued_warriorAI(Creature *c) : ScriptedAI(c){}
 
@@ -286,7 +286,7 @@ public:
         }
     };
 
-    struct mob_plagued_championAI : ScriptedAI 
+    struct mob_plagued_championAI : ScriptedAI
     {
         mob_plagued_championAI(Creature *c) : ScriptedAI(c){}
 
@@ -321,7 +321,7 @@ public:
         }
     };
 
-    struct mob_plagued_guardianAI : ScriptedAI 
+    struct mob_plagued_guardianAI : ScriptedAI
     {
         mob_plagued_guardianAI(Creature *c) : ScriptedAI(c){}
 

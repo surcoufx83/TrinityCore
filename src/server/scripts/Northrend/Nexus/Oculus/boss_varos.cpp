@@ -113,7 +113,7 @@ public:
                     case EVENT_ENERGIZE_CORES:
                         if(me->GetMap()->IsHeroic())
                             DoCast(me, SPELL_ENERGIZE_CORES_H);
-                        else 
+                        else
                             DoCast(me, SPELL_ENERGIZE_CORES);
                         events.CancelEvent(EVENT_ENERGIZE_CORES);
                         break;
@@ -151,7 +151,7 @@ public:
         void JustDied(Unit* /*killer*/)
         {
             Talk(SAY_DEATH);
-            _JustDied(); 
+            _JustDied();
         }
 
         void DamageTaken(Unit* pAttacker, uint32& )

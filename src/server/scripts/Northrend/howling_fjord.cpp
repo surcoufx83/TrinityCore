@@ -281,7 +281,7 @@ public:
 #define GOSSIP_ITEM_MG_I  "Walt sent me to pick up some dark iron ingots."
 #define GOSSIP_ITEM_MG_II "Yarp."
 
-enum eMcGoyver 
+enum eMcGoyver
 {
     QUEST_WE_CAN_REBUILD_IT             = 11483,
 
@@ -343,7 +343,7 @@ public:
         bool isPlagued;
         uint32 check_Timer;
 
-        void Reset() 
+        void Reset()
         {
             isPlagued = false;
             check_Timer = 5000;
@@ -372,7 +372,7 @@ public:
             if (!UpdateVictim())
                 return;
 
-            if (check_Timer <= diff) 
+            if (check_Timer <= diff)
             {
                 if (!me->HasAuraEffect(SPELL_PLAGUE_SPRAY, 0))
                     isPlagued = false;
@@ -430,11 +430,11 @@ public:
         }
         void DamageTaken(Unit *attacker, uint32 &damage)
         {
-            if (damage >= me->GetHealth()) 
+            if (damage >= me->GetHealth())
             {
                 std::list<HostileReference*>& threatList = me->getThreatManager().getThreatList();
                 for (std::list<HostileReference*>::iterator i = threatList.begin(); i != threatList.end(); ++i)
-                    if (Unit* Temp = Unit::GetUnit(*me,(*i)->getUnitGuid())) 
+                    if (Unit* Temp = Unit::GetUnit(*me,(*i)->getUnitGuid()))
                     {
                         if (Temp->GetTypeId() == TYPEID_PLAYER)
                         {
@@ -444,19 +444,19 @@ public:
             }
         }
 
-        void UpdateAI(const uint32 diff) 
+        void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim())
                 return;
 
-            if (strike_Timer <= diff) 
+            if (strike_Timer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_MORTAL_STRIKE);
                 strike_Timer = 10000 + rand() % 5000;
             } else
                 strike_Timer -= diff;
 
-            if (crush_Timer <= diff) 
+            if (crush_Timer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_CRUSH_ARMOR);
                 crush_Timer = 10000 + rand() % 5000;
@@ -509,13 +509,13 @@ public:
             me->SetReactState(REACT_AGGRESSIVE);
         }
 
-        void EnterCombat(Unit *who) 
+        void EnterCombat(Unit *who)
         {
         }
 
         void SpellHit(Unit *caster, const SpellInfo *spell)
         {
-            if (spell->Id == SPELL_SHINING_LIGHT_HIT) 
+            if (spell->Id == SPELL_SHINING_LIGHT_HIT)
             {
                 DoCast(me, SPELL_SELF_FEAR);
                 me->SetReactState(REACT_PASSIVE);
@@ -586,7 +586,7 @@ public:
             me->SetReactState(REACT_PASSIVE);
         }
 
-        void UpdateAI(const uint32 diff) 
+        void UpdateAI(const uint32 diff)
         {
             if (part > 4 || me->isDead())
                 return;
@@ -684,7 +684,7 @@ public:
 #define GOSSIP_ITEM_0  "[PH] Ich brauche einen normalen Flug."
 #define GOSSIP_ITEM_1  "[PH] Bring mich nach Neu-Agamand."
 
-enum eOrehammer 
+enum eOrehammer
 {
     QUEST_PLAGUE_THIS                   = 11332,
     ITEM_PRECISION_BOMBS                = 33634,

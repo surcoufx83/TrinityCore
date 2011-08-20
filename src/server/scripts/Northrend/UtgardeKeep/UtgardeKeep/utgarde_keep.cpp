@@ -219,7 +219,7 @@ public:
             uiPounceTimer=0;
         }
 
-        void EnterCombat(Unit *who) 
+        void EnterCombat(Unit *who)
         {
             me->CallForHelp(15);
         }

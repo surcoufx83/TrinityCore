@@ -162,7 +162,7 @@ public:
             if(Creature* EmeraldDrake = me->FindNearestCreature(27692, 200, true))
                 if(EmeraldDrake->HasAura(49346))
                     EmeraldVoid = false;
-			    
+
             _EnterCombat();
 
             Talk(SAY_AGGRO);
@@ -212,8 +212,8 @@ public:
                 summons.DespawnAll();
                 for (uint8 i = 0; i < 6; i++)
                 {
-                    Creature* pSummoned = me->SummonCreature(30879, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 15000); 
-	                Unit* target = pSummoned->AI()->SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
+                    Creature* pSummoned = me->SummonCreature(30879, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 15000);
+                    Unit* target = pSummoned->AI()->SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
                     if(target->GetVehicleBase())
                     {
                         pSummoned->CombatStart(target->GetVehicleBase(), true);
