@@ -145,21 +145,21 @@ public:
                 {
                     AnomalusContainmentSphere = go->GetGUID();
                     if (m_auiEncounter[1] == DONE)
-                        go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                        go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
                     break;
                 }
                 case 188528:
                 {
                     OrmoroksContainmentSphere = go->GetGUID();
                     if (m_auiEncounter[2] == DONE)
-                        go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                        go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
                     break;
                 }
                 case 188526:
                 {
                     TelestrasContainmentSphere = go->GetGUID();
                     if (m_auiEncounter[0] == DONE)
-                        go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                        go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
                     break;
                 }
             }
@@ -203,7 +203,7 @@ public:
                     {
                         GameObject* Sphere = instance->GetGameObject(TelestrasContainmentSphere);
                         if (Sphere)
-                            Sphere->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                            Sphere->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
                     }
                     m_auiEncounter[0] = data;
                     break;
@@ -213,7 +213,7 @@ public:
                     if (data == DONE)
                     {
                         if (GameObject* Sphere = instance->GetGameObject(AnomalusContainmentSphere))
-                            Sphere->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                            Sphere->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
                     }
                     m_auiEncounter[1] = data;
                     break;
@@ -223,7 +223,7 @@ public:
                     if (data == DONE)
                     {
                         if (GameObject* Sphere = instance->GetGameObject(OrmoroksContainmentSphere))
-                            Sphere->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                            Sphere->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
 
                         ConvertFrayer();
                     }

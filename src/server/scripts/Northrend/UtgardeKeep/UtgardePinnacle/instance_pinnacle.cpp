@@ -129,7 +129,7 @@ public:
                     if (m_auiEncounter[1] == DONE)
                     {
                         HandleGameObject(NULL, true, pGo);
-                        pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                        pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
                     }
                     break;
                 case 191745:

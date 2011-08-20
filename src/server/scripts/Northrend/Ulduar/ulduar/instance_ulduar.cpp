@@ -750,7 +750,7 @@ public:
 
                         if (GameObject* HodirRareCache = instance->GetGameObject(HodirRareCacheGUID))
                             if (GetData(DATA_HODIR_RARE_CHEST) == 1)
-                                HodirRareCache->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                                HodirRareCache->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
                         if (GameObject* go = instance->GetGameObject(uiHodirChestGUID))
                             go->SetRespawnTime(go->GetRespawnDelay());
                     }
