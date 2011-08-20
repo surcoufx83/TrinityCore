@@ -3029,7 +3029,7 @@ void SpellMgr::LoadDbcDataCorrections()
             case 31225:
             case 8593:
                 spellInfo->AttributesEx2 |= SPELL_ATTR2_CAN_TARGET_DEAD;
-                break; 
+                break;
             case 41376: // Spite
             case 39992: // Needle Spine
             case 29576: // Multi-Shot

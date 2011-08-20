@@ -5365,13 +5365,13 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                 case 62482: // Grab Crate
                 {
                     if (unitTarget)
-                        if (Vehicle* seat = m_caster->GetVehicleKit())
-                            if (Vehicle* demolisher = seat->GetBase()->GetVehicle())
-                                if (seat->HasEmptySeat(1))
+                        if (Vehicle* mechanicSeat = m_caster->GetVehicle())
+                            if (Vehicle* demolisher = mechanicSeat->GetBase()->GetVehicle())
+                                if (mechanicSeat->HasEmptySeat(1))
                                 {
                                     // TODO: a hack, range = 11, should after some time cast, otherwise too far
-                                    seat->GetBase()->CastSpell(seat->GetBase(), 62496, true);
-                                    unitTarget->CastSpell(seat->GetBase(), m_spellInfo->Effects[EFFECT_0].CalcValue());
+                                    mechanicSeat->GetBase()->CastSpell(mechanicSeat->GetBase(), 62496, true);
+                                    unitTarget->CastSpell(mechanicSeat->GetBase(), m_spellInfo->Effects[EFFECT_0].CalcValue());
                                 }
                     return;
                 }
