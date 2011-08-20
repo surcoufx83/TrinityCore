@@ -10900,8 +10900,8 @@ uint32 Unit::SpellDamageBonus(Unit* victim, SpellInfo const* spellProto, uint32 
         float factorMod = CalculateLevelPenalty(spellProto) * stack;
         // level penalty still applied on Taken bonus - is it blizzlike?
         TakenTotal+= int32(TakenAdvertisedBenefit * factorMod);
-        else
-            TakenTotal+= TakenAdvertisedBenefit; //Workaround by BroodWyrm
+        //else
+        //    TakenTotal+= TakenAdvertisedBenefit; //Workaround by BroodWyrm
 
         if (Player* modOwner = GetSpellModOwner())
         {

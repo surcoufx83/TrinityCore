@@ -637,7 +637,7 @@ public:
                     uiAlgalonAccessGUID = go->GetGUID();
                     if (uiAlgalonCountdown < 62)
                     {
-                        go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                        go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
                         go->SetGoState(GO_STATE_ACTIVE);
                     }
                     break;

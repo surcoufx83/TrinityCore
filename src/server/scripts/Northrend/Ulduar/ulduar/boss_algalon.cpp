@@ -643,7 +643,7 @@ class go_planetarium_access : public GameObjectScript
             if (player->HasItemCount(item, 1))
             {
                 instance->SetBossState(TYPE_ALGALON, SPECIAL);
-                go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
                 go->SetGoState(GO_STATE_ACTIVE);
             }
             return true;

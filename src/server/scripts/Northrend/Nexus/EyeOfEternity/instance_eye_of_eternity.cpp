@@ -90,7 +90,7 @@ public:
                     {
                         if (GameObject* focusingIris = instance->GetGameObject(focusingIrisGUID))
                         {
-                            focusingIris->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                            focusingIris->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
                             focusingIris->SetPhaseMask(1, true);
                         }
 

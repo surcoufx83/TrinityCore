@@ -2802,7 +2802,7 @@ void SpellMgr::LoadSpellCustomAttr()
             case 62521: // Freya - Attuned to Nature 25 Dose Reduction
             case 62524: // Freya - Attuned to Nature 2 Dose Reduction
             case 62525: // Freya - Attuned to Nature 10 Dose Reduction
-                spellInfo->AttributesCu |= SPELL_ATTR0_CU_IGNORE_LOS;
+                spellInfo->AttributesEx2 |= SPELL_ATTR2_CAN_TARGET_NOT_IN_LOS;
                 break;
             case 18500: // Wing Buffet
             case 33086: // Wild Bite

@@ -1365,7 +1365,7 @@ class go_focusing_iris : public GameObjectScript
             Creature* malygos = Unit::GetCreature(*go, instance ? instance->GetData64(DATA_MALYGOS) : 0);
             if (malygos && malygos->isAlive())
             {
-                go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
                 malygos->AI()->DoAction(ACTION_START);
 
                 if (Creature* trigger = go->SummonCreature(NPC_SURGE_OF_POWER, go->GetPositionX(), go->GetPositionY(), 277.0f, 0.0f,

@@ -6459,7 +6459,7 @@ bool Spell::CheckEffectTarget(Unit const* target, uint32 eff) const
                 caster = m_caster->GetMap()->GetGameObject(m_originalCasterGUID);
             if (!caster)
                 caster = m_caster;
-            if (target != m_caster && !(m_spellInfo->AttributesCu & SPELL_ATTR0_CU_IGNORE_LOS) && !target->IsWithinLOSInMap(caster))
+            if (target != m_caster && !(m_spellInfo->AttributesEx2 & SPELL_ATTR2_CAN_TARGET_NOT_IN_LOS) && !target->IsWithinLOSInMap(caster))
                 return false;
             break;
     }

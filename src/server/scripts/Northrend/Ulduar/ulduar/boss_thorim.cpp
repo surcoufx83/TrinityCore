@@ -325,7 +325,7 @@ public:
                 me->SummonCreature(preAddLocations[i].entry,preAddLocations[i].x,preAddLocations[i].y,preAddLocations[i].z,preAddLocations[i].o,TEMPSUMMON_CORPSE_TIMED_DESPAWN,3000);
 
             if (GameObject* go = me->FindNearestGameObject(GO_LEVER, 500))
-                go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
         }
 
         void KilledUnit(Unit* /*victim*/)
@@ -382,7 +382,7 @@ public:
                 runic->AI()->DoAction(ACTION_RUNIC_SMASH);
 
             if (GameObject* go = me->FindNearestGameObject(GO_LEVER, 500))
-                go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
         }
 
         void UpdateAI(uint32 const diff)

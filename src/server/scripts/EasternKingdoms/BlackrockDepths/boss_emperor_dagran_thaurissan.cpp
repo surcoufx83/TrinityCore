@@ -83,15 +83,6 @@ public:
             DoScriptText(SAY_SLAY, me);
         }
 
-        void JustDied(Unit* /*who*/)
-        {
-            if (Creature* Moira = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(DATA_MOIRA) : 0))
-            {
-                Moira->AI()->EnterEvadeMode();
-                Moira->setFaction(35);
-            }
-        }
-
         void UpdateAI(const uint32 diff)
         {
             //Return since we have no target

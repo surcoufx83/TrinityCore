@@ -279,7 +279,7 @@ public:
             {
                 go->SetGoState(GO_STATE_READY);
                 go->SetLootState(GO_JUST_DEACTIVATED);
-                go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
             }
         }
 
@@ -318,7 +318,7 @@ public:
             JumpToNextStep(100);
 
             if (GameObject* go = me->FindNearestGameObject(GO_BIG_RED_BUTTON, 200))
-                go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
         }
 
         void JumpToNextStep(uint32 uiTimer)
