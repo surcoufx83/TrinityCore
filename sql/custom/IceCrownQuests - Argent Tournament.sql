@@ -34,6 +34,85 @@ UPDATE quest_template SET PrevQuestId = 13672, NextQuestId = 0, ExclusiveGroup =
 -- The Aspirant's Challenge - H - Prev: Up To The Challenge
 UPDATE quest_template SET PrevQuestId = 13678, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 13680;
 
+-- Mastery Gossip by tREAK
+SET @NPC_MoM    :=      33973;  -- Jeran Lockwood <Master of Melee>
+SET @G_MoM_0    :=      10398;  -- Gossip Option
+SET @G_MoM_1    := @G_MoM_0+1;  -- 10398
+
+SET @NPC_MoSB   :=      33974;  -- Valis Windchaser <Master of the Shield-Breaker>
+SET @G_MoSB_0   :=      10402;  -- Gossip Option
+SET @G_MoSB_1   :=@G_MoSB_0+1;  -- 10403
+
+SET @NPC_MoC    :=      33972;  -- Rugan Steelbelly <Master of the Charge>
+SET @G_MoC_0    :=      10400;  -- Gossip Option
+SET @G_MoC_1    := @G_MoC_0+1;  -- 10401
+
+UPDATE `creature_template` SET `AIName`='SmartAI',`ScriptName`='',`unit_flags`=`unit_flags`|1 WHERE `entry` IN (@NPC_MoM,@NPC_MoSB,@NPC_MoC);
+UPDATE `creature_template` SET `gossip_menu_id`=10398 WHERE `entry`=@NPC_MoM;
+UPDATE `creature_template` SET `gossip_menu_id`=10402 WHERE `entry`=@NPC_MoSB;
+UPDATE `creature_template` SET `gossip_menu_id`=10400 WHERE `entry`=@NPC_MoC;
+
+-- text_ids from sniff
+DELETE FROM `gossip_menu` WHERE `entry` IN (@G_MoM_0,@G_MoM_1,@G_MoSB_0,@G_MoSB_1,@G_MoC_0,@G_MoC_1);
+INSERT INTO `gossip_menu` (`entry`,`text_id`) VALUES
+(@G_MoM_0,14431),
+(@G_MoM_1,14434),
+
+(@G_MoSB_0,14438),
+(@G_MoSB_1,14439),
+
+(@G_MoC_0,14436),
+(@G_MoC_1,14437);
+
+DELETE FROM `gossip_menu_option` WHERE `menu_id` IN (@G_MoM_0,@G_MoM_1,@G_MoSB_0,@G_MoSB_1,@G_MoC_0,@G_MoC_1);
+INSERT INTO `gossip_menu_option` (`menu_id`,`id`,`option_icon`,`option_text`,`option_id`,`npc_option_npcflag`,`action_menu_id`,`action_poi_id`,`box_coded`,`box_money`,`box_text`) VALUES
+(@G_MoM_0,0,0,'Tell me more about Defend and Thrust!',1,1,@G_MoM_1,0,0,0,''),
+(@G_MoM_0,1,0,'Show me how to train with a Melee Target?',1,1,0,0,0,0,''),
+(@G_MoM_1,0,0,'Show me how to train with a Melee Target?',1,1,0,0,0,0,''),
+
+(@G_MoSB_0,0,0,'Tell me more about using the Shield-Breaker.',1,1,@G_MoSB_1,0,0,0,''),
+(@G_MoSB_0,1,0,'Show me how to train with a Ranged Target.',1,1,0,0,0,0,''),
+(@G_MoSB_1,0,0,'Show me how to train with a Ranged Target.',1,1,0,0,0,0,''),
+
+(@G_MoC_0,0,0,'Tell me more about the Charge!',1,1,@G_MoC_1,0,0,0,''),
+(@G_MoC_0,1,0,'Show me how to train with a Charge Target?',1,1,0,0,0,0,''),
+(@G_MoC_1,0,0,'Show me how to train with a Charge Target?',1,1,0,0,0,0,'');
+
+DELETE FROM `creature_text` WHERE `entry` IN (@NPC_MoM,@NPC_MoSB,@NPC_MoC);
+INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`probability`,`emote`,`duration`,`sound`,`comment`) VALUES
+(@NPC_MoM,1,0,'Put up Defense.$B$BThen use Thrust on a Melee Target.',41,0,100,0,0,0,'Jeran Lockwood'),
+(@NPC_MoSB,1,0,'Use Shield-Breaker on a Ranged Target.$B$BThen use Shield-Breaker while the target is defenseless.',41,0,100,0,0,0,'Valis Windchaser'),
+(@NPC_MoC,1,0,'Use Shield-Breaker on a Charge Target.$B$BFollow up with Charge while the target is vulnerable.',41,0,100,0,0,0,'Rugan Steelbelly');
+
+DELETE FROM `smart_scripts` WHERE `source_type`=0 AND `entryorguid` IN (@NPC_MoM,@NPC_MoSB,@NPC_MoC);
+INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type`,`event_phase_mask`,`event_chance`,`event_flags`,`event_param1`,`event_param2`,`event_param3`,`event_param4`,`action_type`,`action_param1`,`action_param2`,`action_param3`,`action_param4`,`action_param5`,`action_param6`,`target_type`,`target_param1`,`target_param2`,`target_param3`,`target_x`,`target_y`,`target_z`,`target_o`,`comment`) VALUES
+(@NPC_MoM,0,0,3,62,0,100,0,@G_MoM_0,1,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'Jeran Lockwood - on Gossip select - close Gossip'),
+(@NPC_MoM,0,1,2,62,0,100,0,@G_MoM_1,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'Jeran Lockwood - on Gossip select - close Gossip'),
+(@NPC_MoM,0,2,3,61,0,100,0,0,0,0,0,33,@NPC_MoM,0,0,0,0,0,7,0,0,0,0,0,0,0,'Jeran Lockwood - on Gossip select - give Kill Credit'),
+(@NPC_MoM,0,3,0,61,0,100,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,0,0,'Jeran Lockwood - on Gossip select - Boss Emote to Player'),
+
+(@NPC_MoSB,0,0,3,62,0,100,0,@G_MoSB_0,1,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'Valis Windchaser - on Gossip select - close Gossip'),
+(@NPC_MoSB,0,1,2,62,0,100,0,@G_MoSB_1,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'Valis Windchaser - on Gossip select - close Gossip'),
+(@NPC_MoSB,0,2,3,61,0,100,0,0,0,0,0,33,@NPC_MoSB,0,0,0,0,0,7,0,0,0,0,0,0,0,'Valis Windchaser - on Gossip select - give Kill Credit'),
+(@NPC_MoSB,0,3,0,61,0,100,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,0,0,'Valis Windchaser - on Gossip select - Boss Emote to Player'),
+
+(@NPC_MoC,0,0,3,62,0,100,0,@G_MoC_0,1,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'Rugan Steelbelly - on Gossip select - close Gossip'),
+(@NPC_MoC,0,1,2,62,0,100,0,@G_MoC_1,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'Rugan Steelbelly - on Gossip select - close Gossip'),
+(@NPC_MoC,0,2,3,61,0,100,0,0,0,0,0,33,@NPC_MoC,0,0,0,0,0,7,0,0,0,0,0,0,0,'Rugan Steelbelly - on Gossip select - give Kill Credit'),
+(@NPC_MoC,0,3,0,61,0,100,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,0,0,'Rugan Steelbelly - on Gossip select - Boss Emote to Player');
+
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=15 AND `SourceGroup` IN (@G_MoM_0,@G_MoSB_0,@G_MoC_0) AND `ConditionTypeOrReference`=9;   -- more delete conditions because of existing conditions of these quests
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceGroup`,`SourceEntry`,`ElseGroup`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`ConditionValue3`,`ErrorTextId`,`ScriptName`,`Comment`) VALUES
+(15,@G_MoM_0,0,0,9,13828,0,0,0,'','show Gossip Option if Player has taken Quest 13828'),
+(15,@G_MoM_0,0,0,9,13829,0,0,0,'','show Gossip Option if Player has taken Quest 13829'),
+
+(15,@G_MoSB_0,0,0,9,13835,0,0,0,'','show Gossip Option if Player has taken Quest 13835'),
+(15,@G_MoSB_0,0,0,9,13838,0,0,0,'','show Gossip Option if Player has taken Quest 13838'),
+
+(15,@G_MoC_0,0,0,9,13837,0,0,0,'','show Gossip Option if Player has taken Quest 13837'),
+(15,@G_MoC_0,0,0,9,13839,0,0,0,'','show Gossip Option if Player has taken Quest 13839');
+
+
 -- ## Dailys
 -- Req: Up To The Challenge active and not rewarded
 DELETE FROM conditions WHERE SourceTypeOrReferenceId = -13672; 
@@ -70,39 +149,39 @@ INSERT INTO conditions VALUES
 (19,0,13676,0,-13672,0,0,0,0,'','');
 
 -- A Worthy Weapon - A
-UPDATE quest_template SET PrevQuestId = 0, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 13669;
+UPDATE quest_template SET PrevQuestId = 0, NextQuestId = 0, ExclusiveGroup = 13669, NextQuestInChain = 0 WHERE entry = 13669;
 DELETE FROM conditions WHERE SourceEntry = 13669 AND SourceTypeOrReferenceId IN (20,19);
 INSERT INTO conditions VALUES
 (20,0,13669,0,-13672,0,0,0,0,'',''),
 (19,0,13669,0,-13672,0,0,0,0,'','');
 -- A Worthy Weapon - H
-UPDATE quest_template SET PrevQuestId = 0, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 13674;
+UPDATE quest_template SET PrevQuestId = 0, NextQuestId = 0, ExclusiveGroup = 13674, NextQuestInChain = 0 WHERE entry = 13674;
 DELETE FROM conditions WHERE SourceEntry = 13674 AND SourceTypeOrReferenceId IN (20,19);
 INSERT INTO conditions VALUES
 (20,0,13674,0,-13672,0,0,0,0,'',''),
 (19,0,13674,0,-13672,0,0,0,0,'','');
 
 -- A Blade Fit For A Champion - A
-UPDATE quest_template SET PrevQuestId = 0, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 13666;
+UPDATE quest_template SET PrevQuestId = 0, NextQuestId = 0, ExclusiveGroup = 13669, NextQuestInChain = 0 WHERE entry = 13666;
 DELETE FROM conditions WHERE SourceEntry = 13666 AND SourceTypeOrReferenceId IN (20,19);
 INSERT INTO conditions VALUES
 (20,0,13666,0,-13672,0,0,0,0,'',''),
 (19,0,13666,0,-13672,0,0,0,0,'','');
 -- A Blade Fit For A Champion - H
-UPDATE quest_template SET PrevQuestId = 0, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 13673;
+UPDATE quest_template SET PrevQuestId = 0, NextQuestId = 0, ExclusiveGroup = 13674, NextQuestInChain = 0 WHERE entry = 13673;
 DELETE FROM conditions WHERE SourceEntry = 13673 AND SourceTypeOrReferenceId IN (20,19);
 INSERT INTO conditions VALUES
 (20,0,13673,0,-13672,0,0,0,0,'',''),
 (19,0,13673,0,-13672,0,0,0,0,'','');
 
 -- The Edge Of Winter - A
-UPDATE quest_template SET PrevQuestId = 0, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 13670;
+UPDATE quest_template SET PrevQuestId = 0, NextQuestId = 0, ExclusiveGroup = 13669, NextQuestInChain = 0 WHERE entry = 13670;
 DELETE FROM conditions WHERE SourceEntry = 13670 AND SourceTypeOrReferenceId IN (20,19);
 INSERT INTO conditions VALUES
 (20,0,13670,0,-13672,0,0,0,0,'',''),
 (19,0,13670,0,-13672,0,0,0,0,'','');
 -- The Edge Of Winter - H
-UPDATE quest_template SET PrevQuestId = 0, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 13675;
+UPDATE quest_template SET PrevQuestId = 0, NextQuestId = 0, ExclusiveGroup = 13674, NextQuestInChain = 0 WHERE entry = 13675;
 DELETE FROM conditions WHERE SourceEntry = 13675 AND SourceTypeOrReferenceId IN (20,19);
 INSERT INTO conditions VALUES
 (20,0,13675,0,-13672,0,0,0,0,'',''),
