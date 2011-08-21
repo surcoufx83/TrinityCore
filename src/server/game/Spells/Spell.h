@@ -727,12 +727,17 @@ namespace Trinity
                     case SPELL_TARGETS_ENEMY:
                         if (target->isTotem())
                             continue;
+                        /***************************/
+                        if (target->HasUnitState(UNIT_STAT_UNATTACKABLE))
+                            continue;
+                        if (target->IsVehicle() && target->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE))
+                            continue;
+                        /***************************/
                         // if we are a player, not in duel, not in arena, not in battleground, and deactivated pvp we are unable to hit player targets
                         if (i_source->GetTypeId() == TYPEID_PLAYER && !((Player*)i_source)->duel &&
                             !((Player*)i_source)->InArena() && !((Player*)i_source)->InBattleground() &&
                             !((Player*)i_source)->IsPvP()  && target->GetTypeId() == TYPEID_PLAYER)
                             continue;
-
                         if (i_source->IsControlledByPlayer())
                         {
                             if (i_source->IsFriendlyTo(target))
