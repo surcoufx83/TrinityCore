@@ -1600,7 +1600,7 @@ class spell_gen_bone_gryphon_frost_breath : public SpellScriptLoader
 
             void Register()
             {
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_gen_bone_gryphon_frost_breath_SpellScript::FilterTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ENTRY);
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_gen_bone_gryphon_frost_breath_SpellScript::FilterTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ENEMY);
             }
         };
 
