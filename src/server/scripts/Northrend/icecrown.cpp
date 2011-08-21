@@ -493,9 +493,6 @@ class spell_argent_cannon : public SpellScriptLoader
         }
 };
 
-
-
-
 enum BlessedBannerSpells
 {
     SPELL_BLESSING_OF_THE_CRUSADE       = 58026,
@@ -1690,6 +1687,145 @@ public:
     }
 };
 
+/*######
+## npc_fraction_valiant
+######*/
+
+/*
+UPDATE creature_template SET scriptname = 'npc_faction_valiant' WHERE entry IN (33559,33562,33558,33564,33306,33285,33382,33561,33383,33384);
+*/
+
+enum eFractionValiant
+{
+    //SPELL_CHARGE                = 63010,
+    //SPELL_SHIELD_BREAKER        = 65147,
+
+    SPELL_GIVE_VALIANT_MARK_1 = 62724,
+    SPELL_GIVE_VALIANT_MARK_2 = 62770,
+    SPELL_GIVE_VALIANT_MARK_3 = 62771,
+    SPELL_GIVE_VALIANT_MARK_4 = 62995,
+    SPELL_GIVE_VALIANT_MARK_5 = 62996,
+
+    QUEST_THE_GRAND_MELEE_0     = 13665,
+    QUEST_THE_GRAND_MELEE_1     = 13745,
+    QUEST_THE_GRAND_MELEE_2     = 13750,
+    QUEST_THE_GRAND_MELEE_3     = 13756,
+    QUEST_THE_GRAND_MELEE_4     = 13761,
+    QUEST_THE_GRAND_MELEE_5     = 13767,
+    QUEST_THE_GRAND_MELEE_6     = 13772,
+    QUEST_THE_GRAND_MELEE_7     = 13777,
+    QUEST_THE_GRAND_MELEE_8     = 13782,
+    QUEST_THE_GRAND_MELEE_9     = 13787,
+};
+
+#define GOSSIP_MELEE_FIGHT      "I'am ready to fight!"
+
+class npc_faction_valiant : public CreatureScript
+{
+public:
+    npc_faction_valiant() : CreatureScript("npc_faction_valiant") { }
+
+    struct npc_faction_valiantAI : public ScriptedAI
+    {
+        npc_faction_valiantAI(Creature* creature) : ScriptedAI(creature)
+        {
+        }
+
+        uint32 uiChargeTimer;
+        uint32 uiShieldBreakerTimer;
+        uint64 guidAttacker;
+
+        void Reset()
+        {
+            uiChargeTimer = 7000;
+            uiShieldBreakerTimer = 10000;
+
+            me->setFaction(35); 
+        }
+
+        void EnterCombat(Unit* attacker)
+        {
+            guidAttacker = attacker->GetGUID();
+        }
+
+        void MovementInform(uint32 uiType, uint32 /*uiId*/)
+        {
+            if (uiType != POINT_MOTION_TYPE)
+                return;
+        }
+
+        void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
+        {
+            if(pDoneBy && pDoneBy->GetGUID() != guidAttacker)
+                uiDamage = 0;
+
+            if (uiDamage > me->GetHealth() && pDoneBy->GetTypeId() == TYPEID_PLAYER)
+            {
+                uiDamage = 0;
+                pDoneBy->CastSpell(pDoneBy,SPELL_GIVE_VALIANT_MARK_1,true);
+                me->setFaction(35);
+                EnterEvadeMode();
+            }
+        }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            if (uiChargeTimer <= uiDiff)
+            {
+                DoCastVictim(SPELL_CHARGE);
+                uiChargeTimer = 7000;
+            } else uiChargeTimer -= uiDiff;
+
+            if (uiShieldBreakerTimer <= uiDiff)
+            {
+                DoCastVictim(SPELL_SHIELD_BREAKER);
+                uiShieldBreakerTimer = 10000;
+            } else uiShieldBreakerTimer -= uiDiff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
+
+    CreatureAI *GetAI(Creature* creature) const
+    {
+        return new npc_faction_valiantAI(creature);
+    }
+
+    bool OnGossipHello(Player* player, Creature* creature)
+    {
+        if((player->GetQuestStatus(QUEST_THE_GRAND_MELEE_0) == QUEST_STATUS_INCOMPLETE) ||
+            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_1) == QUEST_STATUS_INCOMPLETE) ||
+            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_2) == QUEST_STATUS_INCOMPLETE) ||
+            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_3) == QUEST_STATUS_INCOMPLETE) ||
+            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_4) == QUEST_STATUS_INCOMPLETE) ||
+            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_5) == QUEST_STATUS_INCOMPLETE) ||
+            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_6) == QUEST_STATUS_INCOMPLETE) ||
+            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_7) == QUEST_STATUS_INCOMPLETE) ||
+            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_8) == QUEST_STATUS_INCOMPLETE) ||
+            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_9) == QUEST_STATUS_INCOMPLETE))
+        {
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MELEE_FIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        }
+        player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
+        return true;
+    }
+
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
+    {
+        player->PlayerTalkClass->ClearMenus();
+        player->CLOSE_GOSSIP_MENU();
+        if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
+        {
+            creature->setFaction(14);
+            creature->AI()->AttackStart(player);
+        }
+        return true;
+    }
+};
+
 void AddSC_icecrown()
 {
     new npc_arete();
@@ -1709,4 +1845,5 @@ void AddSC_icecrown()
     new spell_tournament_defend();
     new npc_tournament_dummy();
     new npc_vendor_tournament_fraction_champion();
+    new npc_faction_valiant();
 }

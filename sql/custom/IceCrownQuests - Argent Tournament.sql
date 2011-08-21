@@ -35,17 +35,17 @@ UPDATE quest_template SET PrevQuestId = 13672, NextQuestId = 0, ExclusiveGroup =
 UPDATE quest_template SET PrevQuestId = 13678, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 13680;
 
 -- Mastery Gossip by tREAK
-SET @NPC_MoM    :=      33973;  -- Jeran Lockwood <Master of Melee>
-SET @G_MoM_0    :=      10398;  -- Gossip Option
-SET @G_MoM_1    := @G_MoM_0+1;  -- 10398
+SET @NPC_MoM    =      33973;  -- Jeran Lockwood <Master of Melee>
+SET @G_MoM_0    =      10398;  -- Gossip Option
+SET @G_MoM_1    = @G_MoM_0+1;  -- 10398
 
-SET @NPC_MoSB   :=      33974;  -- Valis Windchaser <Master of the Shield-Breaker>
-SET @G_MoSB_0   :=      10402;  -- Gossip Option
-SET @G_MoSB_1   :=@G_MoSB_0+1;  -- 10403
+SET @NPC_MoSB   =      33974;  -- Valis Windchaser <Master of the Shield-Breaker>
+SET @G_MoSB_0   =      10402;  -- Gossip Option
+SET @G_MoSB_1   =@G_MoSB_0+1;  -- 10403
 
-SET @NPC_MoC    :=      33972;  -- Rugan Steelbelly <Master of the Charge>
-SET @G_MoC_0    :=      10400;  -- Gossip Option
-SET @G_MoC_1    := @G_MoC_0+1;  -- 10401
+SET @NPC_MoC    =      33972;  -- Rugan Steelbelly <Master of the Charge>
+SET @G_MoC_0    =      10400;  -- Gossip Option
+SET @G_MoC_1    = @G_MoC_0+1;  -- 10401
 
 UPDATE `creature_template` SET `AIName`='SmartAI',`ScriptName`='',`unit_flags`=`unit_flags`|1 WHERE `entry` IN (@NPC_MoM,@NPC_MoSB,@NPC_MoC);
 UPDATE `creature_template` SET `gossip_menu_id`=10398 WHERE `entry`=@NPC_MoM;
@@ -88,29 +88,51 @@ DELETE FROM `smart_scripts` WHERE `source_type`=0 AND `entryorguid` IN (@NPC_MoM
 INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type`,`event_phase_mask`,`event_chance`,`event_flags`,`event_param1`,`event_param2`,`event_param3`,`event_param4`,`action_type`,`action_param1`,`action_param2`,`action_param3`,`action_param4`,`action_param5`,`action_param6`,`target_type`,`target_param1`,`target_param2`,`target_param3`,`target_x`,`target_y`,`target_z`,`target_o`,`comment`) VALUES
 (@NPC_MoM,0,0,3,62,0,100,0,@G_MoM_0,1,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'Jeran Lockwood - on Gossip select - close Gossip'),
 (@NPC_MoM,0,1,2,62,0,100,0,@G_MoM_1,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'Jeran Lockwood - on Gossip select - close Gossip'),
-(@NPC_MoM,0,2,3,61,0,100,0,0,0,0,0,33,@NPC_MoM,0,0,0,0,0,7,0,0,0,0,0,0,0,'Jeran Lockwood - on Gossip select - give Kill Credit'),
+(@NPC_MoM,0,2,3,61,0,100,0,0,0,0,0,11,64113,2,0,0,0,0,7,0,0,0,0,0,0,0,'Jeran Lockwood - on Gossip select - give Kill Credit'),
 (@NPC_MoM,0,3,0,61,0,100,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,0,0,'Jeran Lockwood - on Gossip select - Boss Emote to Player'),
 
 (@NPC_MoSB,0,0,3,62,0,100,0,@G_MoSB_0,1,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'Valis Windchaser - on Gossip select - close Gossip'),
 (@NPC_MoSB,0,1,2,62,0,100,0,@G_MoSB_1,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'Valis Windchaser - on Gossip select - close Gossip'),
-(@NPC_MoSB,0,2,3,61,0,100,0,0,0,0,0,33,@NPC_MoSB,0,0,0,0,0,7,0,0,0,0,0,0,0,'Valis Windchaser - on Gossip select - give Kill Credit'),
+(@NPC_MoSB,0,2,3,61,0,100,0,0,0,0,0,11,64115,2,0,0,0,0,7,0,0,0,0,0,0,0,'Valis Windchaser - on Gossip select - give Kill Credit'),
 (@NPC_MoSB,0,3,0,61,0,100,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,0,0,'Valis Windchaser - on Gossip select - Boss Emote to Player'),
 
 (@NPC_MoC,0,0,3,62,0,100,0,@G_MoC_0,1,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'Rugan Steelbelly - on Gossip select - close Gossip'),
 (@NPC_MoC,0,1,2,62,0,100,0,@G_MoC_1,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,'Rugan Steelbelly - on Gossip select - close Gossip'),
-(@NPC_MoC,0,2,3,61,0,100,0,0,0,0,0,33,@NPC_MoC,0,0,0,0,0,7,0,0,0,0,0,0,0,'Rugan Steelbelly - on Gossip select - give Kill Credit'),
+(@NPC_MoC,0,2,3,61,0,100,0,0,0,0,0,11,64114,2,0,0,0,0,7,0,0,0,0,0,0,0,'Rugan Steelbelly - on Gossip select - give Kill Credit'),
 (@NPC_MoC,0,3,0,61,0,100,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,0,0,'Rugan Steelbelly - on Gossip select - Boss Emote to Player');
 
-DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=15 AND `SourceGroup` IN (@G_MoM_0,@G_MoSB_0,@G_MoC_0) AND `ConditionTypeOrReference`=9;   -- more delete conditions because of existing conditions of these quests
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=15 AND `SourceGroup` IN (@G_MoM_0,@G_MoM_1,@G_MoSB_0,@G_MoSB_1,@G_MoC_0,@G_MoC_1) AND `ConditionTypeOrReference` IN (1,9);   -- more delete conditions because of existing conditions of these quests
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=15 AND `SourceGroup` IN (@G_MoM_1,@G_MoSB_1,@G_MoC_1) AND `ConditionTypeOrReference` IN (1,8);
 INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceGroup`,`SourceEntry`,`ElseGroup`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`ConditionValue3`,`ErrorTextId`,`ScriptName`,`Comment`) VALUES
 (15,@G_MoM_0,0,0,9,13828,0,0,0,'','show Gossip Option if Player has taken Quest 13828'),
-(15,@G_MoM_0,0,0,9,13829,0,0,0,'','show Gossip Option if Player has taken Quest 13829'),
-
+(15,@G_MoM_0,0,0,1,63151,1,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
+(15,@G_MoM_0,0,1,9,13829,0,0,0,'','show Gossip Option if Player has taken Quest 13829'),
+(15,@G_MoM_0,0,1,1,63151,1,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
+ 
 (15,@G_MoSB_0,0,0,9,13835,0,0,0,'','show Gossip Option if Player has taken Quest 13835'),
-(15,@G_MoSB_0,0,0,9,13838,0,0,0,'','show Gossip Option if Player has taken Quest 13838'),
-
+(15,@G_MoSB_0,0,0,1,63151,1,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
+(15,@G_MoSB_0,0,1,9,13838,0,0,0,'','show Gossip Option if Player has taken Quest 13838'),
+(15,@G_MoSB_0,0,1,1,63151,0,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
+ 
 (15,@G_MoC_0,0,0,9,13837,0,0,0,'','show Gossip Option if Player has taken Quest 13837'),
-(15,@G_MoC_0,0,0,9,13839,0,0,0,'','show Gossip Option if Player has taken Quest 13839');
+(15,@G_MoC_0,0,0,1,63151,1,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
+(15,@G_MoC_0,0,1,9,13839,0,0,0,'','show Gossip Option if Player has taken Quest 13839'),
+(15,@G_MoC_0,0,1,1,63151,1,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
+ 
+(15,@G_MoM_1,0,0,8,13828,0,0,0,'','show Gossip Option if Player has rewarded Quest 13828'),
+(15,@G_MoM_1,0,0,1,63151,1,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
+(15,@G_MoM_1,0,1,8,13829,0,0,0,'','show Gossip Option if Player has rewarded Quest 13829'),
+(15,@G_MoM_1,0,1,1,63151,1,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
+ 
+(15,@G_MoSB_1,0,0,8,13835,0,0,0,'','show Gossip Option if Player has rewarded Quest 13835'),
+(15,@G_MoSB_1,0,0,1,63151,1,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
+(15,@G_MoSB_1,0,1,8,13838,0,0,0,'','show Gossip Option if Player has rewarded Quest 13838'),
+(15,@G_MoSB_1,0,1,1,63151,0,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
+ 
+(15,@G_MoC_1,0,0,8,13837,0,0,0,'','show Gossip Option if Player has rewarded Quest 13837'),
+(15,@G_MoC_1,0,0,1,63151,1,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
+(15,@G_MoC_1,0,1,8,13839,0,0,0,'','show Gossip Option if Player has rewarded Quest 13839'),
+(15,@G_MoC_1,0,1,1,63151,1,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle');
 
 
 -- ## Dailys
@@ -925,3 +947,40 @@ DELETE FROM pool_quest WHERE pool_entry IN (34882);
 INSERT INTO pool_quest VALUES 
 (14107,35094,'Tournament - Champion - The Argent Crusade - Kraken - The Fate Of The Fallen'),
 (14108,35094,'Tournament - Champion - The Argent Crusade - Kraken - Get Kraken!');
+
+-- Valiant Spellaura on Vehicle Quest: The Grand Melee
+DELETE FROM spell_linked_spell WHERE spell_trigger IN (63151,-63151);
+INSERT INTO spell_linked_spell VALUES
+(63151,63405,0,'Darnassus Valiant'),
+(63151,63422,0,'Exodar Valiant'),
+(63151,63395,0,'Gnomeregan Valiant'),
+(63151,63426,0,'Ironforge Valiant'),
+(63151,63432,0,'Orgrimmar Valiant'),
+(63151,63398,0,'SenJin Valiant'),
+(63151,63402,0,'Silvermoon Valiant'),
+(63151,62596,0,'Stormwind Valiant'),
+(63151,63435,0,'Thunder Bluff Valiant'),
+(63151,63429,0,'Undercity Valiant'),
+(-63151,-63405,0,'Darnassus Valiant remove'),
+(-63151,-63422,0,'Exodar Valiant remove'),
+(-63151,-63395,0,'Gnomeregan Valiant remove'),
+(-63151,-63426,0,'Ironforge Valiant remove'),
+(-63151,-63432,0,'Orgrimmar Valiant remove'),
+(-63151,-63398,0,'SenJin Valiant remove'),
+(-63151,-63402,0,'Silvermoon Valiant remove'),
+(-63151,-62596,0,'Stormwind Valiant remove'),
+(-63151,-63435,0,'Thunder Bluff Valiant remove'),
+(-63151,-63429,0,'Undercity Valiant remove');
+
+DELETE FROM conditions WHERE SourceEntry IN (63405,63422,63395,63426,63432,63398,63402,62596,63435,63429);
+INSERT INTO conditions VALUES
+(17,0,63405,0,9,13761,0,0,0,'','Darnassus Valiant'),
+(17,0,63422,0,9,13756,0,0,0,'','Exodar Valiant'),
+(17,0,63395,0,9,13750,0,0,0,'','Gnomeregan Valiant'),
+(17,0,63426,0,9,13745,0,0,0,'','Ironforge Valiant'),
+(17,0,63432,0,9,13767,0,0,0,'','Orgrimmar Valiant'),
+(17,0,63398,0,9,13772,0,0,0,'','SenJin Valiant'),
+(17,0,63402,0,9,13787,0,0,0,'','Silvermoon Valiant'),
+(17,0,62596,0,9,13665,0,0,0,'','Stormwind Valiant'),
+(17,0,63435,0,9,13777,0,0,0,'','Thunder Bluff Valiant'),
+(17,0,63429,0,9,13782,0,0,0,'','Undercity Valiant');
