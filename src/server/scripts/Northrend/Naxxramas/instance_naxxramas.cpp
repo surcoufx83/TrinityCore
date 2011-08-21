@@ -222,9 +222,7 @@ public:
             uiKelthuzadTrigger  = 0;
 
             memset(uiPortals, 0, sizeof(uiPortals));
-        }
 
-        {
             memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
             gothikDoorState = GO_STATE_ACTIVE;
             SlimeCheckTimer = 1000;
@@ -437,19 +435,6 @@ public:
             }
         }
 
-        uint32 GetData(uint32 id)
-        {
-            switch (id)
-            {
-                case DATA_ABOMINATION_KILLED:
-                    return AbominationCount;
-                default:
-                    break;
-            }
-
-            return 0;
-        }
-
         uint64 GetData64(uint32 id)
         {
             switch(id)
@@ -500,8 +485,17 @@ public:
                     return m_PlayerDeathCount;
                 else return 1;
             }
+
             if(id == DATA_HEIGAN_PLAYER_DEATHS)
                 return m_HeiganPlayerDeathCount;
+
+            switch (id)
+            {
+                case DATA_ABOMINATION_KILLED:
+                    return AbominationCount;
+                default:
+                    break;
+            }
 
             return GetNaxxBossState(id);
         }

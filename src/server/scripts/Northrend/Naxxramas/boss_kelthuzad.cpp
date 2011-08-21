@@ -122,10 +122,6 @@ enum Spells
     //death knight
     SPELL_PLAGUE_STRIKE                                    = 49921,
     SPELL_HOWLING_BLAST                                    = 51411,
-
-    // Abomination spells
-    SPELL_FRENZY                                           = 28468,
-    SPELL_MORTAL_WOUND                                     = 28467,
 };
 
 enum Creatures
@@ -834,8 +830,8 @@ public:
             if(!m_pInstance || m_pInstance->GetData(BOSS_KELTHUZAD) != IN_PROGRESS)
                 return;
 
-            if(Creature* kel = Creature::GetCreature((*me),m_pInstance->GetData64(DATA_KELTHUZAD)))
-                kel->AI()->DoAction(ACTION_ABO_KILLED);
+            if (m_pInstance)
+                m_pInstance->SetData(DATA_ABOMINATION_KILLED, m_pInstance->GetData(DATA_ABOMINATION_KILLED) + 1);
         }
 
         void UpdateAI(const uint32 diff)
@@ -846,7 +842,7 @@ public:
             if(uiMortalWound_Timer <= diff)
             {
                 DoCast(me->getVictim(),SPELL_MORTAL_WOUND);
-                uiMortalWound_Timer = urand(5000,10000);
+                uiMortalWound_Timer = urand(10000,15000);
             }else uiMortalWound_Timer -= diff;
 
             if(HealthBelowPct(30))
@@ -879,62 +875,6 @@ public:
     };
 };
 
-class npc_kelthuzad_abomination : public CreatureScript
-{
-    public:
-        npc_kelthuzad_abomination() : CreatureScript("npc_kelthuzad_abomination") { }
-
-        struct npc_kelthuzad_abominationAI : public ScriptedAI
-        {
-            npc_kelthuzad_abominationAI(Creature* creature) : ScriptedAI(creature)
-            {
-                instance = me->GetInstanceScript();
-            }
-
-            InstanceScript* instance;
-            EventMap events;
-
-            void Reset()
-            {
-                events.Reset();
-                events.ScheduleEvent(EVENT_MORTAL_WOUND, urand(2000, 5000));
-                DoCast(me, SPELL_FRENZY, true);
-            }
-
-            void UpdateAI(uint32 const diff)
-            {
-                if (!UpdateVictim())
-                    return;
-
-                events.Update(diff);
-
-                while (uint32 eventId = events.ExecuteEvent())
-                {
-                    switch (eventId)
-                    {
-                        case EVENT_MORTAL_WOUND:
-                            DoCastVictim(SPELL_MORTAL_WOUND, true);
-                            events.ScheduleEvent(EVENT_MORTAL_WOUND, urand(10000, 15000));
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-
-            void JustDied(Unit* /*who*/)
-            {
-                if (instance)
-                    instance->SetData(DATA_ABOMINATION_KILLED, instance->GetData(DATA_ABOMINATION_KILLED) + 1);
-            }
-        };
-
-        CreatureAI* GetAI(Creature* creature) const
-        {
-            return new npc_kelthuzad_abominationAI(creature);
-        }
-};
-
 class achievement_just_cant_get_enough : public AchievementCriteriaScript
 {
    public:
@@ -960,6 +900,5 @@ void AddSC_boss_kelthuzad()
     new boss_kelthuzad();
     new at_kelthuzad_center();
     new mob_naxxramas_kelthuzad_tash();
-    new npc_kelthuzad_abomination();
     new achievement_just_cant_get_enough();
 }
