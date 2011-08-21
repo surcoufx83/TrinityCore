@@ -3379,6 +3379,14 @@ void SpellMgr::LoadDbcDataCorrections()
                 // temporary remove channeled flag due to facing issues when casting on self
                 spellInfo->AttributesEx &= ~SPELL_ATTR1_CHANNELED_1;
                 break;
+            case 63382: // Rapid Burst
+            case 64570: // Flame Suppressant
+            case 65192: // Flame Suppressant
+            case 64626: // Explosion
+            case 65333: // Explosion
+            case 64619: // Water Spray
+                spellInfo->AttributesEx6 |= SPELL_ATTR6_CAN_TARGET_UNTARGETABLE;
+                break;
             // ENDOF ULDUAR SPELLS
             //
             // TRIAL OF THE CRUSADER SPELLS
