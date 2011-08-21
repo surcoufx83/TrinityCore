@@ -3303,6 +3303,18 @@ void SpellMgr::LoadDbcDataCorrections()
             case 64936: // Item - Warrior T8 Protection 4P Bonus
                 spellInfo->EffectBasePoints[EFFECT_0] = 100;
                 break;
+            // workaround for spells which are currently casted on not_selectable targets
+            case 63382: // Mimiron - Rapid Burst
+            case 64570: // Mimiron - Flame Suppressant
+            case 65192: // Mimiron - Flame Suppressant
+            case 64626: // Mimiron - Explosion
+            case 65333: // Mimiron - Explosion
+            case 64619: // Mimiron - Water Spray
+            case 27915: // Gothik - Anchor to Skulls
+            case 27931: // Gothik - Anchor to Skulls
+            case 27937: // Gothik - Anchor to Skulls
+                spellInfo->AttributesEx6 |= SPELL_ATTR6_CAN_TARGET_UNTARGETABLE;
+                break;
             // ULDUAR SPELLS
             //
             case 62016: // Thorim - Charge Orb
@@ -3378,14 +3390,6 @@ void SpellMgr::LoadDbcDataCorrections()
             case 63274: // Mimiron - Laser Barrage
                 // temporary remove channeled flag due to facing issues when casting on self
                 spellInfo->AttributesEx &= ~SPELL_ATTR1_CHANNELED_1;
-                break;
-            case 63382: // Rapid Burst
-            case 64570: // Flame Suppressant
-            case 65192: // Flame Suppressant
-            case 64626: // Explosion
-            case 65333: // Explosion
-            case 64619: // Water Spray
-                spellInfo->AttributesEx6 |= SPELL_ATTR6_CAN_TARGET_UNTARGETABLE;
                 break;
             // ENDOF ULDUAR SPELLS
             //
