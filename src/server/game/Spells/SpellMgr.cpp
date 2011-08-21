@@ -3200,9 +3200,6 @@ void SpellMgr::LoadDbcDataCorrections()
             case 27892: // To Anchor 1
             case 27928: // To Anchor 1
             case 27935: // To Anchor 1
-            case 27915: // Anchor to Skulls
-            case 27931: // Anchor to Skulls
-            case 27937: // Anchor to Skulls
                 spellInfo->rangeIndex = 13;
                 break;
             // target allys instead of enemies, target A is src_caster, spells with effect like that have ally target
@@ -3310,9 +3307,12 @@ void SpellMgr::LoadDbcDataCorrections()
             case 64626: // Mimiron - Explosion
             case 65333: // Mimiron - Explosion
             case 64619: // Mimiron - Water Spray
+                spellInfo->AttributesEx6 |= SPELL_ATTR6_CAN_TARGET_UNTARGETABLE;
+                break;
             case 27915: // Gothik - Anchor to Skulls
             case 27931: // Gothik - Anchor to Skulls
             case 27937: // Gothik - Anchor to Skulls
+                spellInfo->rangeIndex = 13;
                 spellInfo->AttributesEx6 |= SPELL_ATTR6_CAN_TARGET_UNTARGETABLE;
                 break;
             // ULDUAR SPELLS
