@@ -4378,7 +4378,7 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                 }
                 //Shield Breaker
                 case 62575:
-                case 66480:
+                case 64595:
                 {
                     if (!unitTarget || !m_caster)
                         return;
