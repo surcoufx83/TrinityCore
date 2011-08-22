@@ -1688,14 +1688,14 @@ public:
 };
 
 /*######
-## npc_fraction_valiant
+## npc_faction_valiant
 ######*/
 
 /*
 UPDATE creature_template SET scriptname = 'npc_faction_valiant' WHERE entry IN (33559,33562,33558,33564,33306,33285,33382,33561,33383,33384);
 */
 
-enum eFractionValiant
+enum eFactionValiant
 {
     //SPELL_CHARGE                = 63010,
     //SPELL_SHIELD_BREAKER        = 65147,
@@ -1826,6 +1826,151 @@ public:
     }
 };
 
+/*######
+## npc_maiden_of_drakmar
+######*/
+
+#define SAY_1       "Are those winter hyacinths? For me?"
+#define SAY_2       "It\'s been so long since a traveler has come here bearing flowers."
+#define SAY_3       "The lake has been too lonely these past years. The travelers stopped coming and evil came to these waters."
+#define SAY_4       "Your gift is a rare kindness, traveler. Please take this blade with my gratitude. Long ago, another traveler left it here, but I have little use for it."
+
+enum eEntrys
+{
+     GO_DRAKMAR_LILY_PAD      = 194239,
+     GO_BLADE_OF_DRAKMAR      = 194238,
+     ENTRY_MAIDEN_OF_DRAKMAR  =  33273,
+};
+
+static Position miscLocations[]=
+{
+    {4602.08f, -1600.22f, 156.657f, 0.128299f}, //GO_DRAKMAR_LILY_PAD
+    {4601.53f, -1600.47f, 156.986f, 1.944937f}  //GO_BLADE_OF_DRAKMAR
+};
+
+class npc_maiden_of_drakmar : public CreatureScript
+{
+public:
+    npc_maiden_of_drakmar() : CreatureScript("npc_maiden_of_drakmar") { }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_maiden_of_drakmarAI (pCreature);
+    }
+
+    struct npc_maiden_of_drakmarAI : public Scripted_NoMovementAI
+    {
+        npc_maiden_of_drakmarAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+        {
+            me->SetFlying(true); // cosmetic workaround
+        }
+       
+        uint32 uiSayTimer;
+        uint8 uiSayStep;
+
+        void Reset ()
+        {
+            uiSayStep = 0;
+            uiSayTimer = 2000;
+        }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            if (uiSayTimer <= uiDiff)
+            {
+                switch (uiSayStep)
+                {
+                    case 0:
+                        me->SummonGameObject(GO_DRAKMAR_LILY_PAD, miscLocations[0].GetPositionX(),miscLocations[0].GetPositionY(),miscLocations[0].GetPositionZ(),miscLocations[0].GetOrientation(),0,0,0,0,30000);
+                        me->MonsterSay(SAY_1,LANG_UNIVERSAL,0);
+                        uiSayTimer = 3000;
+                        ++uiSayStep;
+                        break;
+                    case 1:
+                        me->MonsterSay(SAY_2,LANG_UNIVERSAL,0);
+                        uiSayTimer = 5000;
+                        ++uiSayStep;
+                        break;
+                    case 2:
+                        me->MonsterSay(SAY_3,LANG_UNIVERSAL,0);
+                       uiSayTimer = 7000;
+                        ++uiSayStep;
+                    break;
+                    case 3:
+                        me->SummonGameObject(GO_BLADE_OF_DRAKMAR, miscLocations[1].GetPositionX(),miscLocations[1].GetPositionY(),miscLocations[1].GetPositionZ(),miscLocations[1].GetOrientation(),0,0,0,0,30000);
+                        me->MonsterSay(SAY_4,LANG_UNIVERSAL,0);
+                        uiSayTimer = 99999999;
+                        ++uiSayStep;
+                        break;
+                }
+            }
+            else uiSayTimer -= uiDiff;
+        }
+    };
+};
+
+/*######
+npc_squire_danny
+######*/
+
+enum eSquireDanny
+{
+    QUEST_THE_VALIANT_S_CHALLENGE_HORDE_UNDERCITY = 13729,
+    QUEST_THE_VALIANT_S_CHALLENGE_HORDE_SENJIN = 13727,
+    QUEST_THE_VALIANT_S_CHALLENGE_HORDE_THUNDERBLUFF = 13728,
+    QUEST_THE_VALIANT_S_CHALLENGE_HORDE_SILVERMOON = 13731,
+    QUEST_THE_VALIANT_S_CHALLENGE_HORDE_ORGRIMMAR = 13726,
+    QUEST_THE_VALIANT_S_CHALLENGE_ALLIANCE_DARNASSUS = 13725,
+    QUEST_THE_VALIANT_S_CHALLENGE_ALLIANCE_IRONFORGE = 13713,
+    QUEST_THE_VALIANT_S_CHALLENGE_ALLIANCE_GNOMEREGAN = 13723,
+    QUEST_THE_VALIANT_S_CHALLENGE_ALLIANCE_EXODAR = 13724,
+    QUEST_THE_VALIANT_S_CHALLENGE_ALLIANCE_STORMWIND = 13699,
+
+    NPC_ARGENT_CHAMPION = 33707,
+
+    GOSSIP_TEXTID_SQUIRE_DANNY = 14407
+};
+
+class npc_squire_danny : public CreatureScript
+{
+public:
+    npc_squire_danny() : CreatureScript("npc_squire_danny") { }
+
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    {
+        pPlayer->PlayerTalkClass->ClearMenus();
+        if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+        {
+            pPlayer->CLOSE_GOSSIP_MENU();
+            pCreature->SummonCreature(NPC_ARGENT_CHAMPION,8562.451,1095.72,556.784,1.76);
+        }
+        //else
+        //pPlayer->SEND_GOSSIP_MENU(???, pCreature->GetGUID()); Missing text
+        return true;
+    }
+
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        if (pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_HORDE_UNDERCITY) == QUEST_STATUS_INCOMPLETE
+        || pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_HORDE_SENJIN) == QUEST_STATUS_INCOMPLETE
+        || pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_HORDE_THUNDERBLUFF) == QUEST_STATUS_INCOMPLETE
+        || pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_HORDE_SILVERMOON) == QUEST_STATUS_INCOMPLETE
+        || pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_HORDE_ORGRIMMAR) == QUEST_STATUS_INCOMPLETE
+        || pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_ALLIANCE_DARNASSUS) == QUEST_STATUS_INCOMPLETE
+        || pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_ALLIANCE_IRONFORGE) == QUEST_STATUS_INCOMPLETE
+        || pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_ALLIANCE_GNOMEREGAN) == QUEST_STATUS_INCOMPLETE
+        || pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_ALLIANCE_EXODAR) == QUEST_STATUS_INCOMPLETE
+        || pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_ALLIANCE_STORMWIND) == QUEST_STATUS_INCOMPLETE) //We need more info about it.
+        {
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SQUIRE_ITEM_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SQUIRE_ITEM_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+        }
+
+    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_SQUIRE_DANNY, pCreature->GetGUID());
+    return true;
+    }
+};
+
 void AddSC_icecrown()
 {
     new npc_arete();
@@ -1846,4 +1991,6 @@ void AddSC_icecrown()
     new npc_tournament_dummy();
     new npc_vendor_tournament_fraction_champion();
     new npc_faction_valiant();
+    new npc_maiden_of_drakmar();
+    new npc_squire_danny();
 }
