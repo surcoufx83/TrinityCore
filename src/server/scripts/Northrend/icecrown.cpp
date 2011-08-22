@@ -1848,6 +1848,14 @@ static Position miscLocations[]=
     {4601.53f, -1600.47f, 156.986f, 1.944937f}  //GO_BLADE_OF_DRAKMAR
 };
 
+/*
+DELETE FROM `event_scripts` WHERE `id`=20990;
+INSERT INTO `event_scripts` (`id`,`delay`,`command`,`datalong`,`datalong2`,`dataint`,`x`,`y`,`z`,`o`) VALUES
+(20990,1,10,33273,60000,0,4602.782715,-1600.874146,158,1.387292);
+
+UPDATE creature_template SET scriptname = 'npc_maiden_of_drakmar' WHERE entry = 33273;
+*/
+
 class npc_maiden_of_drakmar : public CreatureScript
 {
 public:

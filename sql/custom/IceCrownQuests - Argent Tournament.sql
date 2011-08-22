@@ -991,3 +991,84 @@ INSERT INTO conditions VALUES
 (17,0,62596,0,9,13665,0,0,0,'','Stormwind Valiant'),
 (17,0,63435,0,9,13777,0,0,0,'','Thunder Bluff Valiant'),
 (17,0,63429,0,9,13782,0,0,0,'','Undercity Valiant');
+
+-- Champion Spellaura on Vehicle Quest: Among the Champions
+DELETE FROM spell_linked_spell WHERE spell_trigger IN (63151,-63151);
+INSERT INTO spell_linked_spell VALUES
+(63151,63406,0,'Darnassus Champion'),
+(63151,63423,0,'Exodar Champion'),
+(63151,63396,0,'Gnomeregan Champion'),
+(63151,63427,0,'Ironforge Champion'),
+(63151,63433,0,'Orgrimmar Champion'),
+(63151,63399,0,'SenJin Champion'),
+(63151,63403,0,'Silvermoon Champion'),
+(63151,62594,0,'Stormwind Champion'),
+(63151,63436,0,'Thunder Bluff Champion'),
+(63151,63430,0,'Undercity Champion'),
+(-63151,-63406,0,'Darnassus Champion remove'),
+(-63151,-63423,0,'Exodar Champion remove'),
+(-63151,-63396,0,'Gnomeregan Champion remove'),
+(-63151,-63427,0,'Ironforge Champion remove'),
+(-63151,-63433,0,'Orgrimmar Champion remove'),
+(-63151,-63399,0,'SenJin Champion remove'),
+(-63151,-63403,0,'Silvermoon Champion remove'),
+(-63151,-62594,0,'Stormwind Champion remove'),
+(-63151,-63436,0,'Thunder Bluff Champion remove'),
+(-63151,-63430,0,'Undercity Champion remove');
+
+DELETE FROM conditions WHERE SourceEntry IN (63406,63423,63396,63427,63433,63399,63403,62594,63436,63430);
+INSERT INTO conditions VALUES
+(17,0,63406,0,9,13790,0,0,0,'','Darnassus Champion'),
+(17,0,63423,0,9,13790,0,0,0,'','Exodar Champion'),
+(17,0,63396,0,9,13790,0,0,0,'','Gnomeregan Champion'),
+(17,0,63427,0,9,13790,0,0,0,'','Ironforge Champion'),
+(17,0,63433,0,9,13811,0,0,0,'','Orgrimmar Champion'),
+(17,0,63399,0,9,13811,0,0,0,'','SenJin Champion'),
+(17,0,63403,0,9,13811,0,0,0,'','Silvermoon Champion'),
+(17,0,62594,0,9,13790,0,0,0,'','Stormwind Champion'),
+(17,0,63436,0,9,13811,0,0,0,'','Thunder Bluff Champion'),
+(17,0,63430,0,9,13811,0,0,0,'','Undercity Champion'),
+(17,0,63406,1,9,13793,0,0,0,'','Darnassus Champion'),
+(17,0,63423,1,9,13793,0,0,0,'','Exodar Champion'),
+(17,0,63396,1,9,13793,0,0,0,'','Gnomeregan Champion'),
+(17,0,63427,1,9,13793,0,0,0,'','Ironforge Champion'),
+(17,0,63433,1,9,13814,0,0,0,'','Orgrimmar Champion'),
+(17,0,63399,1,9,13814,0,0,0,'','SenJin Champion'),
+(17,0,63403,1,9,13814,0,0,0,'','Silvermoon Champion'),
+(17,0,62594,1,9,13793,0,0,0,'','Stormwind Champion'),
+(17,0,63436,1,9,13814,0,0,0,'','Thunder Bluff Champion'),
+(17,0,63430,1,9,13814,0,0,0,'','Undercity Champion');
+
+-- The Black Knight Questline
+-- The Black Knight of Silverpine? ... Prev: The Argent Tournament ... NextQuestInLine: The Seer's Crystal
+UPDATE quest_template SET PrevQuestId = 13668, NextQuestId = 13641, ExclusiveGroup = 0, NextQuestInChain = 13641 WHERE entry = 13634;
+-- The Black Knight of Westfall? ... Prev: The Argent Tournament ... NextQuestInLine: The Seer's Crystal
+UPDATE quest_template SET PrevQuestId = 13667, NextQuestId = 13641, ExclusiveGroup = 0, NextQuestInChain = 13641 WHERE entry = 13633;
+
+-- The Seer's Crystal ... Prev: The Black Knight of Westfall? ... NextQuestInLine: The Stories Dead Men Tell
+UPDATE quest_template SET PrevQuestId = 0, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 13643 WHERE entry = 13641;
+
+-- The Stories Dead Men Tell ... Prev: The Seer's Crystal ... NextQuestInLine: There's Something About the Squire
+UPDATE quest_template SET PrevQuestId = 13641, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 13654 WHERE entry = 13643;
+
+-- There's Something About the Squire ... Prev: The Stories Dead Men Tell ... NextQuestInLine: The Black Knight's Orders
+UPDATE quest_template SET PrevQuestId = 13643, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 13663  WHERE entry = 13654;
+
+-- The Black Knight's Orders ... Prev: There's Something About the Squire
+UPDATE quest_template SET PrevQuestId = 13654, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 13663;
+
+-- The Black Knight's Fall ... Prev: The Black Knight's Orders ... NextQuestInLine: The Black Knight's Curse
+UPDATE quest_template SET PrevQuestId = 13663, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 14016  WHERE entry = 13664;
+
+-- The Black Knight's Curse ... Prev: The Black Knight's Fall ... NextQuestInLine: The Black Knight's Fate
+UPDATE quest_template SET PrevQuestId = 13664, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 14017  WHERE entry = 14016;
+
+-- The Black Knight's Fate... Prev: The Black Knight's Curse 
+UPDATE quest_template SET PrevQuestId = 14016, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 14017;
+
+-- The Black Knight's Fall only avalable as Champion
+DELETE FROM conditions WHERE SourceTypeOrReferenceId IN (19,20) AND SourceEntry = 13664;
+INSERT INTO conditions
+VALUES 
+(19,0,13664,0,-2782,0,0,0,0,"","The Black Knight's Fall - Daily needs Champion"),
+(19,0,13664,1,-2788,0,0,0,0,"","The Black Knight's Fall - Daily needs Champion");
