@@ -12349,6 +12349,9 @@ bool Unit::isTargetableForAttack(bool checkFakeDeath) const
     if (GetTypeId() == TYPEID_PLAYER && ToPlayer()->isGameMaster())
         return false;
 
+    if (!isAlive())
+        return false;
+
     return !HasUnitState(UNIT_STAT_UNATTACKABLE) && (!checkFakeDeath || !HasUnitState(UNIT_STAT_DIED));
 }
 
