@@ -3312,6 +3312,7 @@ void SpellMgr::LoadDbcDataCorrections()
             case 64626: // Mimiron - Explosion
             case 65333: // Mimiron - Explosion
             case 64619: // Mimiron - Water Spray
+            case 62466: // Thorim - Lightning Charge
                 spellInfo->AttributesEx6 |= SPELL_ATTR6_CAN_TARGET_UNTARGETABLE;
                 break;
             case 27915: // Gothik - Anchor to Skulls
@@ -3329,6 +3330,10 @@ void SpellMgr::LoadDbcDataCorrections()
             //
             case 62016: // Thorim - Charge Orb
                 spellInfo->MaxAffectedTargets = 1;
+                spellInfo->AttributesEx6 |= SPELL_ATTR6_CAN_TARGET_UNTARGETABLE;
+                break;
+            case 62017: // Thorim - Lightning Shock
+                spellInfo->AttributesEx2 |= SPELL_ATTR2_CAN_TARGET_NOT_IN_LOS;
                 break;
             case 62039: // Hodir - Biting Cold - Remove on Move
                 spellInfo->AuraInterruptFlags |= AURA_INTERRUPT_FLAG_MOVE;
