@@ -3320,6 +3320,11 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->rangeIndex = 13;
                 spellInfo->AttributesEx6 |= SPELL_ATTR6_CAN_TARGET_UNTARGETABLE;
                 break;
+            case 30207: // Shadow Grasp
+            case 30531: // Soul Transfer
+            case 55849: // Power Spark
+                spellInfo->AttributesEx3 |= SPELL_ATTR3_STACK_FOR_DIFF_CASTERS;
+                break;
             // ULDUAR SPELLS
             //
             case 62016: // Thorim - Charge Orb
@@ -3341,6 +3346,7 @@ void SpellMgr::LoadDbcDataCorrections()
             case 62716: // Growth of Nature (Freya)
             case 65584: // Growth of Nature (Freya)
             case 64381: // Strength of the Pack (Auriaya)
+            case 62505: // Harpoon Shot
                 spellInfo->AttributesEx3 |= SPELL_ATTR3_STACK_FOR_DIFF_CASTERS;
                 break;
             //case 62834: // Boom (XT-002)
