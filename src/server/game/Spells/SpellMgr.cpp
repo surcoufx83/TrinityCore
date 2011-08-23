@@ -3301,6 +3301,11 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectBasePoints[EFFECT_0] = 100;
                 break;
             // workaround for spells which are currently casted on not_selectable targets
+            case 56430: // Arcane Bomb
+            case 61421: // Ride Vehicle
+            case 62309: // Ride Vehicle (Scales w/ Gear)
+            case 65031: // Ride Vehicle (Scales w/ Gear)
+            case 65266: // Gear Scaling
             case 63382: // Mimiron - Rapid Burst
             case 64570: // Mimiron - Flame Suppressant
             case 65192: // Mimiron - Flame Suppressant

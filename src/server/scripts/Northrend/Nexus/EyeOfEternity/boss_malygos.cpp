@@ -78,6 +78,8 @@ enum Spells
     SPELL_POWER_SPARK_PLAYERS                = 55852,
 
     // phase 2
+    SPELL_ADD_RIDE_VEHICLE                   = 61421,
+
     SPELL_ARCANE_BOMB                        = 56430,
     SPELL_ARCANE_BOMB_KNOCKBACK              = 56431,
     SPELL_ARCANE_OVERLOAD                    = 56432,
@@ -403,7 +405,7 @@ class boss_malygos : public CreatureScript
                                 lord->SetReactState(REACT_PASSIVE);
                                 if (Creature* temp = me->SummonCreature(NPC_HOVER_DISK_MELEE, Locations[1], TEMPSUMMON_CORPSE_DESPAWN))
                                 {
-                                    lord->EnterVehicle(temp, 0);
+                                    lord->CastSpell(temp, SPELL_ADD_RIDE_VEHICLE, true);
                                     temp->SetReactState(REACT_PASSIVE);
                                     temp->GetMotionMaster()->MovePoint(0, LordLocations[i]);
                                 }
@@ -417,7 +419,7 @@ class boss_malygos : public CreatureScript
                                 scion->SetInCombatWithZone();
                                 if (Creature* temp = me->SummonCreature(NPC_HOVER_DISK_MELEE, Locations[1], TEMPSUMMON_CORPSE_DESPAWN))
                                 {
-                                    scion->EnterVehicle(temp, 0);
+                                    scion->CastSpell(temp, SPELL_ADD_RIDE_VEHICLE, true);
                                     temp->SetFlying(true);
                                     temp->SetSpeed(MOVE_FLIGHT, 0.7f);
                                     temp->SetReactState(REACT_PASSIVE);
@@ -469,6 +471,9 @@ class boss_malygos : public CreatureScript
                                 continue;
 
                             //mount->SetCreatorGUID(player->GetGUID());
+                            if (Pet* pet = player->GetPet())
+                                player->RemovePet(pet, PET_SAVE_NOT_IN_SLOT, true);
+                            player->UnsummonAllTotems();
                             player->CastSpell(mount, SPELL_RIDE_RED_DRAGON_BUDDY, true);
                         }
 
@@ -659,8 +664,6 @@ class boss_malygos : public CreatureScript
                         DoScriptText(SAY_PHASE3_AGGRO, me);
                         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                         DoCast(me, SPELL_ROOT, true);
-                        events.ScheduleEvent(EVENT_STATICFIELD, 20*IN_MILLISECONDS);
-                        events.ScheduleEvent(EVENT_PULSE, 10*IN_MILLISECONDS);
                         break;
                     }
                     default:
@@ -835,6 +838,8 @@ class boss_malygos : public CreatureScript
                                     events.ScheduleEvent(EVENT_SURGEOFPOWER, 10*IN_MILLISECONDS);
                                     events.ScheduleEvent(EVENT_STORM, 15*IN_MILLISECONDS);
                                     events.ScheduleEvent(EVENT_CHECKPLAYER, 5*IN_MILLISECONDS);
+                                    events.ScheduleEvent(EVENT_STATICFIELD, 20*IN_MILLISECONDS);
+                                    events.ScheduleEvent(EVENT_PULSE, 10*IN_MILLISECONDS);
                                     phase = PHASE_DRAGONS;
                                     ++step;
                                     break;
