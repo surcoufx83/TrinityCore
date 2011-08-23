@@ -38,6 +38,11 @@ UPDATE quest_template SET PrevQuestId = 13045, NextQuestId = 0, ExclusiveGroup =
 -- The Last Line Of Defense ... Prev: A Cold Front Approaches
 UPDATE quest_template SET PrevQuestId = 13070, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 13086;
 
+-- Tirions Mount
+DELETE FROM `creature_template_addon` WHERE `entry` IN (30677);
+INSERT INTO `creature_template_addon` (`entry`,`path_id`,`mount`,`bytes1`,`bytes2`,`emote`,`auras`) VALUES
+(30677,0,2325,0,0,0,'');  -- Tirion Fordring - Mount
+
 -- Once More Unto The Breach, Hero
 -- Once More Unto The Breach, Hero  DK only
 UPDATE quest_template SET PrevQuestId = 13086, NextQuestId = 0, ExclusiveGroup = 13104, NextQuestInChain = 0 WHERE entry = 13104;

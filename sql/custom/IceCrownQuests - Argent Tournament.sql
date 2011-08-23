@@ -771,8 +771,17 @@ SourceTypeOrReferenceId IN (19,20) AND SourceEntry IN
 (13846,14101,14102,14104,14105,13810,13862,13811,13794,14140,14143,14144,14096,14136,14092,14107,14108,14141,14145,13707,13708,13709,13710,13711,13795,14080,14074,14077,14142,14152,14076,14090,14112,13684,13688,13685,13690,13689);
 INSERT INTO conditions
 VALUES 
-(-2782,0,0,0,17,2782,0,0,0,"","needs Champion"),
-(-2788,0,0,0,17,2788,0,0,0,"","needs Champion"),
+(-2782,0,0,0,8,13725,0,0,0,"","needs Champion"),
+(-2782,0,0,1,8,13713,0,0,0,"","needs Champion"),
+(-2782,0,0,2,8,13723,0,0,0,"","needs Champion"),
+(-2782,0,0,3,8,13724,0,0,0,"","needs Champion"),
+(-2782,0,0,4,8,13699,0,0,0,"","needs Champion"),
+
+(-2788,0,0,0,8,13727,0,0,0,"","needs Champion"),
+(-2788,0,0,1,8,13728,0,0,0,"","needs Champion"),
+(-2788,0,0,2,8,13729,0,0,0,"","needs Champion"),
+(-2788,0,0,3,8,13731,0,0,0,"","needs Champion"),
+(-2788,0,0,4,8,13726,0,0,0,"","needs Champion"),
 
 (-2817,0,0,0,17,2817,0,0,0,"","needs Exalted Champion"), -- Allianz
 (-2816,0,0,0,17,2816,0,0,0,"","needs Exalted Champion"), -- Horde
@@ -950,7 +959,7 @@ INSERT INTO pool_template VALUES
 (35094,1,'Tournament - Champion - The Argent Crusade - Kraken');
 
 UPDATE quest_template SET ExclusiveGroup = 14107 WHERE entry in (14107,14108);
-DELETE FROM pool_quest WHERE pool_entry IN (34882);
+DELETE FROM pool_quest WHERE pool_entry IN (35094);
 INSERT INTO pool_quest VALUES 
 (14107,35094,'Tournament - Champion - The Argent Crusade - Kraken - The Fate Of The Fallen'),
 (14108,35094,'Tournament - Champion - The Argent Crusade - Kraken - Get Kraken!');
@@ -1071,4 +1080,11 @@ DELETE FROM conditions WHERE SourceTypeOrReferenceId IN (19,20) AND SourceEntry 
 INSERT INTO conditions
 VALUES 
 (19,0,13664,0,-2782,0,0,0,0,"","The Black Knight's Fall - Daily needs Champion"),
-(19,0,13664,1,-2788,0,0,0,0,"","The Black Knight's Fall - Daily needs Champion");
+(20,0,13664,0,-2782,0,0,0,0,"","The Black Knight's Fall - Daily needs Champion"),
+(19,0,13664,1,-2788,0,0,0,0,"","The Black Knight's Fall - Daily needs Champion"),
+(20,0,13664,1,-2788,0,0,0,0,"","The Black Knight's Fall - Daily needs Champion");
+
+-- Mount for Argent Champion
+DELETE FROM `creature_template_addon` WHERE `entry` IN (33707);
+INSERT INTO `creature_template_addon` (`entry`,`path_id`,`mount`,`bytes1`,`bytes2`,`emote`,`auras`) VALUES
+(33707,0,28919,0,0,0,''); -- Argent Champion - Mount

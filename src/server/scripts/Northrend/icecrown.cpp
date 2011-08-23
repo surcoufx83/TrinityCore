@@ -157,6 +157,7 @@ enum eSquireDavid
     QUEST_THE_ASPIRANT_S_CHALLENGE_A                    = 13679,
 
     NPC_ARGENT_VALIANT                                  = 33448,
+    SPELL_SUMMON_ARGENT_VALIANT                         = 63028,
 
     GOSSIP_TEXTID_SQUIRE                                = 14407
 };
@@ -188,7 +189,7 @@ public:
         if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         {
             player->CLOSE_GOSSIP_MENU();
-            creature->SummonCreature(NPC_ARGENT_VALIANT, 8575.451f, 952.472f, 547.554f, 0.38f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+            creature->CastSpell(player,SPELL_SUMMON_ARGENT_VALIANT,false);
         }
         return true;
     }
@@ -244,7 +245,7 @@ public:
             if (uiDamage > me->GetHealth() && pDoneBy->GetTypeId() == TYPEID_PLAYER)
             {
                 uiDamage = 0;
-                me->CastSpell(pDoneBy,SPELL_GIVE_KILL_CREDIT_VALIANT,true);
+                pDoneBy->CastSpell(pDoneBy,SPELL_GIVE_KILL_CREDIT_VALIANT,true);
                 me->setFaction(35);
                 me->DespawnOrUnsummon(5000);
                 me->SetHomePosition(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), me->GetOrientation());
@@ -1796,7 +1797,8 @@ public:
 
     bool OnGossipHello(Player* player, Creature* creature)
     {
-        if((player->GetQuestStatus(QUEST_THE_GRAND_MELEE_0) == QUEST_STATUS_INCOMPLETE) ||
+        if( player->HasAura(63151) &&
+            ((player->GetQuestStatus(QUEST_THE_GRAND_MELEE_0) == QUEST_STATUS_INCOMPLETE) ||
             (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_1) == QUEST_STATUS_INCOMPLETE) ||
             (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_2) == QUEST_STATUS_INCOMPLETE) ||
             (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_3) == QUEST_STATUS_INCOMPLETE) ||
@@ -1805,7 +1807,7 @@ public:
             (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_6) == QUEST_STATUS_INCOMPLETE) ||
             (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_7) == QUEST_STATUS_INCOMPLETE) ||
             (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_8) == QUEST_STATUS_INCOMPLETE) ||
-            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_9) == QUEST_STATUS_INCOMPLETE))
+            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_9) == QUEST_STATUS_INCOMPLETE)))
         {
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MELEE_FIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
         }
@@ -1935,9 +1937,14 @@ enum eSquireDanny
     QUEST_THE_VALIANT_S_CHALLENGE_ALLIANCE_STORMWIND = 13699,
 
     NPC_ARGENT_CHAMPION = 33707,
+    SPELL_SUMMON_ARGENT_CHAMPION = 63171,
 
     GOSSIP_TEXTID_SQUIRE_DANNY = 14407
 };
+
+/*
+UPDATE creature_template SET scriptname = 'npc_squire_danny' WHERE entry = 33518;
+*/
 
 class npc_squire_danny : public CreatureScript
 {
@@ -1950,7 +1957,7 @@ public:
         if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         {
             pPlayer->CLOSE_GOSSIP_MENU();
-            pCreature->SummonCreature(NPC_ARGENT_CHAMPION,8562.451,1095.72,556.784,1.76);
+            pCreature->CastSpell(pPlayer,SPELL_SUMMON_ARGENT_CHAMPION,false);
         }
         //else
         //pPlayer->SEND_GOSSIP_MENU(???, pCreature->GetGUID()); Missing text
@@ -1959,16 +1966,17 @@ public:
 
     bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
-        if (pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_HORDE_UNDERCITY) == QUEST_STATUS_INCOMPLETE
-        || pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_HORDE_SENJIN) == QUEST_STATUS_INCOMPLETE
-        || pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_HORDE_THUNDERBLUFF) == QUEST_STATUS_INCOMPLETE
-        || pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_HORDE_SILVERMOON) == QUEST_STATUS_INCOMPLETE
-        || pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_HORDE_ORGRIMMAR) == QUEST_STATUS_INCOMPLETE
-        || pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_ALLIANCE_DARNASSUS) == QUEST_STATUS_INCOMPLETE
-        || pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_ALLIANCE_IRONFORGE) == QUEST_STATUS_INCOMPLETE
-        || pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_ALLIANCE_GNOMEREGAN) == QUEST_STATUS_INCOMPLETE
-        || pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_ALLIANCE_EXODAR) == QUEST_STATUS_INCOMPLETE
-        || pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_ALLIANCE_STORMWIND) == QUEST_STATUS_INCOMPLETE) //We need more info about it.
+        if (pPlayer->HasAura(63151) 
+            && ((pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_HORDE_UNDERCITY) == QUEST_STATUS_INCOMPLETE)
+            || (pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_HORDE_SENJIN) == QUEST_STATUS_INCOMPLETE)
+            || (pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_HORDE_THUNDERBLUFF) == QUEST_STATUS_INCOMPLETE)
+            || (pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_HORDE_SILVERMOON) == QUEST_STATUS_INCOMPLETE)
+            || (pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_HORDE_ORGRIMMAR) == QUEST_STATUS_INCOMPLETE)
+            || (pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_ALLIANCE_DARNASSUS) == QUEST_STATUS_INCOMPLETE)
+            || (pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_ALLIANCE_IRONFORGE) == QUEST_STATUS_INCOMPLETE)
+            || (pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_ALLIANCE_GNOMEREGAN) == QUEST_STATUS_INCOMPLETE)
+            || (pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_ALLIANCE_EXODAR) == QUEST_STATUS_INCOMPLETE)
+            || (pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_ALLIANCE_STORMWIND) == QUEST_STATUS_INCOMPLETE)))
         {
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SQUIRE_ITEM_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SQUIRE_ITEM_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
@@ -1976,6 +1984,95 @@ public:
 
     pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_SQUIRE_DANNY, pCreature->GetGUID());
     return true;
+    }
+};
+
+/*######
+## npc_argent_champion
+######*/
+// To Do Argent Valiant, Faction Valiant, Argent Champion and Faction Champion have the same script -> make one
+
+/*
+UPDATE creature_template SET scriptname = 'npc_argent_champion' WHERE entry = 33707;
+*/
+
+enum eArgentChampion
+{
+    //SPELL_CHARGE                = 63010,
+    //SPELL_SHIELD_BREAKER        = 65147,
+
+    SPELL_ARGENT_CRUSADE_CHAMPION   = 63501,
+    SPELL_GIVE_KILL_CREDIT_CHAMPION = 63516,
+};
+
+class npc_argent_champion : public CreatureScript
+{
+public:
+    npc_argent_champion() : CreatureScript("npc_argent_champion") { }
+
+    struct npc_argent_championAI : public ScriptedAI
+    {
+        npc_argent_championAI(Creature* creature) : ScriptedAI(creature)
+        {
+            creature->GetMotionMaster()->MovePoint(0, 8561.30f, 1113.30f, 556.9f);
+            creature->setFaction(35); //wrong faction in db?
+        }
+
+        uint32 uiChargeTimer;
+        uint32 uiShieldBreakerTimer;
+
+        void Reset()
+        {
+            uiChargeTimer = 7000;
+            uiShieldBreakerTimer = 10000;
+        }
+
+        void MovementInform(uint32 uiType, uint32 /*uiId*/)
+        {
+            if (uiType != POINT_MOTION_TYPE)
+                return;
+
+            me->SetHomePosition(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), me->GetOrientation());
+            me->setFaction(14);
+        }
+
+        void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
+        {
+            if (uiDamage > me->GetHealth() && pDoneBy->GetTypeId() == TYPEID_PLAYER)
+            {
+                uiDamage = 0;
+                pDoneBy->CastSpell(pDoneBy,SPELL_GIVE_KILL_CREDIT_CHAMPION,true);
+                me->setFaction(35);
+                me->DespawnOrUnsummon(5000);
+                me->SetHomePosition(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), me->GetOrientation());
+                EnterEvadeMode();
+            }
+        }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            if (uiChargeTimer <= uiDiff)
+            {
+                DoCastVictim(SPELL_CHARGE);
+                uiChargeTimer = 7000;
+            } else uiChargeTimer -= uiDiff;
+
+            if (uiShieldBreakerTimer <= uiDiff)
+            {
+                DoCastVictim(SPELL_SHIELD_BREAKER);
+                uiShieldBreakerTimer = 10000;
+            } else uiShieldBreakerTimer -= uiDiff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
+
+    CreatureAI *GetAI(Creature* creature) const
+    {
+        return new npc_argent_championAI(creature);
     }
 };
 
@@ -2001,4 +2098,5 @@ void AddSC_icecrown()
     new npc_faction_valiant();
     new npc_maiden_of_drakmar();
     new npc_squire_danny();
+    new npc_argent_champion();
 }
