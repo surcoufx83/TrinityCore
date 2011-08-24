@@ -1119,7 +1119,7 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                 {
                     if (!unitTarget || m_caster->GetTypeId() != TYPEID_PLAYER || unitTarget->GetTypeId() != TYPEID_UNIT)
                         return;
-                    
+
                     if (uint32 entry = unitTarget->ToCreature()->GetEntry())
                     {
                         switch(entry)
@@ -4390,12 +4390,12 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                         break;
                     case 62575: // 2k Damage
                         m_caster->CastSpell(unitTarget,62626,true);
-                        break; 
+                        break;
                     }
 
                     return;
                 }
-                // Charge 
+                // Charge
                 case 62960:
                 {
                     if (!unitTarget || !m_caster)
@@ -4409,7 +4409,7 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                 //Shield Breaker Trigger
                 case 62626:
                 case 64590:
-                //Charge Effekt 
+                //Charge Effekt
                 case 68321:
                 {
                     if (!unitTarget || !m_caster)
@@ -6174,7 +6174,7 @@ void Spell::EffectReputation(SpellEffIndex effIndex)
     {
         rep_change = int32((float)rep_change * repData->spell_rate);
     }
-    
+
     // Bonus from spells that increase reputation gain
     float bonus = rep_change * _player->GetTotalAuraModifier(SPELL_AURA_MOD_REPUTATION_GAIN) / 100.0f; // 10%
     rep_change += (int32)bonus;
@@ -7281,7 +7281,7 @@ void Spell::EffectCastButtons(SpellEffIndex effIndex)
         if (!ab || ab->GetType() != ACTION_BUTTON_SPELL)
             continue;
 
-        //! Action button data is unverified when it's set so it can be "hacked" 
+        //! Action button data is unverified when it's set so it can be "hacked"
         //! to contain invalid spells, so filter here.
         uint32 spell_id = ab->GetAction();
         if (!spell_id)
@@ -7296,7 +7296,7 @@ void Spell::EffectCastButtons(SpellEffIndex effIndex)
 
         if (!(spellInfo->AttributesEx7 & SPELL_ATTR7_SUMMON_PLAYER_TOTEM))
             continue;
-        
+
         uint32 cost = spellInfo->CalcPowerCost(m_caster, spellInfo->GetSchoolMask());
         if (m_caster->GetPower(POWER_MANA) < cost)
             continue;

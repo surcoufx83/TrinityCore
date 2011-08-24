@@ -881,17 +881,25 @@ public:
         {
             if (Unit* target = me->SelectNearbyTarget(100))
                 AttackStart(target);
+
             Flame_Lash_Timer = urand(2000, 5000);
             changeTargetTimer = 7500;
+        }
+
+        void DamageTaken(Unit* /*attacker*/, uint32 &damage)
+        {
+            if (damage >= me->GetHealth())
+            {
+                if (Creature* freya = me->GetCreature(*me, m_pInstance->GetData64(TYPE_FREYA)))
+                    DoCast(freya, SPELL_ATTUNED_TO_NATURE_REMOVE_2, true);
+
+                me->DespawnOrUnsummon(15000);
+            }
         }
 
         void JustDied(Unit* /*killer*/)
         {
             DoCast(me, RAID_MODE(SPELL_DETONATE_10, SPELL_DETONATE_25), true);
-            if (Creature* freya = me->FindNearestCreature(ENTRY_CREATURE_FREYA, 10000))
-                DoCast(freya, SPELL_ATTUNED_TO_NATURE_REMOVE_2, true);
-
-            me->DespawnOrUnsummon(15000);
         }
 
         void UpdateAI(const uint32 diff)
@@ -930,16 +938,16 @@ class mob_ancient_water_spirit : public CreatureScript
 public:
     mob_ancient_water_spirit() : CreatureScript("mob_ancient_water_spirit") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new mob_ancient_water_spiritAI (pCreature);
+        return new mob_ancient_water_spiritAI(creature);
     }
 
     struct mob_ancient_water_spiritAI : public ScriptedAI
     {
-        mob_ancient_water_spiritAI(Creature *pCreature) : ScriptedAI(pCreature)
+        mob_ancient_water_spiritAI(Creature* creature) : ScriptedAI(creature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = creature->GetInstanceScript();
             alreadyKilled = false;
         }
 
@@ -952,21 +960,26 @@ public:
             me->SetCorpseDelay(20);
             Tidal_Wave_Timer = 20000;
 
-            if(Unit* target = me->SelectNearbyTarget(100))
+            if (Unit* target = me->SelectNearbyTarget(100))
                 me->AI()->AttackStart(target);
         }
 
-        void JustDied(Unit* )
+        void DamageTaken(Unit* /*attacker*/, uint32 &damage)
         {
-            if (Creature* Freya = me->GetCreature(*me, m_pInstance->GetData64(TYPE_FREYA)))
+            if (damage >= me->GetHealth())
             {
-                if(!alreadyKilled) DoCast(Freya, SPELL_ATTUNED_TO_NATURE_REMOVE_10,true);
-                alreadyKilled = true;
-                Freya->AI()->DoAction(ACTION_ELEMENTAL_DEAD);
+                if (Creature* freya = me->GetCreature(*me, m_pInstance->GetData64(TYPE_FREYA)))
+                {
+                    if (!alreadyKilled)
+                        DoCast(freya, SPELL_ATTUNED_TO_NATURE_REMOVE_10, true);
+
+                    alreadyKilled = true;
+                    freya->AI()->DoAction(ACTION_ELEMENTAL_DEAD);
+                }
             }
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             if (m_pInstance && m_pInstance->GetBossState(TYPE_FREYA) != IN_PROGRESS)
                 me->DespawnOrUnsummon(2000);
@@ -992,16 +1005,16 @@ class mob_storm_lasher : public CreatureScript
 public:
     mob_storm_lasher() : CreatureScript("mob_storm_lasher") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new mob_storm_lasherAI (pCreature);
+        return new mob_storm_lasherAI(creature);
     }
 
     struct mob_storm_lasherAI : public ScriptedAI
     {
-        mob_storm_lasherAI(Creature *pCreature) : ScriptedAI(pCreature)
+        mob_storm_lasherAI(Creature* creature) : ScriptedAI(creature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = creature->GetInstanceScript();
             alreadyKilled = false;
         }
 
@@ -1020,18 +1033,21 @@ public:
                 me->AI()->AttackStart(target);
         }
 
-        void JustDied(Unit* )
+        void DamageTaken(Unit* /*attacker*/, uint32 &damage)
         {
-            if (Creature* Freya = me->GetCreature(*me, m_pInstance->GetData64(TYPE_FREYA)))
+            if (damage >= me->GetHealth())
             {
-                if (!alreadyKilled)
-                    DoCast(Freya, SPELL_ATTUNED_TO_NATURE_REMOVE_10, true);
-                alreadyKilled = true;
-                Freya->AI()->DoAction(ACTION_ELEMENTAL_DEAD);
+                if (Creature* freya = me->GetCreature(*me, m_pInstance->GetData64(TYPE_FREYA)))
+                {
+                    if (!alreadyKilled)
+                        DoCast(freya, SPELL_ATTUNED_TO_NATURE_REMOVE_10, true);
+                    alreadyKilled = true;
+                    freya->AI()->DoAction(ACTION_ELEMENTAL_DEAD);
+                }
             }
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             if (m_pInstance && m_pInstance->GetBossState(TYPE_FREYA) != IN_PROGRESS)
                 me->DespawnOrUnsummon(2000);
@@ -1063,16 +1079,16 @@ class mob_snaplasher : public CreatureScript
 public:
     mob_snaplasher() : CreatureScript("mob_snaplasher") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new mob_snaplasherAI(pCreature);
+        return new mob_snaplasherAI(creature);
     }
 
     struct mob_snaplasherAI : public ScriptedAI
     {
-        mob_snaplasherAI(Creature *pCreature) : ScriptedAI(pCreature)
+        mob_snaplasherAI(Creature* creature) : ScriptedAI(creature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = creature->GetInstanceScript();
             alreadyKilled = false;
         }
 
@@ -1091,20 +1107,18 @@ public:
             DoCast(me, RAID_MODE(SPELL_HARDENED_BARK_10, SPELL_HARDENED_BARK_25));
         }
 
-        void JustDied(Unit* /*killer*/)
+        void DamageTaken(Unit* /*attacker*/, uint32 &damage)
         {
-            if (Creature* Freya = me->GetCreature(*me, m_pInstance->GetData64(TYPE_FREYA)))
+            if (damage >= me->GetHealth())
             {
-                if (!alreadyKilled)
-                    DoCast(Freya, SPELL_ATTUNED_TO_NATURE_REMOVE_10, true);
-                alreadyKilled = true;
-                Freya->AI()->DoAction(ACTION_ELEMENTAL_DEAD);
+                if (Creature* freya = me->GetCreature(*me, m_pInstance->GetData64(TYPE_FREYA)))
+                {
+                    if (!alreadyKilled)
+                        DoCast(freya, SPELL_ATTUNED_TO_NATURE_REMOVE_10, true);
+                    alreadyKilled = true;
+                    freya->AI()->DoAction(ACTION_ELEMENTAL_DEAD);
+                }
             }
-        }
-
-        void JustSummoned(Unit* )
-        {
-            me->CombatStart(me->SelectNearestTarget(), true);
         }
 
         void UpdateAI(uint32 const /*diff*/)
@@ -1141,7 +1155,6 @@ public:
         uint32 Natures_Fury_Timer;
         uint32 Healthy_Spore_Spawn_Timer;
         Position pos;
-        Creature* freya;
 
         void Reset()
         {
@@ -1159,21 +1172,19 @@ public:
             for (int i = 1; i <= 6; ++i)
             {
                 me->GetRandomNearPosition(pos, 35);
-                me->SummonCreature(33215, pos, TEMPSUMMON_TIMED_DESPAWN, 30000+(rand()%6000));
+                me->SummonCreature(33215, pos, TEMPSUMMON_TIMED_DESPAWN, 30000 + (rand()%6000));
             }
         }
 
-        void JustDied(Unit* /*killer*/)
+        void DamageTaken(Unit* /*attacker*/, uint32 &damage)
         {
-            if (Creature* freya = me->FindNearestCreature(ENTRY_CREATURE_FREYA, 10000))
-                DoCast(freya, SPELL_ATTUNED_TO_NATURE_REMOVE_25, true);
+            if (damage >= me->GetHealth())
+            {
+                if (Creature* freya = me->GetCreature(*me, m_pInstance->GetData64(TYPE_FREYA)))
+                    DoCast(freya, SPELL_ATTUNED_TO_NATURE_REMOVE_25, true);
 
-            me->DespawnOrUnsummon(15000);
-        }
-
-        void JustSummoned(Unit* /*summon*/)
-        {
-            me->CombatStart(me->SelectNearestTarget(), true);
+                me->DespawnOrUnsummon(15000);
+            }
         }
 
         void UpdateAI(uint32 const diff)
@@ -1196,7 +1207,7 @@ public:
             {
                 me->GetRandomNearPosition(pos, 35);
                 me->SummonCreature(33215, pos, TEMPSUMMON_TIMED_DESPAWN, 30000);
-                Healthy_Spore_Spawn_Timer = 1500 + urand(1000, 3500);
+                Healthy_Spore_Spawn_Timer = urand(2500, 5000);
             }
             else Healthy_Spore_Spawn_Timer -= diff;
 

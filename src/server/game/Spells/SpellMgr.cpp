@@ -2793,17 +2793,6 @@ void SpellMgr::LoadSpellCustomAttr()
                 spellInfo->AttributesCu |= SPELL_ATTR0_CU_DIRECT_DAMAGE; // spellInfo->AttributesEx4 |= SPELL_ATTR4_FIXED_DAMAGE;
                 spellInfo->AttributesCu |= SPELL_ATTR0_CU_IGNORE_ARMOR;
                 break;
-            case 64218: // Emalon - Overcharge
-            case 64216: // Emalon - Lightning Nova
-            case 65279: // Emalon - Lightning Nova
-            case 62016: // Thorim - Charge Orb
-            case 65210: // Keeper Mimiron Destabilization Matrix - Ignore LoS (because Mimiron stands in a Tube and is out of LoS)
-            case 62042: // Thorim - Stormhammer
-            case 62521: // Freya - Attuned to Nature 25 Dose Reduction
-            case 62524: // Freya - Attuned to Nature 2 Dose Reduction
-            case 62525: // Freya - Attuned to Nature 10 Dose Reduction
-                spellInfo->AttributesEx2 |= SPELL_ATTR2_CAN_TARGET_NOT_IN_LOS;
-                break;
             case 18500: // Wing Buffet
             case 33086: // Wild Bite
             case 28375: // Decimate
@@ -3301,12 +3290,18 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectBasePoints[EFFECT_0] = 100;
                 break;
             // workaround for spells which are currently casted on not_selectable targets
+            case 56430: // Arcane Bomb
+            case 61421: // Ride Vehicle
+            case 62309: // Ride Vehicle (Scales w/ Gear)
+            case 65031: // Ride Vehicle (Scales w/ Gear)
+            case 65266: // Gear Scaling
             case 63382: // Mimiron - Rapid Burst
             case 64570: // Mimiron - Flame Suppressant
             case 65192: // Mimiron - Flame Suppressant
             case 64626: // Mimiron - Explosion
             case 65333: // Mimiron - Explosion
             case 64619: // Mimiron - Water Spray
+            case 62466: // Thorim - Lightning Charge
                 spellInfo->AttributesEx6 |= SPELL_ATTR6_CAN_TARGET_UNTARGETABLE;
                 break;
             case 27915: // Gothik - Anchor to Skulls
@@ -3315,10 +3310,20 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->rangeIndex = 13;
                 spellInfo->AttributesEx6 |= SPELL_ATTR6_CAN_TARGET_UNTARGETABLE;
                 break;
+            case 30207: // Shadow Grasp
+            case 30531: // Soul Transfer
+            case 55849: // Power Spark
+                spellInfo->AttributesEx3 |= SPELL_ATTR3_STACK_FOR_DIFF_CASTERS;
+                break;
             // ULDUAR SPELLS
             //
             case 62016: // Thorim - Charge Orb
                 spellInfo->MaxAffectedTargets = 1;
+                spellInfo->AttributesEx6 |= SPELL_ATTR6_CAN_TARGET_UNTARGETABLE;
+                break;
+            case 62017: // Thorim - Lightning Shock
+            case 62042: // Thorim - Stormhammer
+                spellInfo->AttributesEx2 |= SPELL_ATTR2_CAN_TARGET_NOT_IN_LOS;
                 break;
             case 62039: // Hodir - Biting Cold - Remove on Move
                 spellInfo->AuraInterruptFlags |= AURA_INTERRUPT_FLAG_MOVE;
@@ -3336,6 +3341,7 @@ void SpellMgr::LoadDbcDataCorrections()
             case 62716: // Growth of Nature (Freya)
             case 65584: // Growth of Nature (Freya)
             case 64381: // Strength of the Pack (Auriaya)
+            case 62505: // Harpoon Shot
                 spellInfo->AttributesEx3 |= SPELL_ATTR3_STACK_FOR_DIFF_CASTERS;
                 break;
             //case 62834: // Boom (XT-002)

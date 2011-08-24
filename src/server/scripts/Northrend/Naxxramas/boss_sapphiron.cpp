@@ -132,7 +132,7 @@ public:
             CheckPlayersFrostResist();
         }
 
-        void SpellHitTarget(Unit* target, const SpellInfo *spell)
+        void SpellHitTarget(Unit* target, SpellInfo const* spell)
         {
             if (spell->Id == SPELL_ICEBOLT)
             {
@@ -172,7 +172,7 @@ public:
                 events.ScheduleEvent(EVENT_LIFTOFF, 0);
         }
 
-        void DoAction(const int32 param)
+        void DoAction(int32 const param)
         {
             if (param == DATA_SAPPHIRON_BIRTH)
             {
@@ -221,7 +221,7 @@ public:
             iceblocks.clear();
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             if (!phase)
                 return;
@@ -253,7 +253,7 @@ public:
                             DoCast(me, SPELL_BERSERK);
                             return;
                         case EVENT_CLEAVE:
-                            DoCast(me->getVictim(), SPELL_CLEAVE);
+                            DoCastVictim(SPELL_CLEAVE);
                             events.ScheduleEvent(EVENT_CLEAVE, 5000+rand()%10000, 0, PHASE_GROUND);
                             return;
                         case EVENT_TAIL:
@@ -267,9 +267,11 @@ public:
                         case EVENT_BLIZZARD:
                         {
                             //DoCastAOE(SPELL_SUMMON_BLIZZARD);
-                            Unit *target = SelectTarget(SELECT_TARGET_RANDOM,1);
-                            if (!target) target = me->getVictim();
-                            if (Creature *pSummon = DoSummon(MOB_BLIZZARD, target, 0.0f, 20000, TEMPSUMMON_TIMED_DESPAWN))
+                            Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1);
+                            if (!target)
+                                target = me->getVictim();
+                            if (Creature* Summon = DoSummon(MOB_BLIZZARD, target, 0.0f, 20000, TEMPSUMMON_TIMED_DESPAWN))
+                                Summon->GetMotionMaster()->MoveRandom(40);
                             events.ScheduleEvent(EVENT_BLIZZARD, RAID_MODE(20000, 7000), 0, PHASE_GROUND);
                             break;
                         }
@@ -352,8 +354,8 @@ public:
                             me->SetReactState(REACT_AGGRESSIVE);
                             return;
                     }
-                }//if (uint32 eventId = events.ExecuteEvent())
-            }//if (phase == PHASE_GROUND)
+                }
+            }
         }
 
         void CastExplosion()
@@ -376,12 +378,11 @@ public:
 
                 for (IceBlockMap::const_iterator itr = iceblocks.begin(); itr != iceblocks.end(); ++itr)
                 {
-                    if (GameObject* pGo = GameObject::GetGameObject(*me, itr->second))
+                    if (GameObject* go = GameObject::GetGameObject(*me, itr->second))
                     {
-                        float angle = me->GetAngle(pGo) - me->GetAngle(target);
-                        float dist = me->GetExactDist2d(target->GetPositionX(), target->GetPositionY()) - me->GetExactDist2d(pGo->GetPositionX(), pGo->GetPositionY());
-                        //if (pGo->IsInBetween(me, pTarget, 2.0f)
-                        //    && me->GetExactDist2d(pTarget->GetPositionX(), pTarget->GetPositionY()) - me->GetExactDist2d(pGo->GetPositionX(), pGo->GetPositionY()) < 5.0f)
+                        float angle = me->GetAngle(go) - me->GetAngle(target);
+                        float dist = me->GetExactDist2d(target->GetPositionX(), target->GetPositionY()) - me->GetExactDist2d(go->GetPositionX(), go->GetPositionY());
+
                         if (angle > -0.04f && angle < 0.04f && dist < 5.0f && dist >= 0.0f)
                         {
                             target->ApplySpellImmune(0, IMMUNITY_ID, SPELL_FROST_EXPLOSION, true);
