@@ -201,6 +201,7 @@ public:
 
 enum eArgentValiant
 {
+    SPELL_THRUST                = 62544,
     SPELL_CHARGE                = 63010,
     SPELL_SHIELD_BREAKER        = 65147,
 
@@ -270,7 +271,11 @@ public:
                 uiShieldBreakerTimer = 10000;
             } else uiShieldBreakerTimer -= uiDiff;
 
-            DoMeleeAttackIfReady();
+            if (me->isAttackReady())
+            {
+                DoCast(me->getVictim(), SPELL_THRUST, true);
+                me->resetAttackTimer();
+            }
         }
     };
 
@@ -1517,7 +1522,7 @@ public:
     {
         npc_tournament_dummyAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature){ }
 
-                uint32 ResetTimer;
+        uint32 ResetTimer;
 
         void Reset()
         {
@@ -1691,14 +1696,15 @@ public:
 };
 
 /*######
-## npc_faction_valiant
+## npc_faction_valiant_champion
 ######*/
 
 /*
-UPDATE creature_template SET scriptname = 'npc_faction_valiant' WHERE entry IN (33559,33562,33558,33564,33306,33285,33382,33561,33383,33384);
+UPDATE creature_template SET scriptname = 'npc_faction_valiant_champion' WHERE entry IN (33559,33562,33558,33564,33306,33285,33382,33561,33383,33384);
+UPDATE creature_template SET scriptname = 'npc_faction_valiant_champion' WHERE entry IN (33738,33739,33740,33743,33744,33745,33746,33747,33748,33749);
 */
 
-enum eFactionValiant
+enum eFactionValiantChampion
 {
     //SPELL_CHARGE                = 63010,
     //SPELL_SHIELD_BREAKER        = 65147,
@@ -1708,6 +1714,8 @@ enum eFactionValiant
     SPELL_GIVE_VALIANT_MARK_3 = 62771,
     SPELL_GIVE_VALIANT_MARK_4 = 62995,
     SPELL_GIVE_VALIANT_MARK_5 = 62996,
+
+    SPELL_GIVE_CHAMPION_MARK  = 63596,
 
     QUEST_THE_GRAND_MELEE_0     = 13665,
     QUEST_THE_GRAND_MELEE_1     = 13745,
@@ -1719,18 +1727,23 @@ enum eFactionValiant
     QUEST_THE_GRAND_MELEE_7     = 13777,
     QUEST_THE_GRAND_MELEE_8     = 13782,
     QUEST_THE_GRAND_MELEE_9     = 13787,
+
+    QUEST_AMONG_THE_CHAMPIONS_0 = 13790,
+    QUEST_AMONG_THE_CHAMPIONS_1 = 13793,
+    QUEST_AMONG_THE_CHAMPIONS_2 = 13811,
+    QUEST_AMONG_THE_CHAMPIONS_3 = 13814,
 };
 
 #define GOSSIP_MELEE_FIGHT      "I'am ready to fight!"
 
-class npc_faction_valiant : public CreatureScript
+class npc_faction_valiant_champion : public CreatureScript
 {
 public:
-    npc_faction_valiant() : CreatureScript("npc_faction_valiant") { }
+    npc_faction_valiant_champion() : CreatureScript("npc_faction_valiant_champion") { }
 
-    struct npc_faction_valiantAI : public ScriptedAI
+    struct npc_faction_valiant_championAI : public ScriptedAI
     {
-        npc_faction_valiantAI(Creature* creature) : ScriptedAI(creature)
+        npc_faction_valiant_championAI(Creature* creature) : ScriptedAI(creature)
         {
         }
 
@@ -1765,7 +1778,39 @@ public:
             if (uiDamage > me->GetHealth() && pDoneBy->GetTypeId() == TYPEID_PLAYER)
             {
                 uiDamage = 0;
-                pDoneBy->CastSpell(pDoneBy,SPELL_GIVE_VALIANT_MARK_1,true);
+
+                switch(me->GetEntry())
+                {
+                case 33559: // Darnassus
+                case 33562: // Exodar
+                case 33558: // Gnomeregan
+                case 33564: // Ironforge
+                case 33306: // Orgrimmar
+                case 33285: // Sen'jin
+                case 33382: // Silvermoon
+                case 33561: // Stormwind
+                case 33383: // Thunder Bluff
+                case 33384: // Undercity
+                    {
+                        pDoneBy->CastSpell(pDoneBy,SPELL_GIVE_VALIANT_MARK_1,true);
+                        break;
+                    }
+                case 33738: // Darnassus
+                case 33739: // Exodar
+                case 33740: // Gnomeregan
+                case 33743: // Ironforge
+                case 33744: // Orgrimmar
+                case 33745: // Sen'jin
+                case 33746: // Silvermoon
+                case 33747: // Stormwind
+                case 33748: // Thunder Bluff
+                case 33749: // Undercity
+                    {
+                        pDoneBy->CastSpell(pDoneBy,SPELL_GIVE_CHAMPION_MARK,true);
+                        break;
+                    }
+                }
+
                 me->setFaction(35);
                 EnterEvadeMode();
             }
@@ -1788,31 +1833,73 @@ public:
                 uiShieldBreakerTimer = 10000;
             } else uiShieldBreakerTimer -= uiDiff;
 
-            DoMeleeAttackIfReady();
+            if (me->isAttackReady())
+            {
+                DoCast(me->getVictim(), SPELL_THRUST, true);
+                me->resetAttackTimer();
+            }
         }
     };
 
     CreatureAI *GetAI(Creature* creature) const
     {
-        return new npc_faction_valiantAI(creature);
+        return new npc_faction_valiant_championAI(creature);
     }
 
     bool OnGossipHello(Player* player, Creature* creature)
     {
-        if( player->HasAura(63151) &&
-            ((player->GetQuestStatus(QUEST_THE_GRAND_MELEE_0) == QUEST_STATUS_INCOMPLETE) ||
-            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_1) == QUEST_STATUS_INCOMPLETE) ||
-            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_2) == QUEST_STATUS_INCOMPLETE) ||
-            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_3) == QUEST_STATUS_INCOMPLETE) ||
-            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_4) == QUEST_STATUS_INCOMPLETE) ||
-            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_5) == QUEST_STATUS_INCOMPLETE) ||
-            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_6) == QUEST_STATUS_INCOMPLETE) ||
-            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_7) == QUEST_STATUS_INCOMPLETE) ||
-            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_8) == QUEST_STATUS_INCOMPLETE) ||
-            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_9) == QUEST_STATUS_INCOMPLETE)))
+        switch(creature->GetEntry())
         {
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MELEE_FIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        case 33559: // Darnassus
+        case 33562: // Exodar
+        case 33558: // Gnomeregan
+        case 33564: // Ironforge
+        case 33306: // Orgrimmar
+        case 33285: // Sen'jin
+        case 33382: // Silvermoon
+        case 33561: // Stormwind
+        case 33383: // Thunder Bluff
+        case 33384: // Undercity
+            {
+                if( player->HasAura(63034) &&
+                    ((player->GetQuestStatus(QUEST_THE_GRAND_MELEE_0) == QUEST_STATUS_INCOMPLETE) ||
+                    (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_1) == QUEST_STATUS_INCOMPLETE) ||
+                    (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_2) == QUEST_STATUS_INCOMPLETE) ||
+                    (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_3) == QUEST_STATUS_INCOMPLETE) ||
+                    (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_4) == QUEST_STATUS_INCOMPLETE) ||
+                    (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_5) == QUEST_STATUS_INCOMPLETE) ||
+                    (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_6) == QUEST_STATUS_INCOMPLETE) ||
+                    (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_7) == QUEST_STATUS_INCOMPLETE) ||
+                    (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_8) == QUEST_STATUS_INCOMPLETE) ||
+                    (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_9) == QUEST_STATUS_INCOMPLETE)))
+                {
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MELEE_FIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+                }
+                break;
+            }
+        case 33738: // Darnassus
+        case 33739: // Exodar
+        case 33740: // Gnomeregan
+        case 33743: // Ironforge
+        case 33744: // Orgrimmar
+        case 33745: // Sen'jin
+        case 33746: // Silvermoon
+        case 33747: // Stormwind
+        case 33748: // Thunder Bluff
+        case 33749: // Undercity
+             {
+                if( player->HasAura(63034) &&
+                    ((player->GetQuestStatus(QUEST_AMONG_THE_CHAMPIONS_0) == QUEST_STATUS_INCOMPLETE) ||
+                    (player->GetQuestStatus(QUEST_AMONG_THE_CHAMPIONS_1) == QUEST_STATUS_INCOMPLETE) ||
+                    (player->GetQuestStatus(QUEST_AMONG_THE_CHAMPIONS_2) == QUEST_STATUS_INCOMPLETE) ||
+                    (player->GetQuestStatus(QUEST_AMONG_THE_CHAMPIONS_3) == QUEST_STATUS_INCOMPLETE)))
+                {
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MELEE_FIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                }
+                break;
+            }
         }
+
         player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
         return true;
     }
@@ -1825,6 +1912,14 @@ public:
         {
             creature->setFaction(14);
             creature->AI()->AttackStart(player);
+            return true;
+        }
+
+        if (uiAction == GOSSIP_ACTION_INFO_DEF + 2)
+        {
+            creature->setFaction(14);
+            creature->AI()->AttackStart(player);
+            return true;
         }
         return true;
     }
@@ -2068,7 +2163,11 @@ public:
                 uiShieldBreakerTimer = 10000;
             } else uiShieldBreakerTimer -= uiDiff;
 
-            DoMeleeAttackIfReady();
+            if (me->isAttackReady())
+            {
+                DoCast(me->getVictim(), SPELL_THRUST, true);
+                me->resetAttackTimer();
+            }
         }
     };
 
@@ -2097,7 +2196,7 @@ void AddSC_icecrown()
     new spell_tournament_defend();
     new npc_tournament_dummy();
     new npc_vendor_tournament_fraction_champion();
-    new npc_faction_valiant();
+    new npc_faction_valiant_champion();
     new npc_maiden_of_drakmar();
     new npc_squire_danny();
     new npc_argent_champion();

@@ -101,38 +101,37 @@ INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type
 (@NPC_MoC,0,2,3,61,0,100,0,0,0,0,0,11,64114,2,0,0,0,0,7,0,0,0,0,0,0,0,'Rugan Steelbelly - on Gossip select - give Kill Credit'),
 (@NPC_MoC,0,3,0,61,0,100,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,0,0,'Rugan Steelbelly - on Gossip select - Boss Emote to Player');
 
-DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=15 AND `SourceGroup` IN (@G_MoM_0,@G_MoM_1,@G_MoSB_0,@G_MoSB_1,@G_MoC_0,@G_MoC_1) AND `ConditionTypeOrReference` IN (1,9);   -- more delete conditions because of existing conditions of these quests
-DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=15 AND `SourceGroup` IN (@G_MoM_1,@G_MoSB_1,@G_MoC_1) AND `ConditionTypeOrReference` IN (1,8);
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=15 AND `SourceGroup` IN (@G_MoM_0,@G_MoM_1,@G_MoSB_0,@G_MoSB_1,@G_MoC_0,@G_MoC_1);
 INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceGroup`,`SourceEntry`,`ElseGroup`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`ConditionValue3`,`ErrorTextId`,`ScriptName`,`Comment`) VALUES
 (15,@G_MoM_0,0,0,9,13828,0,0,0,'','show Gossip Option if Player has taken Quest 13828'),
-(15,@G_MoM_0,0,0,1,63151,1,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
+(15,@G_MoM_0,0,0,1,63034,0,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
 (15,@G_MoM_0,0,1,9,13829,0,0,0,'','show Gossip Option if Player has taken Quest 13829'),
-(15,@G_MoM_0,0,1,1,63151,1,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
+(15,@G_MoM_0,0,1,1,63034,0,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
  
 (15,@G_MoSB_0,0,0,9,13835,0,0,0,'','show Gossip Option if Player has taken Quest 13835'),
-(15,@G_MoSB_0,0,0,1,63151,1,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
+(15,@G_MoSB_0,0,0,1,63034,0,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
 (15,@G_MoSB_0,0,1,9,13838,0,0,0,'','show Gossip Option if Player has taken Quest 13838'),
-(15,@G_MoSB_0,0,1,1,63151,0,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
+(15,@G_MoSB_0,0,1,1,63034,0,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
  
 (15,@G_MoC_0,0,0,9,13837,0,0,0,'','show Gossip Option if Player has taken Quest 13837'),
-(15,@G_MoC_0,0,0,1,63151,1,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
+(15,@G_MoC_0,0,0,1,63034,0,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
 (15,@G_MoC_0,0,1,9,13839,0,0,0,'','show Gossip Option if Player has taken Quest 13839'),
-(15,@G_MoC_0,0,1,1,63151,1,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
+(15,@G_MoC_0,0,1,1,63034,0,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
  
 (15,@G_MoM_1,0,0,8,13828,0,0,0,'','show Gossip Option if Player has rewarded Quest 13828'),
-(15,@G_MoM_1,0,0,1,63151,1,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
+(15,@G_MoM_1,0,0,1,63034,0,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
 (15,@G_MoM_1,0,1,8,13829,0,0,0,'','show Gossip Option if Player has rewarded Quest 13829'),
-(15,@G_MoM_1,0,1,1,63151,1,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
+(15,@G_MoM_1,0,1,1,63034,0,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
  
 (15,@G_MoSB_1,0,0,8,13835,0,0,0,'','show Gossip Option if Player has rewarded Quest 13835'),
-(15,@G_MoSB_1,0,0,1,63151,1,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
+(15,@G_MoSB_1,0,0,1,63034,0,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
 (15,@G_MoSB_1,0,1,8,13838,0,0,0,'','show Gossip Option if Player has rewarded Quest 13838'),
-(15,@G_MoSB_1,0,1,1,63151,0,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
+(15,@G_MoSB_1,0,1,1,63034,0,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
  
 (15,@G_MoC_1,0,0,8,13837,0,0,0,'','show Gossip Option if Player has rewarded Quest 13837'),
-(15,@G_MoC_1,0,0,1,63151,1,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
+(15,@G_MoC_1,0,0,1,63034,0,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
 (15,@G_MoC_1,0,1,8,13839,0,0,0,'','show Gossip Option if Player has rewarded Quest 13839'),
-(15,@G_MoC_1,0,1,1,63151,1,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle');
+(15,@G_MoC_1,0,1,1,63034,0,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle');
 
 
 -- ## Dailys
@@ -1002,6 +1001,7 @@ INSERT INTO conditions VALUES
 (17,0,63429,0,9,13782,0,0,0,'','Undercity Valiant');
 
 -- Champion Spellaura on Vehicle Quest: Among the Champions
+/*
 DELETE FROM spell_linked_spell WHERE spell_trigger IN (63151,-63151);
 INSERT INTO spell_linked_spell VALUES
 (63151,63406,0,'Darnassus Champion'),
@@ -1037,6 +1037,7 @@ INSERT INTO conditions VALUES
 (17,0,62594,0,9,13790,0,0,0,'','Stormwind Champion'),
 (17,0,63436,0,9,13811,0,0,0,'','Thunder Bluff Champion'),
 (17,0,63430,0,9,13811,0,0,0,'','Undercity Champion'),
+
 (17,0,63406,1,9,13793,0,0,0,'','Darnassus Champion'),
 (17,0,63423,1,9,13793,0,0,0,'','Exodar Champion'),
 (17,0,63396,1,9,13793,0,0,0,'','Gnomeregan Champion'),
@@ -1047,6 +1048,7 @@ INSERT INTO conditions VALUES
 (17,0,62594,1,9,13793,0,0,0,'','Stormwind Champion'),
 (17,0,63436,1,9,13814,0,0,0,'','Thunder Bluff Champion'),
 (17,0,63430,1,9,13814,0,0,0,'','Undercity Champion');
+*/
 
 -- The Black Knight Questline
 -- The Black Knight of Silverpine? ... Prev: The Argent Tournament ... NextQuestInLine: The Seer's Crystal
