@@ -2793,17 +2793,6 @@ void SpellMgr::LoadSpellCustomAttr()
                 spellInfo->AttributesCu |= SPELL_ATTR0_CU_DIRECT_DAMAGE; // spellInfo->AttributesEx4 |= SPELL_ATTR4_FIXED_DAMAGE;
                 spellInfo->AttributesCu |= SPELL_ATTR0_CU_IGNORE_ARMOR;
                 break;
-            case 64218: // Emalon - Overcharge
-            case 64216: // Emalon - Lightning Nova
-            case 65279: // Emalon - Lightning Nova
-            case 62016: // Thorim - Charge Orb
-            case 65210: // Keeper Mimiron Destabilization Matrix - Ignore LoS (because Mimiron stands in a Tube and is out of LoS)
-            case 62042: // Thorim - Stormhammer
-            case 62521: // Freya - Attuned to Nature 25 Dose Reduction
-            case 62524: // Freya - Attuned to Nature 2 Dose Reduction
-            case 62525: // Freya - Attuned to Nature 10 Dose Reduction
-                spellInfo->AttributesEx2 |= SPELL_ATTR2_CAN_TARGET_NOT_IN_LOS;
-                break;
             case 18500: // Wing Buffet
             case 33086: // Wild Bite
             case 28375: // Decimate
@@ -3333,6 +3322,7 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->AttributesEx6 |= SPELL_ATTR6_CAN_TARGET_UNTARGETABLE;
                 break;
             case 62017: // Thorim - Lightning Shock
+            case 62042: // Thorim - Stormhammer
                 spellInfo->AttributesEx2 |= SPELL_ATTR2_CAN_TARGET_NOT_IN_LOS;
                 break;
             case 62039: // Hodir - Biting Cold - Remove on Move
