@@ -118,19 +118,19 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceGroup`,`SourceEntry`,
 (15,@G_MoC_0,0,1,9,13839,0,0,0,'','show Gossip Option if Player has taken Quest 13839'),
 (15,@G_MoC_0,0,1,1,63034,0,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
  
-(15,@G_MoM_1,0,0,8,13828,0,0,0,'','show Gossip Option if Player has rewarded Quest 13828'),
+(15,@G_MoM_1,0,0,9,13828,0,0,0,'','show Gossip Option if Player has rewarded Quest 13828'),
 (15,@G_MoM_1,0,0,1,63034,0,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
-(15,@G_MoM_1,0,1,8,13829,0,0,0,'','show Gossip Option if Player has rewarded Quest 13829'),
+(15,@G_MoM_1,0,1,9,13829,0,0,0,'','show Gossip Option if Player has rewarded Quest 13829'),
 (15,@G_MoM_1,0,1,1,63034,0,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
  
-(15,@G_MoSB_1,0,0,8,13835,0,0,0,'','show Gossip Option if Player has rewarded Quest 13835'),
+(15,@G_MoSB_1,0,0,9,13835,0,0,0,'','show Gossip Option if Player has rewarded Quest 13835'),
 (15,@G_MoSB_1,0,0,1,63034,0,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
-(15,@G_MoSB_1,0,1,8,13838,0,0,0,'','show Gossip Option if Player has rewarded Quest 13838'),
+(15,@G_MoSB_1,0,1,9,13838,0,0,0,'','show Gossip Option if Player has rewarded Quest 13838'),
 (15,@G_MoSB_1,0,1,1,63034,0,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
  
-(15,@G_MoC_1,0,0,8,13837,0,0,0,'','show Gossip Option if Player has rewarded Quest 13837'),
+(15,@G_MoC_1,0,0,9,13837,0,0,0,'','show Gossip Option if Player has rewarded Quest 13837'),
 (15,@G_MoC_1,0,0,1,63034,0,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle'),
-(15,@G_MoC_1,0,1,8,13839,0,0,0,'','show Gossip Option if Player has rewarded Quest 13839'),
+(15,@G_MoC_1,0,1,9,13839,0,0,0,'','show Gossip Option if Player has rewarded Quest 13839'),
 (15,@G_MoC_1,0,1,1,63034,0,0,0,'','show Gossip Option if Player has Aura: Ride Vehicle');
 
 
