@@ -1741,7 +1741,7 @@ public:
             uiChargeTimer = 7000;
             uiShieldBreakerTimer = 10000;
 
-            me->setFaction(35); 
+            me->setFaction(35);
         }
 
         void EnterCombat(Unit* attacker)
@@ -1874,7 +1874,7 @@ public:
         {
             me->SetFlying(true); // cosmetic workaround
         }
-       
+
         uint32 uiSayTimer;
         uint8 uiSayStep;
 
@@ -1903,9 +1903,9 @@ public:
                         break;
                     case 2:
                         me->MonsterSay(SAY_3,LANG_UNIVERSAL,0);
-                       uiSayTimer = 7000;
+                        uiSayTimer = 7000;
                         ++uiSayStep;
-                    break;
+                        break;
                     case 3:
                         me->SummonGameObject(GO_BLADE_OF_DRAKMAR, miscLocations[1].GetPositionX(),miscLocations[1].GetPositionY(),miscLocations[1].GetPositionZ(),miscLocations[1].GetOrientation(),0,0,0,0,30000);
                         me->MonsterSay(SAY_4,LANG_UNIVERSAL,0);
@@ -1966,7 +1966,7 @@ public:
 
     bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
-        if (pPlayer->HasAura(63151) 
+        if (pPlayer->HasAura(63151)
             && ((pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_HORDE_UNDERCITY) == QUEST_STATUS_INCOMPLETE)
             || (pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_HORDE_SENJIN) == QUEST_STATUS_INCOMPLETE)
             || (pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_HORDE_THUNDERBLUFF) == QUEST_STATUS_INCOMPLETE)

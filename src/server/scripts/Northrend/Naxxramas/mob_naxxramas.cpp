@@ -1645,29 +1645,30 @@ public:
                     switch(type)
                     {
                     case MEAXXNA:
-                        if( pInstance->GetData(BOSS_MAEXXNA) == DONE)
+                        if (pInstance->GetData(BOSS_MAEXXNA) == DONE)
                             me->SetVisible(true);
                         else me->SetVisible(false);
                         break;
                     case THADDIUS:
-                        if( pInstance->GetData(BOSS_THADDIUS) == DONE)
+                        if (pInstance->GetData(BOSS_THADDIUS) == DONE)
                             me->SetVisible(true);
                         else me->SetVisible(false);
                         break;
                     case FOURHORSEMEN:
-                        if( pInstance->GetData(BOSS_HORSEMEN) == DONE)
+                        if (pInstance->GetData(BOSS_HORSEMEN) == DONE)
                             me->SetVisible(true);
                         else me->SetVisible(false);
                         break;
                     case LOATHEB:
-                        if( pInstance->GetData(BOSS_LOATHEB) == DONE)
+                        if (pInstance->GetData(BOSS_LOATHEB) == DONE)
                             me->SetVisible(true);
                         else me->SetVisible(false);
                         break;
                     case SAPPHIRON:
-                        if( pInstance->GetData(BOSS_SAPPHIRON) != IN_PROGRESS)
+                        if (pInstance->GetData(BOSS_SAPPHIRON) != IN_PROGRESS)
                             me->SetVisible(true);
                         else me->SetVisible(false);
+                        break;
                     default: me->SetVisible(false);
                     }
                 }
