@@ -1432,35 +1432,37 @@ class spell_tournament_defend : public SpellScriptLoader
 
             void OnStackChange(AuraEffect const* aurEff, AuraEffectHandleModes mode)
             {
-                if(Unit* target = GetTarget())
-                {
-                    target->RemoveAurasDueToSpell(63130);
-                    target->RemoveAurasDueToSpell(63131);
-                    target->RemoveAurasDueToSpell(63132);
-
-                    switch(GetStackAmount())
+                if(GetCaster())
+                    if(Unit* caster = GetCaster()->GetCharmerOrOwnerOrSelf())
                     {
-                    case 1:
-                        target->CastSpell(target,63130,true,0,aurEff);
-                        break;
-                    case 2:
-                        target->CastSpell(target,63131,true,0,aurEff);
-                        break;
-                    case 3:
-                        target->CastSpell(target,63132,true,0,aurEff);
-                        break;
+                        caster->RemoveAurasDueToSpell(63130);
+                        caster->RemoveAurasDueToSpell(63131);
+                        caster->RemoveAurasDueToSpell(63132);
+
+                        switch(GetStackAmount())
+                        {
+                        case 1:
+                            caster->CastSpell(caster,63130,true,0,aurEff);
+                            break;
+                        case 2:
+                            caster->CastSpell(caster,63131,true,0,aurEff);
+                            break;
+                        case 3:
+                            caster->CastSpell(caster,63132,true,0,aurEff);
+                            break;
+                        }
                     }
-                }
             }
 
             void OnAuraRemoved(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
             {
-                if(Unit* target = GetTarget())
-                {
-                    target->RemoveAurasDueToSpell(63130);
-                    target->RemoveAurasDueToSpell(63131);
-                    target->RemoveAurasDueToSpell(63132);
-                }
+                if(GetCaster())
+                    if(Unit* caster = GetCaster()->GetCharmerOrOwnerOrSelf())
+                    {
+                        caster->RemoveAurasDueToSpell(63130);
+                        caster->RemoveAurasDueToSpell(63131);
+                        caster->RemoveAurasDueToSpell(63132);
+                    }
             }
 
             void Register()
