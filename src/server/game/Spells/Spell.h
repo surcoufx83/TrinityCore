@@ -706,9 +706,9 @@ namespace Trinity
                         // can't be checked in SpellInfo::CheckTarget - needs more research
                         if (target->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE))
                             continue;
-                        /***************************/
                         if (target->HasUnitState(UNIT_STAT_UNATTACKABLE))
                             continue;
+                        /***************************/
                         if (target->IsVehicle() && target->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE))
                             continue;
                         /***************************/
