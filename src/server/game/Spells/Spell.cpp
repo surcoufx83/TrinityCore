@@ -609,8 +609,8 @@ void Spell::InitExplicitTargets(SpellCastTargets const& targets)
     // this also makes sure that we correctly send explicit targets to client (removes redundant data)
     uint32 neededTargets = m_spellInfo->GetExplicitTargetMask();
 
-    // check if spell needs unit target
-    if (neededTargets & TARGET_FLAG_UNIT_MASK)
+    // check if spell needs unit target (allow spells with corpse flag to accept unit targets - unit target is sent by client when corpse not yet released)
+    if (neededTargets & (TARGET_FLAG_UNIT_MASK | TARGET_FLAG_CORPSE_MASK))
     {
         Unit* target = targets.GetUnitTarget();
 
@@ -722,7 +722,6 @@ void Spell::SelectSpellTargets()
                     break;
                 }
                 case SPELL_EFFECT_BIND:
-                case SPELL_EFFECT_RESURRECT:
                 case SPELL_EFFECT_CREATE_ITEM:
                 case SPELL_EFFECT_TRIGGER_SPELL:
                 case SPELL_EFFECT_SKILL_STEP:
@@ -747,6 +746,7 @@ void Spell::SelectSpellTargets()
                             AddUnitTarget(target, i, false);
                     }
                     break;
+                case SPELL_EFFECT_RESURRECT:
                 case SPELL_EFFECT_RESURRECT_NEW:
                     if (m_targets.GetUnitTarget())
                         AddUnitTarget(m_targets.GetUnitTarget(), i, false);
@@ -6414,6 +6414,7 @@ bool Spell::CheckEffectTarget(Unit const* target, uint32 eff) const
     //Check targets for LOS visibility (except spells without range limitations)
     switch(m_spellInfo->Effects[eff].Effect)
     {
+        case SPELL_EFFECT_RESURRECT:
         case SPELL_EFFECT_RESURRECT_NEW:
             // player far away, maybe his corpse near?
             if (target != m_caster && !target->IsWithinLOSInMap(m_caster))

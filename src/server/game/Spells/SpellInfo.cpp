@@ -530,7 +530,11 @@ bool SpellEffectInfo::IsAreaAuraEffect() const
 
 bool SpellEffectInfo::IsFarUnitTargetEffect() const
 {
-    return Effect == SPELL_EFFECT_SUMMON_PLAYER;
+    if (Effect == SPELL_EFFECT_RESURRECT     ||
+        Effect == SPELL_EFFECT_RESURRECT_NEW ||
+        Effect == SPELL_EFFECT_SUMMON_PLAYER)
+        return true;
+    return false;
 }
 
 bool SpellEffectInfo::IsFarDestTargetEffect() const
