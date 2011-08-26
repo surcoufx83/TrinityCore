@@ -722,7 +722,6 @@ void Spell::SelectSpellTargets()
                     break;
                 }
                 case SPELL_EFFECT_BIND:
-                case SPELL_EFFECT_RESURRECT:
                 case SPELL_EFFECT_CREATE_ITEM:
                 case SPELL_EFFECT_TRIGGER_SPELL:
                 case SPELL_EFFECT_SKILL_STEP:
@@ -747,6 +746,7 @@ void Spell::SelectSpellTargets()
                             AddUnitTarget(target, i, false);
                     }
                     break;
+                case SPELL_EFFECT_RESURRECT:
                 case SPELL_EFFECT_RESURRECT_NEW:
                     if (m_targets.GetUnitTarget())
                         AddUnitTarget(m_targets.GetUnitTarget(), i, false);
@@ -6414,6 +6414,7 @@ bool Spell::CheckEffectTarget(Unit const* target, uint32 eff) const
     //Check targets for LOS visibility (except spells without range limitations)
     switch(m_spellInfo->Effects[eff].Effect)
     {
+        case SPELL_EFFECT_RESURRECT:
         case SPELL_EFFECT_RESURRECT_NEW:
             // player far away, maybe his corpse near?
             if (target != m_caster && !target->IsWithinLOSInMap(m_caster))
