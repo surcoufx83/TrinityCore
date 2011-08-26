@@ -3365,8 +3365,9 @@ void SpellMgr::LoadDbcDataCorrections()
             // effect and implement a script hack for that.
             //    spellInfo->Effect[EFFECT_1] = 0;
             //    break;
+            case 62899: // Razorscale - Summon Mole Machine
             case 64600: // Freya - Nature Bomb (GO Visual)
-                spellInfo->DurationIndex = 38;
+                spellInfo->DurationIndex = 38; // 11 seconds
                 break;
             case 62056: // Kologarn - some Stone Grip related Spells that have SPELL_ATTR1_IGNORE_IMMUNITY (NYI?)
             case 63985:

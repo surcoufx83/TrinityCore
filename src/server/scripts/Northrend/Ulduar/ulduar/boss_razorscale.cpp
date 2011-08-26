@@ -762,7 +762,6 @@ class npc_mole_machine_trigger : public CreatureScript
             {
                 SummonGobTimer = 2000;
                 SummonNpcTimer = 6000;
-                DissapearTimer = 10000;
                 GobSummoned = false;
                 NpcSummoned = false;
             }
@@ -772,17 +771,17 @@ class npc_mole_machine_trigger : public CreatureScript
                 summons.DespawnAll();
             }
 
-            void UpdateAI(uint32 const Diff)
+            void UpdateAI(uint32 const diff)
             {
-                if (!GobSummoned && SummonGobTimer <= Diff)
+                if (!GobSummoned && SummonGobTimer <= diff)
                 {
                     DoCast(SPELL_SUMMON_MOLE_MACHINE);
                     GobSummoned = true;
                 }
                 else
-                    SummonGobTimer -= Diff;
+                    SummonGobTimer -= diff;
 
-                if (!NpcSummoned && SummonNpcTimer <= Diff)
+                if (!NpcSummoned && SummonNpcTimer <= diff)
                 {
                     switch (urand(0, 1 ))
                     {
@@ -799,15 +798,7 @@ class npc_mole_machine_trigger : public CreatureScript
                     NpcSummoned = true;
                 }
                 else
-                    SummonNpcTimer -= Diff;
-
-                if (DissapearTimer <= Diff)
-                {
-                    if (GameObject* molemachine = me->FindNearestGameObject(GO_MOLE_MACHINE, 1))
-                        molemachine->Delete();
-                }
-                else
-                    DissapearTimer -= Diff;
+                    SummonNpcTimer -= diff;
             }
 
             void JustSummoned(Creature* summoned)
