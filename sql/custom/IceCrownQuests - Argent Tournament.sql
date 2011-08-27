@@ -1090,3 +1090,8 @@ VALUES
 DELETE FROM `creature_template_addon` WHERE `entry` IN (33707);
 INSERT INTO `creature_template_addon` (`entry`,`path_id`,`mount`,`bytes1`,`bytes2`,`emote`,`auras`) VALUES
 (33707,0,28919,0,0,0,''); -- Argent Champion - Mount
+
+-- The Scourgebane - DK only
+UPDATE quest_template SET SkillOrClassMask = -32 WHERE entry = 13795;
+-- Eradic the Pure - DK forbitten
+UPDATE quest_template SET SkillOrClassMask = -1503 WHERE entry = 13794;
