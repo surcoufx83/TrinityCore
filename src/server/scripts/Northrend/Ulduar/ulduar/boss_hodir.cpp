@@ -162,7 +162,8 @@ public:
                     if (Creature* iceBlock = helper->SummonCreature(ENTRY_NPC_FLASH_FREEZE_PRE, addLocations[i].x, addLocations[i].y, addLocations[i].z, addLocations[i].o))
                     {
                         helper->AddThreat(me, 5000000.0f);
-                        helper->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_ALL, true);
+                        me->ApplySpellImmune(0, IMMUNITY_ID, RAID_MODE<uint32>(64392, 64679), true);
+                        me->ApplySpellImmune(0, IMMUNITY_ID, RAID_MODE<uint32>(63525, 63526), true);
                     }
             }
         }
@@ -204,11 +205,6 @@ public:
 
         void EnterCombat(Unit* /*who*/)
         {
-            for (SummonList::iterator itr = summons.begin(); itr != summons.end(); ++itr)
-                if (Unit* helper = ObjectAccessor::GetUnit(*me, *itr))
-                    if (helper->isAlive() && helper->GetEntry() != ENTRY_NPC_FLASH_FREEZE_PRE)
-                        helper->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_ALL, false);
-
             _EnterCombat();
             DoScriptText(SAY_AGGRO, me);
             me->SetReactState(REACT_AGGRESSIVE);

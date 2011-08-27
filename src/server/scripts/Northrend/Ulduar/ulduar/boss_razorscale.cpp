@@ -754,7 +754,6 @@ class npc_mole_machine_trigger : public CreatureScript
             SummonList summons;
             uint32 SummonGobTimer;
             uint32 SummonNpcTimer;
-            uint32 DissapearTimer;
             bool GobSummoned;
             bool NpcSummoned;
 
