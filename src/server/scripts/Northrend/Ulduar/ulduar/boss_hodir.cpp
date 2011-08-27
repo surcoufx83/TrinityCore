@@ -156,21 +156,24 @@ public:
             me->SetReactState(REACT_PASSIVE);
 
             // Spawn NPC Helpers
-            for (uint8 i = 0; i < RAID_MODE(NORMAL_COUNT, RAID_COUNT); ++i)
+            for (uint8 i = 0; i < RAID_MODE<uint8>(NORMAL_COUNT, RAID_COUNT); ++i)
             {
-                if (Creature* pHelper = me->SummonCreature(addLocations[i].entry,addLocations[i].x,addLocations[i].y,addLocations[i].z,addLocations[i].o))
-                    if (Creature* pIceBlock = pHelper->SummonCreature(ENTRY_NPC_FLASH_FREEZE_PRE,addLocations[i].x,addLocations[i].y,addLocations[i].z,addLocations[i].o))
-                        pHelper->AddThreat(me, 5000000.0f);
+                if (Creature* helper = me->SummonCreature(addLocations[i].entry, addLocations[i].x, addLocations[i].y, addLocations[i].z, addLocations[i].o))
+                    if (Creature* iceBlock = helper->SummonCreature(ENTRY_NPC_FLASH_FREEZE_PRE, addLocations[i].x, addLocations[i].y, addLocations[i].z, addLocations[i].o))
+                    {
+                        helper->AddThreat(me, 5000000.0f);
+                        helper->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_ALL, true);
+                    }
             }
         }
 
-        void KilledUnit(Unit * /*victim*/)
+        void KilledUnit(Unit* /*victim*/)
         {
             if (!(rand()%5))
                 DoScriptText(RAND(SAY_SLAY_1, SAY_SLAY_2), me);
         }
 
-        void JustDied(Unit * /*victim*/)
+        void JustDied(Unit* /*victim*/)
         {
             DoScriptText(SAY_DEATH, me);
 
@@ -199,8 +202,13 @@ public:
             _JustDied();
         }
 
-        void EnterCombat(Unit* /*pWho*/)
+        void EnterCombat(Unit* /*who*/)
         {
+            for (SummonList::iterator itr = summons.begin(); itr != summons.end(); ++itr)
+                if (Unit* helper = ObjectAccessor::GetUnit(*me, *itr))
+                    if (helper->isAlive() && helper->GetEntry() != ENTRY_NPC_FLASH_FREEZE_PRE)
+                        helper->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_ALL, false);
+
             _EnterCombat();
             DoScriptText(SAY_AGGRO, me);
             me->SetReactState(REACT_AGGRESSIVE);
@@ -218,7 +226,7 @@ public:
             RareCache = true;
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             if (!UpdateVictim())
                 return;
