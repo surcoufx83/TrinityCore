@@ -234,8 +234,8 @@ INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type
 
 /*DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry`=63006;
 INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceGroup`,`SourceEntry`,`ElseGroup`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`ConditionValue3`,`ErrorTextId`,`ScriptName`,`Comment`) VALUES
-(13,0,63007,0,18,1,33431,0,0,'','Spell: Aggregation Pheromones only target Forest Swarmer (10)'),
-(13,0,63007,1,18,1,33731,0,0,'','Spell: Aggregation Pheromones only target Forest Swarmer (25)');*/ -- doesn't seem to work
+(13,0,63006,0,18,1,33431,0,0,'','Spell: Aggregation Pheromones only target Forest Swarmer (10)'),
+(13,0,63006,1,18,1,33731,0,0,'','Spell: Aggregation Pheromones only target Forest Swarmer (25)');*/ -- doesn't seem to work
 -- Forest Swarmer
 UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`dmg_multiplier`=10,`AIName`='SmartAI' WHERE `entry`=33431;
 UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`dmg_multiplier`=18 WHERE `entry`=33731;
