@@ -167,8 +167,8 @@ INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type
 (34197,0,3,0,0,0,100,2,8000,10000,8000,12000,11,64825,0,0,0,0,0,1,0,0,0,0,0,0,0, 'Chamber Overseer - Cast Staggering Roar 10'),
 (34197,0,4,0,0,0,100,4,8000,10000,8000,12000,11,64944,0,0,0,0,0,1,0,0,0,0,0,0,0, 'Chamber Overseer - Cast Staggering Roar 25');
 -- Displacement Device
-UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`unit_flags`=33554560,`speed_walk`=0.4,`speed_run`=0.6,`dmg_multiplier`=1,`unit_flags`=514,`InhabitType`=1,`MovementType`=0,`AIName`='SmartAI' WHERE `entry`=34203;
-UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`unit_flags`=33554560,`speed_walk`=0.4,`speed_run`=0.6,`dmg_multiplier`=1,`unit_flags`=514,`InhabitType`=1,`MovementType`=0 WHERE `entry`=34227; 
+UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`unit_flags`=33554560,`speed_walk`=0.3,`speed_run`=0.5,`dmg_multiplier`=1,`unit_flags`=514,`InhabitType`=1,`MovementType`=0,`AIName`='SmartAI' WHERE `entry`=34203;
+UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`unit_flags`=33554560,`speed_walk`=0.3,`speed_run`=0.5,`dmg_multiplier`=1,`unit_flags`=514,`InhabitType`=1,`MovementType`=0 WHERE `entry`=34227; 
 DELETE FROM `creature_ai_scripts` WHERE `creature_id`=34203;
 DELETE FROM `smart_scripts` WHERE `entryorguid`=34203;
 INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type`,`event_phase_mask`,`event_chance`,`event_flags`,`event_param1`,`event_param2`,`event_param3`,`event_param4`,`action_type`,`action_param1`,`action_param2`,`action_param3`,`action_param4`,`action_param5`,`action_param6`,`target_type`,`target_param1`,`target_param2`,`target_param3`,`target_x`,`target_y`,`target_z`,`target_o`,`comment`) VALUES
@@ -231,13 +231,23 @@ INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type
 (33430,0,0,0,4,0,100,0,0,0,0,0,11,63007,0,0,0,0,0,1,0,0,0,0,0,0,0, 'Guardian Lasher - on Aggro - Cast Guardian Pheromones'),
 (33430,0,1,0,0,0,100,2,3000,6000,8000,12000,11,63047,0,0,0,0,0,2,0,0,0,0,0,0,0, 'Guardian Lasher - Cast Guardian''s Lash 10'),
 (33430,0,2,0,0,0,100,4,3000,6000,8000,12000,11,63550,0,0,0,0,0,2,0,0,0,0,0,0,0, 'Guardian Lasher - Cast Guardian''s Lash 25');
+
+/*DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry`=63006;
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceGroup`,`SourceEntry`,`ElseGroup`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`ConditionValue3`,`ErrorTextId`,`ScriptName`,`Comment`) VALUES
+(13,0,63007,0,18,1,33431,0,0,'','Spell: Aggregation Pheromones only target Forest Swarmer (10)'),
+(13,0,63007,1,18,1,33731,0,0,'','Spell: Aggregation Pheromones only target Forest Swarmer (25)');*/ -- doesn't seem to work
 -- Forest Swarmer
 UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`dmg_multiplier`=10,`AIName`='SmartAI' WHERE `entry`=33431;
 UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`dmg_multiplier`=18 WHERE `entry`=33731;
 DELETE FROM `creature_ai_scripts` WHERE `creature_id`=33431;
 DELETE FROM `smart_scripts` WHERE `entryorguid`=33431;
 INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type`,`event_phase_mask`,`event_chance`,`event_flags`,`event_param1`,`event_param2`,`event_param3`,`event_param4`,`action_type`,`action_param1`,`action_param2`,`action_param3`,`action_param4`,`action_param5`,`action_param6`,`target_type`,`target_param1`,`target_param2`,`target_param3`,`target_x`,`target_y`,`target_z`,`target_o`,`comment`) VALUES
-(33431,0,0,0,0,0,100,0,3000,9000,10000,20000,11,63059,0,0,0,0,0,9,33430,0,20,0,0,0,0, 'Forest Swarmer - Cast Pollinate on Guardian Lasher');
+(33431,0,0,0,0,0,100,0,3000,4000,6000,8000,11,63059,0,0,0,0,0,9,33430,0,25,0,0,0,0, 'Forest Swarmer - Cast Pollinate on Guardian Lasher');
+
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=17 AND `SourceEntry`=63059;
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceGroup`,`SourceEntry`,`ElseGroup`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`ConditionValue3`,`ErrorTextId`,`ScriptName`,`Comment`) VALUES
+(13,0,63059,0,18,1,33430,0,0,'','Spell: Polite only target Guardian Lasher (10)'),
+(13,0,63059,1,18,1,33732,0,0,'','Spell: Polite only target Guardian Lasher (25)');
 -- Guardian of Life
 UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`dmg_multiplier`=10,`AIName`='SmartAI' WHERE `entry`=33528;
 UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16,`dmg_multiplier`=18 WHERE `entry`=33733;
