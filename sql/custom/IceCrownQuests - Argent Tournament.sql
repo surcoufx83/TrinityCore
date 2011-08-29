@@ -893,16 +893,16 @@ VALUES
 (19,0,14112,0,-2817,0,0,0,0,"","What Do You Feed a Yeti, Anyway? - Daily needs Exalted Champion"),
 (20,0,14112,0,-2817,0,0,0,0,"","What Do You Feed a Yeti, Anyway? - Daily needs Exalted Champion"),
 
-(19,0,13684,0,-2782,0,0,0,0,"","Valiant Of Stormwind - Quest needs Champion"),
-(20,0,13684,0,-2782,0,0,0,0,"","Valiant Of Stormwind - Quest needs Champion"),
-(19,0,13688,0,-2782,0,0,0,0,"","Valiant Of Gnomeregan - Quest needs Champion"),
-(20,0,13688,0,-2782,0,0,0,0,"","Valiant Of Gnomeregan - Quest needs Champion"),
-(19,0,13685,0,-2782,0,0,0,0,"","Valiant Of Ironforge - Quest needs Champion"),
-(20,0,13685,0,-2782,0,0,0,0,"","Valiant Of Ironforge - Quest needs Champion"),
-(19,0,13690,0,-2782,0,0,0,0,"","Valiant Of Exodar - Quest needs Champion"),
-(20,0,13690,0,-2782,0,0,0,0,"","Valiant Of Exodar - Quest needs Champion"),
-(19,0,13689,0,-2782,0,0,0,0,"","Valiant Of Darnassus - Quest needs Champion"),
-(20,0,13689,0,-2782,0,0,0,0,"","Valiant Of Darnassus - Quest needs Champion");
+(19,0,13593,0,-2782,0,0,0,0,"","Valiant Of Stormwind - Quest needs Champion"),
+(20,0,13593,0,-2782,0,0,0,0,"","Valiant Of Stormwind - Quest needs Champion"),
+(19,0,13704,0,-2782,0,0,0,0,"","Valiant Of Gnomeregan - Quest needs Champion"),
+(20,0,13704,0,-2782,0,0,0,0,"","Valiant Of Gnomeregan - Quest needs Champion"),
+(19,0,13703,0,-2782,0,0,0,0,"","Valiant Of Ironforge - Quest needs Champion"),
+(20,0,13703,0,-2782,0,0,0,0,"","Valiant Of Ironforge - Quest needs Champion"),
+(19,0,13705,0,-2782,0,0,0,0,"","Valiant Of Exodar - Quest needs Champion"),
+(20,0,13705,0,-2782,0,0,0,0,"","Valiant Of Exodar - Quest needs Champion"),
+(19,0,13706,0,-2782,0,0,0,0,"","Valiant Of Darnassus - Quest needs Champion"),
+(20,0,13706,0,-2782,0,0,0,0,"","Valiant Of Darnassus - Quest needs Champion");
 
 -- The Sunreavers * The Silver Covenant Quests
 DELETE FROM pool_template WHERE entry IN (34880,34771);
@@ -1064,6 +1064,24 @@ UPDATE quest_template SET PrevQuestId = 13641, NextQuestId = 0, ExclusiveGroup =
 
 -- There's Something About the Squire ... Prev: The Stories Dead Men Tell ... NextQuestInLine: The Black Knight's Orders
 UPDATE quest_template SET PrevQuestId = 13643, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 13663  WHERE entry = 13654;
+
+-- Questfix
+UPDATE `creature_template` SET `AIName`='SmartAI' WHERE `entry`=33498;
+ 
+DELETE FROM `smart_scripts` WHERE `source_type`=0 AND `entryorguid`=33498;
+INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type`,`event_phase_mask`,`event_chance`,`event_flags`,`event_param1`,`event_param2`,`event_param3`,`event_param4`,`action_type`,`action_param1`,`action_param2`,`action_param3`,`action_param4`,`action_param5`,`action_param6`,`target_type`,`target_param1`,`target_param2`,`target_param3`,`target_x`,`target_y`,`target_z`,`target_o`,`comment`) VALUES
+(33498,0,0,0,23,0,100,0,63124,1,0,0,81,16777216,0,0,0,0,0,1,0,0,0,0,0,0,0,'Maloric - on Aura: Incapacitate Maloric - set npcflag: Spellklick'),
+(33498,0,1,0,23,0,100,0,63124,0,0,0,81,0,0,0,0,0,0,1,0,0,0,0,0,0,0,'Maloric - on NoAura: Incapacitate Maloric - set npcflag: none');
+ 
+DELETE FROM `npc_spellclick_spells` WHERE `npc_entry`=33498;
+INSERT INTO `npc_spellclick_spells` (`npc_entry`,`spell_id`,`quest_start`,`quest_start_active`,`quest_end`,`cast_flags`,`aura_required`,`aura_forbidden`,`user_type`) VALUES
+(33498,63126,13654,1,13654,2,0,0,0);
+ 
+UPDATE `creature_template` SET `lootid`=`entry` WHERE `entry`=33499;
+ 
+DELETE FROM `creature_loot_template` WHERE `entry`=33499;
+INSERT INTO `creature_loot_template` (`entry`,`item`,`ChanceOrQuestChance`,`lootmode`,`groupid`,`mincountOrRef`,`maxcount`) VALUES
+(33499,45080,-100,0,0,1,1);
 
 -- The Black Knight's Orders ... Prev: There's Something About the Squire
 UPDATE quest_template SET PrevQuestId = 13654, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 13663;

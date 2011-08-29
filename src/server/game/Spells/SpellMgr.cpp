@@ -2768,6 +2768,7 @@ void SpellMgr::LoadSpellCustomAttr()
             case 23959: // Test Stab R50
             case 24825: // Test Backstab
             case 58563: // Assassinate Restless Lookout
+            case 63124: // Incapacitate Maloric
                 spellInfo->AttributesCu |= SPELL_ATTR0_CU_REQ_CASTER_BEHIND_TARGET;
                 break;
             case 26029: // Dark Glare

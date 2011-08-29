@@ -172,12 +172,13 @@ public:
 
     bool OnGossipHello(Player* player, Creature* creature)
     {
-        if (player->GetQuestStatus(QUEST_THE_ASPIRANT_S_CHALLENGE_H) == QUEST_STATUS_INCOMPLETE ||
-            player->GetQuestStatus(QUEST_THE_ASPIRANT_S_CHALLENGE_A) == QUEST_STATUS_INCOMPLETE)//We need more info about it.
-        {
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SQUIRE_ITEM_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SQUIRE_ITEM_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-        }
+        if(player->HasAura(63034))
+            if (player->GetQuestStatus(QUEST_THE_ASPIRANT_S_CHALLENGE_H) == QUEST_STATUS_INCOMPLETE ||
+                player->GetQuestStatus(QUEST_THE_ASPIRANT_S_CHALLENGE_A) == QUEST_STATUS_INCOMPLETE)//We need more info about it.
+            {
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SQUIRE_ITEM_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SQUIRE_ITEM_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            }
 
         player->SEND_GOSSIP_MENU(GOSSIP_TEXTID_SQUIRE, creature->GetGUID());
         return true;
@@ -246,7 +247,8 @@ public:
             if (uiDamage > me->GetHealth() && pDoneBy->GetTypeId() == TYPEID_PLAYER)
             {
                 uiDamage = 0;
-                pDoneBy->CastSpell(pDoneBy,SPELL_GIVE_KILL_CREDIT_VALIANT,true);
+                if(pDoneBy->HasAura(63034))
+                    pDoneBy->CastSpell(pDoneBy,SPELL_GIVE_KILL_CREDIT_VALIANT,true);
                 me->setFaction(35);
                 me->DespawnOrUnsummon(5000);
                 me->SetHomePosition(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), me->GetOrientation());
@@ -1495,6 +1497,8 @@ enum TournamentDummySpells
     SPELL_TOURNAMENT_SPECIAL_CREDIT                         = 62673, // Mastery Of The Shield-Breaker
 
     SPELL_DEFEND_AURA_PERIODIC                              = 64223, // 10sec
+
+    SPELL_CONTER_ATTACK                                     = 62889,
 };
 
 enum TorunamentDummyEntrys
@@ -1792,7 +1796,8 @@ public:
                 case 33383: // Thunder Bluff
                 case 33384: // Undercity
                     {
-                        pDoneBy->CastSpell(pDoneBy,SPELL_GIVE_VALIANT_MARK_1,true);
+                        if(pDoneBy->HasAura(63034))
+                            pDoneBy->CastSpell(pDoneBy,SPELL_GIVE_VALIANT_MARK_1,true);
                         break;
                     }
                 case 33738: // Darnassus
@@ -1806,7 +1811,8 @@ public:
                 case 33748: // Thunder Bluff
                 case 33749: // Undercity
                     {
-                        pDoneBy->CastSpell(pDoneBy,SPELL_GIVE_CHAMPION_MARK,true);
+                        if(pDoneBy->HasAura(63034))
+                            pDoneBy->CastSpell(pDoneBy,SPELL_GIVE_CHAMPION_MARK,true);
                         break;
                     }
                 }
@@ -1846,6 +1852,24 @@ public:
         return new npc_faction_valiant_championAI(creature);
     }
 
+    void AddMeleeFightGossip(Player* player)
+    {
+         if( player->HasAura(63034) &&
+            ((player->GetQuestStatus(QUEST_THE_GRAND_MELEE_0) == QUEST_STATUS_INCOMPLETE) ||
+            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_1) == QUEST_STATUS_INCOMPLETE) ||
+            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_2) == QUEST_STATUS_INCOMPLETE) ||
+            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_3) == QUEST_STATUS_INCOMPLETE) ||
+            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_4) == QUEST_STATUS_INCOMPLETE) ||
+            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_5) == QUEST_STATUS_INCOMPLETE) ||
+            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_6) == QUEST_STATUS_INCOMPLETE) ||
+            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_7) == QUEST_STATUS_INCOMPLETE) ||
+            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_8) == QUEST_STATUS_INCOMPLETE) ||
+            (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_9) == QUEST_STATUS_INCOMPLETE)))
+        {
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MELEE_FIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        }
+    }
+
     bool OnGossipHello(Player* player, Creature* creature)
     {
         switch(creature->GetEntry())
@@ -1854,27 +1878,20 @@ public:
         case 33562: // Exodar
         case 33558: // Gnomeregan
         case 33564: // Ironforge
+        case 33561: // Stormwind
+            {
+                if(player->GetTeamId() == TEAM_ALLIANCE)
+                    AddMeleeFightGossip(player);
+                break;
+            }
         case 33306: // Orgrimmar
         case 33285: // Sen'jin
         case 33382: // Silvermoon
-        case 33561: // Stormwind
         case 33383: // Thunder Bluff
         case 33384: // Undercity
             {
-                if( player->HasAura(63034) &&
-                    ((player->GetQuestStatus(QUEST_THE_GRAND_MELEE_0) == QUEST_STATUS_INCOMPLETE) ||
-                    (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_1) == QUEST_STATUS_INCOMPLETE) ||
-                    (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_2) == QUEST_STATUS_INCOMPLETE) ||
-                    (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_3) == QUEST_STATUS_INCOMPLETE) ||
-                    (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_4) == QUEST_STATUS_INCOMPLETE) ||
-                    (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_5) == QUEST_STATUS_INCOMPLETE) ||
-                    (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_6) == QUEST_STATUS_INCOMPLETE) ||
-                    (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_7) == QUEST_STATUS_INCOMPLETE) ||
-                    (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_8) == QUEST_STATUS_INCOMPLETE) ||
-                    (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_9) == QUEST_STATUS_INCOMPLETE)))
-                {
-                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MELEE_FIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-                }
+                if(player->GetTeamId() == TEAM_HORDE)
+                    AddMeleeFightGossip(player);
                 break;
             }
         case 33738: // Darnassus
@@ -2138,7 +2155,8 @@ public:
             if (uiDamage > me->GetHealth() && pDoneBy->GetTypeId() == TYPEID_PLAYER)
             {
                 uiDamage = 0;
-                pDoneBy->CastSpell(pDoneBy,SPELL_GIVE_KILL_CREDIT_CHAMPION,true);
+                if(pDoneBy->HasAura(63034))
+                    pDoneBy->CastSpell(pDoneBy,SPELL_GIVE_KILL_CREDIT_CHAMPION,true);
                 me->setFaction(35);
                 me->DespawnOrUnsummon(5000);
                 me->SetHomePosition(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), me->GetOrientation());
