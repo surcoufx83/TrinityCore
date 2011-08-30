@@ -587,7 +587,7 @@ public:
             }
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             if (!UpdateVictim())
                 return;
@@ -620,20 +620,15 @@ public:
                 if (uiNaturalBomb_Timer <= diff)
                 {
                     std::list<Player*> plrList = me->GetNearestPlayersList(500);
-                    int max = RAID_MODE(urand(4, 6), urand(10, 15));
+                    Trinity::RandomResizeList<Player*>(plrList, uint32(Is25ManRaid() ? urand(10, 15) : urand(4, 6)));
                     for (std::list<Player*>::const_iterator itr = plrList.begin(); itr != plrList.end(); ++itr)
-                    {
-                        if((*itr))
-                        {
+                        if (*itr)
                             me->CastSpell((*itr), SPELL_NATURE_BOMB_VISUAL, true);
-                            if (max <= 0)
-                                break;
-                            else
-                                max--;
-                        }
-                    }
-                    uiNaturalBomb_Timer = urand(20000,30000);
-                } else uiNaturalBomb_Timer -= diff;
+
+                    uiNaturalBomb_Timer = urand(20000, 30000);
+                }
+                else
+                    uiNaturalBomb_Timer -= diff;
             }
 
             if (Berserk_Timer <= diff)
@@ -1136,130 +1131,136 @@ public:
 
 class mob_ancient_conservator : public CreatureScript
 {
-public:
-    mob_ancient_conservator() : CreatureScript("mob_ancient_conservator") { }
+    public:
+        mob_ancient_conservator() : CreatureScript("mob_ancient_conservator") { }
 
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return new mob_ancient_conservatorAI(creature);
-    }
-
-    struct mob_ancient_conservatorAI : public ScriptedAI
-    {
-        mob_ancient_conservatorAI(Creature* creature) : ScriptedAI(creature)
+        struct mob_ancient_conservatorAI : public ScriptedAI
         {
-            m_pInstance = creature->GetInstanceScript();
-        }
-
-        InstanceScript* m_pInstance;
-        uint32 Natures_Fury_Timer;
-        uint32 Healthy_Spore_Spawn_Timer;
-        Position pos;
-
-        void Reset()
-        {
-            Natures_Fury_Timer = 10000;
-            Healthy_Spore_Spawn_Timer = 15000 + (rand()%8000);
-
-            if (Unit* target = me->SelectNearbyTarget(100))
-                me->AI()->AttackStart(target);
-        }
-
-        void EnterCombat(Unit* /*who*/)
-        {
-            DoCast(SPELL_CONSERVATORS_GRIP);
-
-            for (int i = 1; i <= 6; ++i)
+            mob_ancient_conservatorAI(Creature* creature) : ScriptedAI(creature)
             {
-                me->GetRandomNearPosition(pos, 35);
-                me->SummonCreature(33215, pos, TEMPSUMMON_TIMED_DESPAWN, 30000 + (rand()%6000));
+                _instance = creature->GetInstanceScript();
             }
-        }
 
-        void DamageTaken(Unit* /*attacker*/, uint32 &damage)
+            void Reset()
+            {
+                _naturesFuryTimer = 10000;
+                _healthySporeSpawnTimer = urand(15000, 23000);
+
+                if (Unit* target = me->SelectNearbyTarget(100.0f))
+                    AttackStart(target);
+            }
+
+            void EnterCombat(Unit* /*who*/)
+            {
+                for (uint8 i = 1; i <= 6; ++i)
+                {
+                    Position pos;
+                    me->GetRandomNearPosition(pos, 35.0f);
+                    me->SummonCreature(33215, pos, TEMPSUMMON_TIMED_DESPAWN, urand(30000, 36000));
+                }
+
+                DoCast(me, SPELL_CONSERVATORS_GRIP, true);
+            }
+
+            void DamageTaken(Unit* /*attacker*/, uint32 &damage)
+            {
+                if (damage >= me->GetHealth())
+                {
+                    if (Creature* freya = me->GetCreature(*me, _instance->GetData64(TYPE_FREYA)))
+                        DoCast(freya, SPELL_ATTUNED_TO_NATURE_REMOVE_25, true);
+
+                    me->DespawnOrUnsummon(15000);
+                }
+            }
+
+            void UpdateAI(uint32 const diff)
+            {
+                if (_instance && _instance->GetBossState(TYPE_FREYA) != IN_PROGRESS)
+                    me->DespawnOrUnsummon(2000);
+
+                if (!UpdateVictim())
+                    return;
+
+                if (_naturesFuryTimer <= diff)
+                {
+                    if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                        DoCast(target, RAID_MODE<uint32>(SPELL_NATURES_FURY_10, SPELL_NATURES_FURY_25));
+                    _naturesFuryTimer = 15000;
+                }
+                else
+                    _naturesFuryTimer -= diff;
+
+                if (_healthySporeSpawnTimer <= diff)
+                {
+                    Position pos;
+                    me->GetRandomNearPosition(pos, 35.0f);
+                    me->SummonCreature(33215, pos, TEMPSUMMON_TIMED_DESPAWN, 30000);
+                    _healthySporeSpawnTimer = urand(2500, 5000);
+                }
+                else
+                    _healthySporeSpawnTimer -= diff;
+
+                DoMeleeAttackIfReady();
+            }
+
+        private:
+            InstanceScript* _instance;
+            uint32 _naturesFuryTimer;
+            uint32 _healthySporeSpawnTimer;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
         {
-            if (damage >= me->GetHealth())
-            {
-                if (Creature* freya = me->GetCreature(*me, m_pInstance->GetData64(TYPE_FREYA)))
-                    DoCast(freya, SPELL_ATTUNED_TO_NATURE_REMOVE_25, true);
-
-                me->DespawnOrUnsummon(15000);
-            }
+            return new mob_ancient_conservatorAI(creature);
         }
-
-        void UpdateAI(uint32 const diff)
-        {
-            if (m_pInstance && m_pInstance->GetBossState(TYPE_FREYA) != IN_PROGRESS)
-                me->DespawnOrUnsummon(2000);
-
-            if (!UpdateVictim())
-                return;
-
-            if (Natures_Fury_Timer <= diff)
-            {
-                if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                    DoCast(target, RAID_MODE(SPELL_NATURES_FURY_10, SPELL_NATURES_FURY_25));
-                Natures_Fury_Timer = 15000;
-            }
-            else Natures_Fury_Timer -= diff;
-
-            if (Healthy_Spore_Spawn_Timer <= diff)
-            {
-                me->GetRandomNearPosition(pos, 35);
-                me->SummonCreature(33215, pos, TEMPSUMMON_TIMED_DESPAWN, 30000);
-                Healthy_Spore_Spawn_Timer = urand(2500, 5000);
-            }
-            else Healthy_Spore_Spawn_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
-    };
 };
 
 class mob_healthy_spore : public CreatureScript
 {
-public:
-    mob_healthy_spore() : CreatureScript("mob_healthy_spore") { }
+    public:
+        mob_healthy_spore() : CreatureScript("mob_healthy_spore") { }
 
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return new mob_healthy_sporeAI(creature);
-    }
-
-    struct mob_healthy_sporeAI : public Scripted_NoMovementAI
-    {
-        mob_healthy_sporeAI(Creature* creature) : Scripted_NoMovementAI(creature)
+        struct mob_healthy_sporeAI : public Scripted_NoMovementAI
         {
-            instance = creature->GetInstanceScript();
-            Shrink_Timer = urand(22000, 30000);
-        }
-
-        InstanceScript* instance;
-        uint32 Shrink_Timer;
-
-        void Reset()
-        {
-            DoCast(me, SPELL_HEALTHY_SPORE_VISUAL, true);
-            DoCast(me, SPELL_GROW, true);
-            DoCast(me, SPELL_POTENT_PHEROMONES, true);
-            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
-            me->setFaction(35);
-        }
-
-        void UpdateAI(uint32 const diff)
-        {
-            if (instance && instance->GetBossState(TYPE_FREYA) != IN_PROGRESS)
-                me->DisappearAndDie();
-
-            if (Shrink_Timer <= diff)
+            mob_healthy_sporeAI(Creature* creature) : Scripted_NoMovementAI(creature)
             {
-                me->RemoveAurasDueToSpell(SPELL_GROW);
-                me->ForcedDespawn(2000);
+                _instance = creature->GetInstanceScript();
+                _shrinkTimer = urand(22000, 30000);
             }
-            else Shrink_Timer -= diff;
 
+            void Reset()
+            {
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
+                me->setFaction(35);
+                DoCast(me, SPELL_HEALTHY_SPORE_VISUAL, true);
+                DoCast(me, SPELL_GROW, true);
+                DoCast(me, SPELL_POTENT_PHEROMONES, true);
+            }
+
+            void UpdateAI(uint32 const diff)
+            {
+                if (_instance && _instance->GetBossState(TYPE_FREYA) != IN_PROGRESS)
+                    me->DisappearAndDie();
+
+                if (_shrinkTimer <= diff)
+                {
+                    me->RemoveAurasDueToSpell(SPELL_GROW);
+                    me->ForcedDespawn(2000);
+                    _shrinkTimer = 3000;
+                }
+                else
+                    _shrinkTimer -= diff;
+            }
+
+        private:
+            InstanceScript* _instance;
+            uint32 _shrinkTimer;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new mob_healthy_sporeAI(creature);
         }
-    };
 };
 
 
