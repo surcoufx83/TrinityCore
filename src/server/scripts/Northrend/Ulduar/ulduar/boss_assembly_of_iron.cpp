@@ -292,7 +292,7 @@ class boss_steelbreaker : public CreatureScript
                     }
 
                     if (!has_supercharge)
-                        DoCast(SPELL_SUPERCHARGE);
+                        DoCast(me, SPELL_SUPERCHARGE, true);
                 }
             }
 
@@ -576,7 +576,7 @@ class boss_runemaster_molgeim : public CreatureScript
                     }
 
                     if (!has_supercharge)
-                        DoCast(me, SPELL_SUPERCHARGE);
+                        DoCast(me, SPELL_SUPERCHARGE, true);
                 }
             }
 
@@ -897,7 +897,7 @@ class boss_stormcaller_brundir : public CreatureScript
                     }
 
                     if (!has_supercharge)
-                        DoCast(SPELL_SUPERCHARGE);
+                        DoCast(me, SPELL_SUPERCHARGE, true);
                 }
             }
 
