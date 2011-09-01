@@ -20,19 +20,19 @@
 
 enum Spells
 {
-    SPELL_NECROTIC_AURA                                    = 55593,
-    SPELL_SUMMON_SPORE                                     = 29234,
-    SPELL_DEATHBLOOM                                       = 29865,
-    H_SPELL_DEATHBLOOM                                     = 55053,
-    SPELL_INEVITABLE_DOOM                                  = 29204,
-    H_SPELL_INEVITABLE_DOOM                                = 55052,
-    SPELL_BERSERK                                          = 27680
+    SPELL_NECROTIC_AURA       = 55593,
+    SPELL_SUMMON_SPORE        = 29234,
+    SPELL_DEATHBLOOM          = 29865,
+    H_SPELL_DEATHBLOOM        = 55053,
+    SPELL_INEVITABLE_DOOM     = 29204,
+    H_SPELL_INEVITABLE_DOOM   = 55052,
+    SPELL_BERSERK             = 27680,
+    SPELL_FUNGAL_CREEP        = 29232
 };
 
 enum Events
 {
-    EVENT_NONE,
-    EVENT_AURA,
+    EVENT_AURA = 1,
     EVENT_BLOOM,
     EVENT_DOOM,
     EVENT_BERSERK
@@ -40,72 +40,69 @@ enum Events
 
 class boss_loatheb : public CreatureScript
 {
-public:
-    boss_loatheb() : CreatureScript("boss_loatheb") { }
+    public:
+        boss_loatheb() : CreatureScript("boss_loatheb") { }
 
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return new boss_loathebAI (creature);
-    }
-
-    struct boss_loathebAI : public BossAI
-    {
-        boss_loathebAI(Creature* c) : BossAI(c, BOSS_LOATHEB) {}
-
-        void Reset()
+        struct boss_loathebAI : public BossAI
         {
-            _Reset();
-        }
+            boss_loathebAI(Creature* c) : BossAI(c, BOSS_LOATHEB) {}
 
-        void EnterCombat(Unit* /*who*/)
-        {
-            _EnterCombat();
-            events.ScheduleEvent(EVENT_AURA, 10000);
-            events.ScheduleEvent(EVENT_BLOOM, 5000);
-            events.ScheduleEvent(EVENT_DOOM, 120000);
-            events.ScheduleEvent(EVENT_BERSERK, 12*60000);
-        }
-
-        void UpdateAI(const uint32 diff)
-        {
-            if (!UpdateVictim())
-                return;
-
-            _DoAggroPulse(diff);
-            events.Update(diff);
-
-            while (uint32 eventId = events.ExecuteEvent())
+            void Reset()
             {
-                switch(eventId)
-                {
-                    case EVENT_AURA:
-                        DoCastAOE(SPELL_NECROTIC_AURA);
-                        events.ScheduleEvent(EVENT_AURA, 20000);
-                        break;
-                    case EVENT_BLOOM:
-                        // TODO : Add missing text
-                        DoCastAOE(SPELL_SUMMON_SPORE, true);
-                        DoCastAOE(RAID_MODE(SPELL_DEATHBLOOM, H_SPELL_DEATHBLOOM));
-                        events.ScheduleEvent(EVENT_BLOOM, 30000);
-                        break;
-                    case EVENT_DOOM:
-                        DoCastAOE(RAID_MODE(SPELL_INEVITABLE_DOOM, H_SPELL_INEVITABLE_DOOM));
-                        events.ScheduleEvent(EVENT_DOOM, events.GetTimer() < 5*60000 ? 30000 : 15000);
-                        break;
-                    case EVENT_BERSERK:
-                        if(GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL)
-                        {
-                            if(!me->HasAura(SPELL_BERSERK))
-                                DoCast(me,SPELL_BERSERK,true);
-                        }
-                         events.ScheduleEvent(EVENT_BERSERK, 60000);
-                        break;
-                }
+                _Reset();
             }
 
-            DoMeleeAttackIfReady();
+            void EnterCombat(Unit* /*who*/)
+            {
+                _EnterCombat();
+                events.ScheduleEvent(EVENT_AURA, 10000);
+                events.ScheduleEvent(EVENT_BLOOM, 5000);
+                events.ScheduleEvent(EVENT_DOOM, 120000);
+                events.ScheduleEvent(EVENT_BERSERK, 12*60000);
+            }
+
+            void UpdateAI(uint32 const diff)
+            {
+                if (!UpdateVictim())
+                    return;
+
+                _DoAggroPulse(diff);
+                events.Update(diff);
+
+                while (uint32 eventId = events.ExecuteEvent())
+                {
+                    switch (eventId)
+                    {
+                        case EVENT_AURA:
+                            DoCastAOE(SPELL_NECROTIC_AURA);
+                            events.ScheduleEvent(EVENT_AURA, 20000);
+                            break;
+                        case EVENT_BLOOM:
+                            // TODO : Add missing text
+                            DoCastAOE(SPELL_SUMMON_SPORE, true);
+                            DoCastAOE(RAID_MODE<uint32>(SPELL_DEATHBLOOM, H_SPELL_DEATHBLOOM));
+                            events.ScheduleEvent(EVENT_BLOOM, 30000);
+                            break;
+                        case EVENT_DOOM:
+                            DoCastAOE(RAID_MODE<uint32>(SPELL_INEVITABLE_DOOM, H_SPELL_INEVITABLE_DOOM));
+                            events.ScheduleEvent(EVENT_DOOM, events.GetTimer() < 5*60000 ? 30000 : 15000);
+                            break;
+                        case EVENT_BERSERK:
+                            if (Is25ManRaid() && !me->HasAura(SPELL_BERSERK))
+                                DoCast(me, SPELL_BERSERK, true);
+                            events.ScheduleEvent(EVENT_BERSERK, 60000);
+                            break;
+                    }
+                }
+
+                DoMeleeAttackIfReady();
+            }
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new boss_loathebAI(creature);
         }
-    };
 };
 
 class spell_fungal_creep_targeting : public SpellScriptLoader
@@ -143,30 +140,26 @@ class spell_fungal_creep_targeting : public SpellScriptLoader
         }
 };
 
-enum SporeSpells
-{
-   SPELL_FUNGAL_CREEP                                     = 29232
-};
-
 class mob_loatheb_spore : public CreatureScript
 {
-public:
-   mob_loatheb_spore() : CreatureScript("mob_loatheb_spore") { }
+    public:
+        mob_loatheb_spore() : CreatureScript("mob_loatheb_spore") { }
 
-   CreatureAI* GetAI(Creature* pCreature) const
-   {
-       return new mob_loatheb_sporeAI (pCreature);
-   }
+        struct mob_loatheb_sporeAI : public ScriptedAI
+        {
+            mob_loatheb_sporeAI(Creature* c) : ScriptedAI(c) {}
 
-   struct mob_loatheb_sporeAI : public ScriptedAI
-   {
-       mob_loatheb_sporeAI(Creature *c) : ScriptedAI(c) {}
+            void DamageTaken(Unit* /*attacker*/, uint32 &damage)
+            {
+                if (damage >= me->GetHealth())
+                    DoCastAOE(SPELL_FUNGAL_CREEP, true);
+            }
+        };
 
-       void JustDied(Unit* killer)
-       {
-            DoCastAOE(SPELL_FUNGAL_CREEP, true); //A Little bit hacky ... but it works now (without triggered no cast on death)
-       }
-   };
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new mob_loatheb_sporeAI(creature);
+        }
 };
 
 void AddSC_boss_loatheb()
