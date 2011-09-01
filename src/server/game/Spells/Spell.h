@@ -704,10 +704,6 @@ namespace Trinity
                             continue;
                         if (target->HasUnitState(UNIT_STAT_UNATTACKABLE))
                             continue;
-                        /***************************/
-                        if (target->IsVehicle() && target->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE))
-                            continue;
-                        /***************************/
                         // if we are a player, not in duel, not in arena, not in battleground, and deactivated pvp we are unable to hit player targets
                         if (i_source->GetTypeId() == TYPEID_PLAYER && !((Player*)i_source)->duel &&
                             !((Player*)i_source)->InArena() && !((Player*)i_source)->InBattleground() &&
