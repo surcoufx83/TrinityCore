@@ -889,8 +889,8 @@ void AuraEffect::CalculateSpellMod()
                 case SPELLFAMILY_DRUID:
                     switch (GetId())
                     {
-                        case 34246:                                 // Idol of the Emerald Queen
-                        case 60779:                                 // Idol of Lush Moss
+                        case 34246: // Idol of the Emerald Queen
+                        case 60779: // Idol of Lush Moss
                         {
                             if (!m_spellmod)
                             {
@@ -900,9 +900,22 @@ void AuraEffect::CalculateSpellMod()
                                 m_spellmod->spellId = GetId();
                                 m_spellmod->mask[1] = 0x0010;
                             }
-                            m_spellmod->value = GetAmount()/7;
+                            m_spellmod->value = GetAmount() / 7;
+                            break;
                         }
-                        break;
+                        case 64949: // Idol of the Flourishing Life
+                        {
+                            if (!m_spellmod)
+                            {
+                                m_spellmod = new SpellModifier(GetBase());
+                                m_spellmod->op = SpellModOp(GetMiscValue());
+                                m_spellmod->type = SPELLMOD_FLAT;
+                                m_spellmod->spellId = GetId();
+                                m_spellmod->mask[1] = 0x2000000;
+                            }
+                            m_spellmod->value = GetAmount();
+                            break;
+                        }
                     }
                     break;
                 default:
