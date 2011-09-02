@@ -4370,6 +4370,7 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                 }
                 //Shield Breaker
                 case 62575:
+                case 66480:
                 case 64595:
                 {
                     if (!unitTarget || !m_caster)
@@ -4378,6 +4379,7 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                     switch(m_spellInfo->Id)
                     {
                     case 66480: // 10k Damage
+                    case 64595:
                         m_caster->CastSpell(unitTarget,64590,true);
                         break;
                     case 62575: // 2k Damage
