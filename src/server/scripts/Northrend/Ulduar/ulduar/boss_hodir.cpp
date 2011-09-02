@@ -768,7 +768,7 @@ public:
             DoCast(me, SPELL_SINGED, true);
         }
 
-            void SpellHit(Unit* /*who*/, const SpellInfo* spell)
+        void SpellHit(Unit* /*who*/, SpellInfo const* spell)
         {
             // Toasty fire can be extinguished by falling ice or Flash Freeze
             if (spell->Id == SPELL_BLOCK_OF_ICE || spell->Id == 62457 || spell->Id == 65370)

@@ -502,6 +502,9 @@ public:
             me->GetMotionMaster()->MoveIdle();
             me->SetStandState(UNIT_STAND_STATE_SUBMERGED);
 
+            // Remove if it is still active?
+            me->RemoveAurasDueToSpell(SPELL_TYMPANIC_TANTRUM);
+
             // Make untargetable
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_NOT_SELECTABLE);
 
@@ -557,52 +560,58 @@ public:
  *///----------------------------------------------------
 class mob_xt002_heart : public CreatureScript
 {
-public:
-    mob_xt002_heart() : CreatureScript("mob_xt002_heart") { }
+    public:
+        mob_xt002_heart() : CreatureScript("mob_xt002_heart") { }
 
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return new mob_xt002_heartAI(creature);
-    }
-
-    struct mob_xt002_heartAI : public Scripted_NoMovementAI
-    {
-        mob_xt002_heartAI(Creature* creature) : Scripted_NoMovementAI(creature)
+        struct mob_xt002_heartAI : public Scripted_NoMovementAI
         {
-            _instance = creature->GetInstanceScript();
-            //me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_STUNNED);
-            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
-        }
+            mob_xt002_heartAI(Creature* creature) : Scripted_NoMovementAI(creature)
+            {
+                _instance = creature->GetInstanceScript();
+                //me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_STUNNED);
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
+            }
 
-        InstanceScript* _instance;
+            void JustDied(Unit* /*victim*/)
+            {
+                if (_instance)
+                    if (Creature* XT002 = me->GetCreature(*me, _instance->GetData64(TYPE_XT002)))
+                        if (XT002->AI())
+                            XT002->AI()->DoAction(ACTION_ENTER_HARD_MODE);
 
-        void JustDied(Unit * /*victim*/)
+                //removes the aura
+                me->RemoveAurasDueToSpell(SPELL_EXPOSED_HEART);
+            }
+
+            void DamageTaken(Unit* /*attacker*/, uint32 &damage)
+            {
+                if (Creature* XT002 = me->GetCreature(*me, _instance->GetData64(TYPE_XT002)))
+                    if (XT002->AI())
+                    {
+                        uint32 health = me->GetHealth();
+                        if (health <= damage)
+                            health = 0;
+                        else
+                            health -= damage;
+                        XT002->AI()->SetData(DATA_TRANSFERED_HEALTH, me->GetMaxHealth() - health);
+                    }
+            }
+
+            void UpdateAI(uint32 const /*diff*/)
+            {
+                // TODO: find better solution
+                if (!me->HasAura(SPELL_EXPOSED_HEART))
+                    me->AddAura(SPELL_EXPOSED_HEART, me);
+            }
+
+        private:
+            InstanceScript* _instance;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
         {
-            if (_instance)
-                if (Creature* pXT002 = me->GetCreature(*me, _instance->GetData64(TYPE_XT002)))
-                    if (pXT002->AI())
-                        pXT002->AI()->DoAction(ACTION_ENTER_HARD_MODE);
-
-            //removes the aura
-            me->RemoveAurasDueToSpell(SPELL_EXPOSED_HEART);
+            return new mob_xt002_heartAI(creature);
         }
-
-        void DamageTaken(Unit * /*pDone*/, uint32 &damage)
-        {
-            if (Creature* pXT002 = me->GetCreature(*me, _instance->GetData64(TYPE_XT002)))
-                if (pXT002->AI())
-                {
-                    uint32 health = me->GetHealth();
-                    if (health <= damage)
-                        health = 0;
-                    else
-                        health -= damage;
-                    pXT002->AI()->SetData(DATA_TRANSFERED_HEALTH, me->GetMaxHealth() - health);
-                }
-        }
-
-        void UpdateAI(const uint32 diff) { }
-    };
 };
 
 /*-------------------------------------------------------
