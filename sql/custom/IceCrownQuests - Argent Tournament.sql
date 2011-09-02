@@ -767,7 +767,7 @@ UPDATE quest_template SET PrevQuestId = 13795, NextQuestId = 0, ExclusiveGroup =
 DELETE FROM conditions WHERE SourceTypeOrReferenceId IN (-2782,-2788,-2817,-2816,-3676,-3677);
 DELETE FROM conditions WHERE 
 SourceTypeOrReferenceId IN (19,20) AND SourceEntry IN
-(13846,14101,14102,14104,14105,13810,13862,13811,13794,14140,14143,14144,14096,14136,14092,14107,14108,14141,14145,13707,13708,13709,13710,13711,13795,14080,14074,14077,14142,14152,14076,14090,14112,13684,13688,13685,13690,13689);
+(13846,14101,14102,14104,14105,13810,13862,13703,13705,13706,13811,13794,14140,13704,14143,14144,14096,14136,14092,14107,13593,14108,14141,14145,13707,13708,13709,13710,13711,13795,14080,14074,14077,14142,14152,14076,14090,14112,13684,13688,13685,13690,13689);
 INSERT INTO conditions
 VALUES 
 (-2782,0,0,0,8,13725,0,0,0,"","needs Champion"),
@@ -907,23 +907,23 @@ VALUES
 -- The Sunreavers * The Silver Covenant Quests
 DELETE FROM pool_template WHERE entry IN (34880,34771);
 INSERT INTO pool_template VALUES
-(34880,2,'Tournament - Champion - The Silver Covenant - Sea'),
-(34771,2,'Tournament - Champion - The Sunreavers - Sea');
+(34880,1,'Tournament - Champion - The Silver Covenant - Sea'),
+(34771,1,'Tournament - Champion - The Sunreavers - Sea');
 
 UPDATE quest_template SET ExclusiveGroup = 14074 WHERE entry in (14074,14152,14077,14080,14096);
-UPDATE quest_template SET ExclusiveGroup = 14143 WHERE entry in (14143,14136,14144,14140,14142);
+UPDATE quest_template SET ExclusiveGroup = 14143 WHERE entry in (14143,14136,14144,14140);
+UPDATE quest_template SET ExclusiveGroup = 0 WHERE entry in (14142,14096); -- Kul Quest enable everyday
+
 DELETE FROM pool_quest WHERE pool_entry IN (34880,34771);
 INSERT INTO pool_quest VALUES 
 (14074,34880,'Tournament - Champion - The Silver Covenant - Sea - A Leg Up'),
 (14152,34880,'Tournament - Champion - The Silver Covenant - Sea - Rescue At Sea'),
 (14077,34880,'Tournament - Champion - The Silver Covenant - Sea - The Lights Mercy'),
 (14080,34880,'Tournament - Champion - The Silver Covenant - Sea - Stop the Aggression'),
-(14096,34880,'Tournament - Champion - The Silver Covenant - Sea - Youve Really Done It This Time, Kul'),
 (14143,34771,'Tournament - Champion - The Sunreavers - Sea - A Leg Up'),
 (14136,34771,'Tournament - Champion - The Sunreavers - Sea - Rescue At Sea'),
 (14144,34771,'Tournament - Champion - The Sunreavers - Sea - The Lights Mercy'),
-(14140,34771,'Tournament - Champion - The Sunreavers - Sea - Stop the Aggression'),
-(14142,34771,'Tournament - Champion - The Sunreavers - Sea - Youve Really Done It This Time, Kul');
+(14140,34771,'Tournament - Champion - The Sunreavers - Sea - Stop the Aggression');
 
 DELETE FROM pool_template WHERE entry IN (34912,34914);
 INSERT INTO pool_template VALUES
