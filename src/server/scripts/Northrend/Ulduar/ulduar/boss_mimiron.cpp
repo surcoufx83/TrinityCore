@@ -484,6 +484,7 @@ public:
                                     {
                                         if (Creature* Rocket = me->SummonCreature(NPC_ROCKET, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_MANUAL_DESPAWN))
                                         {
+                                            Rocket->setFaction(14);
                                             Rocket->SetReactState(REACT_PASSIVE);
                                             Rocket->EnterVehicle(VX_001, n);
                                         }
@@ -1253,11 +1254,11 @@ public:
                             break;
                         case EVENT_ROCKET_STRIKE:
                             if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                                if (Creature* missile = CAST_CRE(me->GetVehicleKit()->GetPassenger(5)))
+                                if (Unit* missile = me->GetVehicleKit()->GetPassenger(5))
                                     missile->CastSpell(target, SPELL_ROCKET_STRIKE, true);
                             if (phase == PHASE_VX001_ASSEMBLED)
                                 if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                                    if (Creature* missile = CAST_CRE(me->GetVehicleKit()->GetPassenger(6)))
+                                    if (Unit* missile = me->GetVehicleKit()->GetPassenger(6))
                                         missile->CastSpell(target, SPELL_ROCKET_STRIKE, true);
                             events.RescheduleEvent(EVENT_ROCKET_STRIKE, urand(20000, 25000));
                             break;
@@ -1800,6 +1801,8 @@ class npc_mimiron_flame_trigger : public CreatureScript
             {
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
                 me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
+                me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
+                me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, true);
                 me->SetInCombatWithZone();
                 _flameTimer = 3000;
             }
@@ -1830,7 +1833,7 @@ class npc_mimiron_flame_trigger : public CreatureScript
                     if (Player* nearest = me->SelectNearestPlayer(100.0f))
                     {
                         me->GetMotionMaster()->Clear();
-                        me->GetMotionMaster()->MoveChase(nearest);
+                        me->GetMotionMaster()->MoveFollow(nearest, 0.0f, 0.0f);
                     }
 
                     me->SummonCreature(NPC_FLAME_SPREAD, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());

@@ -2836,6 +2836,8 @@ void SpellMgr::LoadSpellCustomAttr()
             case 69293: // Wing Buffet
             case 74439: // Machine Gun
             case 62775: // XT-002 - Tympanic Tantrum
+            case 63629: // Kologarn - Arm Dead Damage 10N
+            case 63979: // Kologarn - Arm Dead Damage 25N
             case 64443: // Algalon - Big Bang
             case 64584: // Algalon - Big Bang
             case 63278: // Mark of the Faceless (General Vezax)

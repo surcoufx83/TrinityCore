@@ -290,6 +290,7 @@ public:
         boss_thorimAI(Creature* creature) : BossAI(creature, TYPE_THORIM)
         {
             Wipe = false;
+            EncounterFinished = false;
         }
 
         Phases phase;
@@ -300,9 +301,13 @@ public:
         bool Wipe;
         bool HardMode;
         bool OrbSummoned;
+        bool EncounterFinished;
 
         void Reset()
         {
+            if (EncounterFinished)
+                return;
+
             if (Wipe)
                 DoScriptText(SAY_WIPE, me);
 
@@ -317,13 +322,14 @@ public:
             spawnedAdds = 0;
 
             // Respawn Mini Bosses
-            for (uint8 i = DATA_RUNIC_COLOSSUS; i <= DATA_RUNE_GIANT; i++)
+            for (uint8 i = DATA_RUNIC_COLOSSUS; i <= DATA_RUNE_GIANT; ++i)
                 if (Creature* MiniBoss = me->GetCreature(*me, instance->GetData64(i)))
                     MiniBoss->Respawn(true);
 
             // Spawn Pre-Phase Adds
-            for (uint8 i = 0; i < 6; i++)
-                me->SummonCreature(preAddLocations[i].entry,preAddLocations[i].x,preAddLocations[i].y,preAddLocations[i].z,preAddLocations[i].o,TEMPSUMMON_CORPSE_TIMED_DESPAWN,3000);
+            for (uint8 i = 0; i < 6; ++i)
+                me->SummonCreature(preAddLocations[i].entry,preAddLocations[i].x, preAddLocations[i].y, preAddLocations[i].z, preAddLocations[i].o,
+                TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000);
 
             if (GameObject* go = me->FindNearestGameObject(GO_LEVER, 500))
                 go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
@@ -332,15 +338,22 @@ public:
         void KilledUnit(Unit* /*victim*/)
         {
             if (!(rand()%5))
-                DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2), me);
+                DoScriptText(RAND(SAY_SLAY_1, SAY_SLAY_2), me);
         }
 
-        void JustDied(Unit* /*killer*/)
+        void EncounterIsDone()
         {
+            if (EncounterFinished)
+                return;
+
+            EncounterFinished = true;
+
             DoScriptText(SAY_DEATH, me);
             _JustDied();
 
             me->setFaction(35);
+            me->ForcedDespawn(7000);
+            EnterEvadeMode();
 
             if (instance)
             {
@@ -353,9 +366,7 @@ public:
                     me->SummonGameObject(RAID_MODE(CACHE_OF_STORMS_HARDMODE_10, CACHE_OF_STORMS_HARDMODE_25), 2134.58f, -286.908f, 419.495f, 1.55988f, 0, 0, 1, 1, 604800);
                 }
                 else
-                {
                     me->SummonGameObject(RAID_MODE(CACHE_OF_STORMS_10, CACHE_OF_STORMS_25), 2134.58f, -286.908f, 419.495f, 1.55988f, 0, 0, 1, 1, 604800);
-                }
             }
         }
 
@@ -532,7 +543,7 @@ public:
                     {
                         // Dark Rune Warbringer
                         for (uint8 n = 0; n < 1; ++n)
-                            me->SummonCreature(ARENA_PHASE_ADD[3], Pos[n], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000);
+                            me->SummonCreature(ARENA_PHASE_ADD[3], Pos[rand()%7], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000);
                     }
                     break;
             }
@@ -544,6 +555,12 @@ public:
 
         void DamageTaken(Unit* attacker, uint32 &damage)
         {
+            if (damage >= me->GetHealth())
+            {
+                damage = 0;
+                EncounterIsDone();
+            }
+
             if (phase == PHASE_1 && attacker && instance)
             {
                 if (Creature* RunicColossus = me->GetCreature(*me, instance->GetData64(DATA_RUNIC_COLOSSUS)))
