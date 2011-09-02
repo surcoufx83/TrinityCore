@@ -845,23 +845,23 @@ VALUES
 (20,0,13795,1,-2788,0,0,0,0,"","The Scourgebane - Daily needs Champion"),
 
 -- Horde Only
-(19,0,14140,0,-2816,0,0,0,0,"","Stop The Aggressors - Daily needs Exalted Champion"),
-(20,0,14140,0,-2816,0,0,0,0,"","Stop The Aggressors - Daily needs Exalted Champion"),
-(19,0,14143,0,-2816,0,0,0,0,"","A Leg Up - Daily needs ExaltedChampion"),
-(20,0,14143,0,-2816,0,0,0,0,"","A Leg Up - Daily needs Exalted Champion"),
-(19,0,14144,0,-2816,0,0,0,0,"","The Light's Mercy - Daily needs Exalted Champion"),
-(20,0,14144,0,-2816,0,0,0,0,"","The Light's Mercy - Daily needs Exalted Champion"),
-(19,0,14136,0,-2816,0,0,0,0,"","Rescue at Sea - Daily needs Exalted Champion"),
-(20,0,14136,0,-2816,0,0,0,0,"","Rescue at Sea - Daily needs Exalted Champion"),
-(19,0,14142,0,-2816,0,0,0,0,"","Youve Really Done It This Time, Kul - Daily needs Exalted Champion"),
-(20,0,14142,0,-2816,0,0,0,0,"","Youve Really Done It This Time, Kul - Daily needs Exalted Champion"),
+(19,0,14140,0,-3677,0,0,0,0,"","Stop The Aggressors - Daily needs The Sunreaver"),
+(20,0,14140,0,-3677,0,0,0,0,"","Stop The Aggressors - Daily needs The Sunreaver"),
+(19,0,14143,0,-3677,0,0,0,0,"","A Leg Up - Daily needs The Sunreaver"),
+(20,0,14143,0,-3677,0,0,0,0,"","A Leg Up - Daily needs The Sunreaver"),
+(19,0,14144,0,-3677,0,0,0,0,"","The Light's Mercy - Daily needs The Sunreaver"),
+(20,0,14144,0,-3677,0,0,0,0,"","The Light's Mercy - Daily needs The Sunreaver"),
+(19,0,14136,0,-3677,0,0,0,0,"","Rescue at Sea - Daily needs The Sunreaver"),
+(20,0,14136,0,-3677,0,0,0,0,"","Rescue at Sea - Daily needs The Sunreaver"),
+(19,0,14142,0,-3677,0,0,0,0,"","Youve Really Done It This Time, Kul - Daily needs The Sunreaver"),
+(20,0,14142,0,-3677,0,0,0,0,"","Youve Really Done It This Time, Kul - Daily needs The Sunreaver"),
 
-(19,0,14092,0,-2816,0,0,0,0,"","Breakfast Of Champions - Daily needs Exalted Champion"),
-(20,0,14092,0,-2816,0,0,0,0,"","Breakfast Of Champions - Daily needs Exalted Champion"),
-(19,0,14141,0,-2816,0,0,0,0,"","Gormok Wants His Snobolds - Daily needs Exalted Champion"),
-(20,0,14141,0,-2816,0,0,0,0,"","Gormok Wants His Snobolds - Daily needs Exalted Champion"),
-(19,0,14145,0,-2816,0,0,0,0,"","What Do You Feed a Yeti, Anyway? - Daily needs Exalted Champion"),
-(20,0,14145,0,-2816,0,0,0,0,"","What Do You Feed a Yeti, Anyway? - Daily needs Exalted Champion"),
+(19,0,14092,0,-3677,0,0,0,0,"","Breakfast Of Champions - Daily needs The Sunreaver"),
+(20,0,14092,0,-3677,0,0,0,0,"","Breakfast Of Champions - Daily needs The Sunreaver"),
+(19,0,14141,0,-3677,0,0,0,0,"","Gormok Wants His Snobolds - Daily needs The Sunreaver"),
+(20,0,14141,0,-3677,0,0,0,0,"","Gormok Wants His Snobolds - Daily needs The Sunreaver"),
+(19,0,14145,0,-3677,0,0,0,0,"","What Do You Feed a Yeti, Anyway? - Daily needs The Sunreaver"),
+(20,0,14145,0,-3677,0,0,0,0,"","What Do You Feed a Yeti, Anyway? - Daily needs The Sunreaver"),
 
 (19,0,13707,0,-2788,0,0,0,0,"","Valiant Of Orgrimmar - Quest needs Champion"),
 (20,0,13707,0,-2788,0,0,0,0,"","Valiant Of Orgrimmar - Quest needs Champion"),
@@ -875,23 +875,23 @@ VALUES
 (20,0,13710,0,-2788,0,0,0,0,"","Valiant Of Undercity - Quest needs Champion"),
 
 -- Alliance Only
-(19,0,14080,0,-2817,0,0,0,0,"","Stop The Aggressors - Daily needs Exalted Champion"),
-(20,0,14080,0,-2817,0,0,0,0,"","Stop The Aggressors - Daily needs Exalted Champion"),
-(19,0,14074,0,-2817,0,0,0,0,"","A Leg Up - Daily needs Exalted Champion"),
-(20,0,14074,0,-2817,0,0,0,0,"","A Leg Up - Daily needs Exalted Champion"),
-(19,0,14077,0,-2817,0,0,0,0,"","The Light's Mercy - Daily needs Exalted Champion"),
-(20,0,14077,0,-2817,0,0,0,0,"","The Light's Mercy - Daily needs Exalted Champion"),
-(19,0,14152,0,-2817,0,0,0,0,"","Rescue at Sea - Daily needs Exalted Champion"),
-(20,0,14152,0,-2817,0,0,0,0,"","Rescue at Sea - Daily needs Exalted Champion"),
-(19,0,14096,0,-2817,0,0,0,0,"","Youve Really Done It This Time, Kul - Daily needs Exalted Champion"),
-(20,0,14096,0,-2817,0,0,0,0,"","Youve Really Done It This Time, Kul - Daily needs Exalted Champion"),
+(19,0,14080,0,-3676,0,0,0,0,"","Stop The Aggressors - Daily needs Silver Confidant"),
+(20,0,14080,0,-3676,0,0,0,0,"","Stop The Aggressors - Daily needs Silver Confidant"),
+(19,0,14074,0,-3676,0,0,0,0,"","A Leg Up - Daily needs Silver Confidant"),
+(20,0,14074,0,-3676,0,0,0,0,"","A Leg Up - Daily needs Silver Confidant"),
+(19,0,14077,0,-3676,0,0,0,0,"","The Light's Mercy - Daily needs Silver Confidant"),
+(20,0,14077,0,-3676,0,0,0,0,"","The Light's Mercy - Daily needs Silver Confidant"),
+(19,0,14152,0,-3676,0,0,0,0,"","Rescue at Sea - Daily needs Silver Confidant"),
+(20,0,14152,0,-3676,0,0,0,0,"","Rescue at Sea - Daily needs Silver Confidant"),
+(19,0,14096,0,-3676,0,0,0,0,"","Youve Really Done It This Time, Kul - Daily needs Silver Confidant"),
+(20,0,14096,0,-3676,0,0,0,0,"","Youve Really Done It This Time, Kul - Daily needs Silver Confidant"),
 
-(19,0,14076,0,-2817,0,0,0,0,"","Breakfast Of Champions - Daily needs Exalted Champion"),
-(20,0,14076,0,-2817,0,0,0,0,"","Breakfast Of Champions - Daily needs Exalted Champion"),
-(19,0,14090,0,-2817,0,0,0,0,"","Gormok Wants His Snobolds - Daily needs Exalted Champion"),
-(20,0,14090,0,-2817,0,0,0,0,"","Gormok Wants His Snobolds - Daily needs Exalted Champion"),
-(19,0,14112,0,-2817,0,0,0,0,"","What Do You Feed a Yeti, Anyway? - Daily needs Exalted Champion"),
-(20,0,14112,0,-2817,0,0,0,0,"","What Do You Feed a Yeti, Anyway? - Daily needs Exalted Champion"),
+(19,0,14076,0,-3676,0,0,0,0,"","Breakfast Of Champions - Daily needs Silver Confidant"),
+(20,0,14076,0,-3676,0,0,0,0,"","Breakfast Of Champions - Daily needs Silver Confidant"),
+(19,0,14090,0,-3676,0,0,0,0,"","Gormok Wants His Snobolds - Daily needs Silver Confidant"),
+(20,0,14090,0,-3676,0,0,0,0,"","Gormok Wants His Snobolds - Daily needs Silver Confidant"),
+(19,0,14112,0,-3676,0,0,0,0,"","What Do You Feed a Yeti, Anyway? - Daily needs Silver Confidant"),
+(20,0,14112,0,-3676,0,0,0,0,"","What Do You Feed a Yeti, Anyway? - Daily needs Silver Confidant"),
 
 (19,0,13593,0,-2782,0,0,0,0,"","Valiant Of Stormwind - Quest needs Champion"),
 (20,0,13593,0,-2782,0,0,0,0,"","Valiant Of Stormwind - Quest needs Champion"),
@@ -910,7 +910,7 @@ INSERT INTO pool_template VALUES
 (34880,1,'Tournament - Champion - The Silver Covenant - Sea'),
 (34771,1,'Tournament - Champion - The Sunreavers - Sea');
 
-UPDATE quest_template SET ExclusiveGroup = 14074 WHERE entry in (14074,14152,14077,14080,14096);
+UPDATE quest_template SET ExclusiveGroup = 14074 WHERE entry in (14074,14152,14077,14080);
 UPDATE quest_template SET ExclusiveGroup = 14143 WHERE entry in (14143,14136,14144,14140);
 UPDATE quest_template SET ExclusiveGroup = 0 WHERE entry in (14142,14096); -- Kul Quest enable everyday
 
@@ -1113,3 +1113,9 @@ INSERT INTO `creature_template_addon` (`entry`,`path_id`,`mount`,`bytes1`,`bytes
 UPDATE quest_template SET SkillOrClassMask = -32 WHERE entry = 13795;
 -- Eradic the Pure - DK forbitten
 UPDATE quest_template SET SkillOrClassMask = -1503 WHERE entry = 13794;
+
+-- Spell: Trample Scourge
+DELETE FROM conditions WHERE SourceTypeOrReferenceId = 13 AND SourceEntry = 63001;
+INSERT INTO conditions VALUES 
+(13,0,63001,0,18,1,33438,0,0,'','');
+UPDATE `creature_template` SET `flags_extra` = `flags_extra` | 268435520 WHERE `entry` = 33438; -- NO-XP and respawntime ignore
