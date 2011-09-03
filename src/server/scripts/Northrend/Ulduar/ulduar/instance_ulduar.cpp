@@ -138,6 +138,7 @@ public:
         uint32 uiAlgalonKillCount;
         uint32 uiCountdownTimer;
         uint32 HodirRareCacheData;
+            uint32 ColossusData;
 
         uint32 uiAlgalonCountdown;
         //   62 - not ready to engage
