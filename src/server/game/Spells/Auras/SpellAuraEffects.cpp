@@ -869,7 +869,7 @@ void AuraEffect::CalculateSpellMod()
     switch (GetAuraType())
     {
         case SPELL_AURA_DUMMY:
-            switch(GetSpellInfo()->SpellFamilyName)
+            switch (GetSpellInfo()->SpellFamilyName)
             {
                 case SPELLFAMILY_PRIEST:
                     // Pain and Suffering
@@ -891,7 +891,6 @@ void AuraEffect::CalculateSpellMod()
                     {
                         case 34246: // Idol of the Emerald Queen
                         case 60779: // Idol of Lush Moss
-                        {
                             if (!m_spellmod)
                             {
                                 m_spellmod = new SpellModifier(GetBase());
@@ -902,9 +901,7 @@ void AuraEffect::CalculateSpellMod()
                             }
                             m_spellmod->value = GetAmount() / 7;
                             break;
-                        }
                         case 64949: // Idol of the Flourishing Life
-                        {
                             if (!m_spellmod)
                             {
                                 m_spellmod = new SpellModifier(GetBase());
@@ -915,14 +912,30 @@ void AuraEffect::CalculateSpellMod()
                             }
                             m_spellmod->value = GetAmount();
                             break;
-                        }
+                    }
+                    break;
+                case SPELLFAMILY_PALADIN:
+                    switch (GetId())
+                    {
+                        case 60792: // Libram of Tolerance
+                        case 64956: // Libram of the Resolute
+                            if (!m_spellmod)
+                            {
+                                m_spellmod = new SpellModifier(GetBase());
+                                m_spellmod->op = SpellModOp(GetMiscValue());
+                                m_spellmod->type = SPELLMOD_FLAT;
+                                m_spellmod->spellId = GetId();
+                                m_spellmod->mask[0] = 0x80000000;
+                            }
+                            m_spellmod->value = GetAmount();
+                            break;
                     }
                     break;
                 default:
                     break;
             }
         case SPELL_AURA_MOD_SPELL_CRIT_CHANCE:
-            switch(GetId())
+            switch (GetId())
             {
                 case 51466: // Elemental oath
                 case 51470: // Elemental oath
