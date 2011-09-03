@@ -3019,6 +3019,7 @@ void SpellMgr::LoadDbcDataCorrections()
             case 64599: // Arcane Barrage
             case 64607: // Arcane Barrage
             case 47731: // Critter
+            case 48246: // Ball of Flame
             case 62301: // Cosmic Smash
                 spellInfo->MaxAffectedTargets = 1;
                 break;
@@ -3247,9 +3248,6 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectBasePoints[0] = 519;           // Some suggest a global multiplier is used for rep gain
                                                                 // but basepoints * 1,3 hard coded in the tooltip says
                 break;                                          // otherwise.
-            case 48246: // Ball of Flame
-                spellInfo->MaxAffectedTargets = 1;
-                break;
             case 48278: // Paralyze
                 spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_TARGET_ENEMY;
                 break;
@@ -3337,6 +3335,9 @@ void SpellMgr::LoadDbcDataCorrections()
             case 30531: // Soul Transfer
             case 55849: // Power Spark
                 spellInfo->AttributesEx3 |= SPELL_ATTR3_STACK_FOR_DIFF_CASTERS;
+                break;
+            case 56790: // Create Harpoon
+                spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_TARGET_ANY;
                 break;
             // ULDUAR SPELLS
             //
