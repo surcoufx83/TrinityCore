@@ -1152,14 +1152,15 @@ class mob_ancient_conservator : public CreatureScript
 
             void EnterCombat(Unit* /*who*/)
             {
+                // TODO: fix this one, might somehow cause client errors?
+                DoCast(SPELL_CONSERVATORS_GRIP);
+
                 for (uint8 i = 1; i <= 6; ++i)
                 {
                     Position pos;
                     me->GetRandomNearPosition(pos, 35.0f);
                     me->SummonCreature(33215, pos, TEMPSUMMON_TIMED_DESPAWN, urand(30000, 36000));
                 }
-
-                DoCast(me, SPELL_CONSERVATORS_GRIP, true);
             }
 
             void DamageTaken(Unit* /*attacker*/, uint32 &damage)

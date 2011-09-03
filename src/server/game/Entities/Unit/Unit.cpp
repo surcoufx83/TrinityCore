@@ -796,12 +796,8 @@ uint32 Unit::DealDamage(Unit* victim, uint32 damage, CleanDamage const* cleanDam
 
         if (victim->GetTypeId() != TYPEID_PLAYER)
         {
-            float threatMod = 0.0f;
-            if (spellProto)
-                threatMod = GetSpellThreatMod(spellProto);
-
-            if (threatMod > 0.0f)
-                victim->AddThreat(this, damage * threatMod, damageSchoolMask, spellProto);
+            if (spellProto && IsDamageToThreatSpell(spellProto))
+                victim->AddThreat(this, damage * 2.0f, damageSchoolMask, spellProto);
             else
                 victim->AddThreat(this, (float)damage, damageSchoolMask, spellProto);
         }
@@ -11688,46 +11684,28 @@ bool Unit::IsImmunedToSpellEffect(SpellInfo const* spellInfo, uint32 index) cons
     return false;
 }
 
-float Unit::GetSpellThreatMod(SpellInfo const * spellInfo) const
+bool Unit::IsDamageToThreatSpell(SpellInfo const* spellInfo) const
 {
     if (!spellInfo)
-        return 0.0f;
+        return false;
 
-    switch (spellInfo->SpellFamilyName)
+    switch(spellInfo->SpellFamilyName)
     {
         case SPELLFAMILY_WARLOCK:
             if (spellInfo->SpellFamilyFlags[0] == 0x100) // Searing Pain
-                return 2.0f;
+                return true;
             break;
         case SPELLFAMILY_SHAMAN:
             if (spellInfo->SpellFamilyFlags[0] == SPELLFAMILYFLAG_SHAMAN_FROST_SHOCK)
-                return 2.0f;
+                return true;
             break;
         case SPELLFAMILY_DEATHKNIGHT:
             if (spellInfo->SpellFamilyFlags[1] == 0x20000000) // Rune Strike
-                return 1.75f;
-            if (spellInfo->SpellFamilyFlags[2] == 0x8) // Death and Decay
-                return 1.9f;
-            break;
-        case SPELLFAMILY_WARRIOR:
-            if (spellInfo->SpellFamilyFlags[0] == 0x80) // Thunder Clap
-                return 1.75f;
-            if (spellInfo->SpellFamilyFlags[1] == 0x1) // Heroic Throw
-                return 1.5f;
-            if (spellInfo->SpellFamilyFlags[1] == 0x200) // Shield Slam
-                return 1.3f;
-            break;
-        case SPELLFAMILY_DRUID:
-            if (spellInfo->SpellFamilyFlags[1] == 0x100000) // Swipe (Bear)
-                return 1.5f;
-            break;
-        case SPELLFAMILY_PALADIN:
-            if (spellInfo->SpellFamilyFlags[0] == 0x8 && spellInfo->SpellFamilyFlags[2] == 0x20) // Retribution Aura
-                return 3.0f;
+                return true;
             break;
     }
 
-    return 0.0f;
+    return false;
 }
 
 void Unit::MeleeDamageBonus(Unit* victim, uint32 *pdamage, WeaponAttackType attType, SpellInfo const* spellProto)
