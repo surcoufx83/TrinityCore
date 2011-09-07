@@ -79,6 +79,8 @@ enum Spells
     SPELL_BERSERK                               = 47008,
 
     // Hard Mode
+    SPELL_SELF_DESTRUCTION                      = 64610,
+    SPELL_SELF_DESTRUCTION_VISUAL               = 64613,
     SPELL_EMERGENCY_MODE                        = 64582,
     SPELL_FLAME_SUPPRESSANT                     = 64570,
     SPELL_FLAME_SUPPRESSANT_VX001               = 65192,
@@ -204,520 +206,526 @@ Position const SummonPos[9] =
 
 class boss_mimiron : public CreatureScript
 {
-public:
-    boss_mimiron() : CreatureScript("boss_mimiron") { }
+    public:
+        boss_mimiron() : CreatureScript("boss_mimiron") { }
 
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return new boss_mimironAI(creature);
-    }
-
-    struct boss_mimironAI : public BossAI
-    {
-        boss_mimironAI(Creature* creature) : BossAI(creature, TYPE_MIMIRON)
+        struct boss_mimironAI : public BossAI
         {
-            me->ApplySpellImmune(0, IMMUNITY_ID, SPELL_ROCKET_STRIKE_DMG, true);
-            me->SetReactState(REACT_PASSIVE);
-        }
-
-        uint32 uiPhase_timer;
-        uint32 uiStep;
-        uint32 EnrageTimer;
-        uint32 FlameTimer;
-        uint32 flameCount;
-        uint32 uiBotTimer;
-        bool MimironHardMode;
-        bool checkBotAlive;
-        bool Enraged;
-
-        Phases phase;
-
-        void DespawnCreatures(uint32 entry, float distance)
-        {
-            std::list<Creature*> creatures;
-            GetCreatureListWithEntryInGrid(creatures, me, entry, distance);
-
-            if (creatures.empty())
-                return;
-
-            for (std::list<Creature*>::iterator iter = creatures.begin(); iter != creatures.end(); ++iter)
-                (*iter)->ForcedDespawn();
-        }
-
-        void Reset()
-        {
-            if (me->getFaction() == 35)
-                return;
-
-            _Reset();
-            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
-            me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_USESTANDING);
-            me->SetVisible(true);
-            me->ExitVehicle();
-            me->GetMotionMaster()->MoveTargetedHome();
-
-            instance->SetData(DATA_MIMIRON_ELEVATOR, GO_STATE_ACTIVE);
-
-            phase = PHASE_NULL;
-            uiStep = 0;
-            uiPhase_timer = -1;
-            uiBotTimer = 0;
-            flameCount = 0;
-            MimironHardMode = false;
-            checkBotAlive = true;
-            Enraged = false;
-
-            DespawnCreatures(NPC_FLAMES_INITIAL, 100.0f);
-            DespawnCreatures(NPC_PROXIMITY_MINE, 100.0f);
-            DespawnCreatures(NPC_ROCKET, 100.0f);
-            DespawnCreatures(NPC_JUNK_BOT, 100.0f);
-            DespawnCreatures(NPC_ASSAULT_BOT, 100.0f);
-            DespawnCreatures(NPC_BOOM_BOT, 100.0f);
-            DespawnCreatures(NPC_EMERGENCY_BOT, 100.0f);
-
-            for (uint8 data = DATA_LEVIATHAN_MK_II; data <= DATA_AERIAL_UNIT; ++data)
-                if (Creature* creature = me->GetCreature(*me, instance->GetData64(data)))
-                    if (creature->isAlive())
-                    {
-                        creature->ExitVehicle();
-                        creature->AI()->EnterEvadeMode();
-                    }
-
-            if (GameObject* go = me->FindNearestGameObject(GO_BIG_RED_BUTTON, 200))
+            boss_mimironAI(Creature* creature) : BossAI(creature, TYPE_MIMIRON)
             {
-                go->SetGoState(GO_STATE_READY);
-                go->SetLootState(GO_JUST_DEACTIVATED);
-                go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
-            }
-        }
-
-        void EndEncounter()
-        {
-            DoScriptText(SAY_V07TRON_DEATH, me);
-
-            me->setFaction(35);
-
-            if (instance)
-            {
-                instance->SetBossState(TYPE_MIMIRON, DONE);
-
-                if (MimironHardMode)
-                    me->SummonGameObject(RAID_MODE(CACHE_OF_INNOVATION_HARDMODE_10, CACHE_OF_INNOVATION_HARDMODE_25), 2744.65f, 2569.46f, 364.314f, 3.14159f, 0, 0, 0.7f, 0.7f, 604800);
-                else
-                    me->SummonGameObject(RAID_MODE(CACHE_OF_INNOVATION_10, CACHE_OF_INNOVATION_25), 2744.65f, 2569.46f, 364.314f, 3.14159f, 0, 0, 0.7f, 0.7f, 604800);
-
-                instance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, NPC_LEVIATHAN_MKII, 1);
+                me->ApplySpellImmune(0, IMMUNITY_ID, SPELL_ROCKET_STRIKE_DMG, true);
+                me->SetReactState(REACT_PASSIVE);
             }
 
-            EnterEvadeMode();
-            me->ForcedDespawn(5000);
-        }
-
-        void EnterCombat(Unit* /*who*/)
-        {
-            _EnterCombat();
-            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
-            phase = PHASE_INTRO;
-            FlameTimer = 5000;
-            if (MimironHardMode)
-                EnrageTimer = 10*60*1000; // Enrage in 10 min
-            else
-                EnrageTimer = 15*60*1000; // Enrage in 15 min
-            JumpToNextStep(100);
-
-            if (GameObject* go = me->FindNearestGameObject(GO_BIG_RED_BUTTON, 200))
-                go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
-        }
-
-        void JumpToNextStep(uint32 uiTimer)
-        {
-            uiPhase_timer = uiTimer;
-            ++uiStep;
-        }
-
-        void UpdateAI(uint32 const diff)
-        {
-            if (!UpdateVictim())
-                return;
-
-            _DoAggroPulse(diff);
-
-            if (EnrageTimer <= diff && !Enraged)
+            void DespawnCreatures(uint32 entry, float distance)
             {
-                DoScriptText(SAY_BERSERK, me);
+                std::list<Creature*> creatures;
+                GetCreatureListWithEntryInGrid(creatures, me, entry, distance);
+
+                if (creatures.empty())
+                    return;
+
+                for (std::list<Creature*>::iterator iter = creatures.begin(); iter != creatures.end(); ++iter)
+                    (*iter)->ForcedDespawn();
+            }
+
+            void Reset()
+            {
+                if (me->getFaction() == 35)
+                    return;
+
+                _Reset();
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
+                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_USESTANDING);
+                me->SetVisible(true);
+                me->ExitVehicle();
+                me->GetMotionMaster()->MoveTargetedHome();
+
+                instance->SetData(DATA_MIMIRON_ELEVATOR, GO_STATE_ACTIVE);
+
+                _phase = PHASE_NULL;
+                _step = 0;
+                _phaseTimer = -1;
+                _botTimer = 0;
+                _flameCount = 0;
+                _mimironHardMode = false;
+                _checkBotAlive = true;
+                _enraged = false;
+
+                DespawnCreatures(NPC_FLAMES_INITIAL, 100.0f);
+                DespawnCreatures(NPC_PROXIMITY_MINE, 100.0f);
+                DespawnCreatures(NPC_ROCKET, 100.0f);
+                DespawnCreatures(NPC_JUNK_BOT, 100.0f);
+                DespawnCreatures(NPC_ASSAULT_BOT, 100.0f);
+                DespawnCreatures(NPC_BOOM_BOT, 100.0f);
+                DespawnCreatures(NPC_EMERGENCY_BOT, 100.0f);
+
                 for (uint8 data = DATA_LEVIATHAN_MK_II; data <= DATA_AERIAL_UNIT; ++data)
                     if (Creature* creature = me->GetCreature(*me, instance->GetData64(data)))
-                        creature->AI()->DoAction(DO_ENTER_ENRAGE);
+                        if (creature->isAlive())
+                        {
+                            creature->ExitVehicle();
+                            creature->AI()->EnterEvadeMode();
+                        }
 
-                Enraged = true;
+                if (GameObject* go = me->FindNearestGameObject(GO_BIG_RED_BUTTON, 200))
+                {
+                    go->SetGoState(GO_STATE_READY);
+                    go->SetLootState(GO_JUST_DEACTIVATED);
+                    go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
+                }
             }
-            else EnrageTimer -= diff;
 
-            if (MimironHardMode)
-                if (FlameTimer <= diff)
-                {
-                    for (uint8 i = 0; i < 3; ++i)
-                        if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                            DoCast(target, SPELL_SUMMON_FLAMES_INITIAL, true);
-
-                    FlameTimer = 30000;
-                }
-                else
-                    FlameTimer -= diff;
-
-            // All sections need to die within 15 seconds, else they respawn
-            if (checkBotAlive)
-                uiBotTimer = 0;
-            else
+            void EndEncounter()
             {
-                uiBotTimer += diff;
-                if (uiBotTimer > 15000) // spell 64383
-                {
-                    if (Creature* Leviathan = me->GetCreature(*me, instance->GetData64(DATA_LEVIATHAN_MK_II)))
-                        Leviathan->AI()->DoAction(DO_LEVIATHAN_ASSEMBLED);
-                    if (Creature* VX_001 = me->GetCreature(*me, instance->GetData64(DATA_VX_001)))
-                        VX_001->AI()->DoAction(DO_VX001_ASSEMBLED);
-                    if (Creature* AerialUnit = me->GetCreature(*me, instance->GetData64(DATA_AERIAL_UNIT)))
-                        AerialUnit->AI()->DoAction(DO_AERIAL_ASSEMBLED);
+                DoScriptText(SAY_V07TRON_DEATH, me);
 
-                    checkBotAlive = true;
+                me->setFaction(35);
+
+                if (instance)
+                {
+                    instance->SetBossState(TYPE_MIMIRON, DONE);
+
+                    if (_mimironHardMode)
+                        me->SummonGameObject(RAID_MODE<uint32>(CACHE_OF_INNOVATION_HARDMODE_10, CACHE_OF_INNOVATION_HARDMODE_25), 2744.65f, 2569.46f,
+                        364.314f, 3.14159f, 0, 0, 0.7f, 0.7f, 604800);
+                    else
+                        me->SummonGameObject(RAID_MODE<uint32>(CACHE_OF_INNOVATION_10, CACHE_OF_INNOVATION_25), 2744.65f, 2569.46f, 364.314f, 3.14159f,
+                        0, 0, 0.7f, 0.7f, 604800);
+
+                    instance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, NPC_LEVIATHAN_MKII, 1);
+                }
+
+                EnterEvadeMode();
+                me->ForcedDespawn(5000);
+            }
+
+            void EnterCombat(Unit* /*who*/)
+            {
+                _EnterCombat();
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
+                _phase = PHASE_INTRO;
+                _flameTimer = 5000;
+                _enrageTimer = _mimironHardMode ? 10*60*1000 : 15*60*1000; // Enrage in 10 (hard mode) or 15 min
+                JumpToNextStep(100);
+
+                if (GameObject* go = me->FindNearestGameObject(GO_BIG_RED_BUTTON, 200))
+                    go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
+            }
+
+            void JumpToNextStep(uint32 timer)
+            {
+                _phaseTimer = timer;
+                ++_step;
+            }
+
+            void UpdateAI(uint32 const diff)
+            {
+                if (!UpdateVictim())
+                    return;
+
+                _DoAggroPulse(diff);
+
+                if (_enrageTimer <= diff && !_enraged)
+                {
+                    DoScriptText(SAY_BERSERK, me);
+                    for (uint8 data = DATA_LEVIATHAN_MK_II; data <= DATA_AERIAL_UNIT; ++data)
+                        if (Creature* creature = me->GetCreature(*me, instance->GetData64(data)))
+                            creature->AI()->DoAction(DO_ENTER_ENRAGE);
+
+                    _enraged = true;
+
+                    if (_mimironHardMode)
+                    {
+                        DoCast(me, SPELL_SELF_DESTRUCTION, true);
+                        DoCast(me, SPELL_SELF_DESTRUCTION_VISUAL, true);
+                    }
                 }
                 else
+                    _enrageTimer -= diff;
+
+                if (_mimironHardMode)
+                    if (_flameTimer <= diff)
+                    {
+                        for (uint8 i = 0; i < 3; ++i)
+                            if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                                DoCast(target, SPELL_SUMMON_FLAMES_INITIAL, true);
+
+                        _flameTimer = 30000;
+                    }
+                    else
+                        _flameTimer -= diff;
+
+                // All sections need to die within 15 seconds, else they respawn
+                if (_checkBotAlive)
+                    _botTimer = 0;
+                else
                 {
-                    if (Creature* Leviathan = me->GetCreature(*me, instance->GetData64(DATA_LEVIATHAN_MK_II)))
+                    _botTimer += diff;
+                    if (_botTimer > 15000) // spell 64383
+                    {
+                        if (Creature* Leviathan = me->GetCreature(*me, instance->GetData64(DATA_LEVIATHAN_MK_II)))
+                            Leviathan->AI()->DoAction(DO_LEVIATHAN_ASSEMBLED);
                         if (Creature* VX_001 = me->GetCreature(*me, instance->GetData64(DATA_VX_001)))
-                            if (Creature* AerialUnit = me->GetCreature(*me, instance->GetData64(DATA_AERIAL_UNIT)))
-                                if (Leviathan->getStandState() == UNIT_STAND_STATE_DEAD)
-                                    if (VX_001->getStandState() == UNIT_STAND_STATE_DEAD)
-                                        if (AerialUnit->getStandState() == UNIT_STAND_STATE_DEAD)
-                                        {
-                                            Leviathan->DisappearAndDie();
-                                            VX_001->DisappearAndDie();
-                                            AerialUnit->DisappearAndDie();
-                                            DespawnCreatures(NPC_FLAMES_INITIAL, 100.0f);
-                                            DespawnCreatures(NPC_PROXIMITY_MINE, 100.0f);
-                                            DespawnCreatures(NPC_ROCKET, 100);
-                                            me->ExitVehicle();
-                                            EndEncounter();
-                                            checkBotAlive = true;
-                                        }
-                }
-            }
+                            VX_001->AI()->DoAction(DO_VX001_ASSEMBLED);
+                        if (Creature* AerialUnit = me->GetCreature(*me, instance->GetData64(DATA_AERIAL_UNIT)))
+                            AerialUnit->AI()->DoAction(DO_AERIAL_ASSEMBLED);
 
-            if (phase == PHASE_INTRO)
-            {
-                if (uiPhase_timer <= diff)
-                {
-                    switch (uiStep)
+                        _checkBotAlive = true;
+                    }
+                    else
                     {
-                        case 1:
-                            if (MimironHardMode)
-                                DoScriptText(SAY_HARDMODE_ON, me);
-                            else
-                                DoScriptText(SAY_AGGRO, me);
-                            JumpToNextStep(10000);
-                            break;
-                        case 2:
-                            if (instance)
+                        Creature* Leviathan = me->GetCreature(*me, instance->GetData64(DATA_LEVIATHAN_MK_II));
+                        Creature* VX_001 = me->GetCreature(*me, instance->GetData64(DATA_VX_001));
+                        Creature* AerialUnit = me->GetCreature(*me, instance->GetData64(DATA_AERIAL_UNIT));
+                        if (Leviathan && VX_001 && AerialUnit)
+                        {
+                            if (Leviathan->getStandState() == UNIT_STAND_STATE_DEAD &&
+                                VX_001->getStandState() == UNIT_STAND_STATE_DEAD &&
+                                AerialUnit->getStandState() == UNIT_STAND_STATE_DEAD)
                             {
-                                if (Creature* Leviathan = me->GetCreature(*me, instance->GetData64(DATA_LEVIATHAN_MK_II)))
-                                    me->EnterVehicle(Leviathan, 4);
+                                Leviathan->DisappearAndDie();
+                                VX_001->DisappearAndDie();
+                                AerialUnit->DisappearAndDie();
+                                DespawnCreatures(NPC_FLAMES_INITIAL, 100.0f);
+                                DespawnCreatures(NPC_PROXIMITY_MINE, 100.0f);
+                                DespawnCreatures(NPC_ROCKET, 100);
+                                me->ExitVehicle();
+                                EndEncounter();
+                                _checkBotAlive = true;
                             }
-                            JumpToNextStep(2000);
-                            break;
-                        case 3:
-                            me->ChangeSeat(2);
-                            JumpToNextStep(2000);
-                            break;
-                        case 4:
-                            me->ChangeSeat(5);
-                            me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STAND);
-                            JumpToNextStep(2500);
-                            break;
-                        case 5:
-                            DoScriptText(SAY_MKII_ACTIVATE, me);
-                            me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_TALK);
-                            JumpToNextStep(6000);
-                            break;
-                        case 6:
-                            me->ChangeSeat(6);
-                            JumpToNextStep(2000);
-                            break;
-                        case 7:
-                            if (instance)
-                            {
-                                if (Creature* Leviathan = me->GetCreature(*me, instance->GetData64(DATA_LEVIATHAN_MK_II)))
-                                {
-                                    me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STAND);
-                                    Leviathan->AI()->DoAction(DO_START_ENCOUNTER);
-                                    phase = PHASE_COMBAT;
-                                }
-                            }
-                            break;
-                        default:
-                            break;
+                        }
                     }
                 }
-                else
-                    uiPhase_timer -= diff;
-            }
 
-            if (phase == PHASE_VX001_ACTIVATION)
-            {
-                if (uiPhase_timer <= diff)
+                if (_phase == PHASE_INTRO)
                 {
-                    switch (uiStep)
+                    if (_phaseTimer <= diff)
                     {
-                        case 1:
-                            DoScriptText(SAY_MKII_DEATH, me);
-                            JumpToNextStep(10000);
-                            break;
-                        case 2:
-                            me->ChangeSeat(1);
-                            JumpToNextStep(2000);
-                            break;
-                        case 3:
-                            if (instance)
-                                instance->SetData(DATA_MIMIRON_ELEVATOR, GO_STATE_READY);
-                            JumpToNextStep(5000);
-                            break;
-                        case 4:
-                            if (instance)
-                            {
-                                if (Creature* VX_001 = me->SummonCreature(NPC_VX_001, 2744.65f, 2569.46f, 364.397f, 3.14159f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000))
+                        switch (_step)
+                        {
+                            case 1:
+                                DoScriptText(_mimironHardMode ? SAY_HARDMODE_ON : SAY_AGGRO, me);
+                                JumpToNextStep(10000);
+                                break;
+                            case 2:
+                                if (instance)
                                 {
-                                    instance->SetData(DATA_MIMIRON_ELEVATOR, GO_STATE_ACTIVE_ALTERNATIVE);
-                                    VX_001->SetVisible(true);
-                                    for (uint8 n = 5; n < 7; n++)
-                                    {
-                                        if (Creature* Rocket = me->SummonCreature(NPC_ROCKET, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_MANUAL_DESPAWN))
-                                        {
-                                            Rocket->setFaction(14);
-                                            Rocket->SetReactState(REACT_PASSIVE);
-                                            Rocket->EnterVehicle(VX_001, n);
-                                        }
-                                    }
+                                    if (Creature* Leviathan = me->GetCreature(*me, instance->GetData64(DATA_LEVIATHAN_MK_II)))
+                                        me->EnterVehicle(Leviathan, 4);
                                 }
-                            }
-                            JumpToNextStep(8000);
-                            break;
-                        case 5:
-                            if (instance)
-                            {
-                                if (Creature* VX_001 = me->GetCreature(*me, instance->GetData64(DATA_VX_001)))
-                                    me->EnterVehicle(VX_001, 0);
-                            }
-                            JumpToNextStep(3500);
-                            break;
-                        case 6:
-                            me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_TALK);
-                            DoScriptText(SAY_VX001_ACTIVATE, me);
-                            JumpToNextStep(10000);
-                            break;
-                        case 7:
-                            me->ChangeSeat(1);
-                            me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_SIT);
-                            JumpToNextStep(2000);
-                            break;
-                        case 8:
-                            if (instance)
-                            {
-                                if (Creature* VX_001 = me->GetCreature(*me, instance->GetData64(DATA_VX_001)))
-                                    VX_001->HandleEmoteCommand(EMOTE_ONESHOT_EMERGE);
-                            }
-                            JumpToNextStep(3500);
-                            break;
-                        case 9:
-                            if (instance)
-                                if (Creature* VX_001 = me->GetCreature(*me, instance->GetData64(DATA_VX_001)))
+                                JumpToNextStep(2000);
+                                break;
+                            case 3:
+                                me->ChangeSeat(2);
+                                JumpToNextStep(2000);
+                                break;
+                            case 4:
+                                me->ChangeSeat(5);
+                                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STAND);
+                                JumpToNextStep(2500);
+                                break;
+                            case 5:
+                                DoScriptText(SAY_MKII_ACTIVATE, me);
+                                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_TALK);
+                                JumpToNextStep(6000);
+                                break;
+                            case 6:
+                                me->ChangeSeat(6);
+                                JumpToNextStep(2000);
+                                break;
+                            case 7:
+                                if (instance)
                                 {
-                                    VX_001->AddAura(SPELL_HOVER, VX_001); // Hover
-                                    VX_001->AI()->DoAction(DO_START_VX001);
-                                    phase = PHASE_COMBAT;
-                                }
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                else
-                    uiPhase_timer -= diff;
-            }
-
-            if (phase == PHASE_AERIAL_ACTIVATION)
-            {
-                if (uiPhase_timer <= diff)
-                {
-                    switch (uiStep)
-                    {
-                        case 1:
-                            me->ChangeSeat(4);
-                            me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STAND);
-                            JumpToNextStep(2500);
-                            break;
-                        case 2:
-                            DoScriptText(SAY_VX001_DEATH, me);
-                            me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_TALK);
-                            JumpToNextStep(5000);
-                            break;
-                        case 3:
-                            me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STAND);
-                            if (instance)
-                            {
-                                if (Creature* AerialUnit = me->SummonCreature(NPC_AERIAL_COMMAND_UNIT, 2744.65f, 2569.46f, 380, 3.14159f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000))
-                                    AerialUnit->SetVisible(true);
-                            }
-                            JumpToNextStep(5000);
-                            break;
-                        case 4:
-                            me->ExitVehicle();
-                            //me->GetMotionMaster()->MoveJump(2745.06f, 2569.36f, 379.90f, 10, 15);
-                            if (Creature* AerialUnit = me->GetCreature(*me, instance->GetData64(DATA_AERIAL_UNIT)))
-                                 me->EnterVehicle(AerialUnit, 0);
-                            JumpToNextStep(2000);
-                            break;
-                        case 5:
-                            me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_TALK);
-                            DoScriptText(SAY_AERIAL_ACTIVATE, me);
-                            JumpToNextStep(8000);
-                            break;
-                        case 6:
-                            me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STAND);
-                            //me->SetVisible(false);
-                            if (instance)
-                            {
-                                if (Creature* AerialUnit = me->GetCreature(*me, instance->GetData64(DATA_AERIAL_UNIT)))
-                                {
-                                    AerialUnit->AI()->DoAction(DO_START_AERIAL);
-                                    phase = PHASE_COMBAT;
-                                }
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                else
-                    uiPhase_timer -= diff;
-            }
-
-            if (phase == PHASE_V0L7R0N_ACTIVATION)
-            {
-                if (uiPhase_timer <= diff)
-                {
-                    switch (uiStep)
-                    {
-                        case 1:
-                            if (instance)
-                            {
-                                //me->SetVisible(true);
-                                if (Creature* Leviathan = me->GetCreature(*me, instance->GetData64(DATA_LEVIATHAN_MK_II)))
-                                   Leviathan->GetMotionMaster()->MovePoint(0, 2744.65f, 2569.46f, 364.397f);
-                                if (Creature* VX_001 = me->GetCreature(*me, instance->GetData64(DATA_VX_001)))
-                                {
-                                    me->EnterVehicle(VX_001, 1);
-                                    me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STAND);
-                                    DoScriptText(SAY_AERIAL_DEATH, me);
-                                }
-                            }
-                            JumpToNextStep(5000);
-                            break;
-                        case 2:
-                            if (instance)
-                                if (Creature* VX_001 = me->GetCreature(*me, instance->GetData64(DATA_VX_001)))
                                     if (Creature* Leviathan = me->GetCreature(*me, instance->GetData64(DATA_LEVIATHAN_MK_II)))
                                     {
-                                        VX_001->SetStandState(UNIT_STAND_STATE_STAND);
-                                        VX_001->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_CUSTOM_SPELL_01);
-                                        VX_001->EnterVehicle(Leviathan, 7);
+                                        me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STAND);
+                                        Leviathan->AI()->DoAction(DO_START_ENCOUNTER);
+                                        _phase = PHASE_COMBAT;
                                     }
-                            JumpToNextStep(2000);
-                            break;
-                        case 3:
-                            if (instance)
-                                if (Creature* VX_001 = me->GetCreature(*me, instance->GetData64(DATA_VX_001)))
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else
+                        _phaseTimer -= diff;
+                }
+
+                if (_phase == PHASE_VX001_ACTIVATION)
+                {
+                    if (_phaseTimer <= diff)
+                    {
+                        switch (_step)
+                        {
+                            case 1:
+                                DoScriptText(SAY_MKII_DEATH, me);
+                                JumpToNextStep(10000);
+                                break;
+                            case 2:
+                                me->ChangeSeat(1);
+                                JumpToNextStep(2000);
+                                break;
+                            case 3:
+                                if (instance)
+                                    instance->SetData(DATA_MIMIRON_ELEVATOR, GO_STATE_READY);
+                                JumpToNextStep(5000);
+                                break;
+                            case 4:
+                                if (instance)
+                                {
+                                    if (Creature* VX_001 = me->SummonCreature(NPC_VX_001, 2744.65f, 2569.46f, 364.397f, 3.14159f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000))
+                                    {
+                                        instance->SetData(DATA_MIMIRON_ELEVATOR, GO_STATE_ACTIVE_ALTERNATIVE);
+                                        VX_001->SetVisible(true);
+                                        for (uint8 n = 5; n < 7; ++n)
+                                        {
+                                            if (Creature* Rocket = me->SummonCreature(NPC_ROCKET, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_MANUAL_DESPAWN))
+                                            {
+                                                Rocket->setFaction(14);
+                                                Rocket->SetReactState(REACT_PASSIVE);
+                                                Rocket->EnterVehicle(VX_001, n);
+                                            }
+                                        }
+                                    }
+                                }
+                                JumpToNextStep(8000);
+                                break;
+                            case 5:
+                                if (instance)
+                                {
+                                    if (Creature* VX_001 = me->GetCreature(*me, instance->GetData64(DATA_VX_001)))
+                                        me->EnterVehicle(VX_001, 0);
+                                }
+                                JumpToNextStep(3500);
+                                break;
+                            case 6:
+                                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_TALK);
+                                DoScriptText(SAY_VX001_ACTIVATE, me);
+                                JumpToNextStep(10000);
+                                break;
+                            case 7:
+                                me->ChangeSeat(1);
+                                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_SIT);
+                                JumpToNextStep(2000);
+                                break;
+                            case 8:
+                                if (instance)
+                                {
+                                    if (Creature* VX_001 = me->GetCreature(*me, instance->GetData64(DATA_VX_001)))
+                                        VX_001->HandleEmoteCommand(EMOTE_ONESHOT_EMERGE);
+                                }
+                                JumpToNextStep(3500);
+                                break;
+                            case 9:
+                                if (instance)
+                                    if (Creature* VX_001 = me->GetCreature(*me, instance->GetData64(DATA_VX_001)))
+                                    {
+                                        VX_001->AddAura(SPELL_HOVER, VX_001); // Hover
+                                        VX_001->AI()->DoAction(DO_START_VX001);
+                                        _phase = PHASE_COMBAT;
+                                    }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else
+                        _phaseTimer -= diff;
+                }
+
+                if (_phase == PHASE_AERIAL_ACTIVATION)
+                {
+                    if (_phaseTimer <= diff)
+                    {
+                        switch (_step)
+                        {
+                            case 1:
+                                me->ChangeSeat(4);
+                                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STAND);
+                                JumpToNextStep(2500);
+                                break;
+                            case 2:
+                                DoScriptText(SAY_VX001_DEATH, me);
+                                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_TALK);
+                                JumpToNextStep(5000);
+                                break;
+                            case 3:
+                                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STAND);
+                                if (instance)
+                                {
+                                    if (Creature* AerialUnit = me->SummonCreature(NPC_AERIAL_COMMAND_UNIT, 2744.65f, 2569.46f, 380, 3.14159f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000))
+                                        AerialUnit->SetVisible(true);
+                                }
+                                JumpToNextStep(5000);
+                                break;
+                            case 4:
+                                me->ExitVehicle();
+                                //me->GetMotionMaster()->MoveJump(2745.06f, 2569.36f, 379.90f, 10, 15);
+                                if (Creature* AerialUnit = me->GetCreature(*me, instance->GetData64(DATA_AERIAL_UNIT)))
+                                     me->EnterVehicle(AerialUnit, 0);
+                                JumpToNextStep(2000);
+                                break;
+                            case 5:
+                                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_TALK);
+                                DoScriptText(SAY_AERIAL_ACTIVATE, me);
+                                JumpToNextStep(8000);
+                                break;
+                            case 6:
+                                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STAND);
+                                //me->SetVisible(false);
+                                if (instance)
+                                {
                                     if (Creature* AerialUnit = me->GetCreature(*me, instance->GetData64(DATA_AERIAL_UNIT)))
                                     {
-                                        AerialUnit->SetFlying(false);
-                                        AerialUnit->EnterVehicle(VX_001, 3);
-                                        DoScriptText(SAY_V07TRON_ACTIVATE, me);
+                                        AerialUnit->AI()->DoAction(DO_START_AERIAL);
+                                        _phase = PHASE_COMBAT;
                                     }
-                            JumpToNextStep(10000);
-                            break;
-                        case 4:
-                            if (instance)
-                            {
-                                if (Creature* Leviathan = me->GetCreature(*me, instance->GetData64(DATA_LEVIATHAN_MK_II)))
-                                    Leviathan->AI()->DoAction(DO_LEVIATHAN_ASSEMBLED);
-                                if (Creature* VX_001 = me->GetCreature(*me, instance->GetData64(DATA_VX_001)))
-                                    VX_001->AI()->DoAction(DO_VX001_ASSEMBLED);
-                                if (Creature* AerialUnit = me->GetCreature(*me, instance->GetData64(DATA_AERIAL_UNIT)))
-                                    AerialUnit->AI()->DoAction(DO_AERIAL_ASSEMBLED);
-                                phase = PHASE_COMBAT;
-                            }
-                            break;
-                        default:
-                            break;
+                                }
+                                break;
+                            default:
+                                break;
+                        }
                     }
+                    else
+                        _phaseTimer -= diff;
                 }
-                else
-                    uiPhase_timer -= diff;
-            }
-        }
 
-        uint32 GetData(uint32 type)
-        {
-            switch (type)
-            {
-                case DATA_GET_HARD_MODE:
-                    return MimironHardMode ? 1 : 0;
-                case DATA_FLAME_COUNT:
-                    return flameCount;
-                default:
-                    return 0;
+                if (_phase == PHASE_V0L7R0N_ACTIVATION)
+                {
+                    if (_phaseTimer <= diff)
+                    {
+                        switch (_step)
+                        {
+                            case 1:
+                                if (instance)
+                                {
+                                    //me->SetVisible(true);
+                                    if (Creature* Leviathan = me->GetCreature(*me, instance->GetData64(DATA_LEVIATHAN_MK_II)))
+                                       Leviathan->GetMotionMaster()->MovePoint(0, 2744.65f, 2569.46f, 364.397f);
+                                    if (Creature* VX_001 = me->GetCreature(*me, instance->GetData64(DATA_VX_001)))
+                                    {
+                                        me->EnterVehicle(VX_001, 1);
+                                        me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STAND);
+                                        DoScriptText(SAY_AERIAL_DEATH, me);
+                                    }
+                                }
+                                JumpToNextStep(5000);
+                                break;
+                            case 2:
+                                if (instance)
+                                    if (Creature* VX_001 = me->GetCreature(*me, instance->GetData64(DATA_VX_001)))
+                                        if (Creature* Leviathan = me->GetCreature(*me, instance->GetData64(DATA_LEVIATHAN_MK_II)))
+                                        {
+                                            VX_001->SetStandState(UNIT_STAND_STATE_STAND);
+                                            VX_001->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_CUSTOM_SPELL_01);
+                                            VX_001->EnterVehicle(Leviathan, 7);
+                                        }
+                                JumpToNextStep(2000);
+                                break;
+                            case 3:
+                                if (instance)
+                                    if (Creature* VX_001 = me->GetCreature(*me, instance->GetData64(DATA_VX_001)))
+                                        if (Creature* AerialUnit = me->GetCreature(*me, instance->GetData64(DATA_AERIAL_UNIT)))
+                                        {
+                                            AerialUnit->SetFlying(false);
+                                            AerialUnit->EnterVehicle(VX_001, 3);
+                                            DoScriptText(SAY_V07TRON_ACTIVATE, me);
+                                        }
+                                JumpToNextStep(10000);
+                                break;
+                            case 4:
+                                if (instance)
+                                {
+                                    if (Creature* Leviathan = me->GetCreature(*me, instance->GetData64(DATA_LEVIATHAN_MK_II)))
+                                        Leviathan->AI()->DoAction(DO_LEVIATHAN_ASSEMBLED);
+                                    if (Creature* VX_001 = me->GetCreature(*me, instance->GetData64(DATA_VX_001)))
+                                        VX_001->AI()->DoAction(DO_VX001_ASSEMBLED);
+                                    if (Creature* AerialUnit = me->GetCreature(*me, instance->GetData64(DATA_AERIAL_UNIT)))
+                                        AerialUnit->AI()->DoAction(DO_AERIAL_ASSEMBLED);
+                                    _phase = PHASE_COMBAT;
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else
+                        _phaseTimer -= diff;
+                }
             }
-        }
 
-        void DoAction(int32 const action)
-        {
-            switch (action)
+            uint32 GetData(uint32 type)
             {
-                case DO_ACTIVATE_VX001:
-                    phase = PHASE_VX001_ACTIVATION;
-                    uiStep = 0;
-                    uiPhase_timer = -1;
-                    JumpToNextStep(100);
-                    break;
-                case DO_ACTIVATE_AERIAL:
-                    phase = PHASE_AERIAL_ACTIVATION;
-                    uiStep = 0;
-                    uiPhase_timer = -1;
-                    JumpToNextStep(5000);
-                    break;
-                case DO_ACTIVATE_V0L7R0N:
-                    me->SetVisible(true);
-                    phase = PHASE_V0L7R0N_ACTIVATION;
-                    uiStep = 0;
-                    uiPhase_timer = -1;
-                    JumpToNextStep(1000);
-                    break;
-                case DO_ACTIVATE_DEATH_TIMER:
-                    checkBotAlive = false;
-                    break;
-                case DO_ACTIVATE_HARD_MODE:
-                    MimironHardMode = true;
-                    DoZoneInCombat();
-                    break;
-                case DO_INCREASE_FLAME_COUNT:
-                    ++flameCount;
-                    break;
-                case DO_DECREASE_FLAME_COUNT:
-                    if (flameCount)
-                        --flameCount;
-                    break;
+                switch (type)
+                {
+                    case DATA_GET_HARD_MODE:
+                        return _mimironHardMode ? 1 : 0;
+                    case DATA_FLAME_COUNT:
+                        return _flameCount;
+                    default:
+                        return 0;
+                }
             }
+
+            void DoAction(int32 const action)
+            {
+                switch (action)
+                {
+                    case DO_ACTIVATE_VX001:
+                        _phase = PHASE_VX001_ACTIVATION;
+                        _step = 0;
+                        _phaseTimer = -1;
+                        JumpToNextStep(100);
+                        break;
+                    case DO_ACTIVATE_AERIAL:
+                        _phase = PHASE_AERIAL_ACTIVATION;
+                        _step = 0;
+                        _phaseTimer = -1;
+                        JumpToNextStep(5000);
+                        break;
+                    case DO_ACTIVATE_V0L7R0N:
+                        me->SetVisible(true);
+                        _phase = PHASE_V0L7R0N_ACTIVATION;
+                        _step = 0;
+                        _phaseTimer = -1;
+                        JumpToNextStep(1000);
+                        break;
+                    case DO_ACTIVATE_DEATH_TIMER:
+                        _checkBotAlive = false;
+                        break;
+                    case DO_ACTIVATE_HARD_MODE:
+                        _mimironHardMode = true;
+                        DoZoneInCombat();
+                        break;
+                    case DO_INCREASE_FLAME_COUNT:
+                        ++_flameCount;
+                        break;
+                    case DO_DECREASE_FLAME_COUNT:
+                        if (_flameCount)
+                            --_flameCount;
+                        break;
+                }
+            }
+
+        private:
+            Phases _phase;
+            uint32 _phaseTimer;
+            uint32 _step;
+            uint32 _enrageTimer;
+            uint32 _flameTimer;
+            uint32 _flameCount;
+            uint32 _botTimer;
+            bool _mimironHardMode;
+            bool _checkBotAlive;
+            bool _enraged;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new boss_mimironAI(creature);
         }
-    };
 };
 
 
@@ -844,9 +852,9 @@ public:
             events.ScheduleEvent(EVENT_PLASMA_BLAST, 10000, 0, PHASE_LEVIATHAN_SOLO);
         }
 
-        void DoAction(const int32 action)
+        void DoAction(int32 const action)
         {
-            switch(action)
+            switch (action)
             {
                 case DO_START_ENCOUNTER:
                     me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_OOC_NOT_ATTACKABLE);
@@ -874,7 +882,7 @@ public:
             }
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             if (!UpdateVictim())
                 return;
@@ -882,17 +890,17 @@ public:
             _DoAggroPulse(diff);
             events.Update(diff);
 
-            if (me->HasUnitState(UNIT_STAT_CASTING))
+            if (me->HasUnitState(UNIT_STAT_CASTING) || me->HasUnitState(UNIT_STAT_STUNNED))
                 return;
 
             if (phase == PHASE_LEVIATHAN_SOLO || phase == PHASE_LEVIATHAN_ASSEMBLED)
             {
                 while (uint32 eventId = events.ExecuteEvent())
                 {
-                    switch(eventId)
+                    switch (eventId)
                     {
                         case EVENT_PROXIMITY_MINE:
-                            for (int i = 0; i < 10; i++)
+                            for (int i = 0; i < 10; ++i)
                                 DoCast(SPELL_MINES_SPAWN);
                             DoCast(SPELL_PROXIMITY_MINES);
                             events.RescheduleEvent(EVENT_PROXIMITY_MINE, 35000);
@@ -1099,7 +1107,7 @@ public:
             me->ApplySpellImmune(0, IMMUNITY_ID, 59164, true);
         }
 
-        void KilledUnit(Unit * /*who*/)
+        void KilledUnit(Unit* /*who*/)
         {
             if (!(rand()%5))
                 if (instance)
@@ -1121,7 +1129,7 @@ public:
             {
                 DoCast(me, SPELL_EMERGENCY_MODE);
                 events.ScheduleEvent(EVENT_FROST_BOMB, 15000);
-                events.ScheduleEvent(EVENT_FLAME_SUPPRESSANT_VX001, 1000, PHASE_VX001_SOLO);
+                events.ScheduleEvent(EVENT_FLAME_SUPPRESSANT_VX001, 1000, 0, PHASE_VX001_SOLO);
             }
 
             events.ScheduleEvent(EVENT_RAPID_BURST, 2500, 0, PHASE_VX001_SOLO);
@@ -1131,7 +1139,7 @@ public:
             events.ScheduleEvent(EVENT_HAND_PULSE, 10000, 0, PHASE_VX001_ASSEMBLED);
         }
 
-        void DoAction(const int32 action)
+        void DoAction(int32 const action)
         {
             switch (action)
             {
@@ -1162,7 +1170,7 @@ public:
             }
         }
 
-        void DamageTaken(Unit * /*who*/, uint32 &damage)
+        void DamageTaken(Unit* /*who*/, uint32 &damage)
         {
             if (me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1))
                 damage = 0;
@@ -1203,7 +1211,7 @@ public:
                 }
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             if (!UpdateVictim())
                 return;
@@ -1255,9 +1263,10 @@ public:
                             me->SetReactState(REACT_PASSIVE);
                             if (Creature* leviathan = me->GetVehicleCreatureBase())
                             {
-                                float orient = leviathan->GetOrientation();
-                                leviathan->CastSpell(leviathan, 14821, true); // temporary, to prevent turning
+                                float orient = float(2*M_PI * rand_norm());
+                                leviathan->CastSpell(leviathan, 14821, true); // temporary
                                 leviathan->SetFacing(orient);
+                                leviathan->SetOrientation(orient);
                                 me->SetOrientation(orient);
                             }
                             direction = urand(0, 1);
@@ -1298,7 +1307,7 @@ public:
                             break;
                         case EVENT_FLAME_SUPPRESSANT_VX001:
                             DoCastAOE(SPELL_FLAME_SUPPRESSANT_VX001);
-                            events.RescheduleEvent(EVENT_FLAME_SUPPRESSANT_VX001, 10000, PHASE_VX001_SOLO);
+                            events.RescheduleEvent(EVENT_FLAME_SUPPRESSANT_VX001, 10000, 0, PHASE_VX001_SOLO);
                             break;
                     }
                 }

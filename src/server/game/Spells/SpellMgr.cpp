@@ -3131,11 +3131,6 @@ void SpellMgr::LoadDbcDataCorrections()
             case 51904: // Summon Ghouls On Scarlet Crusade (core does not know the triggered spell is summon spell)
                 spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
                 break;
-            case 15257: // Shadow Weaving - Rank 1
-            case 15331: // Shadow Weaving - Rank 2
-            case 15332: // Shadow Weaving - Rank 3
-                spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
-                break;
             case 51001: // Tribunal of Ages - Dark Matter
                 spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_TARGET_ENEMY;
                 spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_TARGET_ENEMY;
@@ -3311,6 +3306,7 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectBasePoints[EFFECT_0] = 100;
                 break;
             // workaround for spells which are currently casted on not_selectable targets
+            case 46598: // Ride Vehicle Hardcoded
             case 56430: // Arcane Bomb
             case 61421: // Ride Vehicle
             case 62309: // Ride Vehicle (Scales w/ Gear)
@@ -3331,6 +3327,7 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->rangeIndex = 13;
                 spellInfo->AttributesEx6 |= SPELL_ATTR6_CAN_TARGET_UNTARGETABLE;
                 break;
+            case 17364: // Stormstrike
             case 30207: // Shadow Grasp
             case 30531: // Soul Transfer
             case 55849: // Power Spark
