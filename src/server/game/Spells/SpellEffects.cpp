@@ -4395,8 +4395,11 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                     if (!unitTarget || !m_caster)
                         return;
 
-                    m_caster->CastSpell(unitTarget,63661,true);
-                    m_caster->CastSpell(unitTarget,68321,true);
+                    if(Unit* damager = m_caster->GetCharmerOrOwnerOrSelf())
+                    {
+                        m_caster->CastSpell(unitTarget,63661,true);
+                        damager->CastSpell(unitTarget,68321,true);
+                    }
 
                     return;
                 }
@@ -4460,6 +4463,15 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                             defendaura->ModStackAmount(defendaura->GetStackAmount()-1,AURA_REMOVE_BY_ENEMY_SPELL);
                         }
                     }
+                    return;
+                }
+                // Chum the Water
+                case 66741:
+                {
+                    if(!m_caster)
+                        return;
+
+                    m_caster->CastSpell(m_caster,RAND(66740,66739,66738,66737),true);
                     return;
                 }
                 // Glyph of Backstab

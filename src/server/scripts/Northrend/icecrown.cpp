@@ -2195,6 +2195,255 @@ public:
     }
 };
 
+#define GOSSIP_TRADE        "Visit a trader."
+#define GOSSIP_BANK         "Visit a bank."
+#define GOSSIP_MAIL         "Visit a mailbox."
+
+#define GOSSIP_ORC_PENNANT  "Orgrimmar Champion's Pennant"
+#define GOSSIP_SEN_PENNANT  "Darkspear Champion's Pennant"
+#define GOSSIP_UND_PENNANT  "Forsaken Champion's Pennant"
+#define GOSSIP_SIL_PENNANT  "Silvermoon Champion's Pennant"
+#define GOSSIP_TBL_PENNANT  "Thunder Bluff Champion's Pennant"
+
+#define GOSSIP_STW_PENNANT  "Stormwind Champion's Pennant"
+#define GOSSIP_IFR_PENNANT  "Ironforge Champion's Pennant"
+#define GOSSIP_GNO_PENNANT  "Gnomeregan Champion's Pennant"
+#define GOSSIP_DAR_PENNANT  "Darnassus Champion's Pennant"
+#define GOSSIP_EXO_PENNANT  "Exodar Champion's Pennant"
+
+enum eSquireGruntling
+{
+    SPELL_BANK_ERRAND_H             = 68849,
+    SPELL_POSTMAN_H                 = 68850,
+    SPELL_SHOP_H                    = 68851,
+    SPELL_TIRED_H                   = 68852,
+
+    SPELL_BANK_ERRAND_A             = 67368,
+    SPELL_POSTMAN_A                 = 67376,
+    SPELL_SHOP_A                    = 67377,
+    SPELL_TIRED_A                   = 67401,
+
+    SPELL_PEND_DAR                  = 63443,
+    SPELL_PEND_GNO                  = 63442,
+    SPELL_PEND_IRO                  = 63440,
+    SPELL_PEND_ORG                  = 63444,
+    SPELL_PEND_SEN                  = 63446,
+    SPELL_PEND_SIL                  = 63438,
+    SPELL_PEND_STO                  = 62727,
+    SPELL_PEND_EXO                  = 63439,
+    SPELL_PEND_UND                  = 63441,
+    SPELL_PEND_THU                  = 63445,
+
+
+    ACHIEVEMENT_CHAMP_DARNASSUS     = 2777,
+    ACHIEVEMENT_CHAMP_GNOMEREGAN    = 2779,
+    ACHIEVEMENT_CHAMP_IRONFORGE     = 2780,
+    ACHIEVEMENT_CHAMP_ORGRIMMAR     = 2783,
+    ACHIEVEMENT_CHAMP_SENJIN        = 2784,
+    ACHIEVEMENT_CHAMP_SILVERMOON    = 2785,
+    ACHIEVEMENT_CHAMP_STORMWIND     = 2781,
+    ACHIEVEMENT_CHAMP_EXODAR        = 2778,
+    ACHIEVEMENT_CHAMP_UNDERCITY     = 2787,
+    ACHIEVEMENT_CHAMP_THUNDERBLUFF  = 2786,
+
+    GOS_CHAMP_DAR                   = 1,
+    GOS_CHAMP_GNO                   = 2,
+    GOS_CHAMP_IRO                   = 3,
+    GOS_CHAMP_ORG                   = 4,
+    GOS_CHAMP_SEN                   = 5,
+    GOS_CHAMP_SIL                   = 6,
+    GOS_CHAMP_STO                   = 7,
+    GOS_CHAMP_EXO                   = 8,
+    GOS_CHAMP_UND                   = 9,
+    GOS_CHAMP_THU                   = 10,
+
+    ENTRY_SQUIRE                    = 33238,
+    ENTRY_GRUNTLING                 = 33239,
+};
+
+//UPDATE creature_template SET scriptname = 'npc_argent_squire_gruntling' WHERE entry in (33238,33239);
+
+class npc_argent_squire_gruntling : public CreatureScript
+{
+public:
+    npc_argent_squire_gruntling() : CreatureScript("npc_argent_squire_gruntling") { }
+
+    bool canShowPostman(Creature* pCreature)
+    {
+        if(pCreature->HasAura(SPELL_POSTMAN_H) || pCreature->HasAura(SPELL_POSTMAN_A))
+            return true;
+
+        if(pCreature->HasAura(SPELL_BANK_ERRAND_H) || pCreature->HasAura(SPELL_BANK_ERRAND_A))
+            return false;
+
+        if(pCreature->HasAura(SPELL_SHOP_H) || pCreature->HasAura(SPELL_SHOP_A))
+            return false;
+
+        if(pCreature->HasAura(SPELL_TIRED_H) || pCreature->HasAura(SPELL_TIRED_A))
+            return false;
+
+        return true;
+    }
+
+    bool canShowShop(Creature* pCreature)
+    {
+        if(pCreature->HasAura(SPELL_POSTMAN_H) || pCreature->HasAura(SPELL_POSTMAN_A))
+            return false;
+
+        if(pCreature->HasAura(SPELL_BANK_ERRAND_H) || pCreature->HasAura(SPELL_BANK_ERRAND_A))
+            return false;
+
+        if(pCreature->HasAura(SPELL_SHOP_H) || pCreature->HasAura(SPELL_SHOP_A))
+            return true;
+
+        if(pCreature->HasAura(SPELL_TIRED_H) || pCreature->HasAura(SPELL_TIRED_A))
+            return false;
+
+        return true;
+    }
+
+    bool canShowBank(Creature* pCreature)
+    {
+        if(pCreature->HasAura(SPELL_POSTMAN_H) || pCreature->HasAura(SPELL_POSTMAN_A))
+            return false;
+
+        if(pCreature->HasAura(SPELL_BANK_ERRAND_H) || pCreature->HasAura(SPELL_BANK_ERRAND_A))
+            return true;
+
+        if(pCreature->HasAura(SPELL_SHOP_H) || pCreature->HasAura(SPELL_SHOP_A))
+            return false;
+
+        if(pCreature->HasAura(SPELL_TIRED_H) || pCreature->HasAura(SPELL_TIRED_A))
+            return false;
+
+        return true;
+    }
+
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        if(!pPlayer)
+            return true;
+
+        //if(canShowBank(pCreature))
+        //    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, GOSSIP_BANK, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_BANK);
+
+        //if(canShowShop(pCreature))
+        //    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TRADE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+
+        //if(canShowPostman(pCreature))
+        //    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MAIL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+
+        if(pPlayer->HasAchieved(ACHIEVEMENT_CHAMP_DARNASSUS))
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_DAR_PENNANT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+GOS_CHAMP_DAR);
+
+        if(pPlayer->HasAchieved(ACHIEVEMENT_CHAMP_GNOMEREGAN))
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_GNO_PENNANT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+GOS_CHAMP_GNO);
+
+        if(pPlayer->HasAchieved(ACHIEVEMENT_CHAMP_IRONFORGE))
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_IFR_PENNANT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+GOS_CHAMP_IRO);
+
+        if(pPlayer->HasAchieved(ACHIEVEMENT_CHAMP_ORGRIMMAR))
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ORC_PENNANT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+GOS_CHAMP_ORG);
+
+        if(pPlayer->HasAchieved(ACHIEVEMENT_CHAMP_SENJIN))
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_DAR_PENNANT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+GOS_CHAMP_SEN);
+
+        if(pPlayer->HasAchieved(ACHIEVEMENT_CHAMP_SILVERMOON))
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SIL_PENNANT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+GOS_CHAMP_SIL);
+
+        if(pPlayer->HasAchieved(ACHIEVEMENT_CHAMP_STORMWIND))
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_STW_PENNANT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+GOS_CHAMP_STO);
+
+        if(pPlayer->HasAchieved(ACHIEVEMENT_CHAMP_EXODAR))
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_EXO_PENNANT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+GOS_CHAMP_EXO);
+
+        if(pPlayer->HasAchieved(ACHIEVEMENT_CHAMP_UNDERCITY))
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_UND_PENNANT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+GOS_CHAMP_UND);
+
+        if(pPlayer->HasAchieved(ACHIEVEMENT_CHAMP_THUNDERBLUFF))
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TBL_PENNANT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+GOS_CHAMP_THU);
+
+        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+        return true;
+    }
+
+    void cleanUpAllAuras(Creature* pCreature)
+    {
+        pCreature->RemoveAurasDueToSpell(SPELL_PEND_DAR);
+        pCreature->RemoveAurasDueToSpell(SPELL_PEND_GNO);
+        pCreature->RemoveAurasDueToSpell(SPELL_PEND_IRO);
+        pCreature->RemoveAurasDueToSpell(SPELL_PEND_ORG);
+        pCreature->RemoveAurasDueToSpell(SPELL_PEND_SEN);
+        pCreature->RemoveAurasDueToSpell(SPELL_PEND_SIL);
+        pCreature->RemoveAurasDueToSpell(SPELL_PEND_STO);
+        pCreature->RemoveAurasDueToSpell(SPELL_PEND_EXO);
+        pCreature->RemoveAurasDueToSpell(SPELL_PEND_UND);
+        pCreature->RemoveAurasDueToSpell(SPELL_PEND_THU);
+    }
+
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    {
+        pPlayer->PlayerTalkClass->ClearMenus();
+        switch(uiAction)
+        {
+        //case GOSSIP_ACTION_BANK:
+        //    pPlayer->GetSession()->SendShowBank(pCreature->GetGUID());
+        //    break;
+        //case GOSSIP_ACTION_TRADE:
+        //    pPlayer->GetSession()->SendListInventory(pCreature->GetGUID());
+        //    break;
+        //case GOSSIP_ACTION_INFO_DEF:
+        //    pCreature->MonsterSay("Nein, das kann ich nicht",LANG_UNIVERSAL,pPlayer->GetGUID());
+        //    break;
+
+        case GOSSIP_ACTION_INFO_DEF+GOS_CHAMP_DAR:
+            cleanUpAllAuras(pCreature);
+            pCreature->CastSpell(pCreature,SPELL_PEND_DAR,true);
+            break;
+        case GOSSIP_ACTION_INFO_DEF+GOS_CHAMP_GNO:
+            cleanUpAllAuras(pCreature);
+            pCreature->CastSpell(pCreature,SPELL_PEND_GNO,true);
+            break;
+        case GOSSIP_ACTION_INFO_DEF+GOS_CHAMP_IRO:
+            cleanUpAllAuras(pCreature);
+            pCreature->CastSpell(pCreature,SPELL_PEND_IRO,true);
+            break;
+        case GOSSIP_ACTION_INFO_DEF+GOS_CHAMP_ORG:
+            cleanUpAllAuras(pCreature);
+            pCreature->CastSpell(pCreature,SPELL_PEND_ORG,true);
+            break;
+        case GOSSIP_ACTION_INFO_DEF+GOS_CHAMP_SEN:
+            cleanUpAllAuras(pCreature);
+            pCreature->CastSpell(pCreature,SPELL_PEND_SEN,true);
+            break;
+        case GOSSIP_ACTION_INFO_DEF+GOS_CHAMP_SIL:
+            cleanUpAllAuras(pCreature);
+            pCreature->CastSpell(pCreature,SPELL_PEND_SIL,true);
+            break;
+        case GOSSIP_ACTION_INFO_DEF+GOS_CHAMP_STO:
+            cleanUpAllAuras(pCreature);
+            pCreature->CastSpell(pCreature,SPELL_PEND_STO,true);
+            break;
+        case GOSSIP_ACTION_INFO_DEF+GOS_CHAMP_EXO:
+            cleanUpAllAuras(pCreature);
+            pCreature->CastSpell(pCreature,SPELL_PEND_EXO,true);
+            break;
+        case GOSSIP_ACTION_INFO_DEF+GOS_CHAMP_UND:
+            cleanUpAllAuras(pCreature);
+            pCreature->CastSpell(pCreature,SPELL_PEND_UND,true);
+            break;
+        case GOSSIP_ACTION_INFO_DEF+GOS_CHAMP_THU:
+            cleanUpAllAuras(pCreature);
+            pCreature->CastSpell(pCreature,SPELL_PEND_THU,true);
+            break;
+        }
+
+        pPlayer->CLOSE_GOSSIP_MENU();
+        return true;
+    }
+
+};
+
 void AddSC_icecrown()
 {
     new npc_arete();
@@ -2218,4 +2467,5 @@ void AddSC_icecrown()
     new npc_maiden_of_drakmar();
     new npc_squire_danny();
     new npc_argent_champion();
+    new npc_argent_squire_gruntling();
 }

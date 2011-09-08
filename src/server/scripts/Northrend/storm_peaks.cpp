@@ -495,6 +495,8 @@ public:
 #define SPELL_MECHANO_HOG           60866
 #define SPELL_MEKGINEERS_CHOPPER    60867
 
+//UPDATE creature_template SET scriptname = 'npc_roxi_ramrocket' WHERE entry = 31247;
+
 class npc_roxi_ramrocket : public CreatureScript
 {
 public:
@@ -1086,6 +1088,78 @@ class npc_hyldsmeet_protodrake : public CreatureScript
         }
 };
 
+/*######
+## Snowblind Follower
+## Quest: Gormok Wants His Snobolds (14090,14141)
+######*/
+
+enum eSnowblindFollower
+{
+    ENTRY_SNOWBLIND_CREDIT              = 34899,
+    SPELL_THROW_NET                     = 66474,
+};
+
+#define SAY_SNOWBLINDFOLLOWER_1         "Grrrrr!"
+#define SAY_SNOWBLINDFOLLOWER_2         "Me not afraid!"
+#define SAY_SNOWBLINDFOLLOWER_3         "Net not stop me! No... net stop me."
+#define SAY_SNOWBLINDFOLLOWER_4         "No kill me!"
+#define SAY_SNOWBLINDFOLLOWER_5         "No!"
+#define SAY_SNOWBLINDFOLLOWER_6         "You no take... me!"
+
+//UPDATE creature_template SET scriptname = 'npc_snowblind_follower' WHERE entry = 29618;
+
+class npc_snowblind_follower : public CreatureScript
+{
+public:
+    npc_snowblind_follower() : CreatureScript("npc_snowblind_follower") {}
+
+    struct npc_snowblind_followerAI : public ScriptedAI
+    {
+        npc_snowblind_followerAI(Creature* creature) : ScriptedAI(creature) { }
+
+        bool hitbynet;
+
+        void Reset()
+        {
+            hitbynet = false;
+        }
+
+        void MoveInLineOfSight(Unit* attacker) {}
+        void AttackStart(Unit* attacker) {}
+
+        void SpellHit(Unit* caster, SpellInfo const* spell)
+        {
+            if (spell->Id == SPELL_THROW_NET)
+            {
+                if(!caster || !caster->ToPlayer())
+                    return;
+
+                if(hitbynet)
+                    return;
+
+                hitbynet = true;
+
+                switch(urand(0,5))
+                {
+                case 0: me->MonsterSay(SAY_SNOWBLINDFOLLOWER_1,LANG_UNIVERSAL,caster->GetGUID()); break;
+                case 1: me->MonsterSay(SAY_SNOWBLINDFOLLOWER_2,LANG_UNIVERSAL,caster->GetGUID()); break;
+                case 2: me->MonsterSay(SAY_SNOWBLINDFOLLOWER_3,LANG_UNIVERSAL,caster->GetGUID()); break;
+                case 3: me->MonsterSay(SAY_SNOWBLINDFOLLOWER_4,LANG_UNIVERSAL,caster->GetGUID()); break;
+                case 4: me->MonsterSay(SAY_SNOWBLINDFOLLOWER_5,LANG_UNIVERSAL,caster->GetGUID()); break;
+                case 5: me->MonsterSay(SAY_SNOWBLINDFOLLOWER_6,LANG_UNIVERSAL,caster->GetGUID()); break;
+                }
+                caster->ToPlayer()->KilledMonsterCredit(ENTRY_SNOWBLIND_CREDIT,0);
+                me->DespawnOrUnsummon(3000);
+            }
+        }
+    };
+
+    CreatureAI* GetAI(Creature* creature) const
+    {
+        return new npc_snowblind_followerAI(creature);
+    }
+};
+
 void AddSC_storm_peaks()
 {
     new npc_agnetta_tyrsdottar();
@@ -1104,5 +1178,5 @@ void AddSC_storm_peaks()
     new npc_harnessed_icemaw();
     new npc_hyldsmeet_protodrake();
     new npc_dead_irongiant();
-    //UPDATE creature_template SET scriptname = 'npc_roxi_ramrocket' WHERE entry = 31247;
+    new npc_snowblind_follower();
 }

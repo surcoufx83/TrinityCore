@@ -1358,3 +1358,11 @@ DELETE FROM conditions WHERE SourceTypeOrReferenceId = 13 AND SourceEntry = 6300
 INSERT INTO conditions VALUES 
 (13,0,63001,0,18,1,33438,0,0,'','');
 UPDATE `creature_template` SET `flags_extra` = `flags_extra` | 268435520 WHERE `entry` = 33438; -- NO-XP and respawntime ignore
+
+-- Visibility of Black Knight
+DELETE FROM spell_area WHERE spell = 67471;
+INSERT INTO spell_area VALUES
+(67471,4658,0,0,13664,0,0,2,1);
+
+-- What Do You Feed a Yeti, Anyway? ... Factions
+UPDATE `creature_template` SET `faction_A`=14  , `faction_H`=14, `InhabitType`=3 WHERE `entry` IN (35060,35061,35071,35072);
