@@ -3242,6 +3242,10 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectBasePoints[0] = 519;           // Some suggest a global multiplier is used for rep gain
                                                                 // but basepoints * 1,3 hard coded in the tooltip says
                 break;                                          // otherwise.
+            case 63163: // Apply Enchanted Bridle
+                spellInfo->EffectBasePoints[0] = 0;
+                spellInfo->EffectDieSides[0] = 0;
+                break;
             case 48278: // Paralyze
                 spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_TARGET_ENEMY;
                 break;
