@@ -1152,6 +1152,10 @@ INSERT INTO pool_template VALUES
 UPDATE quest_template SET ExclusiveGroup = 14074 WHERE entry in (14074,14152,14077,14080);
 UPDATE quest_template SET ExclusiveGroup = 14143 WHERE entry in (14143,14136,14144,14140);
 UPDATE quest_template SET ExclusiveGroup = 0 WHERE entry in (14142,14096); -- Kul Quest enable everyday
+-- Fix for Kul Quest - Not Closing Cages
+UPDATE `gameobject_template` SET `data2`=30000 WHERE `entry` = 195310;
+UPDATE gameobject SET state = 1 WHERE id = 195310;
+
 
 DELETE FROM pool_quest WHERE pool_entry IN (34880,34771);
 INSERT INTO pool_quest VALUES 

@@ -2261,7 +2261,7 @@ enum eSquireGruntling
     ENTRY_GRUNTLING                 = 33239,
 };
 
-//UPDATE creature_template SET scriptname = 'npc_argent_squire_gruntling' WHERE entry in (33238,33239);
+//UPDATE creature_template SET scriptname = 'npc_argent_squire_gruntling', npc_flag |= 1 WHERE entry in (33238,33239);
 
 class npc_argent_squire_gruntling : public CreatureScript
 {
@@ -2444,6 +2444,122 @@ public:
 
 };
 
+/*######
+## vehicle_black_knights_gryphon
+######*/
+
+const Position BlackKnightGryphonWaypoints[19] =
+{
+    {8522.41f, 582.23f, 552.29f, 0.0f},
+    {8502.92f, 610.34f, 550.01f, 0.0f},
+    {8502.50f, 628.61f, 547.38f, 0.0f},
+    {8484.50f, 645.16f, 547.30f, 0.0f},
+    {8454.49f, 693.96f, 547.30f, 0.0f},
+    {8403.00f, 742.34f, 547.30f, 0.0f},
+    {8374.00f, 798.35f, 547.93f, 0.0f},
+    {8376.43f, 858.33f, 548.00f, 0.0f},
+    {8388.22f, 868.56f, 547.78f, 0.0f},
+    {8465.58f, 871.45f, 547.30f, 0.0f},
+    {8478.29f, 1014.63f, 547.30f, 0.0f},
+    {8530.86f, 1037.65f, 547.30f, 0.0f},
+    {8537.69f, 1078.33f, 554.80f, 0.0f},
+    {8537.69f, 1078.33f, 578.10f, 0.0f},
+    {8740.47f, 1611.72f, 496.19f, 0.0f},
+    {9025.06f, 1799.67f, 171.54f, 0.0f},
+    {9138.47f, 2013.83f, 104.24f, 0.0f},
+    {9081.39f, 2158.26f, 72.98f, 0.0f},
+    {9054.00f, 2124.85f, 57.13f, 0.0f}
+};
+
+// UPDATE `creature_template` SET scriptname = 'vehicle_black_knights_gryphon' WHERE `entry` = 33519;
+
+class vehicle_black_knight_gryphon : public CreatureScript
+{
+public:
+    vehicle_black_knight_gryphon() : CreatureScript("vehicle_black_knights_gryphon") { }
+
+    CreatureAI* GetAI(Creature *_Creature) const
+    {
+        return new  vehicle_black_knight_gryphonAI(_Creature);
+    }
+
+    struct vehicle_black_knight_gryphonAI : public VehicleAI
+    {
+        vehicle_black_knight_gryphonAI(Creature *c) : VehicleAI(c)
+        {
+             if (VehicleSeatEntry* vehSeat = const_cast<VehicleSeatEntry*>(sVehicleSeatStore.LookupEntry(3548)))
+                vehSeat->m_flags |= VEHICLE_SEAT_FLAG_UNCONTROLLED;
+        }
+
+        bool isInUse;
+
+        bool wp_reached;
+        uint8 count;
+
+        void Reset()
+        {
+            count = 0;
+            wp_reached = false;
+            isInUse = false;
+        }
+
+        void PassengerBoarded(Unit* who, int8 /*seatId*/, bool apply)
+        {
+            if (who && apply)
+            {
+                isInUse = apply;
+                wp_reached = true;
+                me->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
+                me->SetSpeed(MOVE_RUN, 2.0f);
+                me->SetSpeed(MOVE_FLIGHT, 3.5f);
+            }
+        }
+
+        void MovementInform(uint32 type, uint32 id)
+        {
+            if (type != POINT_MOTION_TYPE || id != count)
+                return;
+
+            if (id < 18)
+            {
+                if(id > 11)
+                {
+                    me->SetUnitMovementFlags(MOVEMENTFLAG_LEVITATING);
+                    me->SetSpeed(MOVE_RUN, 5.0f);
+                    //me->SetFlying(true);
+                }
+
+                ++count;
+                wp_reached = true;
+            }
+            else
+            {
+                Unit* player = me->GetVehicleKit()->GetPassenger(0);
+                if (player && player->GetTypeId() == TYPEID_PLAYER)
+                {
+                    player->ToPlayer()->KilledMonsterCredit(me->GetEntry(),me->GetGUID());
+                    player->ExitVehicle();
+                    me->DespawnOrUnsummon(5000);
+                }
+            }
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if(!me->IsVehicle())
+                return;
+
+            if(!isInUse) return;
+
+            if (wp_reached)
+            {
+                wp_reached = false;
+                me->GetMotionMaster()->MovePoint(count, BlackKnightGryphonWaypoints[count]);
+            }
+        }
+    };
+};
+
 void AddSC_icecrown()
 {
     new npc_arete();
@@ -2468,4 +2584,5 @@ void AddSC_icecrown()
     new npc_squire_danny();
     new npc_argent_champion();
     new npc_argent_squire_gruntling();
+    new vehicle_black_knight_gryphon();
 }

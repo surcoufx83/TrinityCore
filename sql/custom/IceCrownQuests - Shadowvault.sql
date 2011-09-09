@@ -81,6 +81,11 @@ UPDATE quest_template SET PrevQuestId = 12806, NextQuestId = 0, ExclusiveGroup =
 UPDATE quest_template SET PrevQuestId = 12807, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 12814 WHERE entry = 12810;
 -- You'll Need a Gryphon
 UPDATE quest_template SET PrevQuestId = 12810, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 12814;
+-- Fix for "You'll Need a Gryphon"
+UPDATE `creature_template` SET `spell1`=54420  , `VehicleId`=165  , `InhabitType`=7 WHERE `entry` = 29403;
+DELETE FROM conditions WHERE SourceTypeOrReferenceId = 17 AND SourceEntry = 54420;
+INSERT INTO conditions VALUES
+(17,0,54420,0,29,29405,10,0,0,'','Deliver Gryphon only near Uzo Deathcaller');
 
 -- -- From Their Corpses, Rise! ... Prev: The Story Thus Far...
 UPDATE quest_template SET PrevQuestId = 12807, NextQuestId = 0, ExclusiveGroup = 0, NextQuestInChain = 0 WHERE entry = 12813;
