@@ -101,7 +101,7 @@ enum Spells
     SPELL_STATIC_FIELD_MISSLE                = 57430,
     SPELL_SURGE_OF_POWER_10                  = 57407,
     SPELL_SURGE_OF_POWER_25                  = 60936,
-    SPELL_SURGE_OF_POWER_25_MARKER           = 60939,
+    //SPELL_SURGE_OF_POWER_25_MARKER           = 60939,
 
     SPELL_RIDE_RED_DRAGON_BUDDY              = 56071,
     SPELL_ALEXSTRASZAS_GIFT_VISUAL           = 61023,
@@ -398,7 +398,7 @@ class boss_malygos : public CreatureScript
                     case ACTION_SPAWN_ADDS:
                     {
                         // nexus lords
-                        for (uint8 i = 0; i < RAID_MODE(2, 4); ++i)
+                        for (uint8 i = 0; i < RAID_MODE<uint8>(2, 4); ++i)
                         {
                             if (Creature* lord = me->SummonCreature(NPC_NEXUS_LORD, Locations[1], TEMPSUMMON_CORPSE_DESPAWN))
                             {
@@ -412,7 +412,7 @@ class boss_malygos : public CreatureScript
                             }
                         }
                         // scions of eternity
-                        for (uint8 i = 0; i < RAID_MODE(4, 8); ++i)
+                        for (uint8 i = 0; i < RAID_MODE<uint8>(4, 8); ++i)
                         {
                             if (Creature* scion = me->SummonCreature(NPC_SCION_OF_ETERNITY, Locations[1], TEMPSUMMON_CORPSE_DESPAWN))
                             {
@@ -424,7 +424,7 @@ class boss_malygos : public CreatureScript
                                     temp->SetSpeed(MOVE_FLIGHT, 0.7f);
                                     temp->SetReactState(REACT_PASSIVE);
                                     temp->GetMotionMaster()->MovePoint(0, Locations[2]);
-                                    temp->AI()->SetData(0, (i + 1) * RAID_MODE(4, 2));
+                                    temp->AI()->SetData(0, (i + 1) * RAID_MODE<uint32>(4, 2));
                                 }
                             }
                         }
@@ -475,6 +475,11 @@ class boss_malygos : public CreatureScript
                                 player->RemovePet(pet, PET_SAVE_NOT_IN_SLOT, true);
                             player->UnsummonAllTotems();
                             player->CastSpell(mount, SPELL_RIDE_RED_DRAGON_BUDDY, true);
+
+                            me->SetInCombatWith(mount);
+                            me->AddThreat(mount, 10.0f);
+                            mount->SetInCombatWith(me);
+                            mount->AddThreat(me, 10.0f);
                         }
 
                         me->SetInCombatWithZone();
@@ -485,7 +490,7 @@ class boss_malygos : public CreatureScript
                         if (!urand(0, 2))
                             DoScriptText(SAY_SURGE_OF_POWER, me);
 
-                        if (GetDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL)
+                        if (!Is25ManRaid())
                         {
                             if (Unit* target = SelectVehicleBaseOrPlayer())
                             {
@@ -496,28 +501,31 @@ class boss_malygos : public CreatureScript
                         }
                         else
                         {
-                            // immune all drakes and players
-                            Map* map = me->GetMap();
-                            if (!map->IsDungeon())
+                            std::list<Unit*> targetList;
+
+                            // get all player drakes with threat
+                            const std::list<HostileReference*>& threatlist = me->getThreatManager().getThreatList();
+                            for (std::list<HostileReference*>::const_iterator itr = threatlist.begin(); itr != threatlist.end(); ++itr)
+                                if ((*itr)->getTarget()->ToCreature() && (*itr)->getTarget()->GetEntry() == NPC_WYRMREST_SKYTALON)
+                                    targetList.push_back((*itr)->getTarget());
+
+                            if (targetList.empty())
                                 return;
 
-                            Map::PlayerList const &PlayerList = map->GetPlayers();
-                            for(Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+                            // randomize and resize
+                            Trinity::RandomResizeList<Unit*>(targetList, 3);
+
+                            targetCount = 0;
+                            // store guids and notify players
+                            for (std::list<Unit*>::iterator itr = targetList.begin(); itr != targetList.end(); ++itr)
                             {
-                                Player* player = i->getSource();
-                                if (player && !player->isGameMaster() && player->isAlive())
-                                {
-                                    if (Unit* drake = player->GetVehicleBase())
-                                    {
-                                        drake->ApplySpellImmune(0, IMMUNITY_ID, SPELL_SURGE_OF_POWER_25, true);
-                                        player->ApplySpellImmune(0, IMMUNITY_ID, SPELL_SURGE_OF_POWER_25, true);
-                                    }
-                                }
+                                surgeTargets[targetCount++] = (*itr)->GetGUID();
+
+                                if (Player* player = (*itr)->GetCharmerOrOwnerPlayerOrPlayerItself())
+                                    me->MonsterWhisper(WHISPER_SURGE, player->GetGUID(), true);
                             }
 
-                            // select 3 targets, remove immunity on spellhit
-                            DoCast(me, SPELL_SURGE_OF_POWER_25_MARKER, true);
-                            // spellscript will select not immuned units
+                            targetCount = 0;
                             DoCast(SPELL_SURGE_OF_POWER_25);
                         }
                         break;
@@ -529,8 +537,8 @@ class boss_malygos : public CreatureScript
                         if (!map->IsDungeon())
                             return;
 
-                        Map::PlayerList const &PlayerList = map->GetPlayers();
-                        for(Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+                        Map::PlayerList const &playerList = map->GetPlayers();
+                        for (Map::PlayerList::const_iterator i = playerList.begin(); i != playerList.end(); ++i)
                         {
                             Player* player = i->getSource();
                             if (player && !player->isGameMaster() && player->isAlive())
@@ -631,7 +639,7 @@ class boss_malygos : public CreatureScript
                         // give some time to heal vortex dmg
                         events.ScheduleEvent(EVENT_STORM, urand(7, 10) * IN_MILLISECONDS);
                         events.ScheduleEvent(EVENT_SPARK, 15*IN_MILLISECONDS);
-                        events.ScheduleEvent(EVENT_BREATH, RAID_MODE(7, 3) * IN_MILLISECONDS);
+                        events.ScheduleEvent(EVENT_BREATH, RAID_MODE<uint32>(7, 3) * IN_MILLISECONDS);
                         events.ScheduleEvent(EVENT_VORTEXFLYUP, 45*IN_MILLISECONDS);
                         phase = PHASE_GROUND;
                         break;
@@ -679,12 +687,11 @@ class boss_malygos : public CreatureScript
                     target->CastSpell(target, SPELL_ARCANE_OVERLOAD, true);
                     target->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
                 }
-                if (spell->Id == SPELL_SURGE_OF_POWER_25_MARKER)
-                {
-                    target->ApplySpellImmune(0, IMMUNITY_ID, SPELL_SURGE_OF_POWER_25, false);
-                    if (Player* player = target->GetCharmerOrOwnerPlayerOrPlayerItself())
-                        me->MonsterWhisper(WHISPER_SURGE, player->GetGUID(), true);
-                }
+            }
+
+            uint64 GetGUID(int32 /*id*/ = 0)
+            {
+                return surgeTargets[targetCount++];
             }
 
             Unit* SelectVehicleBaseOrPlayer()
@@ -716,7 +723,7 @@ class boss_malygos : public CreatureScript
                     switch (eventId)
                     {
                         case EVENT_STORM:
-                            DoCast(RAID_MODE(SPELL_ARCANE_STORM_10, SPELL_ARCANE_STORM_25));
+                            DoCast(RAID_MODE<uint32>(SPELL_ARCANE_STORM_10, SPELL_ARCANE_STORM_25));
                             if (phase == PHASE_DRAGONS)
                             {
                                 if (!urand(0, 2))
@@ -731,7 +738,7 @@ class boss_malygos : public CreatureScript
                             events.ScheduleEvent(EVENT_SPARK, 20*IN_MILLISECONDS);
                             break;
                         case EVENT_BREATH:
-                            DoCastVictim(RAID_MODE(SPELL_ARCANE_BREATH_10, SPELL_ARCANE_BREATH_25));
+                            DoCastVictim(RAID_MODE<uint32>(SPELL_ARCANE_BREATH_10, SPELL_ARCANE_BREATH_25));
                             events.ScheduleEvent(EVENT_BREATH, 20*IN_MILLISECONDS);
                             break;
                         case EVENT_VORTEXFLYUP:
@@ -791,7 +798,7 @@ class boss_malygos : public CreatureScript
                                 DoAction(ACTION_DEEP_BREATH);
                                 events.ScheduleEvent(EVENT_SURGEOFPOWER, 60*IN_MILLISECONDS);
                             }
-                            break;
+                            return;
                         case EVENT_STATICFIELD:
                             if (Unit* target = SelectVehicleBaseOrPlayer())
                             {
@@ -800,7 +807,7 @@ class boss_malygos : public CreatureScript
                                 DoCast(target, SPELL_STATIC_FIELD_MISSLE);
                             }
                             events.ScheduleEvent(EVENT_STATICFIELD, 25*IN_MILLISECONDS);
-                            break;
+                            return;
                         case EVENT_PULSE:
                             DoCast(SPELL_ARCANE_PULSE);
                             events.ScheduleEvent(EVENT_PULSE, 10*IN_MILLISECONDS);
@@ -869,7 +876,7 @@ class boss_malygos : public CreatureScript
                 }
 
                 // switch to phase 3
-                if (phase == PHASE_ADDS && addsCount == RAID_MODE(6, 12))
+                if (phase == PHASE_ADDS && addsCount == RAID_MODE<uint8>(6, 12))
                 {
                     DoScriptText(SAY_PHASE2_END, me);
                     me->GetMotionMaster()->MovePoint(POINT_DESTROYFLOOR, Locations[1]);
@@ -886,6 +893,8 @@ class boss_malygos : public CreatureScript
         private:
             std::set<uint64> sparkList;
             std::list<std::pair<uint64,uint64> > mounts;
+            uint64 surgeTargets[3];
+            uint8 targetCount;
             uint8 step;
             uint8 phase;
             uint8 addsCount;
@@ -963,7 +972,7 @@ class npc_nexus_lord : public CreatureScript
 
                 if (_arcaneShockTimer <= diff)
                 {
-                    DoCastVictim(RAID_MODE(SPELL_ARCANE_SHOCK_10, SPELL_ARCANE_SHOCK_25));
+                    DoCastVictim(RAID_MODE<uint32>(SPELL_ARCANE_SHOCK_10, SPELL_ARCANE_SHOCK_25));
                     _arcaneShockTimer = urand(5, 10) * IN_MILLISECONDS;
                 }
                 else
@@ -1071,10 +1080,10 @@ class npc_alexstrasza : public CreatureScript
                         case 4:
                         {
                             DoScriptText(SAY_OUTRO_3, me);
-                            me->SummonGameObject(RAID_MODE(GO_ALEXSTRASZAS_GIFT_10, GO_ALEXSTRASZAS_GIFT_25), Locations[5].GetPositionX(),
+                            me->SummonGameObject(RAID_MODE<uint32>(GO_ALEXSTRASZAS_GIFT_10, GO_ALEXSTRASZAS_GIFT_25), Locations[5].GetPositionX(),
                                 Locations[5].GetPositionY(), Locations[5].GetPositionZ(), 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0);
 
-                            //me->SummonGameObject(RAID_MODE(GO_HEART_OF_MAGIC_10, GO_HEART_OF_MAGIC_25), Locations[5].GetPositionX() + 15.0f,
+                            //me->SummonGameObject(RAID_MODE<uint32>(GO_HEART_OF_MAGIC_10, GO_HEART_OF_MAGIC_25), Locations[5].GetPositionX() + 15.0f,
                             //    Locations[5].GetPositionY(), Locations[5].GetPositionZ(), 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0);
 
                             // custom
@@ -1086,7 +1095,7 @@ class npc_alexstrasza : public CreatureScript
                                 temporary->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PASSIVE);
                                 DoCast(temporary, 1130, true);
 
-                                if (GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL)
+                                if (Is25ManRaid())
                                     temporary->SetLootMode(LOOT_MODE_HARD_MODE_1);
                             }
 
@@ -1386,22 +1395,6 @@ class go_focusing_iris : public GameObjectScript
         }
 };
 
-class isBadTargetForSpell
-{
-    public:
-        isBadTargetForSpell() { }
-
-        bool operator() (Unit* unit)
-        {
-            const SpellInfo* surge;
-            surge = sSpellMgr->GetSpellInfo(SPELL_SURGE_OF_POWER_25);
-            if (surge)
-                return unit->IsImmunedToSpell(surge);
-
-            return true;
-        }
-};
-
 class spell_surge_of_power_targeting : public SpellScriptLoader
 {
     public:
@@ -1413,7 +1406,15 @@ class spell_surge_of_power_targeting : public SpellScriptLoader
 
             void FilterTargets(std::list<Unit*>& unitList)
             {
-                unitList.remove_if(isBadTargetForSpell());
+                unitList.clear();
+                Unit* caster = GetCaster();
+
+                if (!caster->GetAI())
+                    return;
+
+                for (uint8 i = 0; i < 3; ++i)
+                    if (Unit* target = ObjectAccessor::GetUnit(*caster, caster->GetAI()->GetGUID()))
+                        unitList.push_back(target);
             }
 
             void Register()

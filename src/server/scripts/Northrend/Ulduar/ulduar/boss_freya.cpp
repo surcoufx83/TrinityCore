@@ -644,7 +644,7 @@ public:
                 {
                     if (!me->IsNonMeleeSpellCasted(false))
                     {
-                        DoCast(RAID_MODE(SPELL_FREYA_GROUND_TREMOR_10, SPELL_FREYA_GROUND_TREMOR_25));
+                        DoCast(RAID_MODE<uint32>(SPELL_FREYA_GROUND_TREMOR_10, SPELL_FREYA_GROUND_TREMOR_25));
                         Ground_Tremor_Timer = 30000;
                     }
                     else Ground_Tremor_Timer = 3000;
@@ -659,8 +659,8 @@ public:
                 {
                     if (!me->IsNonMeleeSpellCasted(false))
                     {
-                        Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 500, true);
-                        target->CastSpell(target, RAID_MODE(SPELL_FREYA_IRON_ROOTS_10, SPELL_FREYA_IRON_ROOTS_25), false);
+                        if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 500, true))
+                            target->CastSpell(target, RAID_MODE<uint32>(SPELL_FREYA_IRON_ROOTS_10, SPELL_FREYA_IRON_ROOTS_25), false);
                         Iron_Roots_Timer = urand(25000, 30000);
                     }
                     else Iron_Roots_Timer = 3000;
@@ -687,7 +687,7 @@ public:
 
             if (Lifebinders_Gift_Timer <= diff)
             {
-                DoCastAOE(RAID_MODE(SPELL_LIFEBINDERS_GIFT_TRIGGER_MISSILE_1, SPELL_LIFEBINDERS_GIFT_TRIGGER_MISSILE_2), true);
+                DoCastAOE(RAID_MODE<uint32>(SPELL_LIFEBINDERS_GIFT_TRIGGER_MISSILE_1, SPELL_LIFEBINDERS_GIFT_TRIGGER_MISSILE_2), true);
                 Lifebinders_Gift_Timer = 35000 + urand(2000, 10000);
             } else Lifebinders_Gift_Timer -= diff;
 
@@ -696,9 +696,9 @@ public:
                 if (!me->IsNonMeleeSpellCasted(false))
                 {
                     if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1, 500, true))
-                        DoCast(target, RAID_MODE(SPELL_SUNBEAM_10, SPELL_SUNBEAM_25));
+                        DoCast(target, RAID_MODE<uint32>(SPELL_SUNBEAM_10, SPELL_SUNBEAM_25));
                     else
-                        DoCastVictim(RAID_MODE(SPELL_SUNBEAM_10, SPELL_SUNBEAM_25));
+                        DoCastVictim(RAID_MODE<uint32>(SPELL_SUNBEAM_10, SPELL_SUNBEAM_25));
                     uiSunbeam_Timer = urand(20000, 30000);
                 }
                 else uiSunbeam_Timer = 3000;
