@@ -17528,6 +17528,11 @@ Item* Player::_LoadItem(SQLTransaction& trans, uint32 zoneId, uint32 timeDiff, F
                     }
                 }
             }
+
+            if (!remove)
+                for (uint8 i = 0; i < MAX_ITEM_PROTO_SPELLS; ++i)
+                    if (proto->Spells[i].SpellTrigger == ITEM_SPELLTRIGGER_ON_NO_DELAY_USE && proto->Spells[i].SpellId > 0)
+                        CastSpell(this, proto->Spells[i].SpellId, true, item);
         }
         else
         {
