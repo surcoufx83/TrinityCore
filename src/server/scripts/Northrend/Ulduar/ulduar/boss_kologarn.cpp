@@ -171,6 +171,9 @@ class boss_kologarn : public CreatureScript
                     if (Unit* arm = vehicle->GetPassenger(i))
                         arm->ExitVehicle();
 
+                while (Creature* rubbleStalker = me->FindNearestCreature(NPC_RUBBLE_STALKER, 100.0f, true))
+                    rubbleStalker->Kill(rubbleStalker);
+
                 _JustDied();
             }
 

@@ -347,10 +347,7 @@ public:
                 return;
 
             EncounterFinished = true;
-
             DoScriptText(SAY_DEATH, me);
-            _JustDied();
-
             me->setFaction(35);
             me->ForcedDespawn(7000);
             EnterEvadeMode();
@@ -368,6 +365,8 @@ public:
                 else
                     me->SummonGameObject(RAID_MODE(CACHE_OF_STORMS_10, CACHE_OF_STORMS_25), 2134.58f, -286.908f, 419.495f, 1.55988f, 0, 0, 1, 1, 604800);
             }
+
+            _JustDied();
         }
 
         void EnterCombat(Unit* /*who*/)
@@ -1222,6 +1221,25 @@ class spell_stormhammer_targeting : public SpellScriptLoader
         }
 };
 
+class achievement_who_needs_bloodlust : public AchievementCriteriaScript
+{
+    public:
+        achievement_who_needs_bloodlust() : AchievementCriteriaScript("achievement_who_needs_bloodlust")
+        {
+        }
+
+        bool OnCheck(Player* player, Unit* /*target*/)
+        {
+            if (!player)
+                return false;
+
+            if (player->HasAura(SPELL_AURA_OF_CELERITY))
+                return true;
+
+            return false;
+        }
+};
+
 /*
 -- Thorim
 UPDATE `creature_template` SET `speed_walk` = 1.66667, `mechanic_immune_mask` = 650854239, `flags_extra` = 1, `ScriptName` = 'boss_thorim' WHERE `entry` = 32865;
@@ -1286,4 +1304,5 @@ void AddSC_boss_thorim()
     new npc_ancient_rune_giant();
     new npc_sif();
     new spell_stormhammer_targeting();
+    new achievement_who_needs_bloodlust();
 }

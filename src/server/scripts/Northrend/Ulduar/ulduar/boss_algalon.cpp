@@ -158,9 +158,11 @@ class boss_algalon : public CreatureScript
                 _wipeRaid = false;
 
                 DoCast(me, SPELL_DUAL_WIELD, true);
-                me->SetAttackTime(OFF_ATTACK, 1400);
-                me->SetStatFloatValue(UNIT_FIELD_MINOFFHANDDAMAGE, float(RAID_MODE<uint32>(15000, 30000)));
+                me->SetAttackTime(OFF_ATTACK, 1200);
+                me->SetStatFloatValue(UNIT_FIELD_MINOFFHANDDAMAGE, float(RAID_MODE<uint32>(15000, 28000)));
                 me->SetStatFloatValue(UNIT_FIELD_MAXOFFHANDDAMAGE, float(RAID_MODE<uint32>(18000, 35000)));
+                me->SetStatFloatValue(UNIT_FIELD_MINDAMAGE, float(RAID_MODE<uint32>(28000, 50000)));
+                me->SetStatFloatValue(UNIT_FIELD_MAXDAMAGE, float(RAID_MODE<uint32>(35000, 60000)));
             }
 
             void JustReachedHome()
@@ -452,7 +454,7 @@ class boss_algalon : public CreatureScript
                             break;
                         case EVENT_QUANTUMSTRIKE:
                             DoCastVictim(RAID_MODE<uint32>(SPELL_QUANTUM_STRIKE_10, SPELL_QUANTUM_STRIKE_25));
-                            events.ScheduleEvent(EVENT_QUANTUMSTRIKE, urand(4*IN_MILLISECONDS, 14*IN_MILLISECONDS));
+                            events.ScheduleEvent(EVENT_QUANTUMSTRIKE, urand(4*IN_MILLISECONDS, 10*IN_MILLISECONDS));
                             break;
                         case EVENT_COSMICSMASH:
                             DoCast(RAID_MODE<uint32>(SPELL_COSMIC_SMASH_10, SPELL_COSMIC_SMASH_25));
@@ -777,10 +779,10 @@ class spell_cosmic_smash_dmg : public SpellScriptLoader
                     return;
 
                 float distance = GetHitUnit()->GetExactDist2d(GetTargetDest());
-                if (distance < 3.4f)
+                if (distance < 6.0f)
                     return;
 
-                SetHitDamage(int32(GetHitDamage() * 10.0f / pow(distance, 1.9f)));
+                SetHitDamage(int32(GetHitDamage() * 10.0f / pow(distance - 2.6f, 1.9f)));
             }
 
             void Register()

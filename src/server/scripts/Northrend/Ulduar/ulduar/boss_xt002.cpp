@@ -367,13 +367,15 @@ public:
             {
                 if (uiSearingLightTimer <= diff)
                 {
-                    DoCast(me, RAID_MODE(SPELL_SEARING_LIGHT_10, SPELL_SEARING_LIGHT_25), true);
+                    if (!me->HasAura(SPELL_TYMPANIC_TANTRUM))
+                        DoCast(me, RAID_MODE<uint32>(SPELL_SEARING_LIGHT_10, SPELL_SEARING_LIGHT_25), true);
                     uiSearingLightTimer = TIMER_SEARING_LIGHT;
                 } else uiSearingLightTimer -= diff;
 
                 if (uiGravityBombTimer <= diff)
                 {
-                    DoCast(me, RAID_MODE(SPELL_GRAVITY_BOMB_10, SPELL_GRAVITY_BOMB_25), true);
+                    if (!me->HasAura(SPELL_TYMPANIC_TANTRUM))
+                        DoCast(me, RAID_MODE<uint32>(SPELL_GRAVITY_BOMB_10, SPELL_GRAVITY_BOMB_25), true);
                     uiGravityBombTimer = TIMER_GRAVITY_BOMB;
                 } else uiGravityBombTimer -= diff;
 

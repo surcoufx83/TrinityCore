@@ -1789,6 +1789,36 @@ class spell_elder_brightleafs_essence_targeting : public SpellScriptLoader
         }
 };
 
+class spell_aggregation_pheromones_targeting : public SpellScriptLoader
+{
+    public:
+        spell_aggregation_pheromones_targeting() : SpellScriptLoader("spell_aggregation_pheromones_targeting") { }
+
+        class spell_aggregation_pheromones_targeting_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_aggregation_pheromones_targeting_SpellScript);
+
+            void FilterTargets(std::list<Unit*>& unitList)
+            {
+                // remove caster if this is the only target
+                if (unitList.size() < 2)
+                    unitList.clear();
+            }
+
+            void Register()
+            {
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_aggregation_pheromones_targeting_SpellScript::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ALLY);
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_aggregation_pheromones_targeting_SpellScript::FilterTargets, EFFECT_1, TARGET_UNIT_SRC_AREA_ALLY);
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_aggregation_pheromones_targeting_SpellScript::FilterTargets, EFFECT_2, TARGET_UNIT_SRC_AREA_ALLY);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_aggregation_pheromones_targeting_SpellScript();
+        }
+};
+
 // temporary to trigger spell on proper target
 class spell_elder_brightleaf_unstable_sun_beam : public SpellScriptLoader
 {
@@ -1965,6 +1995,7 @@ void AddSC_boss_freya()
     new mob_iron_roots();
     new spell_elder_ironbranchs_essence_targeting();
     new spell_elder_brightleafs_essence_targeting();
+    new spell_aggregation_pheromones_targeting();
     new spell_elder_brightleaf_unstable_sun_beam();
     new achievement_getting_back_to_nature();
     new achievement_knock_on_wood();
