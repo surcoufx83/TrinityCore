@@ -3052,7 +3052,6 @@ void SpellMgr::LoadDbcDataCorrections()
             case 41357: // L1 Acane Charge
             case 66588: // Flaming Spear
             case 54171: // Divine Storm
-            case 60939: // Surge of Power
             case 61693: // Arcane Storm
             case 64598: // Cosmic Smash
             case 61916: // Lightning Whirl (10N)
