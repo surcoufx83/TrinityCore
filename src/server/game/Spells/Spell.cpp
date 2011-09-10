@@ -542,6 +542,7 @@ m_caster((info->AttributesEx6 & SPELL_ATTR6_CAST_BY_CHARMER && caster->GetCharme
     itemTarget = NULL;
     gameObjTarget = NULL;
     focusObject = NULL;
+    focusCreature = NULL;
     m_cast_count = 0;
     m_glyphIndex = 0;
     m_preCastSpell = 0;
@@ -1979,6 +1980,16 @@ WorldObject* Spell::SearchNearbyTarget(float range, SpellTargets TargetType, Spe
                     case SPELL_TARGET_TYPE_CREATURE:
                         if (m_targets.GetUnitTarget() && m_targets.GetUnitTarget()->GetEntry() == (*i_spellST)->mConditionValue2)
                             return m_targets.GetUnitTarget();
+                        else if (focusCreature)
+                        {
+                            float frange = m_caster->GetDistance(focusCreature);
+                            if (range >= frange)
+                            {
+                                creatureScriptTarget = focusCreature;
+                                goScriptTarget = NULL;
+                                range = frange;
+                            }
+                        }
                     case SPELL_TARGET_TYPE_DEAD:
                     default:
                         if (Creature *cre = m_caster->FindNearestCreature((*i_spellST)->mConditionValue2, range, (*i_spellST)->mConditionValue1 != SPELL_TARGET_TYPE_DEAD))
@@ -5907,18 +5918,31 @@ SpellCastResult Spell::CheckItems()
         Cell cell(p);
         cell.data.Part.reserved = ALL_DISTRICT;
 
-        GameObject* ok = NULL;
+        // Gameobject Spell Focus Id
+        GameObject* go = NULL;
         Trinity::GameObjectFocusCheck go_check(m_caster, m_spellInfo->RequiresSpellFocus);
-        Trinity::GameObjectSearcher<Trinity::GameObjectFocusCheck> checker(m_caster, ok, go_check);
+        Trinity::GameObjectSearcher<Trinity::GameObjectFocusCheck> checker(m_caster, go, go_check);
 
         TypeContainerVisitor<Trinity::GameObjectSearcher<Trinity::GameObjectFocusCheck>, GridTypeMapContainer > object_checker(checker);
         Map& map = *m_caster->GetMap();
         cell.Visit(p, object_checker, map, *m_caster, m_caster->GetVisibilityRange());
 
-        if (!ok)
+        // Creature Spell Focus Id
+        Creature* cr = NULL;
+        Unit* target = m_targets.GetUnitTarget();
+        float range = m_caster->GetSpellMaxRangeForTarget(target, m_spellInfo);
+
+        Trinity::CreatureFocusCheck cr_check(m_caster, m_spellInfo->RequiresSpellFocus, range);
+        Trinity::CreatureSearcher<Trinity::CreatureFocusCheck> checker2(m_caster, cr, cr_check);
+
+        TypeContainerVisitor<Trinity::CreatureSearcher<Trinity::CreatureFocusCheck>, GridTypeMapContainer > object_checker2(checker2);
+        cell.Visit(p, object_checker2, map, *m_caster, m_caster->GetVisibilityRange());
+
+        if (!go && !cr)
             return SPELL_FAILED_REQUIRES_SPELL_FOCUS;
 
-        focusObject = ok;                                   // game object found in range
+        focusObject = go;                                   // game object found in range
+        focusCreature = cr;                                 // creature found in range
     }
 
     // do not take reagents for these item casts

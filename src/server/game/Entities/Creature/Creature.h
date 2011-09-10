@@ -627,6 +627,9 @@ class Creature : public Unit, public GridObject<Creature>
 
         void SetInCombatWithZone();
 
+        void SetSpellFocusId(uint32 spellFocusId) { m_spellFocusId = spellFocusId; }
+        uint32 GetSpellFocusId() { return m_spellFocusId; }
+
         bool hasQuest(uint32 quest_id) const;
         bool hasInvolvedQuest(uint32 quest_id)  const;
 
@@ -726,6 +729,8 @@ class Creature : public Unit, public GridObject<Creature>
 
         uint16 m_LootMode;                                  // bitmask, default LOOT_MODE_DEFAULT, determines what loot will be lootable
         uint32 guid_transport;
+
+        uint32 m_spellFocusId;
 
         bool isVisibleForInState(WorldObject const* seer) const;
         bool canSeeAlways(WorldObject const* obj) const;
