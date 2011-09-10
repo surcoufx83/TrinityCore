@@ -262,7 +262,7 @@ World::AddSession_(WorldSession* s)
     if (decrease_session)
         --Sessions;
 
-    if (pLimit > 0 && Sessions >= pLimit && s->GetSecurity() == SEC_PLAYER && !HasRecentlyDisconnected(s))
+    if (pLimit > 0 && Sessions >= pLimit && AccountMgr::IsPlayerAccount(s->GetSecurity()) && !HasRecentlyDisconnected(s))
     {
         AddQueuedPlayer (s);
         UpdateMaxSessionCounters();
@@ -1361,7 +1361,7 @@ void World::SetInitialWorldSettings()
     LoadRandomEnchantmentsTable();
 
     sLog->outString("Loading Disables");
-    sDisableMgr->LoadDisables();                                 // must be before loading quests and items
+    DisableMgr::LoadDisables();                                  // must be before loading quests and items
 
     sLog->outString("Loading Items...");                         // must be after LoadRandomEnchantmentsTable and LoadPageTexts
     sObjectMgr->LoadItemTemplates();
@@ -1427,7 +1427,7 @@ void World::SetInitialWorldSettings()
     sObjectMgr->LoadQuests();                                    // must be loaded after DBCs, creature_template, item_template, gameobject tables
 
     sLog->outString("Checking Quest Disables");
-    sDisableMgr->CheckQuestDisables();                           // must be after loading quests
+    DisableMgr::CheckQuestDisables();                           // must be after loading quests
 
     sLog->outString("Loading Quest POI");
     sObjectMgr->LoadQuestPOI();
@@ -1610,7 +1610,7 @@ void World::SetInitialWorldSettings()
     sTicketMgr->LoadSurveys();
 
     sLog->outString("Loading client addons...");
-    sAddonMgr->LoadFromDB();
+    AddonMgr::LoadFromDB();
 
     ///- Handle outdated emails (delete/return)
     sLog->outString("Returning old mails...");
@@ -2067,7 +2067,7 @@ void World::SendGlobalGMMessage(WorldPacket* packet, WorldSession* self, uint32 
             itr->second->GetPlayer() &&
             itr->second->GetPlayer()->IsInWorld() &&
             itr->second != self &&
-            itr->second->GetSecurity() > SEC_PLAYER &&
+            !AccountMgr::IsPlayerAccount(itr->second->GetSecurity()) &&
             (team == 0 || itr->second->GetPlayer()->GetTeam() == team))
         {
             itr->second->SendPacket(packet);
@@ -2164,7 +2164,7 @@ void World::SendGMText(int32 string_id, ...)
         if (!itr->second || !itr->second->GetPlayer() || !itr->second->GetPlayer()->IsInWorld())
             continue;
 
-        if (itr->second->GetSecurity() < SEC_MODERATOR)
+        if (AccountMgr::IsPlayerAccount(itr->second->GetSecurity()))
             continue;
 
         wt_do(itr->second->GetPlayer());
@@ -2328,7 +2328,7 @@ bool World::RemoveBanAccount(BanMode mode, std::string nameOrIP)
     {
         uint32 account = 0;
         if (mode == BAN_ACCOUNT)
-            account = sAccountMgr->GetId(nameOrIP);
+            account = AccountMgr::GetId(nameOrIP);
         else if (mode == BAN_CHARACTER)
             account = sObjectMgr->GetPlayerAccountIdByPlayerName(nameOrIP);
 
