@@ -4416,8 +4416,10 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                 //Shield Breaker Trigger
                 case 62626:
                 case 64590:
+                case 65147:
                 //Charge Effekt
                 case 68321:
+                case 63010:
                 {
                     if (!unitTarget || !m_caster)
                         return;
@@ -4425,53 +4427,25 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                     if(unitTarget->HasAura(62552))
                     {
                         Aura* defendaura = unitTarget->GetAura(62552);
-                        if(defendaura->GetStackAmount() == 1)
-                        {
-                            unitTarget->RemoveAurasDueToSpell(62552,0,0,AURA_REMOVE_BY_ENEMY_SPELL);
-                        }
-                        else
-                        {
-                            defendaura->ModStackAmount(defendaura->GetStackAmount()-1,AURA_REMOVE_BY_ENEMY_SPELL);
-                        }
+                        defendaura->ModStackAmount(-1,AURA_REMOVE_BY_ENEMY_SPELL);
                     }
 
                     if(unitTarget->HasAura(66482))
                     {
                         Aura* defendaura = unitTarget->GetAura(66482);
-                        if(defendaura->GetStackAmount() == 1)
-                        {
-                            unitTarget->RemoveAurasDueToSpell(66482,0,0,AURA_REMOVE_BY_ENEMY_SPELL);
-                        }
-                        else
-                        {
-                            defendaura->ModStackAmount(defendaura->GetStackAmount()-1,AURA_REMOVE_BY_ENEMY_SPELL);
-                        }
+                        defendaura->ModStackAmount(-1,AURA_REMOVE_BY_ENEMY_SPELL);
                     }
 
                     if(unitTarget->HasAura(64100))
                     {
                         Aura* defendaura = unitTarget->GetAura(64100);
-                        if(defendaura->GetStackAmount() == 1)
-                        {
-                            unitTarget->RemoveAurasDueToSpell(64100,0,0,AURA_REMOVE_BY_ENEMY_SPELL);
-                        }
-                        else
-                        {
-                            defendaura->ModStackAmount(defendaura->GetStackAmount()-1,AURA_REMOVE_BY_ENEMY_SPELL);
-                        }
+                        defendaura->ModStackAmount(-1,AURA_REMOVE_BY_ENEMY_SPELL);
                     }
 
                     if(unitTarget->HasAura(62719))
                     {
                         Aura* defendaura = unitTarget->GetAura(62719);
-                        if(defendaura->GetStackAmount() == 1)
-                        {
-                            unitTarget->RemoveAurasDueToSpell(62719,0,0,AURA_REMOVE_BY_ENEMY_SPELL);
-                        }
-                        else
-                        {
-                            defendaura->ModStackAmount(defendaura->GetStackAmount()-1,AURA_REMOVE_BY_ENEMY_SPELL);
-                        }
+                        defendaura->ModStackAmount(-1,AURA_REMOVE_BY_ENEMY_SPELL);
                     }
                     return;
                 }

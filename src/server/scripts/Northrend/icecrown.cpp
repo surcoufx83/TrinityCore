@@ -1757,14 +1757,15 @@ enum eFactionValiantChampion
 {
     //SPELL_CHARGE                = 63010,
     //SPELL_SHIELD_BREAKER        = 65147,
+    SPELL_REFRESH_MOUNT         = 66483,
 
-    SPELL_GIVE_VALIANT_MARK_1 = 62724,
-    SPELL_GIVE_VALIANT_MARK_2 = 62770,
-    SPELL_GIVE_VALIANT_MARK_3 = 62771,
-    SPELL_GIVE_VALIANT_MARK_4 = 62995,
-    SPELL_GIVE_VALIANT_MARK_5 = 62996,
+    SPELL_GIVE_VALIANT_MARK_1   = 62724,
+    SPELL_GIVE_VALIANT_MARK_2   = 62770,
+    SPELL_GIVE_VALIANT_MARK_3   = 62771,
+    SPELL_GIVE_VALIANT_MARK_4   = 62995,
+    SPELL_GIVE_VALIANT_MARK_5   = 62996,
 
-    SPELL_GIVE_CHAMPION_MARK  = 63596,
+    SPELL_GIVE_CHAMPION_MARK    = 63596,
 
     QUEST_THE_GRAND_MELEE_0     = 13665,
     QUEST_THE_GRAND_MELEE_1     = 13745,
@@ -1799,6 +1800,7 @@ public:
         uint32 uiChargeTimer;
         uint32 uiShieldBreakerTimer;
         uint64 guidAttacker;
+        bool chargeing;
 
         void Reset()
         {
@@ -1811,12 +1813,22 @@ public:
         void EnterCombat(Unit* attacker)
         {
             guidAttacker = attacker->GetGUID();
+            DoCast(me,SPELL_DEFEND_AURA_PERIODIC,true);
         }
 
-        void MovementInform(uint32 uiType, uint32 /*uiId*/)
+        void MovementInform(uint32 uiType, uint32 uiId)
         {
             if (uiType != POINT_MOTION_TYPE)
                 return;
+
+            if(uiId != 1)
+                return;
+
+            chargeing = false;
+
+            DoCastVictim(SPELL_CHARGE);
+            if(me->getVictim())
+                me->GetMotionMaster()->MoveChase(me->getVictim());
         }
 
         void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
@@ -1864,6 +1876,7 @@ public:
 
                 me->setFaction(35);
                 EnterEvadeMode();
+                me->CastSpell(me,SPELL_REFRESH_MOUNT,true);
             }
         }
 
@@ -1874,8 +1887,12 @@ public:
 
             if (uiChargeTimer <= uiDiff)
             {
-                DoCastVictim(SPELL_CHARGE);
-                uiChargeTimer = 7000;
+                chargeing = true;
+                float x,y,z;
+                me->GetNearPoint(me, x, y, z, 1.0f, 15.0f, float(M_PI*2*rand_norm()));
+                me->GetMotionMaster()->MovePoint(1,x,y,z);
+
+                uiChargeTimer = 15000;
             } else uiChargeTimer -= uiDiff;
 
             if (uiShieldBreakerTimer <= uiDiff)
