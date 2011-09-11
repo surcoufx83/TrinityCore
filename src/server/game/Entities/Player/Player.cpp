@@ -22511,11 +22511,11 @@ void Player::RewardPlayerAndGroupAtEvent(uint32 creature_id, WorldObject* pRewar
 
             // quest objectives updated only for alive group member or dead but with not released body
             if (pGroupGuy->isAlive()|| !pGroupGuy->GetCorpse())
-                pGroupGuy->KilledMonsterCredit(creature_id, creature_guid);
+                pGroupGuy->KilledMonsterCredit(creature_id, 0);
         }
     }
     else                                                    // if (!pGroup)
-        KilledMonsterCredit(creature_id, creature_guid);
+        KilledMonsterCredit(creature_id, 0);
 }
 
 bool Player::IsAtGroupRewardDistance(WorldObject const* pRewardSource) const

@@ -426,11 +426,11 @@ public:
 
                 Creature* target = me->FindNearestCreature(27436,10,true);
                 if(target && owner->ToPlayer())
-                    owner->ToPlayer()->KilledMonsterCredit(27436,target->GetGUID());
+                    owner->ToPlayer()->KilledMonsterCredit(27436,0);
 
                 target = me->FindNearestCreature(27437,10,true);
                 if(target && owner->ToPlayer())
-                    owner->ToPlayer()->KilledMonsterCredit(27437,target->GetGUID());
+                    owner->ToPlayer()->KilledMonsterCredit(27437,0);
 
                 DoCast(SPELL_WMB_EXPLOSION);
                 Explote_Timer = 9999999;
@@ -836,7 +836,7 @@ public:
             if(spell->Id == SPELL_DESTURCTION_TRIGGER)
             {
                 if(Player *owner = Unit::GetPlayer(*me,guid_owner))
-                    owner->KilledMonsterCredit(ENTRY_PLAGUE_PULT_CREDIT,target->GetGUID());
+                    owner->KilledMonsterCredit(ENTRY_PLAGUE_PULT_CREDIT,0);
                 if(target->ToCreature())
                 {
                     target->DealDamage(target,target->GetHealth());

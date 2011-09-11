@@ -83,7 +83,7 @@ public:
             me->setDeathState(DEAD);
 
             if(who->GetTypeId() == TYPEID_PLAYER)
-                who->ToPlayer()->KilledMonsterCredit(NPC_RAGECLAW,RageclawGUID);
+                who->ToPlayer()->KilledMonsterCredit(NPC_RAGECLAW,0);
         }
 
         void SpellHit(Unit* pCaster, const SpellInfo* pSpell)
@@ -1739,7 +1739,7 @@ public:
     {
         if (uiAction == GOSSIP_ACTION_INFO_DEF +1)
         {
-            pPlayer->KilledMonsterCredit(ENTRY_ARGENT_SOLDIER_CREDIT,pCreature->GetGUID());
+            pPlayer->KilledMonsterCredit(ENTRY_ARGENT_SOLDIER_CREDIT,0);
             pCreature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
         }
         pPlayer->CLOSE_GOSSIP_MENU();
@@ -1897,7 +1897,7 @@ public:
         if (uiAction == GOSSIP_ACTION_INFO_DEF +1)
         {
             pPlayer->CLOSE_GOSSIP_MENU();
-            pPlayer->KilledMonsterCredit(ENTRY_BLOODROSE_CREDIT, pCreature->GetGUID());
+            pPlayer->KilledMonsterCredit(ENTRY_BLOODROSE_CREDIT, 0);
 
             pAI->stepping = true;
             pAI->uiStep = 1;

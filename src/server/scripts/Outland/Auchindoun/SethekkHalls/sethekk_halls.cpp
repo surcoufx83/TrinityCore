@@ -48,7 +48,7 @@ public:
                         if (Player* i_pl = i->getSource())
                         {
                             if(i_pl->GetQuestStatus(10097) == QUEST_STATUS_INCOMPLETE)
-                                i_pl->KilledMonsterCredit(N_LAKKA,me->GetGUID());
+                                i_pl->KilledMonsterCredit(N_LAKKA,0);
                         }
                     }
                 }
@@ -89,7 +89,7 @@ public:
             //        if (Player* i_pl = i->getSource())
             //        {
             //            if(i_pl->GetQuestStatus(10097) == QUEST_STATUS_INCOMPLETE)
-            //                i_pl->KilledMonsterCredit(N_LAKKA,Lakka->GetGUID());
+            //                i_pl->KilledMonsterCredit(N_LAKKA,0);
             //                _GO->DestroyForPlayer(i_pl);
             //        }
             //    }

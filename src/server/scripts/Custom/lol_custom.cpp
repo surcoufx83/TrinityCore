@@ -201,7 +201,7 @@ struct mob_wyrm_dragonmaw_peonAI : public ScriptedAI
     }
 
     void UpdateAI(const uint32 diff)
-    {        
+    {
         if(eventrunning)
         {
             if (me->isDead())
@@ -213,7 +213,7 @@ struct mob_wyrm_dragonmaw_peonAI : public ScriptedAI
                 {
                     me->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_ONESHOT_NONE);
                     Player* plr = ((Player*)Unit::GetUnit((*me), PlayerGUID));
-                    plr->KilledMonsterCredit(23209, me->GetGUID());
+                    plr->KilledMonsterCredit(23209, 0);
                     me->DealDamage( me,  me->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
                     me->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
                     eating = false;
@@ -343,7 +343,7 @@ public:
                 switch(spell->Id)
                 {
                 case 45030:
-                    ((Player*)caster)->KilledMonsterCredit(25065 , me->GetGUID());
+                    caster->ToPlayer()->KilledMonsterCredit(25065 , 0);
                     break;
                 }
             }
@@ -1220,7 +1220,7 @@ public:
                 {
                     Player* plr = Unit::GetPlayer(*me,PlayerGUID);
                     if(plr && plr->GetQuestStatus(QUESTG) == QUEST_STATUS_INCOMPLETE)
-                        plr->KilledMonsterCredit(25086, me->GetGUID());
+                        plr->KilledMonsterCredit(25086, 0);
                 }
                 DoCast(me, ENRAGE);
                 Creature* Myrmidon = GetClosestCreatureWithEntry(me, DM, 70);

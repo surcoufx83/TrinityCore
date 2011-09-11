@@ -179,7 +179,7 @@ public:
                 {
                     if (Unit* pTemp = Unit::GetUnit(*me, Tagger))
                     {
-                        CAST_PLR(pTemp)->KilledMonsterCredit(ENTRY_RESTLESS, me->GetGUID());
+                        CAST_PLR(pTemp)->KilledMonsterCredit(ENTRY_RESTLESS, 0);
                         me->Kill(me);
                     }
                 } else Die_Timer -= diff;

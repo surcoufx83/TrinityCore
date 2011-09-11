@@ -360,7 +360,7 @@ public:
             if (spell->Id == SPELL_PLAGUE_SPRAY)
             {
                 isPlagued = true;
-                caster->ToPlayer()->KilledMonsterCredit(ENTRY_SPRAYED_TARGET_CREDIT, me->GetGUID());
+                caster->ToPlayer()->KilledMonsterCredit(ENTRY_SPRAYED_TARGET_CREDIT, 0);
                 Creature *target = me->FindNearestCreature(RAND(23564, 24198, 24199), 50, true);
                 if (target)
                     me->Attack(target, true);

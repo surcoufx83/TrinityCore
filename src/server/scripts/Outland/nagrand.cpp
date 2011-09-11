@@ -721,7 +721,7 @@ public:
                     {
                         // 18840: Sunspring, 18841: Laughing, 18842: Garadar, 18843: Bleeding
                         if (!CAST_PLR(who)->GetReqKillOrCastCurrentCount(10085, creditMarkerId))
-                            CAST_PLR(who)->KilledMonsterCredit(creditMarkerId, me->GetGUID());
+                            CAST_PLR(who)->KilledMonsterCredit(creditMarkerId, 0);
                     }
                 }
             }
