@@ -2164,6 +2164,243 @@ public:
 };
 
 /*######
+npc_squire_cavin
+######*/
+
+enum eSquireCalvin
+{
+    QUEST_THE_BLACK_KNIGHTS_FALL                = 13664,
+    NPC_BLACK_KNIGHT                            = 33785,
+};
+
+/*
+UPDATE creature_template SET scriptname = 'npc_squire_cavin' WHERE entry = 33522;
+*/
+
+#define GOSSIP_SUMMON_BLACK_KNIGHT      "Ask Cavin to summon the Black Knight."
+
+class npc_squire_cavin : public CreatureScript
+{
+public:
+    npc_squire_cavin() : CreatureScript("npc_squire_cavin") { }
+
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    {
+        pPlayer->PlayerTalkClass->ClearMenus();
+        if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+        {
+            Position pos;
+            pCreature->GetPosition(&pos);
+            {
+                if(TempSummon* temp = pCreature->SummonCreature(NPC_BLACK_KNIGHT,pos,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000))
+                    temp->AI()->SetGUID(pPlayer->GetGUID());
+            }
+            pPlayer->CLOSE_GOSSIP_MENU();
+        }
+        return true;
+    }
+
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        if (pPlayer->HasAura(63663) && (pPlayer->GetQuestStatus(QUEST_THE_BLACK_KNIGHTS_FALL) == QUEST_STATUS_INCOMPLETE))
+        {
+            std::list<Creature*> checkList;
+            pCreature->GetCreatureListWithEntryInGrid(checkList,NPC_BLACK_KNIGHT,100.0f);
+            if(checkList.size() == 0)
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SUMMON_BLACK_KNIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        }
+
+        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+        return true;
+    }
+};
+
+
+enum eBlackKnight
+{
+    SPELL_BK_CHARGE                 = 63003,
+    //SPELL_SHIELD_BREAKER        = 65147,
+    SPELL_DARK_SHIELD               = 64505,
+
+};
+
+// UPDATE creature_template SET scriptname = 'npc_the_black_knight' WHERE entry = 33785;
+
+#define YELL_ATTACK_PHASE_1_END         "Get off that horse and fight me man-to-man!"
+#define YELL_ATTACK_PHASE_2             "I will not fail you, master!"
+
+class npc_the_black_knight : public CreatureScript
+{
+public:
+    npc_the_black_knight() : CreatureScript("npc_the_black_knight") { }
+
+    struct npc_the_black_knightAI : public ScriptedAI
+    {
+        npc_the_black_knightAI(Creature* creature) : ScriptedAI(creature)
+        {
+        }
+
+        uint32 uiChargeTimer;
+        uint32 uiShieldBreakerTimer;
+        uint64 guidAttacker;
+        uint32 uireattackTimer;
+
+        bool chargeing;
+
+        bool mountDuel;
+        bool handDuel;
+
+        void Reset()
+        {
+            uiChargeTimer = 7000;
+            uiShieldBreakerTimer = 10000;
+            uireattackTimer = 10000;
+
+            me->setFaction(35);
+
+            mountDuel = false;
+            handDuel = false;
+        }
+
+        void SetGUID(uint64 guid, int32)
+        {
+            if(Player* plr = Player::GetPlayer(*me,guid))
+            {
+                guidAttacker = guid;
+                mountDuel = true;
+                handDuel = false;
+                me->setFaction(14);
+                me->Mount(28652);
+                AttackStart(plr);
+                // Move Point
+
+                me->SetMaxHealth(50000);
+                me->SetHealth(50000);
+            }
+        }
+
+        void JustDied(Unit* killer)
+        {
+            me->DespawnOrUnsummon(5000);
+        }
+
+        void EnterCombat(Unit* attacker)
+        {
+            DoCast(me,SPELL_DEFEND_AURA_PERIODIC,true);
+        }
+
+        void MovementInform(uint32 uiType, uint32 uiId)
+        {
+            if (uiType != POINT_MOTION_TYPE)
+                return;
+
+            if(uiId == 1)
+            {
+
+                chargeing = false;
+
+                DoCastVictim(SPELL_BK_CHARGE);
+                if(me->getVictim())
+                    me->GetMotionMaster()->MoveChase(me->getVictim());
+
+            }else if(uiId == 2)
+            {
+                if(Player* plr = Player::GetPlayer(*me,guidAttacker))
+                {
+                    AttackStart(plr);
+                }
+            }
+        }
+
+        void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
+        {
+            if(pDoneBy && pDoneBy->GetGUID() != guidAttacker)
+                uiDamage = 0;
+
+            if(handDuel)
+                return;
+            if(!mountDuel)
+                return;
+
+            if (uiDamage > me->GetHealth() && pDoneBy->GetTypeId() == TYPEID_PLAYER)
+            {
+                uiDamage = 0;
+                mountDuel = false;
+                me->SetHealth(50000);
+                me->Unmount();
+                me->GetMotionMaster()->MoveIdle();
+                me->RemoveAurasDueToSpell(SPELL_DEFEND_AURA_PERIODIC);
+                me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
+                me->MonsterYell(YELL_ATTACK_PHASE_1_END,LANG_UNIVERSAL,guidAttacker);
+                uireattackTimer = 10000;
+            }
+        }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            if(mountDuel)
+            {
+                if (uiChargeTimer <= uiDiff)
+                {
+                    chargeing = true;
+                    float x,y,z;
+                    me->GetNearPoint(me, x, y, z, 1.0f, 15.0f, float(M_PI*2*rand_norm()));
+                    me->GetMotionMaster()->MovePoint(1,x,y,z);
+
+                    uiChargeTimer = 7000;
+                } else uiChargeTimer -= uiDiff;
+
+                if (uiShieldBreakerTimer <= uiDiff)
+                {
+                    DoCastVictim(SPELL_SHIELD_BREAKER);
+                    uiShieldBreakerTimer = 10000;
+                } else uiShieldBreakerTimer -= uiDiff;
+
+                if (me->isAttackReady())
+                {
+                    DoCast(me->getVictim(), SPELL_THRUST, true);
+                    me->resetAttackTimer();
+                }
+            }else if(handDuel)
+            {
+                if (uiShieldBreakerTimer <= uiDiff)
+                {
+                    DoCastVictim(SPELL_DARK_SHIELD);
+                    uiShieldBreakerTimer = 30000;
+                } else uiShieldBreakerTimer -= uiDiff;
+
+                DoMeleeAttackIfReady();
+            }else
+            {
+                if(uireattackTimer <= uiDiff)
+                {
+                    handDuel = true;
+                    if(me->getVictim())
+                        me->GetMotionMaster()->MoveChase(me->getVictim());
+                    me->RemoveFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
+
+                    if(Player* plr = Player::GetPlayer(*me,guidAttacker))
+                        plr->ExitVehicle();
+
+                    me->SetMaxHealth(12500);
+                    me->SetHealth(12500);
+                    me->MonsterYell(YELL_ATTACK_PHASE_2,LANG_UNIVERSAL,guidAttacker);
+                    uireattackTimer = 99999999;
+                }else uireattackTimer -= uiDiff;
+            }
+        }
+    };
+
+    CreatureAI *GetAI(Creature* creature) const
+    {
+        return new npc_the_black_knightAI(creature);
+    }
+};
+
+/*######
 ## npc_argent_champion
 ######*/
 // To Do Argent Valiant, Faction Valiant, Argent Champion and Faction Champion have the same script -> make one
@@ -2645,6 +2882,8 @@ void AddSC_icecrown()
     new npc_faction_valiant_champion();
     new npc_maiden_of_drakmar();
     new npc_squire_danny();
+    new npc_squire_cavin();
+    new npc_the_black_knight();
     new npc_argent_champion();
     new npc_argent_squire_gruntling();
     new vehicle_black_knight_gryphon();

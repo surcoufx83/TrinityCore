@@ -4420,6 +4420,7 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                 //Charge Effekt
                 case 68321:
                 case 63010:
+                case 63003:
                 {
                     if (!unitTarget || !m_caster)
                         return;
