@@ -205,6 +205,7 @@ enum eArgentValiant
     SPELL_THRUST                = 62544,
     SPELL_CHARGE                = 63010,
     SPELL_SHIELD_BREAKER        = 65147,
+    SPELL_DEFEND                = 62719,
 
     NPC_ARGENT_VALIANT_CREDIT   = 38595,
 
@@ -1782,6 +1783,17 @@ enum eFactionValiantChampion
     QUEST_AMONG_THE_CHAMPIONS_1 = 13793,
     QUEST_AMONG_THE_CHAMPIONS_2 = 13811,
     QUEST_AMONG_THE_CHAMPIONS_3 = 13814,
+
+    SPELL_BESTED_DARNASSUS      = 64805,
+    SPELL_BESTED_GNOMEREGAN     = 64809,
+    SPELL_BESTED_IRONFORGE      = 64810,
+    SPELL_BESTED_ORGRIMMAR      = 64811,
+    SPELL_BESTED_SENJIN         = 64812,
+    SPELL_BESTED_SILVERMOON     = 64813,
+    SPELL_BESTED_STORMWIND      = 64814,
+    SPELL_BESTED_EXODAR         = 64808,
+    SPELL_BESTED_UNDERCITY      = 64816,
+    SPELL_BESTED_THUNDERBLUFF   = 64815,
 };
 
 #define GOSSIP_MELEE_FIGHT      "I'am ready to fight!"
@@ -1814,6 +1826,8 @@ public:
         {
             guidAttacker = attacker->GetGUID();
             DoCast(me,SPELL_DEFEND_AURA_PERIODIC,true);
+            if(Aura* aur = me->AddAura(SPELL_DEFEND,me))
+                aur->ModStackAmount(1);
         }
 
         void MovementInform(uint32 uiType, uint32 uiId)
@@ -1840,37 +1854,62 @@ public:
             {
                 uiDamage = 0;
 
-                switch(me->GetEntry())
+                if(pDoneBy->HasAura(63034))
                 {
-                case 33559: // Darnassus
-                case 33562: // Exodar
-                case 33558: // Gnomeregan
-                case 33564: // Ironforge
-                case 33306: // Orgrimmar
-                case 33285: // Sen'jin
-                case 33382: // Silvermoon
-                case 33561: // Stormwind
-                case 33383: // Thunder Bluff
-                case 33384: // Undercity
+                    switch(me->GetEntry())
                     {
-                        if(pDoneBy->HasAura(63034))
+                    case 33559: // Darnassus
+                    case 33562: // Exodar
+                    case 33558: // Gnomeregan
+                    case 33564: // Ironforge
+                    case 33306: // Orgrimmar
+                    case 33285: // Sen'jin
+                    case 33382: // Silvermoon
+                    case 33561: // Stormwind
+                    case 33383: // Thunder Bluff
+                    case 33384: // Undercity
+                        {
                             pDoneBy->CastSpell(pDoneBy,SPELL_GIVE_VALIANT_MARK_1,true);
-                        break;
-                    }
-                case 33738: // Darnassus
-                case 33739: // Exodar
-                case 33740: // Gnomeregan
-                case 33743: // Ironforge
-                case 33744: // Orgrimmar
-                case 33745: // Sen'jin
-                case 33746: // Silvermoon
-                case 33747: // Stormwind
-                case 33748: // Thunder Bluff
-                case 33749: // Undercity
-                    {
-                        if(pDoneBy->HasAura(63034))
+                            break;
+                        }
+                    case 33738: // Darnassus
+                    case 33739: // Exodar
+                    case 33740: // Gnomeregan
+                    case 33743: // Ironforge
+                    case 33744: // Orgrimmar
+                    case 33745: // Sen'jin
+                    case 33746: // Silvermoon
+                    case 33747: // Stormwind
+                    case 33748: // Thunder Bluff
+                    case 33749: // Undercity
+                        {
                             pDoneBy->CastSpell(pDoneBy,SPELL_GIVE_CHAMPION_MARK,true);
-                        break;
+                            break;
+                        }
+                    }
+
+                    switch(me->GetEntry())
+                    {
+                        case 33738: // Darnassus
+                            pDoneBy->CastSpell(pDoneBy,SPELL_BESTED_DARNASSUS,true); break;
+                        case 33739: // Exodar
+                            pDoneBy->CastSpell(pDoneBy,SPELL_BESTED_EXODAR,true); break;
+                        case 33740: // Gnomeregan
+                            pDoneBy->CastSpell(pDoneBy,SPELL_BESTED_GNOMEREGAN,true); break;
+                        case 33743: // Ironforge
+                            pDoneBy->CastSpell(pDoneBy,SPELL_BESTED_IRONFORGE,true); break;
+                        case 33744: // Orgrimmar
+                            pDoneBy->CastSpell(pDoneBy,SPELL_BESTED_ORGRIMMAR,true); break;
+                        case 33745: // Sen'jin
+                            pDoneBy->CastSpell(pDoneBy,SPELL_BESTED_SENJIN,true); break;
+                        case 33746: // Silvermoon
+                            pDoneBy->CastSpell(pDoneBy,SPELL_BESTED_SILVERMOON,true); break;
+                        case 33747: // Stormwind
+                            pDoneBy->CastSpell(pDoneBy,SPELL_BESTED_STORMWIND,true); break;
+                        case 33748: // Thunder Bluff
+                            pDoneBy->CastSpell(pDoneBy,SPELL_BESTED_THUNDERBLUFF,true); break;
+                        case 33749: // Undercity
+                            pDoneBy->CastSpell(pDoneBy,SPELL_BESTED_UNDERCITY,true); break;
                     }
                 }
 
@@ -1906,6 +1945,10 @@ public:
                 DoCast(me->getVictim(), SPELL_THRUST, true);
                 me->resetAttackTimer();
             }
+
+            if(Player* plr = Player::GetPlayer(*me,guidAttacker))
+                 if(!plr->HasAura(63034))
+                     EnterEvadeMode();
         }
     };
 
@@ -1914,9 +1957,28 @@ public:
         return new npc_faction_valiant_championAI(creature);
     }
 
+    bool CanMakeDuel(Player* player)
+    {
+        if(player->HasAura(SPELL_BESTED_DARNASSUS)
+            || player->HasAura(SPELL_BESTED_GNOMEREGAN)
+            || player->HasAura(SPELL_BESTED_IRONFORGE)
+            || player->HasAura(SPELL_BESTED_ORGRIMMAR)
+            || player->HasAura(SPELL_BESTED_SENJIN)
+            || player->HasAura(SPELL_BESTED_SILVERMOON)
+            || player->HasAura(SPELL_BESTED_STORMWIND)
+            || player->HasAura(SPELL_BESTED_EXODAR)
+            || player->HasAura(SPELL_BESTED_UNDERCITY)
+            || player->HasAura(SPELL_BESTED_THUNDERBLUFF))
+            return false;
+        return true;
+    }
+
     void AddMeleeFightGossip(Player* player)
     {
-         if( player->HasAura(63034) &&
+        if(!player)
+            return;
+
+        if( player->HasAura(63034) &&
             ((player->GetQuestStatus(QUEST_THE_GRAND_MELEE_0) == QUEST_STATUS_INCOMPLETE) ||
             (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_1) == QUEST_STATUS_INCOMPLETE) ||
             (player->GetQuestStatus(QUEST_THE_GRAND_MELEE_2) == QUEST_STATUS_INCOMPLETE) ||
@@ -1931,6 +1993,7 @@ public:
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MELEE_FIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
         }
     }
+
 
     bool OnGossipHello(Player* player, Creature* creature)
     {
@@ -1973,7 +2036,8 @@ public:
                     (player->GetQuestStatus(QUEST_AMONG_THE_CHAMPIONS_2) == QUEST_STATUS_INCOMPLETE) ||
                     (player->GetQuestStatus(QUEST_AMONG_THE_CHAMPIONS_3) == QUEST_STATUS_INCOMPLETE)))
                 {
-                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MELEE_FIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                    if(CanMakeDuel(player))
+                        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MELEE_FIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
                 }
                 break;
             }
@@ -2287,6 +2351,8 @@ public:
         void EnterCombat(Unit* attacker)
         {
             DoCast(me,SPELL_DEFEND_AURA_PERIODIC,true);
+            if(Aura* aur = me->AddAura(SPELL_DEFEND,me))
+                aur->ModStackAmount(1);
         }
 
         void MovementInform(uint32 uiType, uint32 uiId)
