@@ -1469,9 +1469,11 @@ public:
 };
 
 /*
-DELETE FROM spell_script_names WHERE spell_id = 62552;
+DELETE FROM spell_script_names WHERE spell_id IN (62552,66482,62719);
 INSERT INTO spell_script_names VALUES
-(62552,'spell_tournament_defend');
+(62552,'spell_tournament_defend'),
+(66482,'spell_tournament_defend'),
+(62719,'spell_tournament_defend');
 */
 
 class spell_tournament_defend : public SpellScriptLoader
@@ -1523,6 +1525,10 @@ class spell_tournament_defend : public SpellScriptLoader
                 AfterEffectApply += AuraEffectApplyFn(spell_tournament_defend_AuraScript::OnStackChange, EFFECT_2, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_CHANGE_AMOUNT);
                 AfterEffectApply += AuraEffectApplyFn(spell_tournament_defend_AuraScript::OnStackChange, EFFECT_2, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_REAL);
                 AfterEffectRemove += AuraEffectRemoveFn(spell_tournament_defend_AuraScript::OnAuraRemoved, EFFECT_2, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_REAL);
+                
+                AfterEffectApply += AuraEffectApplyFn(spell_tournament_defend_AuraScript::OnStackChange, EFFECT_0, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_CHANGE_AMOUNT);
+                AfterEffectApply += AuraEffectApplyFn(spell_tournament_defend_AuraScript::OnStackChange, EFFECT_0, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_REAL);
+                AfterEffectRemove += AuraEffectRemoveFn(spell_tournament_defend_AuraScript::OnAuraRemoved, EFFECT_0, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_REAL);
             }
         };
 
@@ -1957,19 +1963,31 @@ public:
         return new npc_faction_valiant_championAI(creature);
     }
 
-    bool CanMakeDuel(Player* player)
+    bool CanMakeDuel(Player* player, uint32 npcEntry)
     {
-        if(player->HasAura(SPELL_BESTED_DARNASSUS)
-            || player->HasAura(SPELL_BESTED_GNOMEREGAN)
-            || player->HasAura(SPELL_BESTED_IRONFORGE)
-            || player->HasAura(SPELL_BESTED_ORGRIMMAR)
-            || player->HasAura(SPELL_BESTED_SENJIN)
-            || player->HasAura(SPELL_BESTED_SILVERMOON)
-            || player->HasAura(SPELL_BESTED_STORMWIND)
-            || player->HasAura(SPELL_BESTED_EXODAR)
-            || player->HasAura(SPELL_BESTED_UNDERCITY)
-            || player->HasAura(SPELL_BESTED_THUNDERBLUFF))
-            return false;
+        switch(npcEntry)
+        {
+        case 33738: // Darnassus
+            return !player->HasAura(SPELL_BESTED_DARNASSUS);
+        case 33739: // Exodar
+            return !player->HasAura(SPELL_BESTED_EXODAR);
+        case 33740: // Gnomeregan
+            return !player->HasAura(SPELL_BESTED_GNOMEREGAN);
+        case 33743: // Ironforge
+            return !player->HasAura(SPELL_BESTED_IRONFORGE);
+        case 33744: // Orgrimmar
+            return !player->HasAura(SPELL_BESTED_ORGRIMMAR);
+        case 33745: // Sen'jin
+            return !player->HasAura(SPELL_BESTED_SENJIN);
+        case 33746: // Silvermoon
+            return !player->HasAura(SPELL_BESTED_SILVERMOON);
+        case 33747: // Stormwind
+            return !player->HasAura(SPELL_BESTED_STORMWIND);
+        case 33748: // Thunder Bluff
+            return !player->HasAura(SPELL_BESTED_THUNDERBLUFF);
+        case 33749: // Undercity
+            return !player->HasAura(SPELL_BESTED_UNDERCITY);
+        }
         return true;
     }
 
@@ -2036,7 +2054,7 @@ public:
                     (player->GetQuestStatus(QUEST_AMONG_THE_CHAMPIONS_2) == QUEST_STATUS_INCOMPLETE) ||
                     (player->GetQuestStatus(QUEST_AMONG_THE_CHAMPIONS_3) == QUEST_STATUS_INCOMPLETE)))
                 {
-                    if(CanMakeDuel(player))
+                    if(CanMakeDuel(player,creature->GetEntry()))
                         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MELEE_FIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
                 }
                 break;
