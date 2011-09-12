@@ -2943,6 +2943,169 @@ public:
     };
 };
 
+/*########
+## npc_black_knights_grave
+#########*/
+
+enum eGraveSpells
+{
+    SPELL_COMPLETE_QUEST        = 66785,
+
+    ENTRY_CULT_ASSASSIN         = 35127,
+    ENTRY_CULT_SABOTEUR         = 35116,
+};
+/*
+UPDATE creature_template SET scriptname = 'npc_black_knights_grave' WHERE entry = 34735;
+*/
+#define SAY_SABOTEUR_1              "What do you think you're doing?"
+#define SAY_SABOTEUR_2              "You're too late to stop our plan."
+#define SAY_SABOTEUR_3              "See to it that I'm not followed."
+#define SAY_ASSASSIN_1              "Gladly."
+
+class npc_black_knights_grave : public CreatureScript
+{
+public:
+    npc_black_knights_grave() : CreatureScript("npc_black_knights_grave") { }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_black_knights_graveAI (pCreature);
+    }
+
+    struct npc_black_knights_graveAI : public Scripted_NoMovementAI
+    {
+        npc_black_knights_graveAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature), summons(pCreature) { me->setActive(true); }
+
+        SummonList summons;
+        bool bEventRunning;
+
+        uint64 guidSaboteur;
+        uint64 guidAssassin;
+
+        uint32 uiSpeakTimer;
+        uint32 uiSpeakPhase;
+
+        void Reset()
+        {
+            bEventRunning = false;
+            uiSpeakPhase = 0;
+        }
+
+        void StartEvent(uint64 attacker = 0)
+        {
+            if(bEventRunning)
+                return;
+
+            bEventRunning = true;
+
+            Creature* cre = DoSummon(ENTRY_CULT_SABOTEUR,me,5.0f,30000,TEMPSUMMON_TIMED_DESPAWN);
+            if(cre)
+            {
+                cre->SetStandState(UNIT_STAND_STATE_KNEEL);
+                cre->SetReactState(REACT_PASSIVE);
+                cre->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
+                cre->setFaction(14);
+                guidSaboteur = cre->GetGUID();
+            }
+
+            cre = DoSummon(ENTRY_CULT_ASSASSIN,me,5.0f,40000,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT);
+            if(cre)
+            {
+                cre->SetReactState(REACT_PASSIVE);
+                cre->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
+                cre->setFaction(14);
+                guidAssassin = cre->GetGUID();
+            }
+
+            uiSpeakTimer = 7000;
+            uiSpeakPhase = 1;
+        }
+
+        void StopEvent()
+        {
+            DoCastAOE(SPELL_COMPLETE_QUEST,true);
+            bEventRunning = false;
+            summons.DespawnAll(2000);
+            uiSpeakPhase = 0;
+        }
+
+        void JustSummoned(Creature* pSummoned)
+        {
+            summons.Summon(pSummoned);
+        }
+
+        void MoveInLineOfSight(Unit *who) 
+        {
+            if(!who || !who->ToPlayer())
+                return;
+
+            if(who->IsWithinDist(me,20.0f))
+                if(who->ToPlayer()->GetQuestStatus(14016) == QUEST_STATUS_INCOMPLETE)
+                    StartEvent(who->GetGUID());
+
+            return;
+        }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            if(bEventRunning)
+            {
+                if(uiSpeakTimer <= uiDiff)
+                {
+                    switch(uiSpeakPhase)
+                    {
+                    case 1:
+                        if(Creature* cre = Creature::GetCreature(*me,guidSaboteur))
+                            cre->MonsterSay(SAY_SABOTEUR_1,LANG_UNIVERSAL,0);
+                        break;
+                    case 2:
+                        if(Creature* cre = Creature::GetCreature(*me,guidSaboteur))
+                            cre->MonsterSay(SAY_SABOTEUR_2,LANG_UNIVERSAL,0);
+                        break;
+                    case 3:
+                        if(Creature* cre = Creature::GetCreature(*me,guidSaboteur))
+                            cre->MonsterSay(SAY_SABOTEUR_3,LANG_UNIVERSAL,0);
+                        break;
+                    case 4:
+                        if(Creature* cre = Creature::GetCreature(*me,guidAssassin))
+                        {
+                            cre->MonsterSay(SAY_ASSASSIN_1,LANG_UNIVERSAL,0);
+                            cre->SetReactState(REACT_AGGRESSIVE);
+                            cre->RemoveFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
+                            std::list<Player*> pList;
+                            pList = cre->GetNearestPlayersList(20.0f,true);
+                            if(pList.size() > 0)
+                            {
+                                std::list<Player*>::const_iterator itr = pList.begin();
+                                if((*itr))
+                                    cre->AI()->AttackStart((*itr));
+                            }
+                            summons.DespawnEntry(ENTRY_CULT_SABOTEUR,2000);
+                        }
+                        break;
+                    }
+                    uiSpeakPhase++;
+                    uiSpeakTimer = 3000;
+                }else uiSpeakTimer -= uiDiff;
+
+
+                if(Creature* cre = Creature::GetCreature(*me,guidAssassin))
+                {
+                    if(cre->isDead())
+                    {
+                        StopEvent();
+                    }
+                }else
+                {
+                    bEventRunning = false;
+                    summons.DespawnAll();
+                }
+
+            }
+        }
+    };
+};
+
 void AddSC_icecrown()
 {
     new npc_arete();
@@ -2971,4 +3134,5 @@ void AddSC_icecrown()
     new npc_argent_champion();
     new npc_argent_squire_gruntling();
     new vehicle_black_knight_gryphon();
+    new npc_black_knights_grave();
 }

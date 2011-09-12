@@ -42,7 +42,7 @@ void SummonList::DoAction(uint32 entry, int32 info)
     }
 }
 
-void SummonList::DespawnEntry(uint32 entry)
+void SummonList::DespawnEntry(uint32 entry, uint32 msTimeToDespawn)
 {
     for (iterator i = begin(); i != end();)
     {
@@ -52,15 +52,14 @@ void SummonList::DespawnEntry(uint32 entry)
         else if (summon->GetEntry() == entry)
         {
             erase(i++);
-            summon->setDeathState(JUST_DIED);
-            summon->RemoveCorpse();
+            summon->DespawnOrUnsummon(msTimeToDespawn);
         }
         else
             ++i;
     }
 }
 
-void SummonList::DespawnAll()
+void SummonList::DespawnAll(uint32 msTimeToDespawn)
 {
     while (!empty())
     {
@@ -73,10 +72,10 @@ void SummonList::DespawnAll()
             if (TempSummon* summ = summon->ToTempSummon())
             {
                 summon->DestroyForNearbyPlayers();
-                summ->UnSummon();
+                summ->UnSummon(msTimeToDespawn);
             }
             else
-                summon->DisappearAndDie();
+                summon->DespawnOrUnsummon(msTimeToDespawn);
         }
     }
 }
