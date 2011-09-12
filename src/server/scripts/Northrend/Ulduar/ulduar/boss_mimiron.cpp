@@ -251,6 +251,7 @@ class boss_mimiron : public CreatureScript
                 _mimironHardMode = false;
                 _checkBotAlive = true;
                 _enraged = false;
+                _checkTargetTimer = 7000;
 
                 DespawnCreatures(NPC_FLAMES_INITIAL, 100.0f);
                 DespawnCreatures(NPC_PROXIMITY_MINE, 100.0f);
@@ -323,6 +324,21 @@ class boss_mimiron : public CreatureScript
             {
                 if (!UpdateVictim())
                     return;
+
+                // prevent mimiron staying infight with leviathan introduced in rev #b40bf69
+                // TODO: find out why this happens
+                if (_checkTargetTimer < diff)
+                {
+                    Unit* player = SelectTarget(SELECT_TARGET_RANDOM, 0, 200.0f, true);
+                    if (!player)
+                    {
+                        EnterEvadeMode();
+                        return;
+                    }
+                    _checkTargetTimer = 7000;
+                }
+                else
+                    _checkTargetTimer -= diff;
 
                 _DoAggroPulse(diff);
 
@@ -717,6 +733,7 @@ class boss_mimiron : public CreatureScript
             uint32 _flameTimer;
             uint32 _flameCount;
             uint32 _botTimer;
+            uint32 _checkTargetTimer;
             bool _mimironHardMode;
             bool _checkBotAlive;
             bool _enraged;
