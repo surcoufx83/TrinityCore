@@ -2,6 +2,7 @@
 ## npc_frostlord_ahune
 ######*/
 
+#include "ScriptPCH.h"
 #include "LFGMgr.h"
 
 #define EMOTE_SUBMERGE             "Ahune Retreats. His Defenses Diminish."
