@@ -3455,11 +3455,6 @@ void SpellMgr::LoadDbcDataCorrections()
                 // that will be clear if we get more spells with problem like this
                 spellInfo->AttributesEx |= SPELL_ATTR1_DISPEL_AURAS_ON_IMMUNITY;
                 break;
-            case 62584: // Lifebinder's Gift
-            case 64185: // Lifebinder's Gift
-                spellInfo->EffectImplicitTargetB[1] = TARGET_UNIT_NEARBY_ENTRY;
-                spellInfo->EffectImplicitTargetB[2] = TARGET_UNIT_NEARBY_ENTRY;
-                break;
             case 62311: // Algalon - Cosmic Smash
             case 64596: // Algalon - Cosmic Smash
                 spellInfo->rangeIndex = 13;
