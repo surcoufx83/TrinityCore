@@ -180,7 +180,7 @@ public:
                 TempSpell->Attributes |= SPELL_ATTR0_PASSIVE;*/
         }
 
-        InstanceScript *pInstance;
+        InstanceScript* pInstance;
         PhaseFelmyst Phase;
         EventFelmyst Event;
         uint32 Timer[EVENT_FLIGHT + 1];
@@ -308,7 +308,7 @@ public:
             }
         }
 
-        void SpellHit(Unit *caster, const SpellInfo *spell)
+        void SpellHit(Unit* caster, const SpellInfo* spell)
         {
             // workaround for linked aura
             /*if(spell->Id == SPELL_VAPOR_FORCE)

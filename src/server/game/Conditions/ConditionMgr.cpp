@@ -116,7 +116,7 @@ bool Condition::Meets(Player* player, Unit* invoker)
             break;
         case CONDITION_INSTANCE_DATA:
         {
-            Map *map = player->GetMap();
+            Map* map = player->GetMap();
             if (map && map->IsDungeon() && ((InstanceMap*)map)->GetInstanceScript())
                 condMeets = ((InstanceMap*)map)->GetInstanceScript()->GetData(mConditionValue1) == mConditionValue2;
             break;
@@ -395,7 +395,7 @@ void ConditionMgr::LoadConditions(bool isReload)
     do
     {
 
-        Field *fields = result->Fetch();
+        Field* fields = result->Fetch();
 
         Condition* cond = new Condition();
         int32 iSourceTypeOrReferenceId   = fields[0].GetInt32();
@@ -936,7 +936,7 @@ bool ConditionMgr::isSourceTypeValid(Condition* cond)
                 return false;
             }
 
-            ItemTemplate const *pItemProto = sObjectMgr->GetItemTemplate(cond->mSourceEntry);
+            ItemTemplate const* pItemProto = sObjectMgr->GetItemTemplate(cond->mSourceEntry);
             if (!pItemProto)
             {
                 sLog->outErrorDb("SourceEntry %u in `condition` table, does not exist in `item_tamplate`, ignoring.", cond->mSourceEntry);
@@ -1044,7 +1044,7 @@ bool ConditionMgr::isConditionTypeValid(Condition* cond)
         }
         case CONDITION_ITEM:
         {
-            ItemTemplate const *proto = sObjectMgr->GetItemTemplate(cond->mConditionValue1);
+            ItemTemplate const* proto = sObjectMgr->GetItemTemplate(cond->mConditionValue1);
             if (!proto)
             {
                 sLog->outErrorDb("Item condition has non existing item (%u), skipped", cond->mConditionValue1);
@@ -1060,7 +1060,7 @@ bool ConditionMgr::isConditionTypeValid(Condition* cond)
         }
         case CONDITION_ITEM_EQUIPPED:
         {
-            ItemTemplate const *proto = sObjectMgr->GetItemTemplate(cond->mConditionValue1);
+            ItemTemplate const* proto = sObjectMgr->GetItemTemplate(cond->mConditionValue1);
             if (!proto)
             {
                 sLog->outErrorDb("ItemEquipped condition has non existing item (%u), skipped", cond->mConditionValue1);
@@ -1114,7 +1114,7 @@ bool ConditionMgr::isConditionTypeValid(Condition* cond)
         }
         case CONDITION_SKILL:
         {
-            SkillLineEntry const *pSkill = sSkillLineStore.LookupEntry(cond->mConditionValue1);
+            SkillLineEntry const* pSkill = sSkillLineStore.LookupEntry(cond->mConditionValue1);
             if (!pSkill)
             {
                 sLog->outErrorDb("Skill condition specifies non-existing skill (%u), skipped", cond->mConditionValue1);
@@ -1326,7 +1326,7 @@ bool ConditionMgr::isConditionTypeValid(Condition* cond)
         }
         case CONDITION_NOITEM:
         {
-            ItemTemplate const *proto = sObjectMgr->GetItemTemplate(cond->mConditionValue1);
+            ItemTemplate const* proto = sObjectMgr->GetItemTemplate(cond->mConditionValue1);
             if (!proto)
             {
                 sLog->outErrorDb("NoItem condition has non existing item (%u), skipped", cond->mConditionValue1);

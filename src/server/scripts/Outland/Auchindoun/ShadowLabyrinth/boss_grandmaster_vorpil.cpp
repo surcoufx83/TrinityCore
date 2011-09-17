@@ -161,7 +161,7 @@ public:
             Intro = false;
         }
 
-        InstanceScript *pInstance;
+        InstanceScript* pInstance;
         bool Intro, HelpYell;
         bool sumportals;
 
@@ -262,7 +262,7 @@ public:
         {
             ScriptedAI::MoveInLineOfSight(who);
 
-            if (!Intro && me->IsWithinLOSInMap(who)&& me->IsWithinDistInMap(who, 100) && me->IsHostileTo(who))
+            if (!Intro && me->IsWithinLOSInMap(who)&& me->IsWithinDistInMap(who, 100) && me->IsValidAttackTarget(who))
             {
                 DoScriptText(SAY_INTRO, me);
                 Intro = true;

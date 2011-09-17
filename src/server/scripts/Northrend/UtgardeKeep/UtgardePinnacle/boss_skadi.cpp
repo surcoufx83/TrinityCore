@@ -305,7 +305,7 @@ public:
             Summons.Despawn(pSummoned);
         }
 
-        void SpellHit(Unit* /*caster*/, const SpellInfo *spell)
+        void SpellHit(Unit* /*caster*/, const SpellInfo* spell)
         {
             if (spell->Id == SPELL_LAUNCH_HARPOON && Phase == FLYING)
             {

@@ -59,7 +59,7 @@ public:
             HeroicMode = me->GetMap()->IsHeroic();
         }
 
-        InstanceScript *pInstance;
+        InstanceScript* pInstance;
 
         bool HeroicMode;
         bool MayNotCastCorrupt;

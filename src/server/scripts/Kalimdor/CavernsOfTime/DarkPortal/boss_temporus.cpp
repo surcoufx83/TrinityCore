@@ -57,7 +57,7 @@ public:
             HeroicMode = me->GetMap()->IsHeroic();
         }
 
-        InstanceScript *pInstance;
+        InstanceScript* pInstance;
 
         bool HeroicMode;
         uint32 Haste_Timer;

@@ -120,7 +120,7 @@ public:
             FireBlast_Timer = 6000;
         }
 
-            void SpellHit(Unit*, const SpellInfo *spell)
+            void SpellHit(Unit*, const SpellInfo* spell)
         {
             if (trigger == 2 && spell->Id == SPELL_BLAZE_TARGET)
             {

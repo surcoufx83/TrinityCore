@@ -283,7 +283,7 @@ HostileReference* ThreatContainer::addThreat(Unit* victim, float threat)
 
 //============================================================
 
-void ThreatContainer::modifyThreatPercent(Unit *victim, int32 percent)
+void ThreatContainer::modifyThreatPercent(Unit* victim, int32 percent)
 {
     if (HostileReference* ref = getReferenceByTarget(victim))
         ref->addThreatPercent(percent);
@@ -396,7 +396,7 @@ void ThreatManager::clearReferences()
 
 //============================================================
 
-void ThreatManager::addThreat(Unit* victim, float threat, SpellSchoolMask schoolMask, SpellInfo const *threatSpell)
+void ThreatManager::addThreat(Unit* victim, float threat, SpellSchoolMask schoolMask, SpellInfo const* threatSpell)
 {
     if (!ThreatCalcHelper::isValidProcess(victim, getOwner(), threatSpell))
         return;
@@ -462,7 +462,7 @@ Unit* ThreatManager::getHostilTarget()
 
 //============================================================
 
-float ThreatManager::getThreat(Unit *victim, bool alsoSearchOfflineList)
+float ThreatManager::getThreat(Unit* victim, bool alsoSearchOfflineList)
 {
     float threat = 0.0f;
     HostileReference* ref = iThreatContainer.getReferenceByTarget(victim);
@@ -487,7 +487,7 @@ void ThreatManager::tauntApply(Unit* taunter)
 
 //============================================================
 
-void ThreatManager::tauntFadeOut(Unit *taunter)
+void ThreatManager::tauntFadeOut(Unit* taunter)
 {
     HostileReference* ref = iThreatContainer.getReferenceByTarget(taunter);
     if (ref)

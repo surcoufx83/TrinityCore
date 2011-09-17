@@ -1060,7 +1060,7 @@ public:
             return sSpellMgr->GetSpellInfo(SPELL_REFLECTIVE_SHIELD_T);
         }
 
-        void Trigger(AuraEffect * aurEff, DamageInfo & dmgInfo, uint32 & absorbAmount)
+        void Trigger(AuraEffect* aurEff, DamageInfo & dmgInfo, uint32 & absorbAmount)
         {
             Unit * target = GetTarget();
             if (dmgInfo.GetAttacker() == target)
@@ -1075,7 +1075,7 @@ public:
         }
     };
 
-    AuraScript *GetAuraScript() const
+    AuraScript* GetAuraScript() const
     {
         return new spell_boss_lady_malande_shield_AuraScript();
     }

@@ -29,7 +29,6 @@ enum Spells
     NPC_UNSTABLE_SPHERE = 28166,
 };
 
-//not in db
 enum Yells
 {
     SAY_AGGRO = -1578005,
