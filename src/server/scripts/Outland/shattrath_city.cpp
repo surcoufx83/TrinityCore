@@ -538,7 +538,7 @@ public:
                 me->SetReactState(REACT_AGGRESSIVE);
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
-                if (!player || !me->canAttack(player))
+                if (!player || !me->canCreatureAttack(player))
                 {
                     EnterEvadeMode();
                     return;

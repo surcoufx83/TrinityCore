@@ -1507,7 +1507,7 @@ public:
                 if(!me->IsWithinDistInMap(who, me->GetAttackDistance(who)) || !me->IsWithinLOSInMap(who))
                     return;
         
-                if(me->canAttack(who))
+                if(me->canCreatureAttack(who))
                     CallReinforcements(who);
             }
             else if(ReinforcementPhase == 3)
