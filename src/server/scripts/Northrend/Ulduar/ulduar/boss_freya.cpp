@@ -514,11 +514,11 @@ public:
                 }
             }
 
-            EnterEvadeMode();
-            me->ForcedDespawn(7500);
-
             // getting back to nature achievement
             attunedToNature = me->GetAuraCount(SPELL_ATTUNED_TO_NATURE);
+
+            EnterEvadeMode();
+            me->ForcedDespawn(7500);
 
             // achievements credit
             DoCast(me, SPELL_ACHIEVEMENT_CHECK, true);
