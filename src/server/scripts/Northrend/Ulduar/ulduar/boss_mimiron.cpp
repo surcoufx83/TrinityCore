@@ -806,9 +806,6 @@ public:
 
         void DamageTaken(Unit* /*who*/, uint32 &damage)
         {
-            if (me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1))
-                damage = 0;
-
             if (phase == PHASE_LEVIATHAN_SOLO)
                 if (damage >= me->GetHealth())
                 {
@@ -854,7 +851,7 @@ public:
 
             if (MimironHardMode)
             {
-                DoCast(me, SPELL_EMERGENCY_MODE);
+                DoCast(me, SPELL_EMERGENCY_MODE, true);
                 events.ScheduleEvent(EVENT_FLAME_SUPPRESSANT, 60000, 0, PHASE_LEVIATHAN_SOLO);
             }
 
@@ -882,7 +879,7 @@ public:
                     break;
                 case DO_LEVIATHAN_ASSEMBLED:
                     if (MimironHardMode)
-                        DoCast(me, SPELL_EMERGENCY_MODE);
+                        DoCast(me, SPELL_EMERGENCY_MODE, true);
                     me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
                     me->SetReactState(REACT_AGGRESSIVE);
                     me->SetHealth(int32(me->GetMaxHealth() / 2));
@@ -1144,7 +1141,7 @@ public:
 
             if (MimironHardMode)
             {
-                DoCast(me, SPELL_EMERGENCY_MODE);
+                DoCast(me, SPELL_EMERGENCY_MODE, true);
                 events.ScheduleEvent(EVENT_FROST_BOMB, 15000);
                 events.ScheduleEvent(EVENT_FLAME_SUPPRESSANT_VX001, 1000, 0, PHASE_VX001_SOLO);
             }
@@ -1177,7 +1174,7 @@ public:
                     events.RescheduleEvent(EVENT_HAND_PULSE, 15000, 0, PHASE_VX001_ASSEMBLED);
                     if (MimironHardMode)
                     {
-                        DoCast(me, SPELL_EMERGENCY_MODE);
+                        DoCast(me, SPELL_EMERGENCY_MODE, true);
                         events.RescheduleEvent(EVENT_FROST_BOMB, 15000);
                     }
                     break;
@@ -1189,9 +1186,6 @@ public:
 
         void DamageTaken(Unit* /*who*/, uint32 &damage)
         {
-            if (me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1))
-                damage = 0;
-
             if (phase == PHASE_VX001_SOLO)
                 if (damage >= me->GetHealth())
                 {
@@ -1458,7 +1452,7 @@ public:
                 MimironHardMode = Mimiron->AI()->GetData(DATA_GET_HARD_MODE);
 
             if (MimironHardMode)
-                DoCast(me, SPELL_EMERGENCY_MODE);
+                DoCast(me, SPELL_EMERGENCY_MODE, true);
 
             events.ScheduleEvent(EVENT_PLASMA_BALL, 1000);
             events.ScheduleEvent(EVENT_SUMMON_BOTS, 10000, 0, PHASE_AERIAL_SOLO);
@@ -1492,7 +1486,7 @@ public:
                     break;
                 case DO_AERIAL_ASSEMBLED:
                     if (MimironHardMode)
-                        DoCast(me, SPELL_EMERGENCY_MODE);
+                        DoCast(me, SPELL_EMERGENCY_MODE, true);
                     me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
                     me->SetReactState(REACT_AGGRESSIVE);
                     me->SetHealth(int32(me->GetMaxHealth() / 2));
@@ -1602,9 +1596,6 @@ public:
 
         void DamageTaken(Unit* /*who*/, uint32 &damage)
         {
-            if (me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1))
-                damage = 0;
-
             if (phase == PHASE_AERIAL_SOLO)
                 if (damage >= me->GetHealth())
                 {
