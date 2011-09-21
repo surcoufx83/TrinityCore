@@ -5598,6 +5598,21 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                     // Frost Fever
                     if (m_targets.GetUnitTarget()->GetAura(55095))
                         m_caster->CastSpell(unitTarget, 55095, true);
+                    // if skilled Ebon Plaguebringer Rank 1 or 2 or 3 -> reset highest Ebon Plague Rank on target
+                    if (m_caster->GetAura(51099) || m_caster->GetAura(51160) || m_caster->GetAura(51161))
+                    {
+                        // Ebon Plague - Rank 1
+                        if (m_targets.GetUnitTarget()->GetAura(51726))
+                            m_caster->CastSpell(unitTarget, 51726, true);
+
+                        // Ebon Plague - Rank 2
+                        if (m_targets.GetUnitTarget()->GetAura(51734))
+                            m_caster->CastSpell(unitTarget, 51734, true);
+
+                        // Ebon Plague - Rank 3
+                        if (m_targets.GetUnitTarget()->GetAura(51735))
+                            m_caster->CastSpell(unitTarget, 51735, true);
+                    }                            
                 }
             }
             break;
