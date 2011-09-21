@@ -3387,6 +3387,8 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->AttributesEx3 |= SPELL_ATTR3_STACK_FOR_DIFF_CASTERS;
                 break;
             case 56790: // Create Harpoon
+            case 60126: // Create Loaned Gryphon Reins
+            case 60128: // Create Loaned Wind Rider Reins
                 spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_TARGET_ANY;
                 break;
             // ULDUAR SPELLS
