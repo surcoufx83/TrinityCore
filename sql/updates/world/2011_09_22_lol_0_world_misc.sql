@@ -43,30 +43,35 @@ INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type
 (@REMULOS,0,4,5,61,0,100,0,0,0,0,0,53,0,@REMULOS,0,0,0,0,1,0,0,0,0,0,0,0,'Keeper Remulos - on Quest Accept - start WP'),
 (@REMULOS,0,5,0,61,0,100,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,'Keeper Remulos - on Quest Accept - say Text 0'),
 (@REMULOS,0,6,7,40,0,100,0,5,@REMULOS,0,0,54,83000,0,0,0,0,0,1,0,0,0,0,0,0,0,'Keeper Remulos - reached WP 5 - pause WP'),
-(@REMULOS,0,7,0,61,0,100,0,0,0,0,0,80,@REMULOS*100,0,0,0,0,0,1,0,0,0,0,0,0,0,'Keeper Remulos - reached WP 5 - run Script'),
-(@REMULOS,0,8,9,40,0,100,0,10,@REMULOS,0,0,81,3,0,0,0,0,0,1,0,0,0,0,0,0,0,'Keeper Remulos - reached WP 10 - Turn on Quest Giver & Gossip Flag'),
-(@REMULOS,0,9,0,61,0,100,0,0,0,0,0,66,0,0,0,0,0,0,8,0,0,0,0,0,0,3.909540,'Keeper Remulos - reached WP 10 - set orientation'),
+(@REMULOS,0,7,8,61,0,100,0,0,0,0,0,66,0,0,0,0,0,0,8,0,0,0,0,0,0,3.12180,'Keeper Remulos - reached WP5 - set orientation'),
+(@REMULOS,0,8,0,61,0,100,0,0,0,0,0,80,@REMULOS*100,0,0,0,0,0,1,0,0,0,0,0,0,0,'Keeper Remulos - reached WP 5 - run Script'),
+(@REMULOS,0,9,10,40,0,100,0,10,@REMULOS,0,0,81,3,0,0,0,0,0,1,0,0,0,0,0,0,0,'Keeper Remulos - reached WP 10 - Turn on Quest Giver & Gossip Flag'),
+(@REMULOS,0,10,0,61,0,100,0,0,0,0,0,66,0,0,0,0,0,0,8,0,0,0,0,0,0,3.909540,'Keeper Remulos - reached WP 10 - set orientation'),
 -- Script
-(@REMULOS*100,9,0,0,0,0,100,0,0,0,0,0,66,0,0,0,0,0,0,8,0,0,0,0,0,0,3.148540,'Keeper Remulos - set orientation'),
-(@REMULOS*100,9,1,0,0,0,100,0,2000,2000,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,0,0,'Keeper Remulos - say Text 1'),
-(@REMULOS*100,9,2,0,0,0,100,0,3000,3000,0,0,11,@SPELL1,2,0,0,0,0,8,0,0,0,7730.5288,-2318.8596,451.34,0,'Keeper Remulos - cast Spell: Throw Nightmare Object to Position'), -- doesn't seem to work'
-(@REMULOS*100,9,3,0,0,0,100,0,4000,4000,0,0,12,@MALFURION,8,0,0,0,0,8,0,0,0,7730.5288,-2318.8596,453.8706,6.14985,'Keeper Remulos - summon Malfurion Stormrage'),
-(@REMULOS*100,9,4,0,0,0,100,0,2000,2000,0,0,1,2,0,0,0,0,0,1,0,0,0,0,0,0,0,'Keeper Remulos - say Text 2'),
-(@REMULOS*100,9,5,0,0,0,100,0,3000,3000,0,0,1,0,0,0,0,0,0,9,@MALFURION,0,30,0,0,0,0,'Malfurion Stormrage - say Text 0'),
-(@REMULOS*100,9,6,0,0,0,100,0,6000,6000,0,0,1,3,0,0,0,0,0,1,0,0,0,0,0,0,0,'Keeper Remulos - say Text 3'),
-(@REMULOS*100,9,7,0,0,0,100,0,7000,7000,0,0,1,1,0,0,0,0,0,9,@MALFURION,0,30,0,0,0,0,'Malfurion Stormrage - say Text 1'),
-(@REMULOS*100,9,8,0,0,0,100,0,11000,11000,0,0,1,4,0,0,0,0,0,1,0,0,0,0,0,0,0,'Keeper Remulos - say Text 4'),
-(@REMULOS*100,9,9,0,0,0,100,0,3500,3500,0,0,1,2,0,0,0,0,0,9,@MALFURION,0,30,0,0,0,0,'Malfurion Stormrage - say Text 2'),
-(@REMULOS*100,9,10,0,0,0,100,0,4000,4000,0,0,1,5,0,0,0,0,0,1,0,0,0,0,0,0,0,'Keeper Remulos - say Text 5'),
-(@REMULOS*100,9,11,0,0,0,100,0,9000,9000,0,0,1,3,0,0,0,0,0,9,@MALFURION,0,30,0,0,0,0,'Malfurion Stormrage - say Text 3'),
-(@REMULOS*100,9,12,0,0,0,100,0,19000,19000,0,0,1,4,0,0,0,0,0,9,@MALFURION,0,30,0,0,0,0,'Malfurion Stormrage - say Text 4'),
-(@REMULOS*100,9,13,0,0,0,100,0,6000,6000,0,0,1,6,0,0,0,0,0,1,0,0,0,0,0,0,0,'Keeper Remulos - say Text 6'),
-(@REMULOS*100,9,14,0,0,0,100,0,2000,2000,0,0,1,7,0,0,0,0,0,1,0,0,0,0,0,0,0,'Keeper Remulos - say Text 7'),
-(@REMULOS*100,9,15,0,0,0,100,0,0,0,0,0,15,@QUEST,0,0,0,0,0,7,0,0,0,0,0,0,0,'Keeper Remulos - give Quest Credit'),
-(@REMULOS*100,9,16,0,0,0,100,0,1000,1000,0,0,45,0,1,0,0,0,0,9,@MALFURION,0,30,0,0,0,0,'Keeper Remulos - set data 0 1 to Malfurion Stormrage'),
+(@REMULOS*100,9,0,0,0,0,100,0,2000,2000,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,0,0,'Keeper Remulos - say Text 1'),
+(@REMULOS*100,9,1,0,0,0,100,0,3000,3000,0,0,11,@SPELL1,2,0,0,0,0,1,0,0,0,0,0,0,0,'Keeper Remulos - cast Spell: Throw Nightmare Object to Position'),
+(@REMULOS*100,9,2,0,0,0,100,0,4000,4000,0,0,12,@MALFURION,8,0,0,0,0,8,0,0,0,7730.5288,-2318.8596,453.8706,6.14985,'Keeper Remulos - summon Malfurion Stormrage'),
+(@REMULOS*100,9,3,0,0,0,100,0,2000,2000,0,0,1,2,0,0,0,0,0,1,0,0,0,0,0,0,0,'Keeper Remulos - say Text 2'),
+(@REMULOS*100,9,4,0,0,0,100,0,3000,3000,0,0,1,0,0,0,0,0,0,9,@MALFURION,0,30,0,0,0,0,'Malfurion Stormrage - say Text 0'),
+(@REMULOS*100,9,5,0,0,0,100,0,6000,6000,0,0,1,3,0,0,0,0,0,1,0,0,0,0,0,0,0,'Keeper Remulos - say Text 3'),
+(@REMULOS*100,9,6,0,0,0,100,0,7000,7000,0,0,1,1,0,0,0,0,0,9,@MALFURION,0,30,0,0,0,0,'Malfurion Stormrage - say Text 1'),
+(@REMULOS*100,9,7,0,0,0,100,0,11000,11000,0,0,1,4,0,0,0,0,0,1,0,0,0,0,0,0,0,'Keeper Remulos - say Text 4'),
+(@REMULOS*100,9,8,0,0,0,100,0,3500,3500,0,0,1,2,0,0,0,0,0,9,@MALFURION,0,30,0,0,0,0,'Malfurion Stormrage - say Text 2'),
+(@REMULOS*100,9,9,0,0,0,100,0,4000,4000,0,0,1,5,0,0,0,0,0,1,0,0,0,0,0,0,0,'Keeper Remulos - say Text 5'),
+(@REMULOS*100,9,10,0,0,0,100,0,9000,9000,0,0,1,3,0,0,0,0,0,9,@MALFURION,0,30,0,0,0,0,'Malfurion Stormrage - say Text 3'),
+(@REMULOS*100,9,11,0,0,0,100,0,19000,19000,0,0,1,4,0,0,0,0,0,9,@MALFURION,0,30,0,0,0,0,'Malfurion Stormrage - say Text 4'),
+(@REMULOS*100,9,12,0,0,0,100,0,6000,6000,0,0,1,6,0,0,0,0,0,1,0,0,0,0,0,0,0,'Keeper Remulos - say Text 6'),
+(@REMULOS*100,9,13,0,0,0,100,0,2000,2000,0,0,1,7,0,0,0,0,0,1,0,0,0,0,0,0,0,'Keeper Remulos - say Text 7'),
+(@REMULOS*100,9,14,0,0,0,100,0,0,0,0,0,15,@QUEST,0,0,0,0,0,7,0,0,0,0,0,0,0,'Keeper Remulos - give Quest Credit'),
+(@REMULOS*100,9,15,0,0,0,100,0,1000,1000,0,0,45,0,1,0,0,0,0,9,@MALFURION,0,30,0,0,0,0,'Keeper Remulos - set data 0 1 to Malfurion Stormrage'),
 
 (@MALFURION,0,0,0,54,0,100,0,0,0,0,0,11,@SPELL2,2,0,0,0,0,1,0,0,0,0,0,0,0,'Malfurion Stormrage - on summon - cast Cosmetic Teleport Effect on self'),
 (@MALFURION,0,1,0,38,0,100,0,0,1,0,0,41,0,0,0,0,0,0,1,0,0,0,0,0,0,0,'Malfurion Stormrage - on data set 0 1 - despawn');
+
+DELETE FROM `spell_target_position` WHERE `id`=@SPELL1;
+INSERT INTO `spell_target_position` (`id`,`target_map`,`target_position_x`,`target_position_y`,`target_position_z`,`target_orientation`) VALUES 
+(@SPELL1,1,7730.5288,-2318.8596,451.34,0);
+
 
 DELETE FROM `waypoints` WHERE `entry`=@REMULOS;
 INSERT INTO `waypoints` (`entry`,`pointid`,`position_x`,`position_y`,`position_z`,`point_comment`) VALUES
