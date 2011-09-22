@@ -1638,6 +1638,123 @@ class npc_stormwatcher : public CreatureScript
         };
 };
 
+/*######
+## Quest: Rejek: First Blood
+######*/
+
+enum enums
+{
+    ENTRY_SAPPHIRE_HIVE_WASP    = 28086,
+    ENTRY_HARDKNUCKLE_CHARGER   = 28096,
+    ENTRY_MISTWHISPER_ORACLE    = 28110,
+    ENTRY_MISTWHISPER_WARRIOR   = 28109,
+    // Kill Credit Entries from quest_template
+    NPC_CREDIT_1                = 28040,
+    NPC_CREDIT_2                = 36189,
+    NPC_CREDIT_3                = 29043,
+
+    SPELL_BLOOD_REJEKS_SWORD    = 52992,
+    SPELL_WASP_STINGER_RAGE     = 34392,
+    SPELL_CHARGER_CHARGE        = 49758,
+    SPELL_ORACLE_LIGHTNING_CLOUD= 54921,
+    SPELL_WARRIOR_FLIP_ATTACK   = 50533
+};
+
+class npc_rejek_first_blood : public CreatureScript
+{
+    public:
+        npc_rejek_first_blood() : CreatureScript("npc_rejek_first_blood"){ }
+
+        CreatureAI* GetAI(Creature* pCreature) const
+        {
+            return new npc_rejek_first_bloodAI(pCreature);
+        }
+
+        struct npc_rejek_first_bloodAI : public ScriptedAI
+        {
+            npc_rejek_first_bloodAI(Creature* pCreature) : ScriptedAI (pCreature){ }
+
+            uint32 uiFlipAttack_Timer;
+            uint32 uiCharge_Timer;
+            
+            bool Frenzied;
+
+            void Reset()
+            {
+                uiFlipAttack_Timer = urand (2000,6000);
+                uiCharge_Timer = 0;
+            }
+
+            void EnterCombat (Unit* /*who*/)
+            {
+                Frenzied = false;
+
+                if(me->GetEntry() == ENTRY_MISTWHISPER_ORACLE)
+                    DoCast(me, SPELL_ORACLE_LIGHTNING_CLOUD, true);
+            }
+
+            void SpellHit (Unit* caster, SpellInfo const* spell)
+            {
+                if(spell->Id == SPELL_BLOOD_REJEKS_SWORD)
+                {
+                    if(caster && caster->ToPlayer())
+                    {
+                        switch(me->GetEntry())
+                        {
+                            case ENTRY_SAPPHIRE_HIVE_WASP:
+                                caster->ToPlayer()->KilledMonsterCredit(NPC_CREDIT_1,0);
+                                break;
+                            case ENTRY_HARDKNUCKLE_CHARGER:
+                                caster->ToPlayer()->KilledMonsterCredit(NPC_CREDIT_2,0);
+                                break;
+                            case ENTRY_MISTWHISPER_ORACLE:
+                            case ENTRY_MISTWHISPER_WARRIOR:
+                                caster->ToPlayer()->KilledMonsterCredit(NPC_CREDIT_3,0);
+                                break;
+                        }
+                    }
+                }
+            }
+
+            void UpdateAI(const uint32 diff)
+            {
+                if(!UpdateVictim())
+                    return;
+
+                if(me->GetEntry() == ENTRY_SAPPHIRE_HIVE_WASP)
+                {
+                    if(!Frenzied && HealthBelowPct(30))
+                    {
+                        DoCast(me, SPELL_WASP_STINGER_RAGE, true);
+                        Frenzied = true;
+                    }
+                }
+
+                if(me->GetEntry() == ENTRY_HARDKNUCKLE_CHARGER)
+                {
+                    if(uiCharge_Timer <= diff)
+                    {
+                        DoCastVictim(SPELL_CHARGER_CHARGE);
+                        uiCharge_Timer = 5000;
+                    }
+                    else uiCharge_Timer -= diff;
+                }
+
+                if(me->GetEntry() == ENTRY_MISTWHISPER_WARRIOR)
+                {
+                    if(uiFlipAttack_Timer <= diff)
+                    {
+                        DoCastVictim(SPELL_WARRIOR_FLIP_ATTACK);
+                        uiFlipAttack_Timer = urand (4000,7000);
+                    }
+                    else uiFlipAttack_Timer -= diff;
+                }
+
+                DoMeleeAttackIfReady();
+            }
+        };
+};
+
 void AddSC_sholazar_basin()
 {
     new npc_injured_rainspeaker_oracle();
@@ -1657,4 +1774,5 @@ void AddSC_sholazar_basin()
     new npc_tipsy_mcmanus();
     new go_brew_event();
     new npc_stormwatcher();
+    new npc_rejek_first_blood();
 }
