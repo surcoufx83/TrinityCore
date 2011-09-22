@@ -1580,6 +1580,64 @@ class go_brew_event : public GameObjectScript
         }
 };
 
+/*######
+## npc_stormwatcher
+######*/
+
+enum eSpells
+{
+    SPELL_CALL_LIGHTNING                = 32018,
+    SPELL_THROW_VENTURE_CO_EXPLOSIVES   = 53145,
+    SPELL_SUMMON_STORMWATCHERS_HEAD     = 53162
+};
+
+class npc_stormwatcher : public CreatureScript
+{
+    public:
+        npc_stormwatcher() : CreatureScript("npc_stormwatcher"){ }
+
+        CreatureAI* GetAI(Creature* pCreature) const
+        {
+            return new npc_stormwatcherAI(pCreature);
+        }
+
+        struct npc_stormwatcherAI : public ScriptedAI
+        {
+            npc_stormwatcherAI(Creature* pCreature) : ScriptedAI (pCreature){ }
+
+            uint32 uiCallLightning_Timer;
+
+            void Reset()
+            {
+                uiCallLightning_Timer = urand (3000,5000);
+            }
+
+            void SpellHit (Unit* /*caster*/, SpellInfo const* spell)
+            {
+                if (spell->Id == SPELL_THROW_VENTURE_CO_EXPLOSIVES)
+                {
+                    DoCast(me, SPELL_SUMMON_STORMWATCHERS_HEAD, true);
+                    me->DespawnOrUnsummon();
+                }
+            }
+
+            void UpdateAI(const uint32 diff)
+            {
+                if (!UpdateVictim())
+                    return;
+
+                if (uiCallLightning_Timer <= diff)
+                {
+                    DoCastVictim(SPELL_CALL_LIGHTNING);
+                    uiCallLightning_Timer = urand (3000,5000);
+                }
+                else uiCallLightning_Timer -= diff;
+
+                DoMeleeAttackIfReady();
+            }
+        };
+};
+
 void AddSC_sholazar_basin()
 {
     new npc_injured_rainspeaker_oracle();
@@ -1598,4 +1656,5 @@ void AddSC_sholazar_basin()
     new npc_adventurous_dwarf();
     new npc_tipsy_mcmanus();
     new go_brew_event();
+    new npc_stormwatcher();
 }
