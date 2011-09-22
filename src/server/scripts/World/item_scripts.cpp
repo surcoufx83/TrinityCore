@@ -467,9 +467,64 @@ class item_fiery_soul_fragment : public ItemScript
         }
 };
 
+/*######
+## item_chime_of_cleansing
+######*/
 
+enum eMisc
+{
+    QUEST_A_CLEANSING_SONG	= 12735,
+    NPC_SPIRIT_OF_ATHA		= 29033,
+    NPC_SPIRIT_OF_HA_KHALAN	= 29018,
+    NPC_SPIRIT_OF_KOOSU		= 29034,
+    SPELL_SONG_OF_CLEANSING = 52941
+};
 
+class item_chime_of_cleansing : public ItemScript
+{
+	public:
+		item_chime_of_cleansing() : ItemScript("item_chime_of_cleansing"){ }
 
+		bool OnUse(Player* pPlayer,Item* pItem, SpellCastTargets const& /*targets*/)
+		{
+            if (pPlayer->GetQuestStatus(QUEST_A_CLEANSING_SONG) == QUEST_STATUS_INCOMPLETE)
+            {
+                if (pPlayer->GetAreaId() == 4385)
+                {
+                    Creature* Atha = pPlayer->SummonCreature(NPC_SPIRIT_OF_ATHA, pPlayer->GetPositionX()+10, pPlayer->GetPositionY(), pPlayer->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 5000);
+                    if (Atha)
+                        Atha->AI()->AttackStart(pPlayer);
+                }
+
+                if (pPlayer->GetAreaId() == 4290)
+                {
+                    Creature* HaKhalan = pPlayer->SummonCreature(NPC_SPIRIT_OF_HA_KHALAN, pPlayer->GetPositionX()+10, pPlayer->GetPositionY(), pPlayer->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 5000);
+                    if (HaKhalan)
+                        HaKhalan->AI()->AttackStart(pPlayer);
+                }
+
+                if (pPlayer->GetAreaId() == 4388)
+                {
+                    Creature* Koosu = pPlayer->SummonCreature(NPC_SPIRIT_OF_KOOSU, pPlayer->GetPositionX()+10, pPlayer->GetPositionY(), pPlayer->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 5000);
+                    if (Koosu)
+                        Koosu->AI()->AttackStart(pPlayer);
+                }
+
+                else
+                {
+                    pPlayer->SendEquipError(EQUIP_ERR_NONE, pItem, NULL);
+
+                    if (const SpellInfo* pSpellInfo = sSpellMgr->GetSpellInfo(SPELL_SONG_OF_CLEANSING))
+                        Spell::SendCastResult(pPlayer, pSpellInfo, 1, SPELL_FAILED_NOT_HERE);
+                    return false;
+                }
+            }
+
+            else
+                pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, pItem, NULL);
+            return false;
+        }
+};
 
 void AddSC_item_scripts()
 {
@@ -485,5 +540,6 @@ void AddSC_item_scripts()
     new item_dehta_trap_smasher();
     new item_trident_of_nazjan();
     new item_captured_frog();
-	new item_fiery_soul_fragment();
+    new item_fiery_soul_fragment();
+    new item_chime_of_cleansing();
 }
