@@ -1719,6 +1719,26 @@ void LFGMgr::TeleportPlayer(Player* plr, bool out, bool fromOpcode /*= false*/)
                     z = at->target_Z;
                     orientation = at->target_Orientation;
                 }
+
+                // FIXME
+                switch (dungeon->ID)
+                {
+                    case 285: // The Headless Horseman
+                        break;
+                    case 286: // The Frost Lord Ahune
+                        break;
+                    case 287: // Coren Direbrew
+                        mapid = 230;
+                        x = 907.299f;
+                        y = -156.689f;
+                        z = -47.75f;
+                        orientation = 2.108f;
+                        break;
+                    case 288: // The Crown Chemical Co.
+                        break;
+                    default:
+                        break;
+                }
             }
 
             if (error == LFG_TELEPORTERROR_OK)
