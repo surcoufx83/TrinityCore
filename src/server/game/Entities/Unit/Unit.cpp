@@ -1472,9 +1472,15 @@ void Unit::DealMeleeDamage(CalcDamageInfo* damageInfo, bool durabilityLoss)
             }
 
             uint32 damage = (*dmgShieldItr)->GetAmount();
-
-            if (Unit* caster = (*dmgShieldItr)->GetCaster())
-                damage = caster->SpellDamageBonus(this, i_spellProto, damage, SPELL_DIRECT_DAMAGE);
+            if(i_spellProto->GetSchoolMask() == SPELL_SCHOOL_MASK_NORMAL)
+            {
+                if (Unit* caster = (*dmgShieldItr)->GetCaster())
+                    damage = caster->SpellDamageBonus(this, i_spellProto, damage, DIRECT_DAMAGE);
+            }else
+            {
+                if (Unit* caster = (*dmgShieldItr)->GetCaster())
+                    damage = caster->SpellDamageBonus(this, i_spellProto, damage, SPELL_DIRECT_DAMAGE);
+            }
 
             // No Unit::CalcAbsorbResist here - opcode doesn't send that data - this damage is probably not affected by that
             victim->DealDamageMods(this, damage, NULL);
