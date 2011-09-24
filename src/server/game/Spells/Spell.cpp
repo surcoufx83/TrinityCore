@@ -726,7 +726,6 @@ void Spell::SelectSpellTargets()
         // some spell effects don't add anything to target map (confirmed with sniffs) (like SPELL_EFFECT_DESTROY_ALL_TOTEMS)
         SelectEffectTypeImplicitTargets(i);
 
-                case SPELL_EFFECT_RESURRECT:
         if (m_spellInfo->IsChanneled())
         {
             uint8 mask = (1 << i);
