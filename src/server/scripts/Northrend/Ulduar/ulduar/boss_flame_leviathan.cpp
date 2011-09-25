@@ -1573,7 +1573,7 @@ class spell_anti_air_rocket : public SpellScriptLoader
 
             void Register()
             {
-                OnEffect += SpellEffectFn(spell_anti_air_rocket_SpellScript::HandleTriggerMissile, EFFECT_0, SPELL_EFFECT_TRIGGER_MISSILE);
+                OnEffectHitTarget += SpellEffectFn(spell_anti_air_rocket_SpellScript::HandleTriggerMissile, EFFECT_0, SPELL_EFFECT_TRIGGER_MISSILE);
             }
         };
 
@@ -1698,8 +1698,8 @@ class spell_flame_leviathan_flames : public SpellScriptLoader
 
             void Register()
             {
-                OnEffect += SpellEffectFn(spell_flame_leviathan_flames_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
-                OnEffect += SpellEffectFn(spell_flame_leviathan_flames_SpellScript::HandleDamage, EFFECT_1, SPELL_EFFECT_SCHOOL_DAMAGE);
+                OnEffectHitTarget += SpellEffectFn(spell_flame_leviathan_flames_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+                OnEffectHitTarget += SpellEffectFn(spell_flame_leviathan_flames_SpellScript::HandleDamage, EFFECT_1, SPELL_EFFECT_SCHOOL_DAMAGE);
             }
         };
 

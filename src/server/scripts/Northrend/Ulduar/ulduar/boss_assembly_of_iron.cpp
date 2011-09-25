@@ -454,7 +454,7 @@ class spell_steelbreaker_static_disruption : public SpellScriptLoader
 
             void Register()
             {
-                OnEffect += SpellEffectFn(spell_steelbreaker_static_disruption_SpellScript::HandleTriggerMissile, EFFECT_0, SPELL_EFFECT_TRIGGER_MISSILE);
+                OnEffectHitTarget += SpellEffectFn(spell_steelbreaker_static_disruption_SpellScript::HandleTriggerMissile, EFFECT_0, SPELL_EFFECT_TRIGGER_MISSILE);
             }
         };
 

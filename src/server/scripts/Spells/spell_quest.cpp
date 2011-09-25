@@ -768,7 +768,7 @@ class spell_q11307_plagued_vrykul_dummy : public SpellScriptLoader
 
             void Register()
             {
-                OnEffect += SpellEffectFn(spell_q11307_plagued_vrykul_dummy_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+                OnEffectHitTarget += SpellEffectFn(spell_q11307_plagued_vrykul_dummy_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
             }
         };
 

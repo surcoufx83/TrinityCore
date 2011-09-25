@@ -319,7 +319,7 @@ class spell_emalon_lightning_nova : public SpellScriptLoader
 
             void Register()
             {
-                OnEffect += SpellEffectFn(spell_emalon_lightning_nova_SpellScript::CalcDamage, EFFECT_0, SPELL_EFFECT_SCHOOL_DAMAGE);
+                OnEffectHitTarget += SpellEffectFn(spell_emalon_lightning_nova_SpellScript::CalcDamage, EFFECT_0, SPELL_EFFECT_SCHOOL_DAMAGE);
             }
         };
 

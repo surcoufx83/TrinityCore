@@ -3055,7 +3055,7 @@ class spell_summon_tentacle_position : public SpellScriptLoader
 
             void Register()
             {
-                OnEffect += SpellEffectFn(spell_summon_tentacle_position_SpellScript::ChangeSummonPos, EFFECT_0, SPELL_EFFECT_SUMMON);
+                OnEffectHitTarget += SpellEffectFn(spell_summon_tentacle_position_SpellScript::ChangeSummonPos, EFFECT_0, SPELL_EFFECT_SUMMON);
             }
         };
 
@@ -3095,7 +3095,7 @@ class spell_empowering_shadows : public SpellScriptLoader
 
             void Register()
             {
-                OnEffect += SpellEffectFn(spell_empowering_shadows_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+                OnEffectHitTarget += SpellEffectFn(spell_empowering_shadows_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
             }
         };
 
