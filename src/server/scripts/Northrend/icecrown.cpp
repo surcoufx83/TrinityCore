@@ -3167,6 +3167,67 @@ public:
     };
 };
 
+// Flaming Spear Targeting
+/*
+DELETE FROM spell_script_names WHERE spell_id IN (66588);
+INSERT INTO spell_script_names (spell_id,Scriptname)
+VALUES
+(66588,'spell_flaming_spear_targeting');
+*/
+class spell_flaming_spear_targeting : public SpellScriptLoader
+{
+    public:
+        spell_flaming_spear_targeting() : SpellScriptLoader("spell_flaming_spear_targeting") { }
+
+        class spell_flaming_spear_targeting_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_flaming_spear_targeting_SpellScript);
+
+            bool Load()
+            {
+                return GetCaster()->ToPlayer() != NULL;
+            }
+
+            void GetTargets(std::list<Unit*>& targetList)
+            {
+                targetList.clear();
+
+                std::list<Creature*> pTargetList;
+                GetCaster()->GetCreatureListWithEntryInGrid(pTargetList,35092, 150.0f);
+                GetCaster()->GetCreatureListWithEntryInGrid(pTargetList,34925, 150.0f);
+
+                if(pTargetList.empty())
+                    return;
+
+                pTargetList.sort(Trinity::ObjectDistanceOrderPred(GetCaster()));
+
+                std::list<Creature*>::iterator itr = pTargetList.begin();
+                uint8 i = 3;
+                for (std::list<Creature*>::const_iterator itr = pTargetList.begin(); itr != pTargetList.end(); ++itr)
+                {
+                    if(i == 0)
+                        break;
+                    if((*itr)->isAlive())
+                    {
+                        targetList.push_back(*itr);
+                        i--;
+                    }
+                }
+
+            }
+
+            void Register()
+            {
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_flaming_spear_targeting_SpellScript::GetTargets, EFFECT_0, TARGET_UNIT_TARGET_ANY);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_flaming_spear_targeting_SpellScript();
+        }
+};
+
 void AddSC_icecrown()
 {
     new npc_arete();
@@ -3197,4 +3258,5 @@ void AddSC_icecrown()
     new vehicle_black_knight_gryphon();
     new npc_black_knights_grave();
     new npc_slain_tualiq_villager();
+    new spell_flaming_spear_targeting();
 }
