@@ -198,7 +198,7 @@ Position const SummonPos[9] =
     {2753.56f, 2584.30f, 364.397f, 0}
 };
 
-#define FLAME_CAP 250 // find a good value
+#define FLAME_CAP 200 // find a good (blizzlike!) value
 
 /*---------------------------------------------*
  *                   Mimiron                   *
@@ -1313,9 +1313,21 @@ public:
                             events.RescheduleEvent(EVENT_HAND_PULSE, urand(3000, 4000));
                             break;
                         case EVENT_FROST_BOMB:
-                            me->SummonCreature(NPC_FROST_BOMB, SummonPos[rand()%9], TEMPSUMMON_TIMED_DESPAWN, 11000);
+                        {
+                            std::list<Creature*> _flames;
+                            me->GetCreatureListWithEntryInGrid(_flames, NPC_FLAME_SPREAD, 150.0f);
+                            if (!_flames.empty())
+                            {
+                                std::list<Creature*>::iterator itr = _flames.begin();
+                                std::advance(itr, urand(0, _flames.size() - 1));
+                                if (Creature* flame = (*itr))
+                                    me->SummonCreature(NPC_FROST_BOMB, *flame, TEMPSUMMON_TIMED_DESPAWN, 11000);
+                            }
+                            else
+                                me->SummonCreature(NPC_FROST_BOMB, SummonPos[rand()%9], TEMPSUMMON_TIMED_DESPAWN, 11000);
                             events.RescheduleEvent(EVENT_FROST_BOMB, 45000);
                             break;
+                        }
                         case EVENT_FLAME_SUPPRESSANT_VX001:
                             DoCastAOE(SPELL_FLAME_SUPPRESSANT_VX001);
                             events.RescheduleEvent(EVENT_FLAME_SUPPRESSANT_VX001, 10000, 0, PHASE_VX001_SOLO);
