@@ -1573,7 +1573,7 @@ class spell_anti_air_rocket : public SpellScriptLoader
 
             void Register()
             {
-                OnEffectHitTarget += SpellEffectFn(spell_anti_air_rocket_SpellScript::HandleTriggerMissile, EFFECT_0, SPELL_EFFECT_TRIGGER_MISSILE);
+                OnEffectHit += SpellEffectFn(spell_anti_air_rocket_SpellScript::HandleTriggerMissile, EFFECT_0, SPELL_EFFECT_TRIGGER_MISSILE);
             }
         };
 
@@ -1691,15 +1691,15 @@ class spell_flame_leviathan_flames : public SpellScriptLoader
                     GetHitUnit()->RemoveAura(62297);
             }
 
-            void HandleDamage(SpellEffIndex /*effIndex*/)
+            void SetDamage()
             {
-                SetHitDamage(0);
+                PreventHitDamage();
             }
 
             void Register()
             {
                 OnEffectHitTarget += SpellEffectFn(spell_flame_leviathan_flames_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
-                OnEffectHitTarget += SpellEffectFn(spell_flame_leviathan_flames_SpellScript::HandleDamage, EFFECT_1, SPELL_EFFECT_SCHOOL_DAMAGE);
+                OnHit += SpellHitFn(spell_flame_leviathan_flames_SpellScript::SetDamage);
             }
         };
 

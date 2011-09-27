@@ -773,7 +773,7 @@ class spell_cosmic_smash_dmg : public SpellScriptLoader
         {
             PrepareSpellScript(spell_cosmic_smash_dmg_SpellScript);
 
-            void CalcDamage(SpellEffIndex /*effIndex*/)
+            void CalcDamage()
             {
                 if (!GetHitUnit() || !GetTargetDest())
                     return;
@@ -787,7 +787,7 @@ class spell_cosmic_smash_dmg : public SpellScriptLoader
 
             void Register()
             {
-                OnEffectHitTarget += SpellEffectFn(spell_cosmic_smash_dmg_SpellScript::CalcDamage, EFFECT_0, SPELL_EFFECT_SCHOOL_DAMAGE);
+                OnHit += SpellHitFn(spell_cosmic_smash_dmg_SpellScript::CalcDamage);
             }
         };
 
