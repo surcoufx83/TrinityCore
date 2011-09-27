@@ -2934,7 +2934,9 @@ enum Brewfest
     NPC_FLYNN_FIREBREW           = 24364,
     NPC_BOK_DROPCERTAIN          = 24527,
     NPC_RAM_MASTER_RAY           = 24497,
-    NPC_NEILL_RAMSTEIN           = 23558
+    NPC_NEILL_RAMSTEIN           = 23558,
+
+    ACHIEV_BREW_OF_THE_MONTH     = 2796
 };
 
 class npc_apple_trap_bunny : public CreatureScript
@@ -3076,6 +3078,22 @@ class npc_bark_bunny : public CreatureScript
         }
 };
 
+class npc_brew_vendor : public CreatureScript
+{
+    public:
+        npc_brew_vendor() : CreatureScript("npc_brew_vendor") { }
+
+        bool OnGossipHello(Player* player, Creature* creature)
+        {
+            if (player->HasAchieved(ACHIEV_BREW_OF_THE_MONTH))
+                player->GetSession()->SendListInventory(creature->GetGUID());
+            else
+                player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
+
+            return true;
+        }
+};
+
 void AddSC_npcs_special()
 {
     new npc_air_force_bots();
@@ -3111,4 +3129,5 @@ void AddSC_npcs_special()
     new npc_apple_trap_bunny();
     new npc_keg_delivery();
     new npc_bark_bunny();
+    new npc_brew_vendor();
 }
