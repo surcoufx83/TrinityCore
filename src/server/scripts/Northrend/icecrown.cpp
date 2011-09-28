@@ -2644,7 +2644,7 @@ enum eSquireGruntling
     ENTRY_GRUNTLING                 = 33239,
 };
 
-//UPDATE creature_template SET scriptname = 'npc_argent_squire_gruntling', npc_flag |= 1 WHERE entry in (33238,33239);
+// UPDATE creature_template SET scriptname = 'npc_argent_squire_gruntling', npcflag |= 1 WHERE entry in (33238,33239);
 
 class npc_argent_squire_gruntling : public CreatureScript
 {
@@ -2856,19 +2856,19 @@ const Position BlackKnightGryphonWaypoints[19] =
 
 // UPDATE `creature_template` SET scriptname = 'vehicle_black_knights_gryphon' WHERE `entry` = 33519;
 
-class vehicle_black_knight_gryphon : public CreatureScript
+class vehicle_black_knights_gryphon : public CreatureScript
 {
 public:
-    vehicle_black_knight_gryphon() : CreatureScript("vehicle_black_knights_gryphon") { }
+    vehicle_black_knights_gryphon() : CreatureScript("vehicle_black_knights_gryphon") { }
 
     CreatureAI* GetAI(Creature *_Creature) const
     {
-        return new  vehicle_black_knight_gryphonAI(_Creature);
+        return new  vehicle_black_knights_gryphonAI(_Creature);
     }
 
-    struct vehicle_black_knight_gryphonAI : public VehicleAI
+    struct vehicle_black_knights_gryphonAI : public VehicleAI
     {
-        vehicle_black_knight_gryphonAI(Creature *c) : VehicleAI(c)
+        vehicle_black_knights_gryphonAI(Creature *c) : VehicleAI(c)
         {
              if (VehicleSeatEntry* vehSeat = const_cast<VehicleSeatEntry*>(sVehicleSeatStore.LookupEntry(3548)))
                 vehSeat->m_flags |= VEHICLE_SEAT_FLAG_UNCONTROLLED;
@@ -3255,7 +3255,7 @@ void AddSC_icecrown()
     new npc_the_black_knight();
     new npc_argent_champion();
     new npc_argent_squire_gruntling();
-    new vehicle_black_knight_gryphon();
+    new vehicle_black_knights_gryphon();
     new npc_black_knights_grave();
     new npc_slain_tualiq_villager();
     new spell_flaming_spear_targeting();

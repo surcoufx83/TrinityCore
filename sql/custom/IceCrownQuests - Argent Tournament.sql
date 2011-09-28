@@ -1370,3 +1370,9 @@ INSERT INTO spell_area VALUES
 
 -- What Do You Feed a Yeti, Anyway? ... Factions
 UPDATE `creature_template` SET `faction_A`=14  , `faction_H`=14, `InhabitType`=3 WHERE `entry` IN (35060,35061,35071,35072);
+
+-- Get Kraken!
+DELETE FROM spell_script_names WHERE spell_id IN (66588);
+INSERT INTO spell_script_names (spell_id,Scriptname)
+VALUES
+(66588,'spell_flaming_spear_targeting');
