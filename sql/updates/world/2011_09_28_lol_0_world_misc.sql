@@ -30,7 +30,7 @@ UPDATE `creature_template` SET
 `attackpower`=608,
 `minrangedmg`=341,
 `maxrangedmg`=506,
-`rangeatackpower`=80,
+`rangedattackpower`=80,
 `ScriptName`='vehicle_haiphoon'
 WHERE `entry`=@HAIPHOON_W;
 
@@ -51,7 +51,7 @@ UPDATE `creature_template` SET
 `attackpower`=608,
 `minrangedmg`=341,
 `maxrangedmg`=506,
-`rangeatackpower`=80,
+`rangedattackpower`=80,
 `ScriptName`='vehicle_haiphoon'
 WHERE `entry`=@HAIPHOON_A;
 
