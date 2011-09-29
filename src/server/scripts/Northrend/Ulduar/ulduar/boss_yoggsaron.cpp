@@ -674,7 +674,7 @@ public:
             uiAmountKeeperActive = -1;
         }
 
-        void JustDied(Unit *killer)
+        void JustDied(Unit* /*killer*/)
         {
             if(m_pInstance)
                 m_pInstance->SetBossState(TYPE_YOGGSARON,DONE);
@@ -2072,7 +2072,7 @@ public:
             me->SetFlying(true);
         }
 
-        void DamageTaken(Unit* dealer, uint32 &damage)
+        void DamageTaken(Unit* /*dealer*/, uint32 &damage)
         {
             if(damage > me->GetHealth())
                 damage = me->GetHealth()-1;
@@ -2092,7 +2092,7 @@ public:
 
         InstanceScript* m_pInstance;
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const /*diff*/)
         {
             if(HealthBelowPct(31))
             {
@@ -2184,7 +2184,7 @@ public:
             }
         }
 
-        void SpellHit(Unit* caster, const SpellInfo* spell)
+        void SpellHit(Unit* /*caster*/, SpellInfo const* spell)
         {
             if(spell->Id == SPELL_IN_THE_MAWS_OF_THE_OLD_GOD)
             {
@@ -2273,7 +2273,7 @@ public:
                 me->CastCustomSpell(SPELL_GRIM_REPRISAL_DAMAGE, SPELLVALUE_BASE_POINT0, int32(damage *0.60), attacker,true);
         }
 
-        void EnterCombat(Unit* attacker)
+        void EnterCombat(Unit* /*attacker*/)
         {
             if(me->GetEntry() != ENTRY_INFULENCE_TENTACLE)
             {
@@ -2333,7 +2333,7 @@ public:
             me->DespawnOrUnsummon(5000);
         }
 
-        void SpellHit(Unit* caster, const SpellInfo* spell)
+        void SpellHit(Unit* /*caster*/, SpellInfo const* spell)
         {
             if(spell->Id == 64172) // Titanic Storm
             {
@@ -2590,7 +2590,7 @@ public:
             uiSanityTick_Timer = 2000;
         }
 
-        void AttackStart(Unit *who) {}
+        void AttackStart(Unit* /*who*/) {}
 
         void MoveInLineOfSight(Unit *mover)
         {
@@ -2674,9 +2674,9 @@ public:
             }
         }
 
-        void AttackStart(Unit *who) {}
+        void AttackStart(Unit* /*who*/) {}
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const /*diff*/)
         {
         }
     };
@@ -2745,7 +2745,7 @@ public:
             Summons.Summon(pSummoned);
         }
 
-        void AttackStart(Unit *who) {}
+        void AttackStart(Unit* /*who*/) {}
 
         void UpdateAI(const uint32 diff)
         {
@@ -2817,9 +2817,9 @@ public:
             moving = false;
         }
 
-        void AttackStart(Unit *who) {}
+        void AttackStart(Unit* /*who*/) {}
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const /*diff*/)
         {
             if(!moving)
             {
@@ -3055,7 +3055,7 @@ class spell_summon_tentacle_position : public SpellScriptLoader
 
             void Register()
             {
-                OnEffectHitTarget += SpellEffectFn(spell_summon_tentacle_position_SpellScript::ChangeSummonPos, EFFECT_0, SPELL_EFFECT_SUMMON);
+                OnEffectHit += SpellEffectFn(spell_summon_tentacle_position_SpellScript::ChangeSummonPos, EFFECT_0, SPELL_EFFECT_SUMMON);
             }
         };
 

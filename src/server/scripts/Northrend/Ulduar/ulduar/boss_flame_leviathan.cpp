@@ -1300,7 +1300,7 @@ class npc_lorekeeper : public CreatureScript
                     {
                         CAST_AI(boss_flame_leviathan::boss_flame_leviathanAI, (leviathan->AI()))->DoAction(0); //enable hard mode activating the 4 additional events spawning additional vehicles
                         creature->SetVisible(false);
-                        creature->AI()->DoAction(0); // spawn the vehicles
+                        //creature->AI()->DoAction(0); // spawn the vehicles
                         if (Creature* Delorah = creature->FindNearestCreature(NPC_DELORAH, 1000, true))
                         {
                             if (Creature* Branz = creature->FindNearestCreature(NPC_BRANZ_BRONZBEARD, 1000, true))
