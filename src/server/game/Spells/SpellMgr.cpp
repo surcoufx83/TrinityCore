@@ -3184,6 +3184,13 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectImplicitTargetA[0] = TARGET_SRC_CASTER;
                 spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_TARGET_ANY;
                 break;
+            case 42435: // Brewfest - Stun
+                spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_TARGET_ANY;
+                break;
+            case 42436: // Drink!
+                spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CONE_ENTRY;
+                spellInfo->MaxAffectedTargets = 1;
+                break;
             case 29809: // Desecration Arm - 36 instead of 37 - typo? :/
                 spellInfo->EffectRadiusIndex[0] = 37;
                 break;
