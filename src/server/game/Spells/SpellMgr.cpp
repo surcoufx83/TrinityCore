@@ -3381,6 +3381,11 @@ void SpellMgr::LoadDbcDataCorrections()
             case 62505: // Harpoon Shot
                 spellInfo->AttributesEx3 |= SPELL_ATTR3_STACK_FOR_DIFF_CASTERS;
                 break;
+            case 62968: // Brightleaf's Essence
+            case 65761: // Brightleaf's Essence
+                spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_CASTER;
+                spellInfo->EffectImplicitTargetB[1] = 0;
+                break;
             //case 62834: // Boom (XT-002)
             // This hack is here because we suspect our implementation of spell effect execution on targets
             // is done in the wrong order. We suspect that EFFECT_0 needs to be applied on all targets,

@@ -1770,16 +1770,9 @@ class spell_elder_brightleafs_essence_targeting : public SpellScriptLoader
                 unitList.remove_if(IsNoAllyOfNature());
             }
 
-            void FilterTargetsEffect1(std::list<Unit*>& unitList)
-            {
-                unitList.clear();
-                unitList.push_back(GetCaster());
-            }
-
             void Register()
             {
                 OnUnitTargetSelect += SpellUnitTargetFn(spell_elder_brightleafs_essence_targeting_SpellScript::FilterTargetsEffect0, EFFECT_0, TARGET_UNIT_SRC_AREA_ALLY);
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_elder_brightleafs_essence_targeting_SpellScript::FilterTargetsEffect1, EFFECT_1, TARGET_UNIT_SRC_AREA_ALLY);
             }
         };
 
