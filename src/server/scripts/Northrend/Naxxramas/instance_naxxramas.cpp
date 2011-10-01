@@ -399,7 +399,7 @@ public:
 
         void SetData(uint32 id, uint32 value)
         {
-            switch(id)
+            switch (id)
             {
                 case DATA_HEIGAN_ERUPT:
                     HeiganErupt(value);
@@ -437,7 +437,7 @@ public:
 
         uint64 GetData64(uint32 id)
         {
-            switch(id)
+            switch (id)
             {
             case DATA_FAERLINA:
                 return uiFaerlina;
@@ -644,7 +644,7 @@ public:
 
         bool CheckAchievementCriteriaMeet(uint32 criteria_id, Player const* /*source*/, Unit const* /*target = NULL*/, uint32 /*miscvalue1 = 0*/)
         {
-            switch(criteria_id)
+            switch (criteria_id)
             {
                 case 7600:  // Criteria for achievement 2176: And They Would All Go Down Together 15sec of each other 10-man
                     if (Difficulty(instance->GetSpawnMode()) == RAID_DIFFICULTY_10MAN_NORMAL && (maxHorsemenDiedTime - minHorsemenDiedTime) < 15)

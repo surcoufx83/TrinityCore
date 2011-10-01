@@ -151,7 +151,7 @@ public:
 
         void OnCreatureCreate(Creature* creature)
         {
-            switch(creature->GetEntry())
+            switch (creature->GetEntry())
             {
             case 22887:    Najentus = creature->GetGUID();                  break;
             case 23089:    Akama = creature->GetGUID();                     break;
@@ -171,7 +171,7 @@ public:
 
         void OnGameObjectCreate(GameObject* go)
         {
-            switch(go->GetEntry())
+            switch (go->GetEntry())
             {
             case 185483: NajentusGate = go->GetGUID();// Gate past Naj'entus (at the entrance to Supermoose's courtyards)
                 if(Encounters[0] == DONE)HandleGameObject(NULL,true,go);break;
@@ -202,7 +202,7 @@ public:
 
         uint64 GetData64(uint32 identifier)
         {
-            switch(identifier)
+            switch (identifier)
             {
             case DATA_TERONGOREFIEND:              return Teron;
             case DATA_HIGHWARLORDNAJENTUS:         return Najentus;
@@ -235,7 +235,7 @@ public:
 
         void SetData(uint32 type, uint32 data)
         {
-            switch(type)
+            switch (type)
             {
             case DATA_HIGHWARLORDNAJENTUSEVENT:
                 if(data == DONE)
@@ -349,7 +349,7 @@ public:
 
         uint32 GetData(uint32 type)
         {
-            switch(type)
+            switch (type)
             {
             case DATA_HIGHWARLORDNAJENTUSEVENT:         return Encounters[0];
             case DATA_SUPREMUSEVENT:                    return Encounters[1];

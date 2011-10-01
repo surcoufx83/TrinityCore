@@ -1216,7 +1216,7 @@ bool ConditionMgr::isConditionTypeValid(Condition* cond)
                 return false;
             }
 
-            switch(cond->mConditionValue1)
+            switch (cond->mConditionValue1)
             {
                 case SPELL_TARGET_TYPE_GAMEOBJECT:
                 {

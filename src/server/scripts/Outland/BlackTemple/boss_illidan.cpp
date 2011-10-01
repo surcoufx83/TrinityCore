@@ -457,7 +457,7 @@ public:
                 ScriptedAI::AttackStart(who);
         }
 
-        void MoveInLineOfSight(Unit *who) {}
+        void MoveInLineOfSight(Unit*) {}
 
         void JustDied(Unit *killer)
         {
@@ -553,7 +553,7 @@ public:
         void HandleTalkSequence();
         void HandleFlightSequence()
         {
-            switch(FlightCount)
+            switch (FlightCount)
             {
             case 1://lift off
                 me->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
@@ -680,7 +680,7 @@ public:
                 SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_UNEQUIP, EQUIP_NO_CHANGE);
             }
 
-            switch(TransformCount)
+            switch (TransformCount)
             {
             case 2:
                 DoResetThreat();
@@ -759,7 +759,7 @@ public:
                 }
             }
 
-            switch(Phase)
+            switch (Phase)
             {
             case PHASE_NORMAL:
                 if (HealthBelowPct(65))
@@ -799,7 +799,7 @@ public:
 
             if(Phase == PHASE_NORMAL || Phase == PHASE_NORMAL_2 || Phase == PHASE_NORMAL_MAIEV && !me->HasAura(SPELL_CAGED, 0))
             {
-                switch(Event)
+                switch (Event)
                 {
                     //PHASE_NORMAL
                 case EVENT_BERSERK:
@@ -875,7 +875,7 @@ public:
 
             if(Phase == PHASE_FLIGHT)
             {
-                switch(Event)
+                switch (Event)
                 {
                 case EVENT_FIREBALL:
                     if(!me->IsNonMeleeSpellCasted(false))
@@ -917,7 +917,7 @@ public:
 
             if(Phase == PHASE_DEMON)
             {
-                switch(Event)
+                switch (Event)
                 {
                 case EVENT_SHADOW_BLAST:
                     me->GetMotionMaster()->Clear(false);
@@ -1233,7 +1233,7 @@ public:
         void EnterPhase(PhaseAkama NextPhase)
         {
             if(!pInstance)  return;
-            switch(NextPhase)
+            switch (NextPhase)
             {
             case PHASE_CHANNEL:
                 BeginChannel();
@@ -1294,7 +1294,7 @@ public:
 
         void HandleTalkSequence()
         {
-            switch(TalkCount)
+            switch (TalkCount)
             {
             case 0:
                 if(GETCRE(Illidan, IllidanGUID))
@@ -1329,7 +1329,7 @@ public:
                     return;
             }
 
-            switch(ChannelCount)
+            switch (ChannelCount)
             {
             case 0: // channel failed
                 me->InterruptNonMeleeSpells(true);
@@ -1377,7 +1377,7 @@ public:
 
         void HandleWalkSequence()
         {
-            switch(WalkCount)
+            switch (WalkCount)
             {
             case 6:
                 for(uint8 i = 0; i < 2; i++)
@@ -1429,7 +1429,7 @@ public:
 
             if(Event)
             {
-                switch(Phase)
+                switch (Phase)
                 {
                 case PHASE_CHANNEL:
                     HandleChannelSequence();

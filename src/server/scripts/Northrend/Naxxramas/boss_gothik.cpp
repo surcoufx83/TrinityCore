@@ -307,7 +307,7 @@ class boss_gothik : public CreatureScript
                 }
                 else
                 {
-                    switch(entry)
+                    switch (entry)
                     {
                         case MOB_LIVE_TRAINEE:
                         {
@@ -381,7 +381,7 @@ class boss_gothik : public CreatureScript
                 }
 
                 uint32 spellId = 0;
-                switch(spell->Id)
+                switch (spell->Id)
                 {
                     case SPELL_INFORM_LIVE_TRAINEE: spellId = SPELL_INFORM_DEAD_TRAINEE;    break;
                     case SPELL_INFORM_LIVE_KNIGHT:  spellId = SPELL_INFORM_DEAD_KNIGHT;     break;
@@ -395,7 +395,7 @@ class boss_gothik : public CreatureScript
                 }
             }
 
-            void DamageTaken(Unit* /*who*/ , uint32& damage)
+            void DamageTaken(Unit* /*who*/, uint32& damage)
             {
                 if (!phaseTwo)
                     damage = 0;
@@ -406,7 +406,7 @@ class boss_gothik : public CreatureScript
                 if (!me->isInCombat())
                     return;
 
-                switch(spell->Id)
+                switch (spell->Id)
                 {
                     case SPELL_INFORM_DEAD_TRAINEE:
                         DoSummon(MOB_DEAD_TRAINEE, target, 0);
@@ -441,7 +441,7 @@ class boss_gothik : public CreatureScript
 
                 while (uint32 eventId = events.ExecuteEvent())
                 {
-                    switch(eventId)
+                    switch (eventId)
                     {
                         case EVENT_SUMMON:
                             if (waves[waveCount].entry)

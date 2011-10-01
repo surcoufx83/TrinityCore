@@ -366,7 +366,7 @@ public:
 
         void WaypointReached(uint32 uiPointId)
         {
-            switch(uiPointId)
+            switch (uiPointId)
             {
                 case 0:
                 case 1:
@@ -497,7 +497,7 @@ public:
             {
                 if (uiPhaseTimer <= diff)
                 {
-                    switch(uiStep)
+                    switch (uiStep)
                     {
                         //After reset
                         case 0:

@@ -216,7 +216,7 @@ public:
             me->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
             me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
 
-            switch(id)
+            switch (id)
             {
                 case HORSEMEN_THANE:
                     me->GetMotionMaster()->MovePoint(0, WaypointPositions[0]);
@@ -377,7 +377,7 @@ public:
 
             while (uint32 eventId = events.ExecuteEvent())
             {
-                switch(eventId)
+                switch (eventId)
                 {
                     case EVENT_MARK:
                         if(!me->IsNonMeleeSpellCasted(false))

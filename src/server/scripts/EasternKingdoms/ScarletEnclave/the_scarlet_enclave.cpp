@@ -70,7 +70,7 @@ private:
                 if (!player)
                     phase = 3;
 
-                switch(phase)
+                switch (phase)
                 {
                     case 0:
                         me->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);

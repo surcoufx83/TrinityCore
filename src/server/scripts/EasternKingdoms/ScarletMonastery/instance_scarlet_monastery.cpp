@@ -78,7 +78,7 @@ public:
 
         void OnGameObjectCreate(GameObject* go)
         {
-            switch(go->GetEntry())
+            switch (go->GetEntry())
             {
             case ENTRY_PUMPKIN_SHRINE: PumpkinShrineGUID = go->GetGUID();break;
             case 104600: DoorHighInquisitorGUID = go->GetGUID(); break;
@@ -87,7 +87,7 @@ public:
 
         void OnCreatureCreate(Creature* creature)
         {
-            switch(creature->GetEntry())
+            switch (creature->GetEntry())
             {
                 case ENTRY_HORSEMAN:    HorsemanGUID = creature->GetGUID(); break;
                 case ENTRY_HEAD:        HeadGUID = creature->GetGUID(); break;
@@ -100,7 +100,7 @@ public:
 
         void SetData(uint32 type, uint32 data)
         {
-            switch(type)
+            switch (type)
             {
             case TYPE_MOGRAINE_AND_WHITE_EVENT:
                 if (data == IN_PROGRESS)
@@ -135,7 +135,7 @@ public:
 
         uint64 GetData64(uint32 type)
         {
-            switch(type)
+            switch (type)
             {
                 //case GAMEOBJECT_PUMPKIN_SHRINE:   return PumpkinShrineGUID;
                 //case DATA_HORSEMAN:               return HorsemanGUID;

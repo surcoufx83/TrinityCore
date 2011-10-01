@@ -163,7 +163,7 @@ public:
             if(player->GetGUID() == me->GetGUID())
                 return;
 
-            switch(i)
+            switch (i)
             {
                 case 0: me->CastSpell(player, SPELL_WATERY_GRAVE_1, true); break;
                 case 1: me->CastSpell(player, SPELL_WATERY_GRAVE_2, true); break;

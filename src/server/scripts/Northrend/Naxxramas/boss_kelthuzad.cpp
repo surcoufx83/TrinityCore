@@ -425,7 +425,7 @@ public:
             {
                 while (uint32 eventId = events.GetEvent())
                 {
-                    switch(eventId)
+                    switch (eventId)
                     {
                         case EVENT_WASTE:
                             DoSummon(NPC_WASTE, Pos[RAND(0, 3, 6, 9)]);
@@ -520,7 +520,7 @@ public:
 
                 if (uint32 eventId = events.GetEvent())
                 {
-                    switch(eventId)
+                    switch (eventId)
                     {
                         case EVENT_BOLT:
                             if(!me->IsNonMeleeSpellCasted(false))
@@ -575,7 +575,7 @@ public:
 
                                     if (Unit *target = SelectTarget(SELECT_TARGET_TOPAGGRO, 0, NotCharmedTargetSelector()))
                                     {
-                                        switch(player->getClass())
+                                        switch (player->getClass())
                                         {
                                             case CLASS_DRUID:
                                                 if (urand(0, 1))
@@ -702,7 +702,7 @@ class at_kelthuzad_center : public AreaTriggerScript
 public:
     at_kelthuzad_center() : AreaTriggerScript("at_kelthuzad_center") { }
 
-    bool OnTrigger(Player* player, const AreaTriggerEntry*  /*at*/)
+    bool OnTrigger(Player* player, const AreaTriggerEntry* /*at*/)
     {
         if (player->isGameMaster())
             return false;

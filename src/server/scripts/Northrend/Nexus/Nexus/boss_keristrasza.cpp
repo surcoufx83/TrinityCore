@@ -258,6 +258,9 @@ public:
 
 };
 
+                if (aurEff->GetBase()->GetStackAmount() < 2)
+                    return;
+                if (!caster || !caster->GetAI())
 void AddSC_boss_keristrasza()
 {
     new boss_keristrasza();

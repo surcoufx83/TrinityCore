@@ -164,7 +164,7 @@ public:
 
         void OnCreatureCreate(Creature* creature)
         {
-        switch(creature->GetEntry())
+            switch (creature->GetEntry())
             {
             case 24850: Kalecgos_Dragon     = creature->GetGUID(); break;
             case 24891: Kalecgos_Human      = creature->GetGUID(); break;
@@ -210,7 +210,7 @@ public:
 
         uint32 GetData(uint32 id)
         {
-            switch(id)
+            switch (id)
             {
                 case DATA_KALECGOS_EVENT:     return m_auiEncounter[0];
                 case DATA_BRUTALLUS_EVENT:    return m_auiEncounter[1];
@@ -226,7 +226,7 @@ public:
 
         uint64 GetData64(uint32 id)
         {
-            switch(id)
+            switch (id)
             {
                 case DATA_KALECGOS_DRAGON:      return Kalecgos_Dragon;
                 case DATA_KALECGOS_HUMAN:       return Kalecgos_Human;
@@ -258,7 +258,7 @@ public:
 
         void SetData(uint32 id, uint32 data)
         {
-            switch(id)
+            switch (id)
             {
                 case DATA_KALECGOS_EVENT:
                 if(data == IN_PROGRESS) HandleGameObject(ForceField, false);
@@ -281,7 +281,7 @@ public:
                     m_auiEncounter[3] = data;
                 break;
                 case DATA_MURU_EVENT:
-                    switch(data)
+                    switch (data)
                     {
                         case DONE:
                             HandleGameObject(MurusGate[0], true);

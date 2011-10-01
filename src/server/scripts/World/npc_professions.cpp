@@ -429,7 +429,7 @@ public:
 
     void SendActionMenu(Player* player, Creature* creature, uint32 uiAction)
     {
-        switch(uiAction)
+        switch (uiAction)
         {
             case GOSSIP_ACTION_TRADE:
                 player->GetSession()->SendListInventory(creature->GetGUID());
@@ -551,7 +551,7 @@ public:
     bool OnGossipSelect(Player* player, Creature* creature, uint32 uiSender, uint32 uiAction)
     {
         player->PlayerTalkClass->ClearMenus();
-        switch(uiSender)
+        switch (uiSender)
         {
             case GOSSIP_SENDER_MAIN:    SendActionMenu(player, creature, uiAction); break;
             case GOSSIP_SENDER_LEARN:   SendConfirmLearn(player, creature, uiAction); break;
@@ -644,7 +644,7 @@ public:
 
     void SendActionMenu(Player* player, Creature* creature, uint32 uiAction)
     {
-        switch(uiAction)
+        switch (uiAction)
         {
             case GOSSIP_ACTION_TRADE:
                 player->GetSession()->SendListInventory(creature->GetGUID());
@@ -1324,7 +1324,7 @@ public:
     bool OnGossipSelect(Player* player, Creature* creature, uint32 uiSender, uint32 uiAction)
     {
         player->PlayerTalkClass->ClearMenus();
-        switch(uiSender)
+        switch (uiSender)
         {
             case GOSSIP_SENDER_MAIN:    SendActionMenu(player, creature, uiAction); break;
             case GOSSIP_SENDER_LEARN:   SendConfirmLearn(player, creature, uiAction); break;
