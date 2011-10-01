@@ -418,10 +418,10 @@ void World::LoadConfigSettings(bool reload)
     m_int_configs[CONFIG_ENABLE_SINFO_LOGIN] = ConfigMgr::GetIntDefault("Server.LoginInfo", 0);
 
     // XP.Boost
-    rate_values[RATE_XP_BOOST_SOLO]    = sConfig->GetFloatDefault("XP.Boost.Solo", 1.0f);
-    rate_values[RATE_XP_BOOST_GROUP]   = sConfig->GetFloatDefault("XP.Boost.Group", 1.0f);
-    m_int_configs[CONFIG_XP_BOOST_ITEMID]    = sConfig->GetIntDefault("XP.Boost.ItemId", 0);
-    m_int_configs[CONFIG_XP_BOOST_MAXLEVEL]  = sConfig->GetIntDefault("XP.Boost.MaxLevel", 0);
+    rate_values[RATE_XP_BOOST_SOLO]    = ConfigMgr::GetFloatDefault("XP.Boost.Solo", 1.0f);
+    rate_values[RATE_XP_BOOST_GROUP]   = ConfigMgr::GetFloatDefault("XP.Boost.Group", 1.0f);
+    m_int_configs[CONFIG_XP_BOOST_ITEMID]    = ConfigMgr::GetIntDefault("XP.Boost.ItemId", 0);
+    m_int_configs[CONFIG_XP_BOOST_MAXLEVEL]  = ConfigMgr::GetIntDefault("XP.Boost.MaxLevel", 0);
 
     ///- Read all rates from the config file
     rate_values[RATE_HEALTH]      = ConfigMgr::GetFloatDefault("Rate.Health", 1);
@@ -864,7 +864,7 @@ void World::LoadConfigSettings(bool reload)
 
     m_int_configs[CONFIG_GM_LEVEL_IN_GM_LIST]   = ConfigMgr::GetIntDefault("GM.InGMList.Level", SEC_ADMINISTRATOR);
     m_int_configs[CONFIG_GM_LEVEL_IN_WHO_LIST]  = ConfigMgr::GetIntDefault("GM.InWhoList.Level", SEC_ADMINISTRATOR);
-    m_int_configs[CONFIG_GM_LEVEL_ALLOW_ACHIEVEMENTS]  = sConfig->GetIntDefault("GM.AllowAchievementGain.Level", SEC_ADMINISTRATOR);
+    m_int_configs[CONFIG_GM_LEVEL_ALLOW_ACHIEVEMENTS]  = ConfigMgr::GetIntDefault("GM.AllowAchievementGain.Level", SEC_PLAYER);
     m_bool_configs[CONFIG_GM_LOG_TRADE]         = ConfigMgr::GetBoolDefault("GM.LogTrade", false);
     m_int_configs[CONFIG_START_GM_LEVEL]        = ConfigMgr::GetIntDefault("GM.StartLevel", 1);
     if (m_int_configs[CONFIG_START_GM_LEVEL] < m_int_configs[CONFIG_START_PLAYER_LEVEL])
@@ -1023,7 +1023,7 @@ void World::LoadConfigSettings(bool reload)
     m_bool_configs[CONFIG_BATTLEGROUND_CAST_DESERTER]                = ConfigMgr::GetBoolDefault("Battleground.CastDeserter", true);
     m_bool_configs[CONFIG_BATTLEGROUND_QUEUE_ANNOUNCER_ENABLE]       = ConfigMgr::GetBoolDefault("Battleground.QueueAnnouncer.Enable", false);
     m_bool_configs[CONFIG_BATTLEGROUND_QUEUE_ANNOUNCER_PLAYERONLY]   = ConfigMgr::GetBoolDefault("Battleground.QueueAnnouncer.PlayerOnly", false);
-    m_bool_configs[CONFIG_BATTLEGROUND_QUEUE_ANNOUNCER_CHANNEL]      = sConfig->GetBoolDefault("Battleground.QueueAnnouncer.Channel", false);
+    m_bool_configs[CONFIG_BATTLEGROUND_QUEUE_ANNOUNCER_CHANNEL]      = ConfigMgr::GetBoolDefault("Battleground.QueueAnnouncer.Channel", false);
     m_int_configs[CONFIG_BATTLEGROUND_INVITATION_TYPE]               = ConfigMgr::GetIntDefault ("Battleground.InvitationType", 0);
     m_int_configs[CONFIG_BATTLEGROUND_PREMATURE_FINISH_TIMER]        = ConfigMgr::GetIntDefault ("Battleground.PrematureFinishTimer", 5 * MINUTE * IN_MILLISECONDS);
     m_int_configs[CONFIG_BATTLEGROUND_PREMADE_GROUP_WAIT_FOR_MATCH]  = ConfigMgr::GetIntDefault ("Battleground.PremadeGroupWaitForMatch", 30 * MINUTE * IN_MILLISECONDS);
@@ -1065,7 +1065,7 @@ void World::LoadConfigSettings(bool reload)
         m_int_configs[CONFIG_GUILD_BANK_EVENT_LOG_COUNT] = GUILD_BANKLOG_MAX_RECORDS;
 
     // Warden
-    m_bool_configs[CONFIG_BOOL_WARDEN_KICK] = sConfig->GetBoolDefault("Warden.Kick", false);
+    m_bool_configs[CONFIG_BOOL_WARDEN_KICK] = ConfigMgr::GetBoolDefault("Warden.Kick", false);
 
     //visibility on continents
     m_MaxVisibleDistanceOnContinents = ConfigMgr::GetFloatDefault("Visibility.Distance.Continents", DEFAULT_VISIBILITY_DISTANCE);
@@ -1198,16 +1198,16 @@ void World::LoadConfigSettings(bool reload)
     // MySQL ping time interval
     m_int_configs[CONFIG_DB_PING_INTERVAL] = ConfigMgr::GetIntDefault("MaxPingTime", 30);
 
-    m_bool_configs[CONFIG_ANTICHEAT_ENABLE] = sConfig->GetBoolDefault("Anticheat.Enable", true);
-    m_int_configs[CONFIG_ANTICHEAT_REPORTS_INGAME_NOTIFICATION] = sConfig->GetIntDefault("Anticheat.ReportsForIngameWarnings", 70);
-    m_int_configs[CONFIG_ANTICHEAT_DETECTIONS_ENABLED] = sConfig->GetIntDefault("Anticheat.DetectionsEnabled",31);
-    m_int_configs[CONFIG_ANTICHEAT_MAX_REPORTS_FOR_DAILY_REPORT] = sConfig->GetIntDefault("Anticheat.MaxReportsForDailyReport",70);
+    m_bool_configs[CONFIG_ANTICHEAT_ENABLE] = ConfigMgr::GetBoolDefault("Anticheat.Enable", true);
+    m_int_configs[CONFIG_ANTICHEAT_REPORTS_INGAME_NOTIFICATION] = ConfigMgr::GetIntDefault("Anticheat.ReportsForIngameWarnings", 70);
+    m_int_configs[CONFIG_ANTICHEAT_DETECTIONS_ENABLED] = ConfigMgr::GetIntDefault("Anticheat.DetectionsEnabled",31);
+    m_int_configs[CONFIG_ANTICHEAT_MAX_REPORTS_FOR_DAILY_REPORT] = ConfigMgr::GetIntDefault("Anticheat.MaxReportsForDailyReport",70);
 
     /** World of Warcraft Armory **/
-    m_bool_configs[CONFIG_ARMORY_ENABLE] = sConfig->GetBoolDefault("Armory.Enable", false);
+    m_bool_configs[CONFIG_ARMORY_ENABLE] = ConfigMgr::GetBoolDefault("Armory.Enable", false);
 
     // Warden
-    m_int_configs[CONFIG_INT_WARDEN_BANDAY] = sConfig->GetIntDefault("Warden.BanDay", 0);
+    m_int_configs[CONFIG_INT_WARDEN_BANDAY] = ConfigMgr::GetIntDefault("Warden.BanDay", 0);
 
     sScriptMgr->OnConfigLoad(reload);
 }

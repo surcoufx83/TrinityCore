@@ -258,9 +258,62 @@ public:
 
 };
 
+/* Not Used */
+/*
+class spell_intense_cold : public SpellScriptLoader
+{
+    public:
+        spell_intense_cold() : SpellScriptLoader("spell_intense_cold") { }
+
+        class spell_intense_cold_AuraScript : public AuraScript
+        {
+            PrepareAuraScript(spell_intense_cold_AuraScript);
+
+            void HandlePeriodicTick(AuraEffect const* aurEff)
+            {
                 if (aurEff->GetBase()->GetStackAmount() < 2)
                     return;
+                Unit* caster = GetCaster();
+                //TODO: the caster should be boss but not the player
                 if (!caster || !caster->GetAI())
+                    return;
+                caster->GetAI()->SetGUID(GetTarget()->GetGUID(), DATA_INTENSE_COLD);
+            }
+
+            void Register()
+            {
+                OnEffectPeriodic += AuraEffectPeriodicFn(spell_intense_cold_AuraScript::HandlePeriodicTick, EFFECT_1, SPELL_AURA_PERIODIC_DAMAGE);
+            }
+        };
+
+        AuraScript* GetAuraScript() const
+        {
+            return new spell_intense_cold_AuraScript();
+        }
+};
+
+class achievement_intense_cold : public AchievementCriteriaScript
+{
+    public:
+        achievement_intense_cold() : AchievementCriteriaScript("achievement_intense_cold")
+        {
+        }
+
+        bool OnCheck(Player* player, Unit* target)
+        {
+            if (!target)
+                return false;
+
+            std::list<uint64> intenseColdList = CAST_AI(boss_keristrasza::boss_keristraszaAI, target->ToCreature()->AI())->intenseColdList;
+            if (!intenseColdList.empty())
+                for (std::list<uint64>::iterator itr = intenseColdList.begin(); itr != intenseColdList.end(); ++itr)
+                    if (player->GetGUID() == *itr)
+                        return false;
+
+            return true;
+        }
+};
+*/
 void AddSC_boss_keristrasza()
 {
     new boss_keristrasza();

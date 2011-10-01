@@ -2405,7 +2405,7 @@ class global_chatticker_playerscript : PlayerScript
 public:
     global_chatticker_playerscript() : PlayerScript("global_chatticker_playerscript")
     {
-        channelName = sConfig->GetStringDefault("Chatticker.Channel", "global");
+        channelName = ConfigMgr::GetStringDefault("Chatticker.Channel", "global");
     }
     
     void OnChat(Player* player, uint32 type, uint32 lang, std::string& message, Channel* channel)
@@ -2801,6 +2801,6 @@ void AddSC_lol_custom()
     new npc_wyrm_debug_repairbot();
     new SurprisePlayerScript();
 
-    if(sConfig->GetBoolDefault("Chatticker.Enabled", false))
+    if(ConfigMgr::GetBoolDefault("Chatticker.Enabled", false))
         new global_chatticker_playerscript();
 }
