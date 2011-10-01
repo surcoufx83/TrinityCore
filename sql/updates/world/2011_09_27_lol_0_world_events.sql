@@ -6,7 +6,7 @@ DELETE FROM `game_event` WHERE `eventEntry` BETWEEN @entry AND @entry+11;
 INSERT INTO `game_event` (`eventEntry`, `start_time`, `end_time`, `occurence`, `length`, `holiday`, `description`, `world_event`) VALUES
 (@entry,'2011-01-01 00:00:00','2020-12-31 06:00:00','525600','44640','0','Bier des Monats - Januar','0'),
 (@entry+1,'2011-02-01 00:00:00','2020-12-31 06:00:00','525600','40320','0','Bier des Monats - Februar','0'),
-(@entry+2,'2011-03-01 00:00:00','2020-12-31 06:00:00','525600','44640','0','Bier des Monats - März','0'),
+(@entry+2,'2011-03-01 00:00:00','2020-12-31 06:00:00','525600','44640','0','Bier des Monats - Maerz','0'),
 (@entry+3,'2011-04-01 00:00:00','2020-12-31 06:00:00','525600','43200','0','Bier des Monats - April','0'),
 (@entry+4,'2011-05-01 00:00:00','2020-12-31 06:00:00','525600','44640','0','Bier des Monats - Mai','0'),
 (@entry+5,'2011-06-01 00:00:00','2020-12-31 06:00:00','525600','43200','0','Bier des Monats - Juni','0'),
