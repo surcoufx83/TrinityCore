@@ -3184,9 +3184,15 @@ class npc_dark_iron_herald : public CreatureScript
 
                 if (_spawnTimer <= diff)
                 {
-                    if (Creature* guzzler = me->SummonCreature(NPC_DARK_IRON_GUZZLER, *me))
+                    Position spawn;
+                    me->GetRandomNearPosition(spawn, 20.0f);
+
+                    if (Creature* guzzler = me->SummonCreature(NPC_DARK_IRON_GUZZLER, spawn))
                     {
                         guzzler->SetReactState(REACT_PASSIVE);
+                        guzzler->AddUnitMovementFlag(MOVEMENTFLAG_WALKING);
+                        guzzler->CastSpell(guzzler, SPELL_MOLE_MACHINE_SPAWN, true);
+                        guzzler->SetVisible(false);
 
                         if (GameObject* keg = GetKeg())
                         {
@@ -3202,7 +3208,7 @@ class npc_dark_iron_herald : public CreatureScript
                             me->DisappearAndDie();
                         }
                     }
-                    _spawnTimer = urand(1, 5)*IN_MILLISECONDS;
+                    _spawnTimer = urand(1, 4)*IN_MILLISECONDS;
                 }
                 else
                     _spawnTimer -= diff;
@@ -3232,8 +3238,11 @@ class npc_dark_iron_guzzler : public CreatureScript
             void Reset()
             {
                 _kegGUID = 0;
+                _waitTimer = 2*IN_MILLISECONDS;
                 _destroyTimer = 20*IN_MILLISECONDS;
                 _kegReached = false;
+                _waiting = true;
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
             }
 
             void SpellHit(Unit* /*caster*/, SpellInfo const* spell)
@@ -3241,7 +3250,8 @@ class npc_dark_iron_guzzler : public CreatureScript
                 if (spell->Id == SPELL_BREWFEST_STUN)
                 {
                     me->GetMotionMaster()->Clear();
-                    me->DespawnOrUnsummon(3*IN_MILLISECONDS);
+                    me->Kill(me);
+                    me->DespawnOrUnsummon(10*IN_MILLISECONDS);
                     _kegReached = false;
                 }
             }
@@ -3268,6 +3278,17 @@ class npc_dark_iron_guzzler : public CreatureScript
 
             void UpdateAI(uint32 const diff)
             {
+                if (_waiting)
+                {
+                    if (_waitTimer <= diff)
+                    {
+                        _waiting = false;
+                        me->SetVisible(true);
+                    }
+                    else
+                        _waitTimer -= diff;
+                }
+
                 if (_kegReached)
                 {
                     GameObject* keg = ObjectAccessor::GetGameObject(*me, _kegGUID);
@@ -3292,7 +3313,9 @@ class npc_dark_iron_guzzler : public CreatureScript
         private:
             uint64 _kegGUID;
             uint32 _destroyTimer;
+            uint32 _waitTimer;
             bool _kegReached;
+            bool _waiting;
         };
 
         CreatureAI* GetAI(Creature* creature) const
