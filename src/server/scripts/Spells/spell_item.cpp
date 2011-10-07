@@ -1128,6 +1128,73 @@ class spell_magic_eater_food : public SpellScriptLoader
         }
 };
 
+enum TeleportStone
+{
+    SPELL_CHECKPOINT_1 = 101000,
+    SPELL_CHECKPOINT_2 = 101001,
+    SPELL_CHECKPOINT_3 = 101002,
+    SPELL_CHECKPOINT_4 = 101003,
+    SPELL_CHECKPOINT_5 = 101004
+};
+
+class spell_item_teleport_stone : public SpellScriptLoader
+{
+    public:
+        spell_item_teleport_stone() : SpellScriptLoader("spell_item_teleport_stone") {}
+
+        class spell_item_teleport_stone_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_item_teleport_stone_SpellScript)
+
+            bool Validate(SpellInfo const* /*spellEntry*/)
+            {
+                if (!sSpellMgr->GetSpellInfo(SPELL_CHECKPOINT_1))
+                    return false;
+                if (!sSpellMgr->GetSpellInfo(SPELL_CHECKPOINT_2))
+                    return false;
+                if (!sSpellMgr->GetSpellInfo(SPELL_CHECKPOINT_3))
+                    return false;
+                if (!sSpellMgr->GetSpellInfo(SPELL_CHECKPOINT_4))
+                    return false;
+                if (!sSpellMgr->GetSpellInfo(SPELL_CHECKPOINT_5))
+                    return false;
+                return true;
+            }
+
+            void OnScriptEffect(SpellEffIndex effIndex)
+            {
+                PreventHitDefaultEffect(effIndex);
+
+                if (Unit* caster = GetCaster())
+                {
+                    if (!caster->ToPlayer() || caster->GetAreaId() != 43)
+                        return;
+
+                    if (caster->HasAura(SPELL_CHECKPOINT_5))
+                        caster->ToPlayer()->TeleportTo(0, -14210.87f, -80.75f, 99.9f, 0.939f, TELE_TO_SPELL);
+                    else if (caster->HasAura(SPELL_CHECKPOINT_4))
+                        caster->ToPlayer()->TeleportTo(0, -14272.87f, -115.5f, 72.7f, 2.053f, TELE_TO_SPELL);
+                    else if (caster->HasAura(SPELL_CHECKPOINT_3))
+                        caster->ToPlayer()->TeleportTo(0, -14291.39f, -156.57f, 58.9f, 0.774f, TELE_TO_SPELL);
+                    else if (caster->HasAura(SPELL_CHECKPOINT_2))
+                        caster->ToPlayer()->TeleportTo(0, -14336.53f, -114.35f, 121.9f, 3.386f, TELE_TO_SPELL);
+                    else if (caster->HasAura(SPELL_CHECKPOINT_1))
+                        caster->ToPlayer()->TeleportTo(0, -14398.94f, -104.67f, 68.99f, 0.764f, TELE_TO_SPELL);
+                }
+            }
+
+            void Register()
+            {
+                OnEffectHit += SpellEffectFn(spell_item_teleport_stone_SpellScript::OnScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_item_teleport_stone_SpellScript();
+        }
+};
+
 void AddSC_item_spell_scripts()
 {
     // 23074 Arcanite Dragonling
@@ -1160,4 +1227,5 @@ void AddSC_item_spell_scripts()
 
     new spell_item_ashbringer();
     new spell_magic_eater_food();
+    new spell_item_teleport_stone();
 }

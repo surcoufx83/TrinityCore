@@ -3324,6 +3324,58 @@ class npc_dark_iron_guzzler : public CreatureScript
         }
 };
 
+enum EventEngineer
+{
+    ITEM_TELEPORT_STONE = 40582,
+    SPELL_CHECKPOINT_1  = 101000,
+    SPELL_CHECKPOINT_2  = 101001,
+    SPELL_CHECKPOINT_3  = 101002,
+    SPELL_CHECKPOINT_4  = 101003,
+    SPELL_CHECKPOINT_5  = 101004
+};
+
+class npc_event_engineer : public CreatureScript
+{
+    public:
+        npc_event_engineer() : CreatureScript("npc_event_engineer") { }
+
+        bool OnGossipHello(Player* player, Creature* creature)
+        {
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Bitte speichere meine Position.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+            player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
+            return true;
+        }
+
+        bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action)
+        {
+            player->PlayerTalkClass->ClearMenus();
+
+            if (action == GOSSIP_ACTION_INFO_DEF + 1)
+            {
+                if (!player->HasItemCount(ITEM_TELEPORT_STONE, 1))
+                    player->AddItem(ITEM_TELEPORT_STONE, 1);
+
+                uint32 aura = 0;
+                switch (creature->GetDBTableGUIDLow())
+                {
+                    case 302705: aura = SPELL_CHECKPOINT_1; break;
+                    case 302706: aura = SPELL_CHECKPOINT_2; break;
+                    case 302707: aura = SPELL_CHECKPOINT_3; break;
+                    case 302708: aura = SPELL_CHECKPOINT_4; break;
+                    case 302709: aura = SPELL_CHECKPOINT_5; break;
+                }
+
+                if (aura)
+                    player->AddAura(aura, player);
+
+                player->CLOSE_GOSSIP_MENU();
+            }
+
+            return true;
+        }
+};
+
 void AddSC_npcs_special()
 {
     new npc_air_force_bots();
@@ -3362,4 +3414,5 @@ void AddSC_npcs_special()
     new npc_brew_vendor();
     new npc_dark_iron_herald();
     new npc_dark_iron_guzzler();
+    new npc_event_engineer();
 }
