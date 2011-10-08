@@ -575,10 +575,10 @@ void Map::ScriptsProcess()
 
                 // quest id and flags checked at script loading
                 if ((worldObject->GetTypeId() != TYPEID_UNIT || ((Unit*)worldObject)->isAlive()) &&
-                    (step.script->QuestExplored.Distance == 0 || worldObject->IsWithinDistInMap(target, float(step.script->QuestExplored.Distance))))
-                    target->AreaExploredOrEventHappens(step.script->QuestExplored.QuestID);
+                    (step.script->QuestExplored.Distance == 0 || worldObject->IsWithinDistInMap(player, float(step.script->QuestExplored.Distance))))
+                    player->AreaExploredOrEventHappens(step.script->QuestExplored.QuestID);
                 else
-                    target->FailQuest(step.script->QuestExplored.QuestID);
+                    player->FailQuest(step.script->QuestExplored.QuestID);
 
                 break;
             }
@@ -686,8 +686,8 @@ void Map::ScriptsProcess()
             {
                 // Source (datalong2 != 0) or target (datalong2 == 0) must be Unit.
                 bool bReverse = step.script->RemoveAura.Flags & SF_REMOVEAURA_REVERSE;
-                if (Unit* target = _GetScriptUnit(bReverse ? source : target, bReverse, step.script))
-                    target->RemoveAurasDueToSpell(step.script->RemoveAura.SpellID);
+                if (Unit* pTarget = _GetScriptUnit(bReverse ? source : target, bReverse, step.script))
+                    pTarget->RemoveAurasDueToSpell(step.script->RemoveAura.SpellID);
                 break;
             }
 
@@ -751,20 +751,20 @@ void Map::ScriptsProcess()
                 if (WorldObject* pSource = _GetScriptWorldObject(source, true, step.script))
                 {
                     // PlaySound.Flags bitmask: 0/1=anyone/target
-                    Player* target = NULL;
+                    Player* player = NULL;
                     if (step.script->PlaySound.Flags & SF_PLAYSOUND_TARGET_PLAYER)
                     {
                         // Target must be Player.
-                        target = _GetScriptPlayer(target, false, step.script);
-                        if (!target)
+                        player = _GetScriptPlayer(target, false, step.script);
+                        if (!player)
                             break;
                     }
 
                     // PlaySound.Flags bitmask: 0/2=without/with distance dependent
                     if (step.script->PlaySound.Flags & SF_PLAYSOUND_DISTANCE_SOUND)
-                        pSource->PlayDistanceSound(step.script->PlaySound.SoundID, target);
+                        pSource->PlayDistanceSound(step.script->PlaySound.SoundID, player);
                     else
-                        pSource->PlayDirectSound(step.script->PlaySound.SoundID, target);
+                        pSource->PlayDirectSound(step.script->PlaySound.SoundID, player);
                 }
                 break;
 
@@ -878,11 +878,11 @@ void Map::ScriptsProcess()
                     if (step.script->Orientation.Flags& SF_ORIENTATION_FACE_TARGET)
                     {
                         // Target must be Unit.
-                        Unit* target = _GetScriptUnit(target, false, step.script);
-                        if (!target)
+                        Unit* pTarget = _GetScriptUnit(target, false, step.script);
+                        if (!pTarget)
                             break;
 
-                        pSource->SetInFront(target);
+                        pSource->SetInFront(pTarget);
                     }
                     else
                         pSource->SetOrientation(step.script->Orientation.Orientation);
