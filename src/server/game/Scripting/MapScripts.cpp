@@ -539,8 +539,8 @@ void Map::ScriptsProcess()
 
                 // when script called for item spell casting then target == (unit or GO) and source is player
                 WorldObject* worldObject;
-                Player* target = target->ToPlayer();
-                if (target)
+                Player* player = target->ToPlayer();
+                if (player)
                 {
                     if (source->GetTypeId() != TYPEID_UNIT && source->GetTypeId() != TYPEID_GAMEOBJECT && source->GetTypeId() != TYPEID_PLAYER)
                     {
@@ -552,8 +552,8 @@ void Map::ScriptsProcess()
                 }
                 else
                 {
-                    target = source->ToPlayer();
-                    if (target)
+                    player = source->ToPlayer();
+                    if (player)
                     {
                         if (target->GetTypeId() != TYPEID_UNIT && target->GetTypeId() != TYPEID_GAMEOBJECT && target->GetTypeId() != TYPEID_PLAYER)
                         {
