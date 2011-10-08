@@ -20547,9 +20547,7 @@ inline bool Player::_StoreOrEquipNewItem(uint32 vendorslot, uint32 item, uint8 c
 bool Player::BuyItemFromVendorSlot(uint64 vendorguid, uint32 vendorslot, uint32 item, uint8 count, uint8 bag, uint8 slot)
 {
     // cheating attempt
-    //if (count < 1) count = 1;
-    // fix macro use to prevent overflow -- [hack]
-    count = 1;
+    if (count < 1) count = 1;
 
     // cheating attempt
     if (slot > MAX_BAG_SIZE && slot !=NULL_SLOT)
