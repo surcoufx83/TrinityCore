@@ -405,10 +405,10 @@ public:
     {
         boss_headless_horsemanAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceScript();
+            instance = c->GetInstanceScript();
         }
 
-        InstanceScript* pInstance;
+        InstanceScript* instance;
 
         uint64 headGUID;
         uint64 PlayerGUID;
@@ -503,8 +503,8 @@ public:
                     break;
                 }
                 case 6:
-                    if (pInstance)
-                        pInstance->SetData(GAMEOBJECT_PUMPKIN_SHRINE, 0);   //hide gameobject
+                    if (instance)
+                        instance->SetData(GAMEOBJECT_PUMPKIN_SHRINE, 0);   //hide gameobject
                     break;
                 case 19:
                     me->RemoveUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT | MOVEMENTFLAG_LEVITATING);
@@ -528,8 +528,8 @@ public:
 
         void EnterCombat(Unit* /*who*/)
         {
-            if (pInstance)
-                pInstance->SetData(DATA_HORSEMAN_EVENT, IN_PROGRESS);
+            if (instance)
+                instance->SetData(DATA_HORSEMAN_EVENT, IN_PROGRESS);
             DoZoneInCombat();
         }
         void AttackStart(Unit* who) {ScriptedAI::AttackStart(who);}
@@ -558,10 +558,10 @@ public:
 
         Player* SelectRandomPlayer(float range = 0.0f, bool checkLoS = true)
         {
-            Map* pMap = me->GetMap();
-            if (!pMap->IsDungeon()) return NULL;
+            Map* map = me->GetMap();
+            if (!map->IsDungeon()) return NULL;
 
-            Map::PlayerList const &PlayerList = pMap->GetPlayers();
+            Map::PlayerList const &PlayerList = map->GetPlayers();
             Map::PlayerList::const_iterator i;
             if (PlayerList.isEmpty()) return NULL;
 
@@ -597,8 +597,8 @@ public:
                 flame->CastSpell(flame,SPELL_BODY_FLAME,false);
             if (Creature *wisp = DoSpawnCreature(WISP_INVIS,0,0,0,0,TEMPSUMMON_TIMED_DESPAWN,60000))
                 CAST_AI(mob_wisp_invis::mob_wisp_invisAI, wisp->AI())->SetType(CREATURE_WISP_BLUE);
-            if (pInstance)
-                pInstance->SetData(DATA_HORSEMAN_EVENT, DONE);
+            if (instance)
+                instance->SetData(DATA_HORSEMAN_EVENT, DONE);
 
             if(me->GetMap()->IsDungeon())
             {
@@ -647,9 +647,9 @@ public:
                 std::list<HostileReference*>::const_iterator itr;
                 for (itr = caster->getThreatManager().getThreatList().begin(); itr != caster->getThreatManager().getThreatList().end(); ++itr)
                 {
-                    Unit* pUnit = Unit::GetUnit((*me), (*itr)->getUnitGuid());
-                    if (pUnit && pUnit->isAlive() && pUnit != caster)
-                        me->AddThreat(pUnit,caster->getThreatManager().getThreat(pUnit));
+                    Unit* unit = Unit::GetUnit((*me), (*itr)->getUnitGuid());
+                    if (unit && unit->isAlive() && unit != caster)
+                        me->AddThreat(unit, caster->getThreatManager().getThreat(unit));
                 }
             }
         }

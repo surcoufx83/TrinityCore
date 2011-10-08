@@ -74,11 +74,11 @@ public:
     {
         boss_nightbaneAI(Creature* c) : ScriptedAI(c)
         {
-            _instance = c->GetInstanceScript();
+            instance = c->GetInstanceScript();
             Intro = true;
         }
 
-        InstanceScript* _instance;
+        InstanceScript* instance;
 
         uint32 BellowingRoarTimer;
         uint32 CharredEarthTimer;
@@ -124,37 +124,47 @@ public:
             me->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
             me->setActive(true);
 
+            if (instance)
+            {
+                if (instance->GetData(TYPE_NIGHTBANE) == DONE || instance->GetData(TYPE_NIGHTBANE) == IN_PROGRESS)
+                    me->DisappearAndDie();
+                else
+                    instance->SetData(TYPE_NIGHTBANE, NOT_STARTED);
+            }
+
             HandleTerraceDoors(true);
             me->SetReactState(REACT_PASSIVE);
 
             if (!Intro)
             {
-                _instance->SetData(TYPE_NIGHTBANE, NOT_STARTED);
-                me->DisappearAndDie();
+                me->SetHomePosition(IntroWay[7][0], IntroWay[7][1], IntroWay[7][2], 0);
+                me->GetMotionMaster()->MoveTargetedHome();
             }
             else
-                _instance->DoSendNotifyToInstance(EMOTE_SUMMON);
+                instance->DoSendNotifyToInstance(EMOTE_SUMMON);
         }
 
         void HandleTerraceDoors(bool open)
         {
-            if (_instance)
+            if (instance)
             {
-                _instance->HandleGameObject(_instance->GetData64(DATA_MASTERS_TERRACE_DOOR_1), open);
-                _instance->HandleGameObject(_instance->GetData64(DATA_MASTERS_TERRACE_DOOR_2), open);
+                instance->HandleGameObject(instance->GetData64(DATA_MASTERS_TERRACE_DOOR_1), open);
+                instance->HandleGameObject(instance->GetData64(DATA_MASTERS_TERRACE_DOOR_2), open);
             }
         }
 
         void EnterCombat(Unit* /*who*/)
         {
+            if (instance)
+                instance->SetData(TYPE_NIGHTBANE, IN_PROGRESS);
             HandleTerraceDoors(false);
             me->MonsterYell(YELL_AGGRO, LANG_UNIVERSAL, 0);
         }
 
         void JustDied(Unit * /*killer*/)
         {
-            if (_instance)
-                _instance->SetData(TYPE_NIGHTBANE, DONE);
+            if (instance)
+                instance->SetData(TYPE_NIGHTBANE, DONE);
 
             HandleTerraceDoors(true);
         }

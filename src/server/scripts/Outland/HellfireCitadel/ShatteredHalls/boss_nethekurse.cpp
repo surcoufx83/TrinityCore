@@ -91,11 +91,11 @@ class boss_grand_warlock_nethekurse : public CreatureScript
         {
             boss_grand_warlock_nethekurseAI(Creature* creature) : ScriptedAI(creature)
             {
-                pInstance = creature->GetInstanceScript();
+                instance = creature->GetInstanceScript();
                 HeroicMode = creature->GetMap()->IsHeroic();
             }
 
-            InstanceScript* pInstance;
+            InstanceScript* instance;
             bool HeroicMode;
 
             bool IntroOnce;
@@ -195,8 +195,8 @@ class boss_grand_warlock_nethekurse : public CreatureScript
                         IntroOnce = true;
                         IsIntroEvent = true;
 
-                        if (pInstance)
-                            pInstance->SetData(TYPE_NETHEKURSE, IN_PROGRESS);
+                        if (instance)
+                            instance->SetData(TYPE_NETHEKURSE, IN_PROGRESS);
                     }
 
                     if (IsIntroEvent || !IsMainEvent)
@@ -230,20 +230,20 @@ class boss_grand_warlock_nethekurse : public CreatureScript
             {
                 DoScriptText(SAY_DIE, me);
 
-                if (!pInstance)
+                if (!instance)
                     return;
 
-                pInstance->SetData(TYPE_NETHEKURSE, DONE);
+                instance->SetData(TYPE_NETHEKURSE, DONE);
             }
 
             void UpdateAI(const uint32 diff)
             {
                 if (IsIntroEvent)
                 {
-                    if (!pInstance)
+                    if (!instance)
                         return;
 
-                    if (pInstance->GetData(TYPE_NETHEKURSE) == IN_PROGRESS)
+                    if (instance->GetData(TYPE_NETHEKURSE) == IN_PROGRESS)
                     {
                         if (IntroEvent_Timer <= diff)
                             DoTauntPeons();
@@ -321,10 +321,10 @@ class mob_fel_orc_convert : public CreatureScript
         {
             mob_fel_orc_convertAI(Creature* creature) : ScriptedAI(creature)
             {
-                pInstance = creature->GetInstanceScript();
+                instance = creature->GetInstanceScript();
             }
 
-            InstanceScript* pInstance;
+            InstanceScript* instance;
             uint32 Hemorrhage_Timer;
 
             void Reset()
@@ -339,19 +339,19 @@ class mob_fel_orc_convert : public CreatureScript
 
             void EnterCombat(Unit* /*who*/)
             {
-                if (pInstance)
+                if (instance)
                 {
-                    if (pInstance->GetData64(DATA_NETHEKURSE))
+                    if (instance->GetData64(DATA_NETHEKURSE))
                     {
-                        Creature* pKurse = Unit::GetCreature(*me, pInstance->GetData64(DATA_NETHEKURSE));
+                        Creature* pKurse = Unit::GetCreature(*me, instance->GetData64(DATA_NETHEKURSE));
                         if (pKurse && me->IsWithinDist(pKurse, 45.0f))
                         {
                             CAST_AI(boss_grand_warlock_nethekurse::boss_grand_warlock_nethekurseAI, pKurse->AI())->DoYellForPeonAggro();
 
-                            if (pInstance->GetData(TYPE_NETHEKURSE) == IN_PROGRESS)
+                            if (instance->GetData(TYPE_NETHEKURSE) == IN_PROGRESS)
                                 return;
                             else
-                                pInstance->SetData(TYPE_NETHEKURSE, IN_PROGRESS);
+                                instance->SetData(TYPE_NETHEKURSE, IN_PROGRESS);
                         }
                     }
                 }
@@ -359,12 +359,12 @@ class mob_fel_orc_convert : public CreatureScript
 
             void JustDied(Unit* /*Killer*/)
             {
-                if (pInstance)
+                if (instance)
                 {
-                    if (pInstance->GetData(TYPE_NETHEKURSE) != IN_PROGRESS)
+                    if (instance->GetData(TYPE_NETHEKURSE) != IN_PROGRESS)
                         return;
-                    if (pInstance->GetData64(DATA_NETHEKURSE))
-                        if (Creature* pKurse = Unit::GetCreature(*me, pInstance->GetData64(DATA_NETHEKURSE)))
+                    if (instance->GetData64(DATA_NETHEKURSE))
+                        if (Creature* pKurse = Unit::GetCreature(*me, instance->GetData64(DATA_NETHEKURSE)))
                             CAST_AI(boss_grand_warlock_nethekurse::boss_grand_warlock_nethekurseAI, pKurse->AI())->DoYellForPeonDeath();
                 }
             }

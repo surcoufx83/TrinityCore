@@ -126,9 +126,9 @@ public:
                 creature->setFaction(FACTION_HOSTILE);
                 creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
                 creature->AI()->AttackStart(player);
-                InstanceScript* pInstance = creature->GetInstanceScript();
-                if (pInstance)
-                    pInstance->SetData64(DATA_EVENSTARTER, player->GetGUID());
+                InstanceScript* instance = creature->GetInstanceScript();
+                if (instance)
+                    instance->SetData64(DATA_EVENSTARTER, player->GetGUID());
                 break;
         }
         return true;
@@ -151,10 +151,10 @@ public:
     {
         boss_doomrelAI(Creature* c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceScript();
+            instance = c->GetInstanceScript();
         }
 
-        InstanceScript* pInstance;
+        InstanceScript* instance;
         uint32 ShadowVolley_Timer;
         uint32 Immolate_Timer;
         uint32 CurseOfWeakness_Timer;
@@ -174,9 +174,9 @@ public:
             // was set before event start, so set again
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
 
-            if (pInstance)
+            if (instance)
             {
-                if (pInstance->GetData(DATA_GHOSTKILL) >= 7)
+                if (instance->GetData(DATA_GHOSTKILL) >= 7)
                     me->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
                 else
                     me->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
@@ -196,14 +196,14 @@ public:
             if (me->isAlive())
                 me->GetMotionMaster()->MoveTargetedHome();
             me->SetLootRecipient(NULL);
-            if (pInstance)
-                pInstance->SetData64(DATA_EVENSTARTER, 0);
+            if (instance)
+                instance->SetData64(DATA_EVENSTARTER, 0);
         }
 
         void JustDied(Unit* /*who*/)
         {
-            if (pInstance)
-                pInstance->SetData(DATA_GHOSTKILL, 1);
+            if (instance)
+                instance->SetData(DATA_GHOSTKILL, 1);
         }
 
         void UpdateAI(const uint32 diff)
