@@ -1258,14 +1258,15 @@ void Group::UpdatePlayerOutOfRange(Player* player)
     if (!player || !player->IsInWorld())
         return;
 
+    Player* member;
     WorldPacket data;
     player->GetSession()->BuildPartyMemberStatsChangedPacket(player, &data);
 
     for (GroupReference* itr = GetFirstMember(); itr != NULL; itr = itr->next())
     {
-        player = itr->getSource();
-        if (player && !player->IsWithinDist(player, player->GetSightRange(), false))
-            player->GetSession()->SendPacket(&data);
+        member = itr->getSource();
+        if (member && !member->IsWithinDist(player, member->GetSightRange(), false))
+            member->GetSession()->SendPacket(&data);
     }
 }
 
