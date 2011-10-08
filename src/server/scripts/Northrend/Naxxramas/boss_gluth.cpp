@@ -81,7 +81,8 @@ public:
         {
             if (who->ToCreature() && who->ToCreature()->GetEntry() == MOB_ZOMBIE && me->IsWithinDistInMap(who, 7))
             {
-                SetGazeOn(who);
+                AttackStart(who);
+                me->SetReactState(REACT_PASSIVE);
                 AttackGluth(who->ToCreature());
 
                 // TODO: use a script text
