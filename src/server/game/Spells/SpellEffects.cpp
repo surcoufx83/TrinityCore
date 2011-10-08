@@ -5934,9 +5934,9 @@ void Spell::EffectStuck(SpellEffIndex /*effIndex*/)
 
     sLog->outDebug(LOG_FILTER_SPELLS_AURAS, "Spell Effect: Stuck");
     sLog->outDetail("Player %s (guid %u) used auto-unstuck future at map %u (%f, %f, %f)", target->GetName(), target->GetGUIDLow(), m_caster->GetMapId(), m_caster->GetPositionX(), target->GetPositionY(), target->GetPositionZ());
-    if (pTarget && pTarget->getClass() == CLASS_DEATH_KNIGHT)
-        return;
 
+    if (target && target->getClass() == CLASS_DEATH_KNIGHT)
+        return;
 
     if (target->isInFlight())
         return;

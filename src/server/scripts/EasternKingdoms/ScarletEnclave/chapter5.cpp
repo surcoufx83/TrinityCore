@@ -737,7 +737,7 @@ public:
                         case 9: // charge begins
                             SetHoldState(false);
                             me->CastSpell(me, SPELL_THE_MIGHT_OF_MOGRAINE, true); // need to fix, on player only
-                            if (Creature* pTemp = Unit::GetCreature(*me, uiKoltiraGUID))
+                            if (Creature* temp = Unit::GetCreature(*me, uiKoltiraGUID))
                             {
                                 temp->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
                                 temp->GetMotionMaster()->MovePoint(0, LightofDawnLoc[0].x+rand()%30, LightofDawnLoc[0].y+rand()%30, LightofDawnLoc[0].z);

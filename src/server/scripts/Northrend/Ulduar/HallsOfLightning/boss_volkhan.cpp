@@ -306,7 +306,7 @@ public:
                     m_uiShatter_Timer -= uiDiff;
             }
 
-            Creature* pAnvil = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_VOLKHAN_ANVIL));
+            Creature* pAnvil = m_instance->instance->GetCreature(m_instance->GetData64(DATA_VOLKHAN_ANVIL));
 
             float fX, fY, fZ;
             me->GetContactPoint(pAnvil, fX, fY, fZ, INTERACTION_DISTANCE);

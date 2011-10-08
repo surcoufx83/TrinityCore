@@ -195,14 +195,14 @@ public:
                                 && unit->HasAura(SPELL_BROODAF_BRONZE)
                                 && unit->HasAura(SPELL_BROODAF_GREEN))
                             {
-                                if (pUnit->GetTypeId() == TYPEID_PLAYER)
+                                if (unit->GetTypeId() == TYPEID_PLAYER)
                                 {
-                                    pUnit->RemoveAurasDueToSpell(SPELL_BROODAF_BLUE);
-                                    pUnit->RemoveAurasDueToSpell(SPELL_BROODAF_BLACK);
-                                    pUnit->RemoveAurasDueToSpell(SPELL_BROODAF_RED);
-                                    pUnit->RemoveAurasDueToSpell(SPELL_BROODAF_BRONZE);
-                                    pUnit->RemoveAurasDueToSpell(SPELL_BROODAF_GREEN);
-                                    DoCast(pUnit, SPELL_CHROMATIC_MUT_1, true);
+                                    unit->RemoveAurasDueToSpell(SPELL_BROODAF_BLUE);
+                                    unit->RemoveAurasDueToSpell(SPELL_BROODAF_BLACK);
+                                    unit->RemoveAurasDueToSpell(SPELL_BROODAF_RED);
+                                    unit->RemoveAurasDueToSpell(SPELL_BROODAF_BRONZE);
+                                    unit->RemoveAurasDueToSpell(SPELL_BROODAF_GREEN);
+                                    DoCast(unit, SPELL_CHROMATIC_MUT_1, true);
                                 }
 
                                 //Chromatic mutation is causing issues

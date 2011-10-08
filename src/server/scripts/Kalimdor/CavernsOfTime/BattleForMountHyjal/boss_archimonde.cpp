@@ -346,11 +346,11 @@ public:
             hyjal_trashAI::JustDied(victim);
             DoScriptText(SAY_DEATH, me);
 
-            if (pInstance)
+            if (instance)
             {
-                pInstance->SetData(DATA_ARCHIMONDEEVENT, DONE);
-                pInstance->DoCompleteAchievement(ACHIEVEMENT_MOUNT_HYJAL);
-            }                
+                instance->SetData(DATA_ARCHIMONDEEVENT, DONE);
+                instance->DoCompleteAchievement(ACHIEVEMENT_MOUNT_HYJAL);
+            }
         }
 
         bool CanUseFingerOfDeath()

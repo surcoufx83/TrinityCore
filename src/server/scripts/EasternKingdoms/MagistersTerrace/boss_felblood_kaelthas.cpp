@@ -159,8 +159,8 @@ public:
             if (!instance)
                 return;
 
-            pInstance->SetData(DATA_KAELTHAS_EVENT, DONE);
-            pInstance->HandleGameObject(pInstance->GetData64(DATA_KAEL_DOOR), true); //TODO: move all door handling to instance
+            instance->SetData(DATA_KAELTHAS_EVENT, DONE);
+            instance->HandleGameObject(instance->GetData64(DATA_KAEL_DOOR), true); //TODO: move all door handling to instance
             // Open the encounter door
 
             if (GameObject* go = me->FindNearestGameObject(GO_ESCAPE_ORB, 150.0f))

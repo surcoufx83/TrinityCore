@@ -124,7 +124,7 @@ public:
                 m_instance->DoStartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_TIMELY_DEATH_START_EVENT);
             }
 
-            if (m_pInstance->GetData(TYPE_IONAR)!=DONE)
+            if (m_instance->GetData(TYPE_IONAR)!=DONE)
             {
                 Map* pMap = me->GetMap();
                 if (pMap->IsDungeon())

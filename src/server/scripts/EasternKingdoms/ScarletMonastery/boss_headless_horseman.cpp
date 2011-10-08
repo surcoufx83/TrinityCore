@@ -457,17 +457,17 @@ public:
                 headGUID = 0;
             }
 
-            if (pInstance)
+            if (instance)
             {
-                pInstance->SetData(DATA_HORSEMAN_EVENT, NOT_STARTED);
-                pInstance->SetData(DATA_HORSEMAN_PHASE, 1);
+                instance->SetData(DATA_HORSEMAN_EVENT, NOT_STARTED);
+                instance->SetData(DATA_HORSEMAN_PHASE, 1);
             }
         }
 
         void FlyMode()
         {
-            if (pInstance)
-                pInstance->SetData(DATA_HORSEMAN_PHASE, 0);
+            if (instance)
+                instance->SetData(DATA_HORSEMAN_PHASE, 0);
 
             me->SetVisible(false);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -512,7 +512,7 @@ public:
                 case 20:
                 {
                     Phase = 1;
-                    pInstance->SetData(DATA_HORSEMAN_PHASE, Phase);
+                    instance->SetData(DATA_HORSEMAN_PHASE, Phase);
                     IsFlying = false;
                     wp_reached = false;
                     me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -632,7 +632,7 @@ public:
                     else newPhase = 1;
 
                     Phase = newPhase;
-                    if(pInstance) pInstance->SetData(DATA_HORSEMAN_PHASE, Phase);
+                    if(instance) instance->SetData(DATA_HORSEMAN_PHASE, Phase);
                 }
 
                 withhead = true;
@@ -669,8 +669,8 @@ public:
                     if(Creature* head = DoSpawnCreature(HEAD, float(rand()%2), float(rand()%2),0,0,TEMPSUMMON_DEAD_DESPAWN,0))
                     {
                         headGUID = head->GetGUID();
-                        if (pInstance)
-                            CAST_AI(mob_head::mob_headAI,head->AI())->SetPhase(pInstance->GetData(DATA_HORSEMAN_PHASE));
+                        if (instance)
+                            CAST_AI(mob_head::mob_headAI,head->AI())->SetPhase(instance->GetData(DATA_HORSEMAN_PHASE));
                     }
                 }
                 Unit* Head = Unit::GetUnit((*me), headGUID);
@@ -693,7 +693,7 @@ public:
         {
             if (withhead)
             {
-                switch(pInstance->GetData(DATA_HORSEMAN_PHASE))
+                switch(instance->GetData(DATA_HORSEMAN_PHASE))
                 {
                     case 0:
                     {
@@ -800,7 +800,7 @@ public:
 
                             Phase = newPhase;
                             
-                            if(pInstance) pInstance->SetData(DATA_HORSEMAN_PHASE, Phase);
+                            if(instance) instance->SetData(DATA_HORSEMAN_PHASE, Phase);
                             CAST_AI(mob_head::mob_headAI, Head->AI())->Phase = newPhase;
                             //CAST_AI(mob_head::mob_headAI, Head->AI())->Phase = Phase;
                             CAST_AI(mob_head::mob_headAI, Head->AI())->Disappear();
