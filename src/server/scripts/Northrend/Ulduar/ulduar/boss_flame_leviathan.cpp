@@ -1211,6 +1211,8 @@ public:
         npc_leviathan_player_vehicleAI(Creature* creature) : NullCreatureAI(creature)
         {
             _instance = creature->GetInstanceScript();
+            me->ApplySpellImmune(0, IMMUNITY_ID, 62680, true);
+            me->ApplySpellImmune(0, IMMUNITY_ID, 63472, true);
         }
 
         void PassengerBoarded(Unit* unit, int8 seat, bool apply)

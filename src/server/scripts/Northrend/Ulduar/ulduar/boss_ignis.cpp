@@ -42,7 +42,6 @@ enum Spells
 {
     // Ignis
     SPELL_FLAME_JETS              = 62680,
-    SPELL_FLAME_JETS_TRIGGERED    = 62681,
     SPELL_SCORCH                  = 62546,
     SPELL_SLAG_POT                = 62717,
     SPELL_SLAG_POT_DAMAGE         = 65722,
@@ -165,12 +164,6 @@ class boss_ignis : public CreatureScript
             {
                 _JustDied();
                 DoScriptText(SAY_DEATH, me);
-            }
-
-            void SpellHitTarget(Unit* target, SpellInfo const* spell)
-            {
-                if (spell->Id == SPELL_FLAME_JETS)
-                    target->CastSpell(target, SPELL_FLAME_JETS_TRIGGERED, true);
             }
 
             void UpdateAI(uint32 const diff)

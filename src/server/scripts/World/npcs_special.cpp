@@ -3116,6 +3116,7 @@ class npc_dark_iron_herald : public CreatureScript
         {
             npc_dark_iron_heraldAI(Creature* creature) : ScriptedAI(creature), _summons(me)
             {
+                me->setActive(true);
                 if (me->isDead())
                     me->Respawn();
             }
