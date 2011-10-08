@@ -447,7 +447,7 @@ class boss_algalon : public CreatureScript
                             DoScriptText(RAND(SAY_BIG_BANG_1, SAY_BIG_BANG_2), me);
                             DoCast(RAID_MODE<uint32>(SPELL_BIG_BANG_10, SPELL_BIG_BANG_25));
                             events.ScheduleEvent(EVENT_BIGBANG, 90*IN_MILLISECONDS);
-                            break;
+                            return;
                         case EVENT_PHASEPUNCH:
                             DoCastVictim(SPELL_PHASE_PUNCH, true);
                             events.ScheduleEvent(EVENT_PHASEPUNCH, 15*IN_MILLISECONDS);
