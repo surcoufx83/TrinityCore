@@ -3375,9 +3375,9 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->MaxAffectedTargets = 1;
                 spellInfo->AttributesEx6 |= SPELL_ATTR6_CAN_TARGET_UNTARGETABLE;
                 break;
-            case 62374: // Pursued (Flame Leviathan)
-                spellInfo->EffectRadiusIndex[0] = 28;   // 50000yd
-                break;
+            //case 62374: // Pursued (Flame Leviathan)
+                //spellInfo->EffectRadiusIndex[0] = 28;   // 50000yd
+                //break;
             case 62017: // Thorim - Lightning Shock
             case 62042: // Thorim - Stormhammer
                 spellInfo->AttributesEx2 |= SPELL_ATTR2_CAN_TARGET_NOT_IN_LOS;
