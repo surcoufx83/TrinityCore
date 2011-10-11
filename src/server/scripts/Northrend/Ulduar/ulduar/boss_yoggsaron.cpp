@@ -2125,13 +2125,11 @@ public:
             m_pInstance = c->GetInstanceScript();
             me->SetReactState(REACT_PASSIVE);
             me->SetUnitMovementFlags(MOVEMENTFLAG_LEVITATING | MOVEMENTFLAG_SWIMMING);
-            bCreateValanyr = false;
         }
 
         InstanceScript* m_pInstance;
         uint32 uiSanityCheck_Timer;
         bool bUsedMindControll;
-        bool bCreateValanyr;
 
         void Reset()
         {
@@ -2139,33 +2137,12 @@ public:
             bUsedMindControll = false;
         }
 
-        void CreateValanyr()
-        {
-            if(!bCreateValanyr)
-                return;
-
-            if(me->GetMap() && me->GetMap()->IsDungeon())
-            {
-                Map::PlayerList const& players = me->GetMap()->GetPlayers();
-                if (!players.isEmpty())
-                    for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-                        if (Player* plr = itr->getSource())
-                            if(plr->isAlive() && plr->GetQuestStatus(13629) == QUEST_STATUS_INCOMPLETE)
-                            {
-                                if(!plr->HasItemCount(45897,1,true))
-                                    plr->AddItem(45897,1);
-                            }
-            }
-        }
-
-        void JustDied(Unit *killer)
+        void JustDied(Unit* killer)
         {
             if(Creature* cSara = me->GetCreature(*me,m_pInstance->GetData64(TYPE_SARA)))
                 cSara->AI()->DoAction(ACTION_YOGGSARON_KILLED);
 
             DoScriptText(SAY_DEATH,me);
-
-            CreateValanyr();
         }
 
         void SpellHitTarget(Unit* target, const SpellInfo* spell)
@@ -2186,10 +2163,8 @@ public:
 
         void SpellHit(Unit* /*caster*/, SpellInfo const* spell)
         {
-            if(spell->Id == SPELL_IN_THE_MAWS_OF_THE_OLD_GOD)
-            {
-                bCreateValanyr = true;
-            }
+            if (spell->Id == SPELL_IN_THE_MAWS_OF_THE_OLD_GOD)
+                me->AddLootMode(LOOT_MODE_HARD_MODE_4);
         }
 
         void UpdateAI(const uint32 diff)
@@ -3298,7 +3273,6 @@ public:
 
     bool OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& /*targets*/)
     {
-
         if(Creature* yogg = pPlayer->FindNearestCreature(ENTRY_YOGG_SARON,20))
         {
             if(yogg->FindCurrentSpellBySpellId(SPELL_DEAFENING_ROAR))
