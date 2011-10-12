@@ -417,9 +417,10 @@ class boss_razorscale : public CreatureScript
                 else
                     EnrageTimer -= Diff;
 
-                if (HarpoonCounter == RAID_MODE(2, 4))
+                if (HarpoonCounter == RAID_MODE<uint8>(2, 4))
                 {
                     HarpoonCounter = 0;
+                    events.CancelEvent(EVENT_SUMMON);
                     me->GetMotionMaster()->MovePoint(1, RazorGround);
                 }
 
@@ -558,7 +559,7 @@ class boss_razorscale : public CreatureScript
                 // Adds will come in waves from mole machines. One mole can spawn a Dark Rune Watcher
                 // with 1-2 Guardians, or a lone Sentinel. Up to 4 mole machines can spawn adds at any given time.
                 uint8 random = urand(2, 4);
-                for (uint8 n = 0; n < random; n++)
+                for (uint8 n = 0; n < random; ++n)
                 {
                     float x = float(irand(540, 640));       // Safe range is between 500 and 650
                     float y = float(irand(-230, -195));     // Safe range is between -235 and -145

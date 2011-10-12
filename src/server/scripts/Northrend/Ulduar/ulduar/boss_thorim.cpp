@@ -489,6 +489,9 @@ public:
             switch (action)
             {
                 case ACTION_BERSERK:
+                    if (phase == PHASE_2)
+                        return;
+
                     if (!OrbSummoned)
                     {
                         events.RescheduleEvent(EVENT_BERSERK, 1000);
@@ -575,7 +578,7 @@ public:
                                     me->SetReactState(REACT_AGGRESSIVE);
                                     me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
                                     me->GetMotionMaster()->MoveJump(2134.79f, -263.03f, 419.84f, 10.0f, 20.0f);
-                                    summons.DespawnEntry(33378); // despawn charged orbs (not sure)
+                                    summons.DespawnEntry(33378); // despawn charged orbs
                                     events.ScheduleEvent(EVENT_UNBALANCING_STRIKE, 15000, 0, PHASE_2);
                                     events.ScheduleEvent(EVENT_CHAIN_LIGHTNING, 20000, 0, PHASE_2);
                                     events.ScheduleEvent(EVENT_TRANSFER_ENERGY, 20000, 0, PHASE_2);
@@ -736,6 +739,7 @@ class npc_thorim_arena_phase : public CreatureScript
             }
 
             // this should only happen if theres no alive player in the arena -> summon orb
+            // might be called by mind control release or controllers death?
             void EnterEvadeMode()
             {
                 if (Creature* thorim = me->GetCreature(*me, _instance ? _instance->GetData64(TYPE_THORIM) : 0))
