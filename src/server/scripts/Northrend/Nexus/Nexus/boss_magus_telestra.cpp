@@ -226,7 +226,7 @@ public:
                     if (uiAchievementTimer <= ACHIEV_TIMER)
                         uiAchievementProgress +=1;
                     me->GetMotionMaster()->Clear();
-                    me->GetMap()->CreatureRelocation(me, CenterOfRoom.GetPositionX(), CenterOfRoom.GetPositionY(), CenterOfRoom.GetPositionZ(), CenterOfRoom.GetOrientation());
+                    me->SetPosition(CenterOfRoom.GetPositionX(), CenterOfRoom.GetPositionY(), CenterOfRoom.GetPositionZ(), CenterOfRoom.GetOrientation());
                     DoCast(me, SPELL_TELESTRA_BACK);
                     me->SetVisible(true);
                     Phase++;

@@ -219,7 +219,7 @@ public:
         {
             float x = KaelLocations[0][0];
             float y = KaelLocations[0][1];
-            me->GetMap()->CreatureRelocation(me, x, y, LOCATION_Z, 0.0f);
+            me->SetPosition(x, y, LOCATION_Z, 0.0f);
             //me->SendMonsterMove(x, y, LOCATION_Z, 0, 0, 0); // causes some issues...
             std::list<HostileReference*>& m_threatlist = me->getThreatManager().getThreatList();
             for (std::list<HostileReference*>::const_iterator i = m_threatlist.begin(); i != m_threatlist.end(); ++i)

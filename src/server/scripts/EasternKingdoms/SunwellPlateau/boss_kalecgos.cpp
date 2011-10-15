@@ -399,7 +399,7 @@ public:
         void JustDied(Unit* /*killer*/)
         {
             DoScriptText(SAY_SATH_DEATH, me);
-            me->Relocate(me->GetPositionX(), me->GetPositionY(), DRAGON_REALM_Z, me->GetOrientation());
+            me->SetPosition(me->GetPositionX(), me->GetPositionY(), DRAGON_REALM_Z, me->GetOrientation());
             me->RemoveAurasDueToSpell(AURA_SPECTRAL_INVISIBILITY);
             TeleportAllPlayersBack();
             if(Unit *Kalecgos = Unit::GetUnit(*me, KalecgosGUID))

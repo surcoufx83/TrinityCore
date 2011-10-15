@@ -8770,24 +8770,10 @@ bool Unit::HandleProcTriggerSpell(Unit* victim, uint32 damage, AuraEffect* trigg
             if (!victim->HasAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, procSpell, this))
                 return false;
             break;
-        // Deathbringer Saurfang - Rune of Blood
-        case 72408:
-            // can proc only if target is marked with rune
-            // this should be handled by targetAuraSpell, but because 72408 is not passive
-            // one failed proc will remove the entire aura
-            if (!victim->HasAura(72410))
-                return false;
-            break;
         // Deathbringer Saurfang - Blood Beast's Blood Link
         case 72176:
             basepoints0 = 3;
             break;
-        // Deathbringer Saurfang - Mark of the Fallen Champion
-        case 72256:
-            // this should be handled by targetAuraSpell, but because 72408 is not passive
-            // one failed proc will remove the entire aura
-            CastSpell((Unit*)NULL, trigger_spell_id, true, NULL, triggeredByAura);
-            return true;
         case 15337: // Improved Spirit Tap (Rank 1)
         case 15338: // Improved Spirit Tap (Rank 2)
         {
@@ -12532,9 +12518,18 @@ int32 Unit::ModifyPower(Powers power, int32 dVal)
     return gain;
 }
 
-bool Unit::isAlwaysVisibleFor(WorldObject const* seer) const
+// returns negative amount on power reduction
+int32 Unit::ModifyPowerPct(Powers power, float pct, bool apply)
 {
-    if (WorldObject::isAlwaysVisibleFor(seer))
+    float amount = (float)GetMaxPower(power);
+    ApplyPercentModFloatVar(amount, pct, apply);
+
+    return ModifyPower(power, (int32)amount - (int32)GetMaxPower(power));
+}
+
+bool Unit::IsAlwaysVisibleFor(WorldObject const* seer) const
+{
+    if (WorldObject::IsAlwaysVisibleFor(seer))
         return true;
 
     // Always seen by owner
@@ -12545,9 +12540,9 @@ bool Unit::isAlwaysVisibleFor(WorldObject const* seer) const
     return false;
 }
 
-bool Unit::isAlwaysDetectableFor(WorldObject const* seer) const
+bool Unit::IsAlwaysDetectableFor(WorldObject const* seer) const
 {
-    if (WorldObject::isAlwaysDetectableFor(seer))
+    if (WorldObject::IsAlwaysDetectableFor(seer))
         return true;
 
     if (HasAuraTypeWithCaster(SPELL_AURA_MOD_STALKED, seer->GetGUID()))
@@ -13866,7 +13861,7 @@ void Unit::RemoveFromWorld()
     }
 }
 
-void Unit::CleanupsBeforeDelete(bool finalCleanup)
+void Unit::CleanupBeforeRemoveFromMap(bool finalCleanup)
 {
     // This needs to be before RemoveFromWorld to make GetCaster() return a valid pointer on aura removal
     InterruptNonMeleeSpells(true);
@@ -13890,6 +13885,11 @@ void Unit::CleanupsBeforeDelete(bool finalCleanup)
     DeleteThreatList();
     getHostileRefManager().setOnlineOfflineState(false);
     GetMotionMaster()->Clear(false);                    // remove different non-standard movement generators.
+}
+
+void Unit::CleanupsBeforeDelete(bool finalCleanup)
+{
+    CleanupBeforeRemoveFromMap(finalCleanup);
 
     if (Creature* thisCreature = ToCreature())
         if (GetTransport())
@@ -17320,16 +17320,16 @@ void Unit::NearTeleportTo(float x, float y, float z, float orientation, bool cas
     {
         // FIXME: this interrupts spell visual
         DestroyForNearbyPlayers();
-        SetPosition(x, y, z, orientation, true);
+        UpdatePosition(x, y, z, orientation, true);
     }
 }
 
-bool Unit::SetPosition(float x, float y, float z, float orientation, bool teleport)
+bool Unit::UpdatePosition(float x, float y, float z, float orientation, bool teleport)
 {
     // prevent crash when a bad coord is sent by the client
     if (!Trinity::IsValidMapCoord(x, y, z, orientation))
     {
-        sLog->outDebug(LOG_FILTER_UNITS, "Unit::SetPosition(%f, %f, %f) .. bad coordinates!", x, y, z);
+        sLog->outDebug(LOG_FILTER_UNITS, "Unit::UpdatePosition(%f, %f, %f) .. bad coordinates!", x, y, z);
         return false;
     }
 

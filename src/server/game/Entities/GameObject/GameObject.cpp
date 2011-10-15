@@ -382,7 +382,7 @@ void GameObject::Update(uint32 diff)
                             if (poolid)
                                 sPoolMgr->UpdatePool<GameObject>(poolid, GetDBTableGUIDLow());
                             else
-                                GetMap()->Add(this);
+                                GetMap()->AddToMap(this);
                             break;
                     }
                 }
@@ -546,14 +546,12 @@ void GameObject::Update(uint32 diff)
 
             loot.clear();
 
-            if (GetOwnerGUID())
+            //! If this is summoned by a spell with ie. SPELL_EFFECT_SUMMON_OBJECT_WILD, with or without owner, we check respawn criteria based on spell
+            //! The GetOwnerGUID() check is mostly for compatibility with hacky scripts - 99% of the time summoning should be done trough spells.
+            if (GetSpellId() || GetOwnerGUID())
             {
-                if (Unit* owner = GetOwner())
-                {
-                    owner->RemoveGameObject(this, false);
-                    SetRespawnTime(0);
-                    Delete();
-                }
+                SetRespawnTime(0);
+                Delete();
                 return;
             }
 
@@ -598,7 +596,7 @@ void GameObject::Refresh()
         return;
 
     if (isSpawned())
-        GetMap()->Add(this);
+        GetMap()->AddToMap(this);
 }
 
 void GameObject::AddUniqueUse(Player* player)
@@ -613,6 +611,8 @@ void GameObject::Delete()
     if (GetOwnerGUID())
         if (Unit* owner = GetOwner())
             owner->RemoveGameObject(this, false);
+        else    //! Owner not in world anymore
+            SetOwnerGUID(0);
 
     if (GetOwnerGUID())
         sLog->outError("Delete GameObject (GUID: %u Entry: %u MapID: %u), assert incoming.", GetGUIDLow(), GetGOInfo()->entry, GetMapId());
@@ -850,9 +850,9 @@ void GameObject::SaveRespawnTime()
         sObjectMgr->SaveGORespawnTime(m_DBTableGuid, GetInstanceId(), m_respawnTime);
 }
 
-bool GameObject::isAlwaysVisibleFor(WorldObject const* seer) const
+bool GameObject::IsAlwaysVisibleFor(WorldObject const* seer) const
 {
-    if (WorldObject::isAlwaysVisibleFor(seer))
+    if (WorldObject::IsAlwaysVisibleFor(seer))
         return true;
 
     if (IsTransport())
@@ -861,16 +861,16 @@ bool GameObject::isAlwaysVisibleFor(WorldObject const* seer) const
     return false;
 }
 
-bool GameObject::isVisibleForInState(WorldObject const* seer) const
+bool GameObject::IsInvisibleDueToDespawn() const
 {
-    if (!WorldObject::isVisibleForInState(seer))
-        return false;
+    if (WorldObject::IsInvisibleDueToDespawn())
+        return true;
 
     // Despawned
     if (!isSpawned())
-        return false;
+        return true;
 
-    return true;
+    return false;
 }
 
 void GameObject::Respawn()
