@@ -284,9 +284,8 @@ public:
         pGameObj->m_serverSideVisibility.SetValue(SERVERSIDE_VISIBILITY_GM, SEC_MODERATOR);
         pGameObj->SetOwnerGUID(handler->GetSession()->GetPlayer()->GetGUID());
         pGameObj->SetSpawnedByDefault(false);
-        
-        map->Add(pGameObj);
-        
+
+        map->AddWorldObject(pGameObj);
         return true;
     }
 };
