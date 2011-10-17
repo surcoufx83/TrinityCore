@@ -926,6 +926,23 @@ void AuraEffect::CalculateSpellMod()
                             break;
                     }
                     break;
+                case SPELLFAMILY_DEATHKNIGHT:
+                    switch (GetId())
+                    {
+                        case 64736: // Item - Death Knight T8 Melee 4P Bonus
+                            if (!m_spellmod)
+                            {
+                                m_spellmod = new SpellModifier(GetBase());
+                                m_spellmod->op = SPELLMOD_EFFECT2;
+                                m_spellmod->type = SPELLMOD_PCT;
+                                m_spellmod->spellId = GetId();
+                                m_spellmod->mask[0] = 0x1400000; // Blood Strike - Heart Strike
+                                m_spellmod->mask[1] = 0x8020000; // Scourge Strike - Obliterate
+                            }
+                            m_spellmod->value = GetAmount();
+                            break;
+                    }
+                    break;
                 default:
                     break;
             }
