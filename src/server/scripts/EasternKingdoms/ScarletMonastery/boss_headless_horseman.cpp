@@ -140,7 +140,7 @@ class boss_headless_horseman : public CreatureScript
                     if (me->getVictim())
                         me->GetMotionMaster()->MoveChase(me->getVictim());
 
-                    //SaySound(SAY_ENTRANCE);
+                    DoScriptText(SAY_ENTRANCE, me);
                 }
             }
 
@@ -154,7 +154,7 @@ class boss_headless_horseman : public CreatureScript
                 if (!victim->ToPlayer())
                     return;
 
-                //SaySound(SAY_PLAYER_DEATH);
+                DoScriptText(SAY_PLAYER_DEATH, me);
             }
 
             void JustSummoned(Creature* summon)
@@ -162,12 +162,12 @@ class boss_headless_horseman : public CreatureScript
                 _summons.Summon(summon);
                 summon->SetInCombatWithZone();
 
-                // SaySound(SAY_SPROUTING_PUMPKINS);
+                // DoScriptText(SAY_SPROUTING_PUMPKINS, me);
             }
 
             void JustDied(Unit* /*killer*/)
             {
-                //SaySound(SAY_DEATH);
+                DoScriptText(SAY_DEATH, me);
                 _summons.DespawnAll();
 
                 // TODO: unhack
@@ -226,11 +226,11 @@ class boss_headless_horseman : public CreatureScript
                         DoCast(me, SPELL_HEAL_BODY, true);
                         DoCast(me, SPELL_HEAD, true);
 
-                        //SaySound(SAY_REJOINED);
-
                         ++phase;
                         if (phase > 3)
                             me->DealDamage(me, me->GetHealth());
+                        else
+                            DoScriptText(SAY_REJOINED, me);
 
                         break;
                 }
@@ -365,8 +365,7 @@ class npc_horseman_head : public CreatureScript
                 me->GetMotionMaster()->MoveRandom(30.0f);
                 DoCast(me, SPELL_HEAD, true);
                 DoCast(me, SPELL_HEAD_LANDS, true);
-
-                // SaySound(SAY_LOST_HEAD);
+                DoScriptText(SAY_LOST_HEAD, me);
             }
 
             void SetData(uint32 /*type*/, uint32 data)
