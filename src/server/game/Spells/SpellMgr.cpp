@@ -3467,6 +3467,11 @@ void SpellMgr::LoadDbcDataCorrections()
                 // temporary remove channeled flag due to facing issues when casting on self
                 spellInfo->AttributesEx &= ~SPELL_ATTR1_CHANNELED_1;
                 break;
+            case 63241: // Mangrove Ent 10 - Tranquility
+            case 63554: // Mangrove Ent 25 - Tranquility
+                spellInfo->EffectImplicitTargetA[0] = TARGET_SRC_CASTER;
+                spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_SRC_AREA_ALLY;
+                break;
             // ENDOF ULDUAR SPELLS
             //
             // TRIAL OF THE CRUSADER SPELLS
