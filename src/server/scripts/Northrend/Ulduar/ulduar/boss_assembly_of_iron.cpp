@@ -134,6 +134,8 @@ enum Data
     DATA_I_CHOOSE_YOU = 1
 };
 
+#define EMOTE_OVERLOAD "Stormcaller Brundir begins to Overload!"
+
 bool IsEncounterComplete(InstanceScript* instance, Creature* me)
 {
    if (!instance || !me)
@@ -931,7 +933,7 @@ class boss_stormcaller_brundir : public CreatureScript
                 {
                     case POINT_FLY:
                     {
-                        me->SetSpeed(MOVE_RUN, 0.95f);
+                        DoCast(RAID_MODE(SPELL_LIGHTNING_TENDRILS, SPELL_LIGHTNING_TENDRILS_H));
                         events.ScheduleEvent(EVENT_LIGHTNING_TENDRILS_END, 30000);
                         events.ScheduleEvent(EVENT_THREAT_WIPE, 0);
                         break;
@@ -982,6 +984,7 @@ class boss_stormcaller_brundir : public CreatureScript
                             events.ScheduleEvent(EVENT_CHAIN_LIGHTNING, urand(3000, 5000), 1);
                             break;
                         case EVENT_OVERLOAD:
+                            me->MonsterTextEmote(EMOTE_OVERLOAD, 0, true);
                             DoCast(RAID_MODE(SPELL_OVERLOAD, SPELL_OVERLOAD_H));
                             events.ScheduleEvent(EVENT_OVERLOAD, urand(60000, 80000), 1);
                             break;
@@ -999,7 +1002,7 @@ class boss_stormcaller_brundir : public CreatureScript
                             events.ScheduleEvent(EVENT_THREAT_WIPE, 5000);
                             break;
                         case EVENT_LIGHTNING_TENDRILS_START:
-                            DoCast(RAID_MODE(SPELL_LIGHTNING_TENDRILS, SPELL_LIGHTNING_TENDRILS_H));
+                            me->SetSpeed(MOVE_RUN, 0.7f);
                             me->SetReactState(REACT_PASSIVE);
                             me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
                             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, true);
