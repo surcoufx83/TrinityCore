@@ -61,8 +61,9 @@ enum Spells
     SPELL_SUMMON_MOLE_MACHINE                    = 62899,
     SPELL_SUMMON_IRON_DWARVES                    = 63116,
     SPELL_SUMMON_IRON_DWARVES_2                  = 63114,
-    SPELL_SUMMON_IRON_DWARVE_GUARDIAN            = 62926,
-    SPELL_SUMMON_IRON_DWARVE_WATCHER             = 63135,
+    SPELL_SUMMON_IRON_DWARF_GUARDIAN             = 62926,
+    SPELL_SUMMON_IRON_DWARF_WATCHER              = 63135,
+    SPELL_SUMMON_IRON_VRYKUL                     = 63798
 };
 
 enum NPC
@@ -783,18 +784,20 @@ class npc_mole_machine_trigger : public CreatureScript
 
                 if (!NpcSummoned && SummonNpcTimer <= diff)
                 {
-                    switch (urand(0, 1 ))
+                    switch (urand(0, 1))
                     {
                         case 0:
                             DoCast(SPELL_SUMMON_IRON_DWARVES);
+                            for (uint8 n = 0; n < urand(1, 2); ++n)
+                                DoCast(SPELL_SUMMON_IRON_DWARF_GUARDIAN);
+                            DoCast(SPELL_SUMMON_IRON_DWARF_WATCHER);
                             break;
                         case 1:
                             DoCast(SPELL_SUMMON_IRON_DWARVES_2);
+                            DoCast(SPELL_SUMMON_IRON_VRYKUL);
                             break;
                     }
 
-                    DoCast(SPELL_SUMMON_IRON_DWARVE_GUARDIAN);
-                    DoCast(SPELL_SUMMON_IRON_DWARVE_WATCHER);
                     NpcSummoned = true;
                 }
                 else
@@ -857,26 +860,26 @@ class npc_darkrune_watcher : public CreatureScript
                 LightTimer = urand(1000, 3000);
             }
 
-            void UpdateAI(uint32 const Diff)
+            void UpdateAI(uint32 const diff)
             {
                 if (!UpdateVictim())
                     return;
 
-                if (ChainTimer <= Diff)
+                if (ChainTimer <= diff)
                 {
-                    DoCast(me->getVictim(), SPELL_CHAIN_LIGHTNING);
+                    DoCastVictim(SPELL_CHAIN_LIGHTNING);
                     ChainTimer = urand(10000, 15000);
                 }
                 else
-                    ChainTimer -= Diff;
+                    ChainTimer -= diff;
 
-                if (LightTimer <= Diff)
+                if (LightTimer <= diff)
                 {
                     DoCastVictim(SPELL_LIGHTNING_BOLT);
                     LightTimer = urand(5000, 7000);
                 }
                 else
-                    LightTimer -= Diff;
+                    LightTimer -= diff;
 
                 DoMeleeAttackIfReady();
             }
@@ -917,18 +920,18 @@ class npc_darkrune_guardian : public CreatureScript
             }
 
 
-            void UpdateAI(uint32 const Diff)
+            void UpdateAI(uint32 const diff)
             {
                 if (!UpdateVictim())
                     return;
 
-                if (StormTimer <= Diff)
+                if (StormTimer <= diff)
                 {
-                    DoCast(me->getVictim(), SPELL_STORMSTRIKE);
+                    DoCastVictim(SPELL_STORMSTRIKE);
                     StormTimer = urand(4000, 8000);
                 }
                 else
-                    StormTimer -= Diff;
+                    StormTimer -= diff;
 
                 DoMeleeAttackIfReady();
             }
@@ -963,34 +966,34 @@ class npc_darkrune_sentinel : public CreatureScript
                 ShoutTimer = urand(15000, 30000);
             }
 
-            void UpdateAI(uint32 const Diff)
+            void UpdateAI(uint32 const diff)
             {
                 if (!UpdateVictim())
                     return;
 
-                if (HeroicTimer <= Diff)
+                if (HeroicTimer <= diff)
                 {
-                    DoCast(me->getVictim(), SPELL_HEROIC_STRIKE);
+                    DoCastVictim(SPELL_HEROIC_STRIKE);
                     HeroicTimer = urand(4000, 6000);
                 }
                 else
-                    HeroicTimer -= Diff;
+                    HeroicTimer -= diff;
 
-                if (WhirlTimer <= Diff)
+                if (WhirlTimer <= diff)
                 {
-                    DoCast(me->getVictim(), SPELL_WHIRLWIND);
+                    DoCastVictim(SPELL_WHIRLWIND);
                     WhirlTimer = urand(20000, 25000);
                 }
                 else
-                    WhirlTimer -= Diff;
+                    WhirlTimer -= diff;
 
-                if (ShoutTimer <= Diff)
+                if (ShoutTimer <= diff)
                 {
                     DoCast(me, SPELL_BATTLE_SHOUT);
                     ShoutTimer = urand(30000, 40000);
                 }
                 else
-                    ShoutTimer -= Diff;
+                    ShoutTimer -= diff;
 
                 DoMeleeAttackIfReady();
             }

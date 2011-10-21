@@ -71,10 +71,18 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionType
 -- ##########################################################
 -- Razorscale
 -- ##########################################################
-DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `ConditionValue2`=0 AND `SourceEntry` IN (63317,64021);
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry` IN (63317,64021);
 INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`Comment`) VALUES
 (13,63317,18,1,0,'Flame Breath - Players'),
-(13,64021,18,1,0,'Flame Breath - Players');
+(13,63317,18,1,33453,'Flame Breath - Dark Rune Watcher'),
+(13,63317,18,1,33846,'Flame Breath - Dark Rune Sentinel'),
+(13,63317,18,1,33388,'Flame Breath - Dark Rune Guardian'),
+(13,63317,18,1,33816,'Flame Breath - Expedition Defender'),
+(13,64021,18,1,0,'Flame Breath - Players'),
+(13,64021,18,1,33453,'Flame Breath - Dark Rune Watcher'),
+(13,64021,18,1,33846,'Flame Breath - Dark Rune Sentinel'),
+(13,64021,18,1,33388,'Flame Breath - Dark Rune Guardian'),
+(13,64021,18,1,33816,'Flame Breath - Expedition Defender');
 
 -- ##########################################################
 -- Assembly of Iron
