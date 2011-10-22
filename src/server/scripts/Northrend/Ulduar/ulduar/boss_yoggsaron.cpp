@@ -2466,16 +2466,15 @@ public:
 
         void GetAliveSaronitCreatureListInGrid(std::list<Creature*>& lList, float fMaxSearchRange)
         {
-            CellPair pair(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+            CellCoord pair(Trinity::ComputeCellCoord(me->GetPositionX(), me->GetPositionY()));
             Cell cell(pair);
-            cell.data.Part.reserved = ALL_DISTRICT;
             cell.SetNoCreate();
 
             AllSaronitCreaturesInRange check(me, fMaxSearchRange);
             Trinity::CreatureListSearcher<AllSaronitCreaturesInRange> searcher(me, lList, check);
             TypeContainerVisitor<Trinity::CreatureListSearcher<AllSaronitCreaturesInRange>, GridTypeMapContainer> visitor(searcher);
 
-            cell.Visit(pair, visitor, *(me->GetMap()));
+            cell.Visit(pair, visitor, *(me->GetMap()), *me, SIZE_OF_GRIDS);
         }
 
         void UpdateAI(const uint32 diff)

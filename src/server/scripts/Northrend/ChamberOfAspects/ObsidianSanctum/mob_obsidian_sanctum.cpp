@@ -54,9 +54,8 @@ struct mob_obsidian_sanctum_trashAI : public ScriptedAI
         me->GetPosition(x, y, z);
 
         {
-            CellPair pair(Trinity::ComputeCellPair(x, y));
+            CellCoord pair(Trinity::ComputeCellCoord(x, y));
             Cell cell(pair);
-            cell.data.Part.reserved = ALL_DISTRICT;
             cell.SetNoCreate();
 
             Trinity::AllFriendlyCreaturesInGrid check(me);
@@ -64,7 +63,7 @@ struct mob_obsidian_sanctum_trashAI : public ScriptedAI
 
             TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::AllFriendlyCreaturesInGrid>, GridTypeMapContainer> cSearcher(searcher);
 
-            cell.Visit(pair, cSearcher, *(me->GetMap()));
+            cell.Visit(pair, cSearcher, *(me->GetMap()), *me, SIZE_OF_GRIDS);
         }
 
         if(!templist.size())

@@ -87,9 +87,8 @@ struct  mob_black_temple_tashAI : public ScriptedAI
         me->GetPosition(x, y, z);
 
         {
-            CellPair pair(Trinity::ComputeCellPair(x, y));
+            CellCoord pair(Trinity::ComputeCellCoord(x, y));
             Cell cell(pair);
-            cell.data.Part.reserved = ALL_DISTRICT;
             cell.SetNoCreate();
 
             Trinity::AllFriendlyCreaturesInGrid check(me);
@@ -97,7 +96,7 @@ struct  mob_black_temple_tashAI : public ScriptedAI
 
             TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::AllFriendlyCreaturesInGrid>, GridTypeMapContainer> cSearcher(searcher);
 
-            cell.Visit(pair, cSearcher, *(me->GetMap()));
+            cell.Visit(pair, cSearcher, *(me->GetMap()), *me, SIZE_OF_GRIDS);
         }
 
         if(!templist.size())
@@ -3289,9 +3288,8 @@ public:
             float x, y, z;
             me->GetPosition(x, y, z);
             {
-                CellPair pair(Trinity::ComputeCellPair(x, y));
+                CellCoord pair(Trinity::ComputeCellCoord(x, y));
                 Cell cell(pair);
-                cell.data.Part.reserved = ALL_DISTRICT;
                 cell.SetNoCreate();
 
                 Trinity::AllFriendlyCreaturesInGrid check(me);
@@ -3299,7 +3297,7 @@ public:
 
                 TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::AllFriendlyCreaturesInGrid>, GridTypeMapContainer> cSearcher(searcher);
 
-                cell.Visit(pair, cSearcher, *(me->GetMap()));
+                cell.Visit(pair, cSearcher, *(me->GetMap()), *me, SIZE_OF_GRIDS);
             }
 
             if(!templist.size())
