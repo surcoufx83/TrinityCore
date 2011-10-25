@@ -610,9 +610,6 @@ void GameObject::Delete()
             SetOwnerGUID(0);
     }
 
-    if (GetOwnerGUID())
-        sLog->outError("Delete GameObject (GUID: %u Entry: %u MapID: %u), assert incoming.", GetGUIDLow(), GetGOInfo()->entry, GetMapId());
-
     ASSERT (!GetOwnerGUID());
     SendObjectDeSpawnAnim(GetGUID());
 
