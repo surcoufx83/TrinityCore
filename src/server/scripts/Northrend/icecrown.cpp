@@ -1522,13 +1522,20 @@ class spell_tournament_defend : public SpellScriptLoader
 
             void Register()
             {
-                AfterEffectApply += AuraEffectApplyFn(spell_tournament_defend_AuraScript::OnStackChange, EFFECT_2, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_CHANGE_AMOUNT);
-                AfterEffectApply += AuraEffectApplyFn(spell_tournament_defend_AuraScript::OnStackChange, EFFECT_2, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_REAL);
-                AfterEffectRemove += AuraEffectRemoveFn(spell_tournament_defend_AuraScript::OnAuraRemoved, EFFECT_2, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_REAL);
-                
-                AfterEffectApply += AuraEffectApplyFn(spell_tournament_defend_AuraScript::OnStackChange, EFFECT_0, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_CHANGE_AMOUNT);
-                AfterEffectApply += AuraEffectApplyFn(spell_tournament_defend_AuraScript::OnStackChange, EFFECT_0, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_REAL);
-                AfterEffectRemove += AuraEffectRemoveFn(spell_tournament_defend_AuraScript::OnAuraRemoved, EFFECT_0, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_REAL);
+                switch(m_scriptSpellId)
+                {
+                case 62552:
+                case 66482:
+                    AfterEffectApply += AuraEffectApplyFn(spell_tournament_defend_AuraScript::OnStackChange, EFFECT_2, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_CHANGE_AMOUNT);
+                    AfterEffectApply += AuraEffectApplyFn(spell_tournament_defend_AuraScript::OnStackChange, EFFECT_2, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_REAL);
+                    AfterEffectRemove += AuraEffectRemoveFn(spell_tournament_defend_AuraScript::OnAuraRemoved, EFFECT_2, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_REAL);
+                    break;
+                case 62719:
+                    AfterEffectApply += AuraEffectApplyFn(spell_tournament_defend_AuraScript::OnStackChange, EFFECT_0, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_CHANGE_AMOUNT);
+                    AfterEffectApply += AuraEffectApplyFn(spell_tournament_defend_AuraScript::OnStackChange, EFFECT_0, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_REAL);
+                    AfterEffectRemove += AuraEffectRemoveFn(spell_tournament_defend_AuraScript::OnAuraRemoved, EFFECT_0, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_REAL);
+                    break;
+                }
             }
         };
 
