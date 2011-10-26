@@ -1,6 +1,6 @@
--- Fix Engineering Loot for Flame Leviathan, XT-002, Mimiron
+-- Fix Engineering Loot for Flame Leviathan, XT-002
 SET @ENTRY  :=100012;
-UPDATE `creature_template` SET `type_flags`=`type_flags`|32768,`skinloot`=@ENTRY WHERE `entry` IN (33113,34003,33293,33885,33350);
+UPDATE `creature_template` SET `type_flags`=`type_flags`|32768,`skinloot`=@ENTRY WHERE `entry` IN (33113,34003,33293,33885);
 DELETE FROM `skinning_loot_template` WHERE `entry` IN (@ENTRY);
 INSERT INTO `skinning_loot_template` (`entry`,`item`,`ChanceOrQuestChance`,`lootmode`,`groupid`,`mincountOrRef`,`maxcount`) VALUES
 (@ENTRY,35627,63,1,0,2,10), -- Eternal Shadow
