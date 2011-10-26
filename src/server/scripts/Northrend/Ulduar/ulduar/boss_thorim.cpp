@@ -291,6 +291,7 @@ public:
         {
             Wipe = false;
             EncounterFinished = false;
+            homePosition = creature->GetHomePosition();
         }
 
         Phases phase;
@@ -302,6 +303,7 @@ public:
         bool HardMode;
         bool OrbSummoned;
         bool EncounterFinished;
+        Position homePosition;
 
         void Reset()
         {
@@ -396,11 +398,28 @@ public:
                 go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
         }
 
+        void EnterEvadeMode()
+        {
+            if (!_EnterEvadeMode())
+                return;
+
+            me->SetHomePosition(homePosition);
+            me->GetMotionMaster()->MoveTargetedHome();
+            Reset();
+        }
+
         void UpdateAI(uint32 const diff)
         {
             if (!UpdateVictim())
                 return;
 
+            if (phase == PHASE_2 && me->getVictim() && !IN_ARENA(me->getVictim()))
+            {
+                me->getVictim()->getHostileRefManager().deleteReference(me);
+                return;
+            }
+
+            // still needed?
             if (phase == PHASE_2 && !IN_ARENA(me))
             {
                 EnterEvadeMode();
@@ -752,7 +771,10 @@ class npc_thorim_arena_phase : public CreatureScript
             void UpdateAI(uint32 const diff)
             {
                 if (me->getVictim() && !isOnSameSide(me->getVictim()))
+                {
                     me->getVictim()->getHostileRefManager().deleteReference(me);
+                    return;
+                }
 
                 if (!UpdateVictim() || me->HasUnitState(UNIT_STAT_CASTING))
                     return;
