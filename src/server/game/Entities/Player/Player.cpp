@@ -4410,7 +4410,7 @@ uint32 Player::resetTalentsCost()
         //ChatHandler(this).PSendSysMessage("PvP.Characters do not pay for talent reset");
         return 0;
     } else {
-        sLog->outStaticDebug(("resetTalentsCost:: Not a PvP.Character");
+        sLog->outStaticDebug("resetTalentsCost:: Not a PvP.Character");
     }
 
     // The first time reset costs 1 gold
@@ -20726,6 +20726,7 @@ bool Player::BuyItemFromVendorSlot(uint64 vendorguid, uint32 vendorslot, uint32 
         }
     } // Vendor has subName
 
+    uint32 price = 0;
     if( !freeForPvPChar ) {
 
     if (crItem->ExtendedCost)
@@ -20770,7 +20771,7 @@ bool Player::BuyItemFromVendorSlot(uint64 vendorguid, uint32 vendorslot, uint32 
         }
     }
 
-    uint32 price = 0;
+    price = 0;
     if(crItem->IsGoldRequired(pProto) && pProto->BuyPrice > 0) //Assume price cannot be negative (do not know why it is int32)
     {
         uint32 maxCount = MAX_MONEY_AMOUNT / pProto->BuyPrice;
