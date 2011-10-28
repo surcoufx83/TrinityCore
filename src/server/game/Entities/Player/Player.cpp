@@ -75,6 +75,7 @@
 #include "InstanceScript.h"
 #include <cmath>
 #include "AccountMgr.h"
+#include "Config.h"
 
 #define ZONE_UPDATE_INTERVAL (1*IN_MILLISECONDS)
 
@@ -9734,7 +9735,7 @@ void Player::SendInitWorldStates(uint32 zoneid, uint32 areaid)
     SendBGWeekendWorldStates();
 
     // PvP.Character? -> They are not allowed to be in the open world.
-    if (!InBattleGround() && isPvPCharacter()) {
+    if (!InBattleground() && isPvPCharacter()) {
         // Has completed the "I am PvP" Quest
         sLog->outStaticDebug("Ist PvP.Character");
         uint32 zone_id, area_id;
@@ -20558,15 +20559,15 @@ inline bool Player::_StoreOrEquipNewItem(uint32 vendorslot, uint32 item, uint8 c
     }
 
     // Free for PvP.Char?
-    boolean freeForPvPChar = false;
-    if (pCreature->GetSubName() != NULL) {
-        std::string configSub = sConfig.GetStringDefault(
+	CreatureTemplate const* ci = sObjectMgr->GetCreatureTemplate(pVendor->GetEntry());
+    bool freeForPvPChar = false;
+	if (ci->SubName.length() != 0) {
+        std::string configSub = ConfigMgr::GetStringDefault("PidFile", "");(
                 "PvP.Character.Vendor", "");
-        std::string vendorSub(pCreature->GetSubName());
         sLog->outStaticDebug("BuyItemFromVendor:: PvP.Character.Vendor: '%s'", configSub.c_str());
         if (isPvPCharacter()) {
             sLog->outStaticDebug("BuyItemFromVendor:: Is PvP.Character");
-            if (vendorSub.compare(configSub) == 0) {
+            if (ci->SubName.compare(configSub) == 0) {
                 sLog->outStaticDebug("BuyItemFromVendor:: Special PvP Vendor -> Buyprice == 0");
                 ChatHandler(this).PSendSysMessage(
                         "PvP.Characters has not to pay for items - buyprice is always 0");
@@ -20575,7 +20576,7 @@ inline bool Player::_StoreOrEquipNewItem(uint32 vendorslot, uint32 item, uint8 c
                 sLog->outStaticDebug("BuyItemFromVendor:: Not a PvP Vendor -> Buyprice normal");
             }
         }
-    }
+    } // Vendor has subName
 
     if(!freeForPvPChar) {
     ModifyMoney(-price);
@@ -20695,15 +20696,15 @@ bool Player::BuyItemFromVendorSlot(uint64 vendorguid, uint32 vendorslot, uint32 
 
     // PvP.Char: Can interact with special pvp vendor
     // PvE.Char: Can only act with "normal vendors"
-    boolean freeForPvPChar = false;
-    if (pCreature->GetSubName() != NULL) {
-        std::string configSub = sConfig.GetStringDefault(
+	CreatureTemplate const* ci = sObjectMgr->GetCreatureTemplate(creature->GetEntry());
+    bool freeForPvPChar = false;
+	if (ci->SubName.length() != 0) {
+        std::string configSub = ConfigMgr::GetStringDefault("PidFile", "");(
                 "PvP.Character.Vendor", "");
-        std::string vendorSub(pCreature->GetSubName());
         sLog->outStaticDebug("BuyItemFromVendor:: PvP.Character.Vendor: '%s'", configSub.c_str());
         if (isPvPCharacter()) {
             sLog->outStaticDebug("BuyItemFromVendor:: Is PvP.Character");
-            if (vendorSub.compare(configSub) == 0) {
+            if (ci->SubName.compare(configSub) == 0) {
                 sLog->outStaticDebug("BuyItemFromVendor:: Special PvP Vendor -> Buyprice == 0");
                 ChatHandler(this).PSendSysMessage(
                         "PvP.Characters has not to pay for items - buyprice is always 0");
@@ -20714,11 +20715,11 @@ bool Player::BuyItemFromVendorSlot(uint64 vendorguid, uint32 vendorslot, uint32 
         } else {
             // PvE character
             sLog->outStaticDebug("BuyItemFromVendor:: Not a PvP.Character");
-            if (vendorSub.compare(configSub) == 0) {
+            if (ci->SubName.compare(configSub) == 0) {
                 sLog->outStaticDebug("BuyItemFromVendor:: Special PvP Vendor -> But PvE Char");
                 ChatHandler(this).PSendSysMessage(
                         "This vendor is only for PvP Characters.");
-                SendBuyError(BUY_ERR_SELLER_DONT_LIKE_YOU, pCreature, item, 0);
+                SendBuyError(BUY_ERR_SELLER_DONT_LIKE_YOU, creature, item, 0);
                 return false;
             } else {
                 sLog->outStaticDebug("BuyItemFromVendor:: Not a PvP Vendor -> Buyprice normal");
