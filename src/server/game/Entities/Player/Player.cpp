@@ -4388,8 +4388,31 @@ void Player::_SaveSpellCooldowns(SQLTransaction& trans)
         trans->Append(ss.str().c_str());
 }
 
-uint32 Player::resetTalentsCost() const
+/**
+ * Is this character a PvP only character?<br/>
+ * <br/>
+ */
+bool Player::isPvPCharacter() {
+    uint32 questId = sWorld.getConfig(CONFIG_UINT32_PVP_CHARACTER_QUESTID);
+    QuestStatus qStatus = this->GetQuestStatus(questId);
+    if (qStatus == QUEST_STATUS_COMPLETE) {
+        return true;
+    }
+
+    return false;
+}
+
+uint32 Player::resetTalentsCost()
 {
+    // PvP.Character? -> resetTalents ist for free
+    if (isPvPCharacter()) {
+        DEBUG_LOG("resetTalentsCost:: Is PvP.Character");
+        //ChatHandler(this).PSendSysMessage("PvP.Characters do not pay for talent reset");
+        return 0;
+    } else {
+        DEBUG_LOG("resetTalentsCost:: Not a PvP.Character");
+    }
+
     // The first time reset costs 1 gold
     if (m_resetTalentsCost < 1*GOLD)
         return 1*GOLD;
@@ -9709,6 +9732,43 @@ void Player::SendInitWorldStates(uint32 zoneid, uint32 areaid)
     }
     GetSession()->SendPacket(&data);
     SendBGWeekendWorldStates();
+
+    // PvP.Character? -> They are not allowed to be in the open world.
+    if (!InBattleGround() && isPvPCharacter()) {
+        // Has completed the "I am PvP" Quest
+        DEBUG_LOG("Ist PvP.Character");
+        uint32 zone_id, area_id;
+        GetZoneAndAreaId(zone_id, area_id);
+        // Relocate player
+        // Horde or Alliance?
+        if (this->getRaceMask() & RACEMASK_ALLIANCE) {
+            DEBUG_LOG("Ist PvP.Character:: RACEMASK_ALLIANCE");
+            // Still in Stormwind?
+            if ((this->GetMapId() != 0) || (area_id != 1519)) {
+                // Relocate Player
+                DEBUG_LOG("Ist PvP.Character:: Nicht mehr in Stormwind");
+                ChatHandler(this).PSendSysMessage(
+                        "PvP.Characters must not be in the open world - porting back to home city");
+                TeleportTo(0, -8833.38, 628.628, 94.0066, GetOrientation(), 0);
+            } else {
+                DEBUG_LOG("Ist PvP.Character:: In Stormwind");
+            }
+        } else {
+            // Map 450: Horde PvP Kaserne
+            DEBUG_LOG("Ist PvP.Character:: RACEMASK_HORDE");
+            // Still in Orgrimmar or in PvP Kaserne?
+            if (!((this->GetMapId() == 450) || ((this->GetMapId() == 1)
+                    && (area_id == 1637)))) {
+                // Relocate Player
+                DEBUG_LOG("Ist PvP.Character:: Nicht mehr in Orgrimmar");
+                ChatHandler(this).PSendSysMessage(
+                        "PvP.Characters must not be in the open world - porting back to home city");
+                TeleportTo(1, 1629.36, -4373.39, 31.2564, GetOrientation(), 0);
+            } else {
+                DEBUG_LOG("Ist PvP.Character:: Immer noch in Orgrimmar");
+            }
+        }
+    } // not in battleground AND is PvP.Character
 }
 
 void Player::SendBGWeekendWorldStates()
@@ -20497,6 +20557,27 @@ inline bool Player::_StoreOrEquipNewItem(uint32 vendorslot, uint32 item, uint8 c
         return false;
     }
 
+    // Free for PvP.Char?
+    boolean freeForPvPChar = false;
+    if (pCreature->GetSubName() != NULL) {
+        std::string configSub = sConfig.GetStringDefault(
+                "PvP.Character.Vendor", "");
+        std::string vendorSub(pCreature->GetSubName());
+        DEBUG_LOG("BuyItemFromVendor:: PvP.Character.Vendor: '%s'", configSub.c_str());
+        if (isPvPCharacter()) {
+            DEBUG_LOG("BuyItemFromVendor:: Is PvP.Character");
+            if (vendorSub.compare(configSub) == 0) {
+                DEBUG_LOG("BuyItemFromVendor:: Special PvP Vendor -> Buyprice == 0");
+                ChatHandler(this).PSendSysMessage(
+                        "PvP.Characters has not to pay for items - buyprice is always 0");
+                freeForPvPChar = true;
+            } else {
+                DEBUG_LOG("BuyItemFromVendor:: Not a PvP Vendor -> Buyprice normal");
+            }
+        }
+    }
+
+    if(!freeForPvPChar) {
     ModifyMoney(-price);
 
     if (crItem->ExtendedCost)                            // case for new honor system
@@ -20514,6 +20595,7 @@ inline bool Player::_StoreOrEquipNewItem(uint32 vendorslot, uint32 item, uint8 c
                 DestroyItemCount(iece->reqitem[i], (iece->reqitemcount[i] * count), true);
         }
     }
+    } // freeForPvPChar
 
     Item* it = bStore ?
         StoreNewItem(vDest, item, true) :
@@ -20611,6 +20693,41 @@ bool Player::BuyItemFromVendorSlot(uint64 vendorguid, uint32 vendorslot, uint32 
         return false;
     }
 
+    // PvP.Char: Can interact with special pvp vendor
+    // PvE.Char: Can only act with "normal vendors"
+    boolean freeForPvPChar = false;
+    if (pCreature->GetSubName() != NULL) {
+        std::string configSub = sConfig.GetStringDefault(
+                "PvP.Character.Vendor", "");
+        std::string vendorSub(pCreature->GetSubName());
+        DEBUG_LOG("BuyItemFromVendor:: PvP.Character.Vendor: '%s'", configSub.c_str());
+        if (isPvPCharacter()) {
+            DEBUG_LOG("BuyItemFromVendor:: Is PvP.Character");
+            if (vendorSub.compare(configSub) == 0) {
+                DEBUG_LOG("BuyItemFromVendor:: Special PvP Vendor -> Buyprice == 0");
+                ChatHandler(this).PSendSysMessage(
+                        "PvP.Characters has not to pay for items - buyprice is always 0");
+                freeForPvPChar = true;
+            } else {
+                DEBUG_LOG("BuyItemFromVendor:: Not a PvP Vendor -> Buyprice normal");
+            }
+        } else {
+            // PvE character
+            DEBUG_LOG("BuyItemFromVendor:: Not a PvP.Character");
+            if (vendorSub.compare(configSub) == 0) {
+                DEBUG_LOG("BuyItemFromVendor:: Special PvP Vendor -> But PvE Char");
+                ChatHandler(this).PSendSysMessage(
+                        "This vendor is only for PvP Characters.");
+                SendBuyError(BUY_ERR_SELLER_DONT_LIKE_YOU, pCreature, item, 0);
+                return false;
+            } else {
+                DEBUG_LOG("BuyItemFromVendor:: Not a PvP Vendor -> Buyprice normal");
+            }
+        }
+    } // Vendor has subName
+
+    if( !freeForPvPChar ) {
+
     if (crItem->ExtendedCost)
     {
         ItemExtendedCostEntry const* iece = sItemExtendedCostStore.LookupEntry(crItem->ExtendedCost);
@@ -20673,6 +20790,8 @@ bool Player::BuyItemFromVendorSlot(uint64 vendorguid, uint32 vendorslot, uint32 
             return false;
         }
     }
+
+    } // freeForPvPChar
 
     if ((bag == NULL_BAG && slot == NULL_SLOT) || IsInventoryPos(bag, slot))
     {

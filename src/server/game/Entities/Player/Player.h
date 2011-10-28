@@ -1687,7 +1687,7 @@ class Player : public Unit, public GridObject<Player>
         uint32 GetFreeTalentPoints() const { return GetUInt32Value(PLAYER_CHARACTER_POINTS1); }
         void SetFreeTalentPoints(uint32 points);
         bool resetTalents(bool no_cost = false);
-        uint32 resetTalentsCost() const;
+        uint32 resetTalentsCost();
         void InitTalentForLevel();
         void BuildPlayerTalentsInfoData(WorldPacket* data);
         void BuildPetTalentsInfoData(WorldPacket* data);
@@ -1699,6 +1699,11 @@ class Player : public Unit, public GridObject<Player>
         bool HasTalent(uint32 spell_id, uint8 spec) const;
 
         uint32 CalculateTalentsPoints() const;
+
+        // PvP.Character?
+        // Is this character a special PvP Character?
+        // -> Then the character finished the "I want PvP only" quest
+        bool isPvPCharacter();
 
         // Dual Spec
         void UpdateSpecCount(uint8 count);
