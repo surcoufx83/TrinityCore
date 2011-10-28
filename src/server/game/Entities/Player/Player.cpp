@@ -4393,7 +4393,7 @@ void Player::_SaveSpellCooldowns(SQLTransaction& trans)
  * <br/>
  */
 bool Player::isPvPCharacter() {
-    uint32 questId = sWorld.getConfig(CONFIG_UINT32_PVP_CHARACTER_QUESTID);
+    uint32 questId = sWorld->getIntConfig(CONFIG_INT_PVP_CHARACTER_QUESTID);
     QuestStatus qStatus = this->GetQuestStatus(questId);
     if (qStatus == QUEST_STATUS_COMPLETE) {
         return true;
