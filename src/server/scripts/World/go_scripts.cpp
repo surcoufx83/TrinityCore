@@ -1186,6 +1186,25 @@ class go_massive_seaforium_charge : public GameObjectScript
         }
 };
 
+/*######
+## Quest 12557: Lab Work
+######*/
+
+enum eLabWorkReagents
+{
+   QUEST_LAB_WORK                          = 12557,
+
+   SPELL_WIRHERED_BATWING_KILL_CREDIT      = 51226,
+   SPELL_MUDDY_MIRE_MAGGOT_KILL_CREDIT     = 51227,
+   SPELL_AMBERSEED_KILL_CREDIT             = 51228,
+   SPELL_CHILLED_SERPENT_MUCUS_KILL_CREDIT = 51229,
+
+   GO_AMBERSEED                            = 190459,
+   GO_CHILLED_SERPENT_MUCUS                = 190462,
+   GO_WITHERED_BATWING                     = 190473,
+   GO_MUDDY_MIRE_MAGGOTS                   = 190478
+};
+
 class go_lab_work_reagents : public GameObjectScript
 {
 public:
