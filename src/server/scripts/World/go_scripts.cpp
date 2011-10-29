@@ -1176,33 +1176,14 @@ public:
 
 class go_massive_seaforium_charge : public GameObjectScript
 {
-public:
-    go_massive_seaforium_charge() : GameObjectScript("go_massive_seaforium_charge") { }
+    public:
+        go_massive_seaforium_charge() : GameObjectScript("go_massive_seaforium_charge") { }
 
-    bool OnGossipHello(Player* /*player*/, GameObject* go)
-    {
-        go->SetLootState(GO_JUST_DEACTIVATED);
-        return true;
-    }
-};
-
-/*######
-## Quest 12557: Lab Work
-######*/
-
-enum eLabWorkReagents
-{
-    QUEST_LAB_WORK                          = 12557,
-
-    SPELL_WIRHERED_BATWING_KILL_CREDIT      = 51226,
-    SPELL_MUDDY_MIRE_MAGGOT_KILL_CREDIT     = 51227,
-    SPELL_AMBERSEED_KILL_CREDIT             = 51228,
-    SPELL_CHILLED_SERPENT_MUCUS_KILL_CREDIT = 51229,
-
-    GO_AMBERSEED                            = 190459,
-    GO_CHILLED_SERPENT_MUCUS                = 190462,
-    GO_WITHERED_BATWING                     = 190473,
-    GO_MUDDY_MIRE_MAGGOTS                   = 190478
+        bool OnGossipHello(Player* /*player*/, GameObject* go)
+        {
+            go->SetLootState(GO_JUST_DEACTIVATED);
+            return true;
+        }
 };
 
 class go_lab_work_reagents : public GameObjectScript
@@ -1228,6 +1209,68 @@ public:
         }
         return false;
     }
+};
+
+/*######
+## go_gjalerbron_cage
+######*/
+
+enum OfKeysAndCages
+{
+    QUEST_OF_KEYS_AND_CAGES     = 11231,
+    NPC_GJALERBRON_PRISONER     = 24035,
+    SAY_FREE                    = 0,
+};
+
+class go_gjalerbron_cage : public GameObjectScript
+{
+    public:
+        go_gjalerbron_cage() : GameObjectScript("go_gjalerbron_cage") { }
+
+        bool OnGossipHello(Player* player, GameObject* go)
+        {
+            if (player->GetQuestStatus(QUEST_OF_KEYS_AND_CAGES) == QUEST_STATUS_INCOMPLETE)
+            {
+                if (Creature* prisoner = go->FindNearestCreature(NPC_GJALERBRON_PRISONER, 5.0f))
+                {
+                    go->UseDoorOrButton();
+
+                    if (player)
+                        player->KilledMonsterCredit(NPC_GJALERBRON_PRISONER, 0);
+
+                    prisoner->AI()->Talk(SAY_FREE);
+                    prisoner->ForcedDespawn(6000);
+                }
+            }
+            return true;
+        }
+};
+
+/*########
+## go_large_gjalerbron_cage
+#####*/
+
+class go_large_gjalerbron_cage : public GameObjectScript
+{
+    public:
+       go_large_gjalerbron_cage() : GameObjectScript("go_large_gjalerbron_cage") { }
+
+       bool OnGossipHello(Player* player, GameObject* go)
+       {
+           if (player->GetQuestStatus(QUEST_OF_KEYS_AND_CAGES) == QUEST_STATUS_INCOMPLETE)
+           {
+               std::list<Creature*> prisonerList;
+               GetCreatureListWithEntryInGrid(prisonerList, go, NPC_GJALERBRON_PRISONER, INTERACTION_DISTANCE);
+               for (std::list<Creature*>::const_iterator itr = prisonerList.begin(); itr != prisonerList.end(); ++itr)
+               {
+                   go->UseDoorOrButton();
+                   player->KilledMonsterCredit(NPC_GJALERBRON_PRISONER, (*itr)->GetGUID());
+                   (*itr)->ForcedDespawn(6000);
+                   (*itr)->AI()->Talk(SAY_FREE);
+               }
+           }        
+           return false;
+       }
 };
 
 void AddSC_go_scripts()
@@ -1269,4 +1312,6 @@ void AddSC_go_scripts()
     new go_hive_pod();
     new go_massive_seaforium_charge();
     new go_lab_work_reagents();
+    new go_gjalerbron_cage;
+    new go_large_gjalerbron_cage;
 }
