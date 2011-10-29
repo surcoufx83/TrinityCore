@@ -3429,6 +3429,9 @@ void SpellMgr::LoadDbcDataCorrections()
                 break;
             // ULDUAR SPELLS
             //
+            case 64206: // XT-002 - Consumption
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_5_YARDS;
+                break;
             case 62016: // Thorim - Charge Orb
                 spellInfo->MaxAffectedTargets = 1;
                 spellInfo->AttributesEx6 |= SPELL_ATTR6_CAN_TARGET_UNTARGETABLE;
@@ -3464,14 +3467,14 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_CASTER;
                 spellInfo->EffectImplicitTargetB[1] = 0;
                 break;
-            //case 62834: // Boom (XT-002)
+            case 62834: // Boom (XT-002)
             // This hack is here because we suspect our implementation of spell effect execution on targets
             // is done in the wrong order. We suspect that EFFECT_0 needs to be applied on all targets,
             // then EFFECT_1, etc - instead of applying each effect on target1, then target2, etc.
             // The above situation causes the visual for this spell to be bugged, so we remove the instakill
             // effect and implement a script hack for that.
-            //    spellInfo->Effect[EFFECT_1] = 0;
-            //    break;
+                spellInfo->Effect[EFFECT_1] = 0;
+                break;
             case 62899: // Razorscale - Summon Mole Machine
             case 64600: // Freya - Nature Bomb (GO Visual)
                 spellInfo->DurationIndex = 38; // 11 seconds
