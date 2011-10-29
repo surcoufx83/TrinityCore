@@ -770,14 +770,14 @@ class npc_thorim_arena_phase : public CreatureScript
 
             void UpdateAI(uint32 const diff)
             {
+                if (!UpdateVictim() || me->HasUnitState(UNIT_STAT_CASTING))
+                    return;
+
                 if (me->getVictim() && !isOnSameSide(me->getVictim()))
                 {
                     me->getVictim()->getHostileRefManager().deleteReference(me);
                     return;
                 }
-
-                if (!UpdateVictim() || me->HasUnitState(UNIT_STAT_CASTING))
-                    return;
 
                 if (_PrimaryTimer <= diff)
                 {
