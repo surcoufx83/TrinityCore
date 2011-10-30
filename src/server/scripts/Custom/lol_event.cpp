@@ -987,36 +987,11 @@ public:
             Reset();
         }
 
-        uint64 EventStarter;
-        bool EventStarted;
-        uint32 part;
-
-        uint32 part_timer;
-
         void Reset()
         {
-            EventStarter = 0;
-            EventStarted = false;
-            me->SetUInt32Value(UNIT_NPC_FLAGS, 3);
         }
-
-        void MoveInLineOfSight(Unit *who)
-        {
-        }
-
-        void StartEvent(Player* starter)
-        {
-        }
-
-        void SayPart(uint32 part)
-        {
-        }
-
 
         void EnterCombat(Unit *who) { }
-        void UpdateAI(const uint32 diff)
-        {
-        }
     };
     // Copied from ChatHandler - was protected
     void HandleCharacterLevel(Player* player, uint64 player_guid, uint32 oldlevel, uint32 newlevel)
@@ -1171,16 +1146,6 @@ public:
             sLog->outStaticDebug("npc_pvpchars_questgiver:: OnQuestComplete -- nicht der PvP.Char Quest");
         }
 
-        return true;
-    }
-
-    bool OnGossipHello(Player *player, Creature *_Creature)
-    {
-        return true;
-    }
-
-    bool OnGossipSelect(Player *player, Creature *_Creature, uint32 sender, uint32 action)
-    {
         return true;
     }
 };
