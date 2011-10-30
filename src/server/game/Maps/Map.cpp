@@ -743,7 +743,9 @@ Map::PlayerRelocation(Player* player, float x, float y, float z, float orientati
         if (player->getRaceMask() & RACEMASK_ALLIANCE) {
             sLog->outStaticDebug("Ist PvP.Character:: RACEMASK_ALLIANCE");
             // Still in Stormwind?
-            if ((player->GetMapId() != 0) || (area_id != 1519)) {
+            if (!(((player->GetMapId() == 0) && (area_id == 1637)) // SW Village
+                    || ((player->GetMapId() == 0) && (area_id == 12)) // Elwynn forect in front of SW Village
+            )) {
                 // Relocate Player
                 sLog->outStaticDebug("Ist PvP.Character:: Nicht mehr in Stormwind");
                 ChatHandler(player).PSendSysMessage(
@@ -756,8 +758,11 @@ Map::PlayerRelocation(Player* player, float x, float y, float z, float orientati
             // Map 450: Horde PvP Kaserne
             sLog->outStaticDebug("Ist PvP.Character:: RACEMASK_HORDE");
             // Still in Orgrimmar or in PvP Kaserne?
-            if (!((player->GetMapId() == 450) || ((player->GetMapId() == 1)
-                    && (area_id == 1637)))) {
+            if (!((player->GetMapId() == 450) // Horde Kaserne
+                            || ((player->GetMapId() == 1) && (area_id == 1637)) // Org Village
+                            || ((player->GetMapId() == 1) && (area_id == 14)) // Durotar in front of Org Village
+                    ))
+                    {
                 // Relocate Player
                 sLog->outStaticDebug("Ist PvP.Character:: Nicht mehr in Orgrimmar");
                 ChatHandler(player).PSendSysMessage(
