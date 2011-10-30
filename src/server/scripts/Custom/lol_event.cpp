@@ -1021,14 +1021,17 @@ public:
     // Copied from ChatHandler - was protected
     void HandleCharacterLevel(Player* player, uint64 player_guid, uint32 oldlevel, uint32 newlevel)
     {
+        sLog->outStaticDebug("npc_pvpchars_questgiver:: HandleCharacterLevel");
         if (player)
         {
+            sLog->outStaticDebug("HandleCharacterLevel - Player ist gesetzt");
             player->GiveLevel(newlevel);
             player->InitTalentForLevel();
             player->SetUInt32Value(PLAYER_XP, 0);
         }
         else
         {
+            sLog->outStaticDebug("npc_pvpchars_questgiver:: HandleCharacterLevel - else Zweig");
             // update level and XP at level, all other will be updated at loading
             CharacterDatabase.PExecute("UPDATE characters SET level = '%u', xp = 0 WHERE guid = '%u'", newlevel, GUID_LOPART(player_guid));
         }
@@ -1037,8 +1040,10 @@ public:
 
     bool OnQuestComplete(Player *player, Creature *_Creature,
             const Quest *_Quest) {
+        sLog->outStaticDebug("npc_pvpchars_questgiver:: OnQuestComplete");
         if (_Quest->GetQuestId() == sWorld->getIntConfig(
                 CONFIG_INT_PVP_CHARACTER_QUESTID)) {
+            sLog->outStaticDebug("npc_pvpchars_questgiver:: OnQuestComplete -- PvP.Char Quest");
             // Set player to max level
             // -> Player should only be level 1
             HandleCharacterLevel(player, player->GetGUID(), player->getLevel(), sWorld->getIntConfig(
@@ -1048,6 +1053,7 @@ public:
             // Add spells, that could only be achieved by PvE quests
             switch (player->getClass()) {
             case CLASS_WARRIOR:
+                sLog->outStaticDebug("npc_pvpchars_questgiver:: OnQuestComplete -- CLASS_WARRIOR");
                 //                (0, 1, 71, 'Verteidigungshaltung'),
                 player->addSpell(71, true, true, true, false);
                 //                (0, 1, 2458, 'Berserkerhaltung'),
@@ -1060,6 +1066,7 @@ public:
                 player->addSpell(355, true, true, true, false);
                 break;
             case CLASS_PALADIN:
+                sLog->outStaticDebug("npc_pvpchars_questgiver:: OnQuestComplete -- CLASS_PALADIN");
                 //                (0, 2, 5502, 'Sense Undead'),
                 player->addSpell(5502, true, true, true, false);
                 //                (0, 2, 7328, 'Redemption');
@@ -1073,6 +1080,7 @@ public:
                 }
                 break;
             case CLASS_HUNTER:
+                sLog->outStaticDebug("npc_pvpchars_questgiver:: OnQuestComplete -- CLASS_HUNTER");
                 //                (0, 3, 883, 'Call Pet'),
                 player->addSpell(883, true, true, true, false);
                 //                (0, 3, 6991, 'Feed Pet'),
@@ -1085,14 +1093,17 @@ public:
                 player->addSpell(1515, true, true, true, false);
                 break;
             case CLASS_ROGUE:
+                sLog->outStaticDebug("npc_pvpchars_questgiver:: OnQuestComplete -- CLASS_ROGUE");
                 break;
             case CLASS_PRIEST:
+                sLog->outStaticDebug("npc_pvpchars_questgiver:: OnQuestComplete -- CLASS_PRIEST");
                 //                (0, 5, 2944, 'Devouring Plague'),
                 player->addSpell(2944, true, true, true, false);
                 //                (0, 5, 6346, 'Fear Ward');
                 player->addSpell(6346, true, true, true, false);
                 break;
             case CLASS_DEATH_KNIGHT:
+                sLog->outStaticDebug("npc_pvpchars_questgiver:: OnQuestComplete -- CLASS_DEATH_KNIGHT");
                 // Should not be possible
                 //                (0, 6, 48778, 'Acherus Deathcharger'),
                 player->addSpell(48778, true, true, true, false);
@@ -1102,6 +1113,7 @@ public:
                 player->addSpell(53428, true, true, true, false);
                 break;
             case CLASS_SHAMAN:
+                sLog->outStaticDebug("npc_pvpchars_questgiver:: OnQuestComplete -- CLASS_SHAMAN");
                 //                (0, 7, 3599, 'Searing Totem(Rank 1)'),
                 player->addSpell(3599, true, true, true, false);
                 //                (0, 7, 8071, 'Stoneskin Totem(Rank 1)'),
@@ -1110,6 +1122,7 @@ public:
                 player->addSpell(5394, true, true, true, false);
                 break;
             case CLASS_MAGE:
+                sLog->outStaticDebug("npc_pvpchars_questgiver:: OnQuestComplete -- CLASS_MAGE");
                 //                (0, 8, 28272, 'Polymorph Pig'),
                 player->addSpell(28272, true, true, true, false);
                 //                (0, 8, 10140, 'Conjure Water '),
@@ -1118,6 +1131,7 @@ public:
                 player->addSpell(53140, true, true, true, false);
                 break;
             case CLASS_WARLOCK:
+                sLog->outStaticDebug("npc_pvpchars_questgiver:: OnQuestComplete -- CLASS_WARLOCK");
                 //                (0, 9, 688, 'Summon Imp'),
                 player->addSpell(688, true, true, true, false);
                 //                (0, 9, 697, 'Summon Voidwalker'),
@@ -1134,6 +1148,7 @@ public:
                 player->addSpell(23161, true, true, true, false);
                 break;
             case CLASS_DRUID:
+                sLog->outStaticDebug("npc_pvpchars_questgiver:: OnQuestComplete -- CLASS_DRUID");
                 //                (0, 11, 5487, 'Bear Form'),
                 player->addSpell(5487, true, true, true, false);
                 //                (0, 11, 6807, 'Maul'),
@@ -1147,7 +1162,13 @@ public:
                 //                (0, 11, 8946, 'Cure Poison');
                 player->addSpell(8946, true, true, true, false);
                 break;
+            default:
+                sLog->outStaticDebug(
+                        "npc_pvpchars_questgiver:: OnQuestComplete -- default");
+                break;
             }
+        } else {
+            sLog->outStaticDebug("npc_pvpchars_questgiver:: OnQuestComplete -- nicht der PvP.Char Quest");
         }
 
         return true;
