@@ -20562,8 +20562,7 @@ inline bool Player::_StoreOrEquipNewItem(uint32 vendorslot, uint32 item, uint8 c
 	CreatureTemplate const* ci = sObjectMgr->GetCreatureTemplate(pVendor->GetEntry());
     bool freeForPvPChar = false;
 	if (ci->SubName.length() != 0) {
-        std::string configSub = ConfigMgr::GetStringDefault("PidFile", "");(
-                "PvP.Character.Vendor", "");
+        std::string configSub = ConfigMgr::GetStringDefault("PvP.Character.Vendor", "");
         sLog->outStaticDebug("BuyItemFromVendor:: PvP.Character.Vendor: '%s'", configSub.c_str());
         if (isPvPCharacter()) {
             sLog->outStaticDebug("BuyItemFromVendor:: Is PvP.Character");
@@ -20699,8 +20698,7 @@ bool Player::BuyItemFromVendorSlot(uint64 vendorguid, uint32 vendorslot, uint32 
 	CreatureTemplate const* ci = sObjectMgr->GetCreatureTemplate(creature->GetEntry());
     bool freeForPvPChar = false;
 	if (ci->SubName.length() != 0) {
-        std::string configSub = ConfigMgr::GetStringDefault("PidFile", "");(
-                "PvP.Character.Vendor", "");
+        std::string configSub = ConfigMgr::GetStringDefault("PvP.Character.Vendor", "");
         sLog->outStaticDebug("BuyItemFromVendor:: PvP.Character.Vendor: '%s'", configSub.c_str());
         if (isPvPCharacter()) {
             sLog->outStaticDebug("BuyItemFromVendor:: Is PvP.Character");
