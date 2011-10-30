@@ -30,6 +30,7 @@
 #include "MapManager.h"
 #include "ObjectMgr.h"
 #include "Group.h"
+#include "Chat.h"
 
 union u_map_magic
 {
@@ -729,6 +730,45 @@ void
 Map::PlayerRelocation(Player* player, float x, float y, float z, float orientation)
 {
     ASSERT(player);
+
+
+    // PvP.Character? -> They are not allowed to be in the open world.
+    if ( (!player->InBattleground() || !player->InArena()) && player->isPvPCharacter()) {
+        // Has completed the "I am PvP" Quest
+        sLog->outStaticDebug("Ist PvP.Character");
+        uint32 zone_id, area_id;
+        player->GetZoneAndAreaId(zone_id, area_id);
+        // Relocate player
+        // Horde or Alliance?
+        if (player->getRaceMask() & RACEMASK_ALLIANCE) {
+            sLog->outStaticDebug("Ist PvP.Character:: RACEMASK_ALLIANCE");
+            // Still in Stormwind?
+            if ((player->GetMapId() != 0) || (area_id != 1519)) {
+                // Relocate Player
+                sLog->outStaticDebug("Ist PvP.Character:: Nicht mehr in Stormwind");
+                ChatHandler(player).PSendSysMessage(
+                        "PvP.Characters must not be in the open world - porting back to home city");
+                player->TeleportTo(0, -8833.38f, 628.628f, 94.0066f, player->GetOrientation(), 0);
+            } else {
+                sLog->outStaticDebug("Ist PvP.Character:: In Stormwind");
+            }
+        } else {
+            // Map 450: Horde PvP Kaserne
+            sLog->outStaticDebug("Ist PvP.Character:: RACEMASK_HORDE");
+            // Still in Orgrimmar or in PvP Kaserne?
+            if (!((player->GetMapId() == 450) || ((player->GetMapId() == 1)
+                    && (area_id == 1637)))) {
+                // Relocate Player
+                sLog->outStaticDebug("Ist PvP.Character:: Nicht mehr in Orgrimmar");
+                ChatHandler(player).PSendSysMessage(
+                        "PvP.Characters must not be in the open world - porting back to home city");
+                player->TeleportTo(1, 1629.36f, -4373.39f, 31.2564f, player->GetOrientation(), 0);
+            } else {
+                sLog->outStaticDebug("Ist PvP.Character:: Immer noch in Orgrimmar");
+            }
+        }
+    } // not in battleground AND is PvP.Character
+
 
     Cell old_cell(player->GetPositionX(), player->GetPositionY());
     Cell new_cell(x, y);

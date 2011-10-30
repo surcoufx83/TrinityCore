@@ -9735,7 +9735,7 @@ void Player::SendInitWorldStates(uint32 zoneid, uint32 areaid)
     SendBGWeekendWorldStates();
 
     // PvP.Character? -> They are not allowed to be in the open world.
-    if (!InBattleground() && isPvPCharacter()) {
+	if ( (!InBattleground() || !InArena()) && isPvPCharacter()) {
         // Has completed the "I am PvP" Quest
         sLog->outStaticDebug("Ist PvP.Character");
         uint32 zone_id, area_id;
@@ -9750,7 +9750,7 @@ void Player::SendInitWorldStates(uint32 zoneid, uint32 areaid)
                 sLog->outStaticDebug("Ist PvP.Character:: Nicht mehr in Stormwind");
                 ChatHandler(this).PSendSysMessage(
                         "PvP.Characters must not be in the open world - porting back to home city");
-                TeleportTo(0, -8833.38, 628.628, 94.0066, GetOrientation(), 0);
+                TeleportTo(0, -8833.38f, 628.628f, 94.0066f, GetOrientation(), 0);
             } else {
                 sLog->outStaticDebug("Ist PvP.Character:: In Stormwind");
             }
@@ -9764,7 +9764,7 @@ void Player::SendInitWorldStates(uint32 zoneid, uint32 areaid)
                 sLog->outStaticDebug("Ist PvP.Character:: Nicht mehr in Orgrimmar");
                 ChatHandler(this).PSendSysMessage(
                         "PvP.Characters must not be in the open world - porting back to home city");
-                TeleportTo(1, 1629.36, -4373.39, 31.2564, GetOrientation(), 0);
+                TeleportTo(1, 1629.36f, -4373.39f, 31.2564f, GetOrientation(), 0);
             } else {
                 sLog->outStaticDebug("Ist PvP.Character:: Immer noch in Orgrimmar");
             }
