@@ -1024,6 +1024,33 @@ class spell_xt002_gravity_bomb_damage : public SpellScriptLoader
         }
 };
 
+class spell_xt002_tympanic_tantrum : public SpellScriptLoader
+{
+    public:
+        spell_xt002_tympanic_tantrum() : SpellScriptLoader("spell_xt002_tympanic_tantrum") { }
+
+        class spell_xt002_tympanic_tantrum_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_xt002_tympanic_tantrum_SpellScript);
+
+            void FilterTargets(std::list<Unit*>& unitList)
+            {
+                unitList.remove_if(PlayerOrPetCheck());
+            }
+
+            void Register()
+            {
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_xt002_tympanic_tantrum_SpellScript::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_xt002_tympanic_tantrum_SpellScript::FilterTargets, EFFECT_1, TARGET_UNIT_SRC_AREA_ENEMY);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_xt002_tympanic_tantrum_SpellScript();
+        }
+};
+
 class achievement_nerf_engineering : public AchievementCriteriaScript
 {
     public:
@@ -1078,6 +1105,7 @@ void AddSC_boss_xt002()
     new spell_xt002_searing_light();
     new spell_xt002_gravity_bomb();
     new spell_xt002_gravity_bomb_damage();
+    new spell_xt002_tympanic_tantrum();
     new achievement_nerf_engineering();
     new achievement_heartbreaker();
     new achievement_nerf_gravity_bombs();

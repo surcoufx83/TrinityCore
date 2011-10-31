@@ -1201,48 +1201,46 @@ class npc_freya_ward_summon : public CreatureScript
 
 class npc_leviathan_player_vehicle : public CreatureScript
 {
-public:
-    npc_leviathan_player_vehicle() : CreatureScript("npc_leviathan_player_vehicle")
-    {
-    }
-
-    struct npc_leviathan_player_vehicleAI : public NullCreatureAI
-    {
-        npc_leviathan_player_vehicleAI(Creature* creature) : NullCreatureAI(creature)
+    public:
+        npc_leviathan_player_vehicle() : CreatureScript("npc_leviathan_player_vehicle")
         {
-            _instance = creature->GetInstanceScript();
-            me->ApplySpellImmune(0, IMMUNITY_ID, 62680, true);
-            me->ApplySpellImmune(0, IMMUNITY_ID, 63472, true);
         }
 
-        void PassengerBoarded(Unit* unit, int8 seat, bool apply)
+        struct npc_leviathan_player_vehicleAI : public NullCreatureAI
         {
-            if (!unit->ToPlayer() || seat != 0)
-                return;
-
-            if (Creature* leviathan = ObjectAccessor::GetCreature(*me, _instance ? _instance->GetData64(TYPE_LEVIATHAN) : 0))
+            npc_leviathan_player_vehicleAI(Creature* creature) : NullCreatureAI(creature)
             {
-                if (leviathan->isInCombat())
-                {
-                    me->SetInCombatWith(leviathan);
-                    me->AddThreat(leviathan, 1.0f);
-                    leviathan->SetInCombatWith(me);
-                    leviathan->AddThreat(me, 1.0f);
+                _instance = creature->GetInstanceScript();
+            }
 
-                    if (apply)
-                        me->SetHealth(uint32(me->GetHealth() / 2));
+            void PassengerBoarded(Unit* unit, int8 seat, bool apply)
+            {
+                if (!unit->ToPlayer() || seat != 0)
+                    return;
+
+                if (Creature* leviathan = ObjectAccessor::GetCreature(*me, _instance ? _instance->GetData64(TYPE_LEVIATHAN) : 0))
+                {
+                    if (leviathan->isInCombat())
+                    {
+                        me->SetInCombatWith(leviathan);
+                        me->AddThreat(leviathan, 1.0f);
+                        leviathan->SetInCombatWith(me);
+                        leviathan->AddThreat(me, 1.0f);
+
+                        if (apply)
+                            me->SetHealth(uint32(me->GetHealth() / 2));
+                    }
                 }
             }
+
+        private:
+            InstanceScript* _instance;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new npc_leviathan_player_vehicleAI(creature);
         }
-
-    private:
-        InstanceScript* _instance;
-    };
-
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return new npc_leviathan_player_vehicleAI(creature);
-    }
 };
 
 //npc lore keeper
