@@ -973,7 +973,9 @@ void AddSC_lol_event()
 class npc_pvpchars_questgiver : public CreatureScript
 {
 public:
-    npc_pvpchars_questgiver() : CreatureScript("npc_pvpchars_questgiver") { }
+    npc_pvpchars_questgiver() : CreatureScript("npc_pvpchars_questgiver") {
+        sLog->outStaticDebug("npc_pvpchars_questgiver:: INIT");
+    }
 
     // Copied from ChatHandler - was protected
     void HandleCharacterLevel(Player* player, uint64 player_guid,
