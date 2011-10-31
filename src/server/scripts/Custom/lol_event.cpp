@@ -975,50 +975,37 @@ class npc_pvpchars_questgiver : public CreatureScript
 public:
     npc_pvpchars_questgiver() : CreatureScript("npc_pvpchars_questgiver") { }
 
-    CreatureAI* GetAI(Creature *_Creature) const
-    {
-        return new npc_pvpchars_questgiverAI (_Creature);
-    }
-
-    struct npc_pvpchars_questgiverAI : public ScriptedAI
-    {
-        npc_pvpchars_questgiverAI(Creature *c) : ScriptedAI(c)
-        {
-            Reset();
-        }
-
-        void Reset()
-        {
-        }
-
-        void EnterCombat(Unit *who) { }
-    };
     // Copied from ChatHandler - was protected
-    void HandleCharacterLevel(Player* player, uint64 player_guid, uint32 oldlevel, uint32 newlevel)
-    {
+    void HandleCharacterLevel(Player* player, uint64 player_guid,
+            uint32 oldlevel, uint32 newlevel) {
         sLog->outStaticDebug("npc_pvpchars_questgiver:: HandleCharacterLevel");
-        if (player)
-        {
+        if (player) {
             sLog->outStaticDebug("HandleCharacterLevel - Player ist gesetzt");
             player->GiveLevel(newlevel);
             player->InitTalentForLevel();
             player->SetUInt32Value(PLAYER_XP, 0);
-        }
-        else
-        {
-            sLog->outStaticDebug("npc_pvpchars_questgiver:: HandleCharacterLevel - else Zweig");
+        } else {
+            sLog->outStaticDebug(
+                    "npc_pvpchars_questgiver:: HandleCharacterLevel - else Zweig");
             // update level and XP at level, all other will be updated at loading
-            CharacterDatabase.PExecute("UPDATE characters SET level = '%u', xp = 0 WHERE guid = '%u'", newlevel, GUID_LOPART(player_guid));
+            CharacterDatabase.PExecute(
+                    "UPDATE characters SET level = '%u', xp = 0 WHERE guid = '%u'",
+                    newlevel, GUID_LOPART(player_guid));
         }
     }
-
+    bool OnQuestReward(Player *player, Creature *_Creature,
+            Quest const *_Quest, uint32 /*item*/) {
+        sLog->outStaticDebug("npc_pvpchars_questgiver:: OnQuestReward");
+        return OnQuestComplete(player, _Creature, _Quest);
+    }
 
     bool OnQuestComplete(Player *player, Creature *_Creature,
             const Quest *_Quest) {
         sLog->outStaticDebug("npc_pvpchars_questgiver:: OnQuestComplete");
         if (_Quest->GetQuestId() == sWorld->getIntConfig(
                 CONFIG_INT_PVP_CHARACTER_QUESTID)) {
-            sLog->outStaticDebug("npc_pvpchars_questgiver:: OnQuestComplete -- PvP.Char Quest");
+            sLog->outStaticDebug(
+                    "npc_pvpchars_questgiver:: OnQuestComplete -- PvP.Char Quest");
             // Set player to max level
             // -> Player should only be level 1
             HandleCharacterLevel(player, player->GetGUID(), player->getLevel(), sWorld->getIntConfig(
