@@ -916,6 +916,28 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z,
         float orientation) {
     ASSERT(player);
 
+    Cell old_cell(player->GetPositionX(), player->GetPositionY());
+    Cell new_cell(x, y);
+
+    player->Relocate(x, y, z, orientation);
+
+    if (old_cell.DiffGrid(new_cell) || old_cell.DiffCell(new_cell)) {
+        sLog->outStaticDebug(
+                "Player %s relocation grid[%u, %u]cell[%u, %u]->grid[%u, %u]cell[%u, %u]",
+                player->GetName(), old_cell.GridX(), old_cell.GridY(),
+                old_cell.CellX(), old_cell.CellY(), new_cell.GridX(),
+                new_cell.GridY(), new_cell.CellX(), new_cell.CellY());
+
+        RemoveFromGrid(player, old_cell);
+
+        if (old_cell.DiffGrid(new_cell))
+            EnsureGridLoadedForActiveObject(new_cell, player);
+
+        AddToGrid(player, new_cell);
+    }
+
+    player->UpdateObjectVisibility(false);
+
     // PvP.Character? -> They are not allowed to be in the open world.
     if ((!player->InBattleground() || !player->InArena())
             && player->isPvPCharacter()) {
@@ -972,28 +994,6 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z,
 
     } // not in battleground AND is PvP.Character
 
-
-    Cell old_cell(player->GetPositionX(), player->GetPositionY());
-    Cell new_cell(x, y);
-
-    player->Relocate(x, y, z, orientation);
-
-    if (old_cell.DiffGrid(new_cell) || old_cell.DiffCell(new_cell)) {
-        sLog->outStaticDebug(
-                "Player %s relocation grid[%u, %u]cell[%u, %u]->grid[%u, %u]cell[%u, %u]",
-                player->GetName(), old_cell.GridX(), old_cell.GridY(),
-                old_cell.CellX(), old_cell.CellY(), new_cell.GridX(),
-                new_cell.GridY(), new_cell.CellX(), new_cell.CellY());
-
-        RemoveFromGrid(player, old_cell);
-
-        if (old_cell.DiffGrid(new_cell))
-            EnsureGridLoadedForActiveObject(new_cell, player);
-
-        AddToGrid(player, new_cell);
-    }
-
-    player->UpdateObjectVisibility(false);
 }
 
 void Map::CreatureRelocation(Creature* creature, float x, float y, float z,
