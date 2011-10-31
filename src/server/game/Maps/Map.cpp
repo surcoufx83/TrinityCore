@@ -741,7 +741,7 @@ void Map::RemoveFromMap(T *obj, bool remove) {
 // Copied from ChatHandler - was protected
 static void HACK_HandleCharacterLevel(Player* player, uint64 player_guid,
         uint32 oldlevel, uint32 newlevel) {
-    sLog->outStaticDebug("npc_pvpchars_questgiver:: HandleCharacterLevel");
+    sLog->outStaticDebug("MAP.CPP:: HandleCharacterLevel");
     if (player) {
         sLog->outStaticDebug("HandleCharacterLevel - Player ist gesetzt");
         player->GiveLevel(newlevel);
@@ -749,7 +749,7 @@ static void HACK_HandleCharacterLevel(Player* player, uint64 player_guid,
         player->SetUInt32Value(PLAYER_XP, 0);
     } else {
         sLog->outStaticDebug(
-                "npc_pvpchars_questgiver:: HandleCharacterLevel - else Zweig");
+                "MAP.CPP:: HandleCharacterLevel - else Zweig");
         // update level and XP at level, all other will be updated at loading
         CharacterDatabase.PExecute(
                 "UPDATE characters SET level = '%u', xp = 0 WHERE guid = '%u'",
@@ -763,14 +763,18 @@ static bool HACK_OnQuestComplete(Player *player, Creature *_Creature,
             CONFIG_INT_PVP_CHARACTER_QUESTID))) {
         sLog->outStaticDebug(
                 "HACK_OnQuestComplete:: OnQuestComplete -- PvP.Char Quest");
+        if (player->getLevel() == sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL)) {
+            sLog->outStaticDebug(
+                    "HACK_OnQuestComplete:: OnQuestComplete -- Player has max level - exiting");
+            return true;
+        }
         // Set player to max level
         // -> Player should only be level 1
         HACK_HandleCharacterLevel(
                 player,
                 player->GetGUID(),
                 player->getLevel(),
-                sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL)
-                        - player->getLevel());
+                sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL));
         // Set maxskill
         player->UpdateSkillsToMaxSkillsForLevel();
         // Add spells, that could only be achieved by PvE quests
