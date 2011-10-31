@@ -28,6 +28,7 @@ enum Spells
     SPELL_SUMMON_LIGHTNING_ORB                  = 62391,
     SPELL_TOUCH_OF_DOMINION                     = 62565,
     SPELL_CHAIN_LIGHTNING                       = 62131,
+    SPELL_CHAIN_LIGHTNING_25                    = 64390,
     SPELL_LIGHTNING_CHARGE                      = 62279,
     SPELL_LIGHTNING_DESTRUCTION                 = 62393,
     SPELL_LIGHTNING_RELEASE                     = 62466,
@@ -476,8 +477,7 @@ public:
                             break;
                         case EVENT_CHAIN_LIGHTNING:
                             if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                                if (target->isAlive())
-                                    DoCast(target, SPELL_CHAIN_LIGHTNING);
+                                DoCast(target, RAID_MODE<uint32>(SPELL_CHAIN_LIGHTNING, SPELL_CHAIN_LIGHTNING_25));
                             events.ScheduleEvent(EVENT_CHAIN_LIGHTNING, urand(7000, 15000), 0, PHASE_2);
                             break;
                         case EVENT_TRANSFER_ENERGY:
