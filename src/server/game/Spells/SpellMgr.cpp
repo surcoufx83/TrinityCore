@@ -3516,6 +3516,9 @@ void SpellMgr::LoadDbcDataCorrections()
             case 63483: // Lightning Whirl (Brundir)
                 spellInfo->InterruptFlags |= SPELL_INTERRUPT_FLAG_INTERRUPT;
                 break;
+            case 64444: // Mimiron - Magnetic Core
+                spellInfo->rangeIndex = 6; // 100yd
+                break;
             case 63414: // Mimiron - Spinning Up
             case 63274: // Mimiron - Laser Barrage
                 // temporary remove channeled flag due to facing issues when casting on self

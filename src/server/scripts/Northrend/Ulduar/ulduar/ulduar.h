@@ -80,7 +80,6 @@ enum UlduarTypes
     DATA_VX_001,
     DATA_AERIAL_UNIT,
     DATA_MIMIRON_ELEVATOR,
-    DATA_MAGNETIC_CORE,
 
     //Pre YoggSaron
     DATA_ADD_HELP_FLAG,
@@ -89,8 +88,8 @@ enum UlduarTypes
 enum UlduarNPCs
 {
     NPC_LEVIATHAN               = 33113,
-    NPC_SALVAGED_DEMOLISHER      = 33109,
-    NPC_SALVAGED_SIEGE_ENGINE    = 33060,
+    NPC_SALVAGED_DEMOLISHER     = 33109,
+    NPC_SALVAGED_SIEGE_ENGINE   = 33060,
     NPC_IGNIS                   = 33118,
     NPC_RAZORSCALE              = 33186,
     NPC_RAZORSCALE_CONTROLLER   = 33233,
@@ -111,7 +110,6 @@ enum UlduarNPCs
     NPC_AURIAYA                 = 33515,
     NPC_MIMIRON                 = 33350,
     NPC_AERIAL_COMMAND_UNIT     = 33670,
-    NPC_MAGNETIC_CORE           = 34068,
     NPC_LEVIATHAN_MKII          = 33432,
     NPC_VX_001                  = 33651,
     NPC_HODIR                   = 32845,

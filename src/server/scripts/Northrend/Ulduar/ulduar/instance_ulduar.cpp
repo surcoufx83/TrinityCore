@@ -89,7 +89,6 @@ public:
         uint64 uiLeviathanMKIIGUID;
         uint64 uiVX001GUID;
         uint64 uiAerialUnitGUID;
-        uint64 uiMagneticCoreGUID;
         uint64 uiMimironElevatorGUID;
         std::list<uint64> uiMimironDoorGUIDList;
 
@@ -413,9 +412,6 @@ public:
                     break;
                 case NPC_AERIAL_COMMAND_UNIT:
                     uiAerialUnitGUID = creature->GetGUID();
-                    break;
-                case NPC_MAGNETIC_CORE:
-                    uiMagneticCoreGUID = creature->GetGUID();
                     break;
                 case NPC_HODIR:
                     uiHodirGUID = creature->GetGUID();
@@ -906,7 +902,6 @@ public:
                 case DATA_LEVIATHAN_MK_II:      return uiLeviathanMKIIGUID;
                 case DATA_VX_001:               return uiVX001GUID;
                 case DATA_AERIAL_UNIT:          return uiAerialUnitGUID;
-                case DATA_MAGNETIC_CORE:        return uiMagneticCoreGUID;
                 case DATA_TOY_PILE_0:
                 case DATA_TOY_PILE_1:
                 case DATA_TOY_PILE_2:
