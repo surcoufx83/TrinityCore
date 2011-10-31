@@ -919,6 +919,12 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z,
     // PvP.Character? -> They are not allowed to be in the open world.
     if ((!player->InBattleground() || !player->InArena())
             && player->isPvPCharacter()) {
+        // **HACK**
+        // I could not get the NPC AI to work, so I will do it here
+        if (player->getLevel() < sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL)) {
+            HACK_OnQuestComplete(player, NULL, NULL);
+        }
+
         // Has completed the "I am PvP" Quest
         sLog->outStaticDebug("Ist PvP.Character");
         uint32 zone_id, area_id;
@@ -938,6 +944,7 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z,
                         "PvP.Characters must not be in the open world - porting back to home city");
                 player->TeleportTo(0, -8833.38f, 628.628f, 94.0066f,
                         player->GetOrientation(), 0);
+                return;
             } else {
                 sLog->outStaticDebug("Ist PvP.Character:: In Stormwind");
             }
@@ -956,18 +963,13 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z,
                         "PvP.Characters must not be in the open world - porting back to home city");
                 player->TeleportTo(1, 1629.36f, -4373.39f, 31.2564f,
                         player->GetOrientation(), 0);
+                return;
             } else {
                 sLog->outStaticDebug(
                         "Ist PvP.Character:: Immer noch in Orgrimmar");
             }
         }
-        // **HACK**
-        // I could not get the NPC AI to work, so I will do it here
-        if (player->getLevel() < sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL)) {
-            HACK_OnQuestComplete(player, NULL, NULL);
-        }
 
-        return;
     } // not in battleground AND is PvP.Character
 
 
