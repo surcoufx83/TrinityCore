@@ -956,7 +956,7 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z,
         if (player->getRaceMask() & RACEMASK_ALLIANCE) {
             sLog->outStaticDebug("Ist PvP.Character:: RACEMASK_ALLIANCE");
             // Still in Stormwind?
-            if (!(((player->GetMapId() == 0) && (area_id == 1637)) // SW Village
+            if (!(((player->GetMapId() == 0) && (area_id == 1519)) // SW Village
                     || ((player->GetMapId() == 0) && (area_id == 12)) // Elwynn forect in front of SW Village
             )) {
                 // Relocate Player
