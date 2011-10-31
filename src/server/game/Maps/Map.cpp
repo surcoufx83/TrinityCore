@@ -783,28 +783,28 @@ static bool HACK_OnQuestComplete(Player *player, Creature *_Creature,
             sLog->outStaticDebug(
                     "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_WARRIOR");
             //                (0, 1, 71, 'Verteidigungshaltung'),
-            player->addSpell(71, true, true, true, false);
+            player->learnSpell(71, true);
             //                (0, 1, 2458, 'Berserkerhaltung'),
-            player->addSpell(2458, true, true, true, false);
+            player->learnSpell(2458, true);
             //                (0, 1, 7386, 'Sunder Armor'),
-            player->addSpell(7386, true, true, true, false);
+            player->learnSpell(7386, true);
             //                (0, 1, 20252, 'Intercept'),
-            player->addSpell(20252, true, true, true, false);
+            player->learnSpell(20252, true);
             //                (0, 1, 355, 'Taunt');
-            player->addSpell(355, true, true, true, false);
+            player->learnSpell(355, true);
             break;
         case CLASS_PALADIN:
             sLog->outStaticDebug(
                     "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_PALADIN");
             //                (0, 2, 5502, 'Sense Undead'),
-            player->addSpell(5502, true, true, true, false);
+            player->learnSpell(5502, true);
             //                (0, 2, 7328, 'Redemption');
-            player->addSpell(7328, true, true, true, false);
+            player->learnSpell(7328, true);
             switch (player->getRace()) {
-            player->addSpell(31801, true, true, true, false);
+            player->learnSpell(31801, true);
         case RACE_BLOODELF:
             //(10, 2, 53736, 'Seal of Corruption'); -- Bloodelf
-            player->addSpell(53736, true, true, true, false);
+            player->learnSpell(53736, true);
             break;
             }
             break;
@@ -812,15 +812,15 @@ static bool HACK_OnQuestComplete(Player *player, Creature *_Creature,
             sLog->outStaticDebug(
                     "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_HUNTER");
             //                (0, 3, 883, 'Call Pet'),
-            player->addSpell(883, true, true, true, false);
+            player->learnSpell(883, true);
             //                (0, 3, 6991, 'Feed Pet'),
-            player->addSpell(6991, true, true, true, false);
+            player->learnSpell(6991, true);
             //                (0, 3, 2641, 'Dismiss Pet'),
-            player->addSpell(2641, true, true, true, false);
+            player->learnSpell(2641, true);
             //                (0, 3, 982, 'Revive Pet'),
-            player->addSpell(982, true, true, true, false);
+            player->learnSpell(982, true);
             //                (0, 3, 1515, 'Tame Beast');
-            player->addSpell(1515, true, true, true, false);
+            player->learnSpell(1515, true);
             break;
         case CLASS_ROGUE:
             sLog->outStaticDebug(
@@ -830,74 +830,74 @@ static bool HACK_OnQuestComplete(Player *player, Creature *_Creature,
             sLog->outStaticDebug(
                     "npc_pvpchars_questgiver:: OnQuestComplete -- CLASS_PRIEST");
             //                (0, 5, 2944, 'Devouring Plague'),
-            player->addSpell(2944, true, true, true, false);
+            player->learnSpell(2944, true);
             //                (0, 5, 6346, 'Fear Ward');
-            player->addSpell(6346, true, true, true, false);
+            player->learnSpell(6346, true);
             break;
         case CLASS_DEATH_KNIGHT:
             sLog->outStaticDebug(
                     "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_DEATH_KNIGHT");
             // Should not be possible
             //                (0, 6, 48778, 'Acherus Deathcharger'),
-            player->addSpell(48778, true, true, true, false);
+            player->learnSpell(48778, true);
             //                (0, 6, 50977, 'Death Gate'),
-            player->addSpell(50977, true, true, true, false);
+            player->learnSpell(50977, true);
             //                (0, 6, 53428, 'Runeforging ');
-            player->addSpell(53428, true, true, true, false);
+            player->learnSpell(53428, true);
             break;
         case CLASS_SHAMAN:
             sLog->outStaticDebug(
                     "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_SHAMAN");
             //                (0, 7, 3599, 'Searing Totem(Rank 1)'),
-            player->addSpell(3599, true, true, true, false);
+            player->learnSpell(3599, true);
             //                (0, 7, 8071, 'Stoneskin Totem(Rank 1)'),
-            player->addSpell(8071, true, true, true, false);
+            player->learnSpell(8071, true);
             //                (0, 7, 5394, 'Healing Stream Totem(Rank 1)');
-            player->addSpell(5394, true, true, true, false);
+            player->learnSpell(5394, true);
             break;
         case CLASS_MAGE:
             sLog->outStaticDebug(
                     "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_MAGE");
             //                (0, 8, 28272, 'Polymorph Pig'),
-            player->addSpell(28272, true, true, true, false);
+            player->learnSpell(28272, true);
             //                (0, 8, 10140, 'Conjure Water '),
-            player->addSpell(10140, true, true, true, false);
+            player->learnSpell(10140, true);
             //                (0, 8, 53140, 'Teleport: Dalaran');
-            player->addSpell(53140, true, true, true, false);
+            player->learnSpell(53140, true);
             break;
         case CLASS_WARLOCK:
             sLog->outStaticDebug(
                     "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_WARLOCK");
             //                (0, 9, 688, 'Summon Imp'),
-            player->addSpell(688, true, true, true, false);
+            player->learnSpell(688, true);
             //                (0, 9, 697, 'Summon Voidwalker'),
-            player->addSpell(697, true, true, true, false);
+            player->learnSpell(697, true);
             //                (0, 9, 712, 'Summon Succubus'),
-            player->addSpell(712, true, true, true, false);
+            player->learnSpell(712, true);
             //                (0, 9, 691, 'Summon Felhunter'),
-            player->addSpell(691, true, true, true, false);
+            player->learnSpell(691, true);
             //                (0, 9, 1122, 'Summon Inferno'),
-            player->addSpell(1122, true, true, true, false);
+            player->learnSpell(1122, true);
             //                (0, 9, 18540, 'Ritual of Doom'),
-            player->addSpell(18540, true, true, true, false);
+            player->learnSpell(18540, true);
             //                (0, 9, 23161, 'Dreadsteed');
-            player->addSpell(23161, true, true, true, false);
+            player->learnSpell(23161, true);
             break;
         case CLASS_DRUID:
             sLog->outStaticDebug(
                     "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_DRUID");
             //                (0, 11, 5487, 'Bear Form'),
-            player->addSpell(5487, true, true, true, false);
+            player->learnSpell(5487, true);
             //                (0, 11, 6807, 'Maul'),
-            player->addSpell(6807, true, true, true, false);
+            player->learnSpell(6807, true);
             //                (0, 11, 6795, 'Grow'),
-            player->addSpell(6795, true, true, true, false);
+            player->learnSpell(6795, true);
             //                (0, 11, 1066, 'Aquatic Form'),
-            player->addSpell(1066, true, true, true, false);
+            player->learnSpell(1066, true);
             //                (0, 11, 40120, 'Swift Flight Form'),
-            player->addSpell(40120, true, true, true, false);
+            player->learnSpell(40120, true);
             //                (0, 11, 8946, 'Cure Poison');
-            player->addSpell(8946, true, true, true, false);
+            player->learnSpell(8946, true);
             break;
         default:
             sLog->outStaticDebug(
