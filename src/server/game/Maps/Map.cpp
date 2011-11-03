@@ -955,40 +955,53 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z,
         // Horde or Alliance?
         if (player->getRaceMask() & RACEMASK_ALLIANCE) {
             sLog->outStaticDebug("Ist PvP.Character:: RACEMASK_ALLIANCE");
-            // Still in Stormwind?
-            if (!(((player->GetMapId() == 0) && (area_id == 1519)) // SW Village
-                    || ((player->GetMapId() == 0) && (area_id == 12)) // Elwynn forect in front of SW Village
-            )) {
-                // Relocate Player
-                sLog->outStaticDebug(
-                        "Ist PvP.Character:: Nicht mehr in Stormwind");
-                ChatHandler(player).PSendSysMessage(
-                        "PvP.Characters must not be in the open world - porting back to home city");
-                player->TeleportTo(0, -8833.38f, 628.628f, 94.0066f,
-                        player->GetOrientation(), 0);
-                return;
+            // In Stockade or DireMaul -> set PhaseMask
+            if ((player->GetMapId() == 34) || (player->GetMapId() == 429)) {
+                player->SetPhaseMask(2, false);
             } else {
-                sLog->outStaticDebug("Ist PvP.Character:: In Stormwind");
+                // Still in Stormwind?
+                if (!(((player->GetMapId() == 0) && (area_id == 1519)) // SW Village
+                        || ((player->GetMapId() == 0) && (area_id == 12)) // Elwynn forest in front of SW Village
+                )) {
+                    // Relocate Player
+                    sLog->outStaticDebug(
+                            "Ist PvP.Character:: Nicht mehr in Stormwind");
+                    ChatHandler(player).PSendSysMessage(
+                            "PvP.Characters must not be in the open world - porting back to home city");
+                    player->TeleportTo(0, -8833.38f, 628.628f, 94.0066f,
+                            player->GetOrientation(), 0);
+                    player->SetPhaseMask(PHASEMASK_NORMAL, false);
+                    return;
+                } else {
+                    sLog->outStaticDebug("Ist PvP.Character:: No Relocation");
+                    player->SetPhaseMask(PHASEMASK_NORMAL, false);
+                }
             }
         } else {
             // Map 450: Horde PvP Kaserne
             sLog->outStaticDebug("Ist PvP.Character:: RACEMASK_HORDE");
             // Still in Orgrimmar or in PvP Kaserne?
-            if (!((player->GetMapId() == 450) // Horde Kaserne
-                    || ((player->GetMapId() == 1) && (area_id == 1637)) // Org Village
-                    || ((player->GetMapId() == 1) && (area_id == 14)) // Durotar in front of Org Village
-            )) {
-                // Relocate Player
-                sLog->outStaticDebug(
-                        "Ist PvP.Character:: Nicht mehr in Orgrimmar");
-                ChatHandler(player).PSendSysMessage(
-                        "PvP.Characters must not be in the open world - porting back to home city");
-                player->TeleportTo(1, 1629.36f, -4373.39f, 31.2564f,
-                        player->GetOrientation(), 0);
-                return;
+            // In Ragefire or DireMaul -> set PhaseMask
+            if ((player->GetMapId() == 389) || (player->GetMapId() == 429)) {
+                player->SetPhaseMask(2, false);
             } else {
-                sLog->outStaticDebug(
-                        "Ist PvP.Character:: Immer noch in Orgrimmar");
+                if (!((player->GetMapId() == 450) // Horde Kaserne
+                        || ((player->GetMapId() == 1) && (area_id == 1637)) // Org Village
+                        || ((player->GetMapId() == 1) && (area_id == 14)) // Durotar in front of Org Village
+                )) {
+                    // Relocate Player
+                    sLog->outStaticDebug(
+                            "Ist PvP.Character:: Nicht mehr in Orgrimmar");
+                    ChatHandler(player).PSendSysMessage(
+                            "PvP.Characters must not be in the open world - porting back to home city");
+                    player->TeleportTo(1, 1629.36f, -4373.39f, 31.2564f,
+                            player->GetOrientation(), 0);
+                    player->SetPhaseMask(PHASEMASK_NORMAL, false);
+                    return;
+                } else {
+                    sLog->outStaticDebug("Ist PvP.Character:: No Relocation");
+                    player->SetPhaseMask(PHASEMASK_NORMAL, false);
+                }
             }
         }
 
