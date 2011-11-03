@@ -948,7 +948,7 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z,
         }
 
         // Has completed the "I am PvP" Quest
-        sLog->outStaticDebug("Ist PvP.Character");
+        sLog->outStaticDebug("Ist PvP.Character **");
         sLog->outStaticDebug("Player ist in Map: %d", this->GetId());
         uint32 zone_id, area_id;
         player->GetZoneAndAreaId(zone_id, area_id);
