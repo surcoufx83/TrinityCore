@@ -250,6 +250,7 @@ class boss_xt002 : public CreatureScript
 
             void JustDied(Unit* /*victim*/)
             {
+                me->RemoveAllAuras();
                 DoScriptText(SAY_DEATH, me);
                 _JustDied();
 
