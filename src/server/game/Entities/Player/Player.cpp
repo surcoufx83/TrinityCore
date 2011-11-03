@@ -9735,42 +9735,6 @@ void Player::SendInitWorldStates(uint32 zoneid, uint32 areaid)
     GetSession()->SendPacket(&data);
     SendBGWeekendWorldStates();
 
-    // PvP.Character? -> They are not allowed to be in the open world.
-	if ( (!InBattleground() || !InArena()) && isPvPCharacter()) {
-        // Has completed the "I am PvP" Quest
-        sLog->outStaticDebug("Ist PvP.Character");
-        uint32 zone_id, area_id;
-        GetZoneAndAreaId(zone_id, area_id);
-        // Relocate player
-        // Horde or Alliance?
-        if (this->getRaceMask() & RACEMASK_ALLIANCE) {
-            sLog->outStaticDebug("Ist PvP.Character:: RACEMASK_ALLIANCE");
-            // Still in Stormwind?
-            if ((this->GetMapId() != 0) || (area_id != 1519)) {
-                // Relocate Player
-                sLog->outStaticDebug("Ist PvP.Character:: Nicht mehr in Stormwind");
-                ChatHandler(this).PSendSysMessage(
-                        "PvP.Characters must not be in the open world - porting back to home city");
-                TeleportTo(0, -8833.38f, 628.628f, 94.0066f, GetOrientation(), 0);
-            } else {
-                sLog->outStaticDebug("Ist PvP.Character:: In Stormwind");
-            }
-        } else {
-            // Map 450: Horde PvP Kaserne
-            sLog->outStaticDebug("Ist PvP.Character:: RACEMASK_HORDE");
-            // Still in Orgrimmar or in PvP Kaserne?
-            if (!((this->GetMapId() == 450) || ((this->GetMapId() == 1)
-                    && (area_id == 1637)))) {
-                // Relocate Player
-                sLog->outStaticDebug("Ist PvP.Character:: Nicht mehr in Orgrimmar");
-                ChatHandler(this).PSendSysMessage(
-                        "PvP.Characters must not be in the open world - porting back to home city");
-                TeleportTo(1, 1629.36f, -4373.39f, 31.2564f, GetOrientation(), 0);
-            } else {
-                sLog->outStaticDebug("Ist PvP.Character:: Immer noch in Orgrimmar");
-            }
-        }
-    } // not in battleground AND is PvP.Character
 }
 
 void Player::SendBGWeekendWorldStates()
