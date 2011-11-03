@@ -957,6 +957,7 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z,
             sLog->outStaticDebug("Ist PvP.Character:: RACEMASK_ALLIANCE");
             // In Stockade or DireMaul -> set PhaseMask
             if ((player->GetMapId() == 34) || (player->GetMapId() == 429)) {
+                sLog->outStaticDebug("Ist PvP.Character:: Stockade or Diremaul --> Phase 2");
                 player->SetPhaseMask(2, false);
             } else {
                 // Still in Stormwind?
@@ -983,6 +984,7 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z,
             // Still in Orgrimmar or in PvP Kaserne?
             // In Ragefire or DireMaul -> set PhaseMask
             if ((player->GetMapId() == 389) || (player->GetMapId() == 429)) {
+                sLog->outStaticDebug("Ist PvP.Character:: Ragefire or Diremaul --> Phase 2");
                 player->SetPhaseMask(2, false);
             } else {
                 if (!((player->GetMapId() == 450) // Horde Kaserne
