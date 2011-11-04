@@ -787,15 +787,13 @@ static bool HACK_OnQuestComplete(Player *player, Creature *_Creature,
             sLog->outStaticDebug(
                     "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_WARRIOR");
             //                (0, 1, 71, 'Verteidigungshaltung'),
-            player->learnSpell(71, true);
-            //                (0, 1, 2458, 'Berserkerhaltung'),
-            player->learnSpell(2458, true);
-            //                (0, 1, 7386, 'Sunder Armor'),
-            player->learnSpell(7386, true);
-            //                (0, 1, 20252, 'Intercept'),
-            player->learnSpell(20252, true);
             //                (0, 1, 355, 'Taunt');
-            player->learnSpell(355, true);
+            player->CastSpell(player, 8121, true, NULL, NULL, player->GetGUID());
+            //                (0, 1, 2458, 'Berserkerhaltung'),
+            //                (0, 1, 20252, 'Intercept'),
+            player->CastSpell(player, 8616, true, NULL, NULL, player->GetGUID());
+            //                (0, 1, 7386, 'Sunder Armor'),
+            player->CastSpell(player, 8121, true, NULL, NULL, player->GetGUID());
             break;
         case CLASS_PALADIN:
             sLog->outStaticDebug(
@@ -834,68 +832,67 @@ static bool HACK_OnQuestComplete(Player *player, Creature *_Creature,
             sLog->outStaticDebug(
                     "npc_pvpchars_questgiver:: OnQuestComplete -- CLASS_PRIEST");
             //                (0, 5, 2944, 'Devouring Plague'),
-            player->learnSpell(2944, true);
+            player->CastSpell(player, 2946, true, NULL, NULL, player->GetGUID());
             //                (0, 5, 6346, 'Fear Ward');
-            player->learnSpell(6346, true);
+            player->CastSpell(player, 19337, true, NULL, NULL,
+                    player->GetGUID());
             break;
         case CLASS_DEATH_KNIGHT:
             sLog->outStaticDebug(
                     "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_DEATH_KNIGHT");
             // Should not be possible
             //                (0, 6, 48778, 'Acherus Deathcharger'),
-            player->learnSpell(48778, true);
+            player->CastSpell(player, 52382, true, NULL, NULL,
+                    player->GetGUID());
             //                (0, 6, 50977, 'Death Gate'),
-            player->learnSpell(50977, true);
+            player->CastSpell(player, 53821, true, NULL, NULL,
+                    player->GetGUID());
             //                (0, 6, 53428, 'Runeforging ');
-            player->learnSpell(53428, true);
+            player->CastSpell(player, 53431, true, NULL, NULL,
+                    player->GetGUID());
             break;
         case CLASS_SHAMAN:
             sLog->outStaticDebug(
                     "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_SHAMAN");
             //                (0, 7, 3599, 'Searing Totem(Rank 1)'),
-            player->learnSpell(3599, true);
+            player->CastSpell(player, 2075, true, NULL, NULL, player->GetGUID());
             //                (0, 7, 8071, 'Stoneskin Totem(Rank 1)'),
-            player->learnSpell(8071, true);
+            player->CastSpell(player, 8073, true, NULL, NULL, player->GetGUID());
             //                (0, 7, 5394, 'Healing Stream Totem(Rank 1)');
-            player->learnSpell(5394, true);
+            player->CastSpell(player, 5396, true, NULL, NULL, player->GetGUID());
             break;
         case CLASS_MAGE:
             sLog->outStaticDebug(
                     "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_MAGE");
             //                (0, 8, 28272, 'Polymorph Pig'),
-            player->learnSpell(28272, true);
+            player->CastSpell(player, 28285, true, NULL, NULL,
+                    player->GetGUID());
             //                (0, 8, 10140, 'Conjure Water '),
-            player->learnSpell(10140, true);
+            player->CastSpell(player, 10143, true, NULL, NULL,
+                    player->GetGUID());
             //                (0, 8, 53140, 'Teleport: Dalaran');
-            player->learnSpell(53140, true);
+            player->CastSpell(player, 3578, true, NULL, NULL, player->GetGUID());
             break;
         case CLASS_WARLOCK:
             sLog->outStaticDebug(
                     "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_WARLOCK");
             // LEARN summon imp
+            //                (0, 9, 688, 'Summon Imp'),        -- WORKS
             player->CastSpell(player, 7763, true, NULL, NULL, player->GetGUID());
-            //                (0, 9, 688, 'Summon Imp'),
-            // player->learnSpell(688, true);
-            //                (0, 9, 697, 'Summon Voidwalker'),
-            //player->learnSpell(697, true);
+            //                (0, 9, 697, 'Summon Voidwalker'), -- WORKS
             player->CastSpell(player, 11520, true, NULL, NULL,
                     player->GetGUID());
-            //                (0, 9, 712, 'Summon Succubus'),
-            // player->learnSpell(712, true);
+            //                (0, 9, 712, 'Summon Succubus'),   -- WORKS
             player->CastSpell(player, 11519, true, NULL, NULL,
                     player->GetGUID());
-            //                (0, 9, 691, 'Summon Felhunter'),
-            //player->learnSpell(691, true);
+            //                (0, 9, 691, 'Summon Felhunter'),  -- WORKS
             player->CastSpell(player, 1373, true, NULL, NULL, player->GetGUID());
             //                (0, 9, 1122, 'Summon Inferno'),
-            // player->learnSpell(1122, true);
-            player->CastSpell(player, 1122, true, NULL, NULL, player->GetGUID());
+            player->CastSpell(player, 1413, true, NULL, NULL, player->GetGUID());
             //                (0, 9, 18540, 'Ritual of Doom'),
-            //player->learnSpell(18540, true);
-            player->CastSpell(player, 18540, true, NULL, NULL,
+            player->CastSpell(player, 20700, true, NULL, NULL,
                     player->GetGUID());
-            //                (0, 9, 23161, 'Dreadsteed');
-            //player->learnSpell(23161, true);
+            //                (0, 9, 23161, 'Dreadsteed');  -- WORKS
             player->CastSpell(player, 23160, true, NULL, NULL,
                     player->GetGUID());
             break;
@@ -903,17 +900,17 @@ static bool HACK_OnQuestComplete(Player *player, Creature *_Creature,
             sLog->outStaticDebug(
                     "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_DRUID");
             //                (0, 11, 5487, 'Bear Form'),
-            player->learnSpell(5487, true);
             //                (0, 11, 6807, 'Maul'),
-            player->learnSpell(6807, true);
             //                (0, 11, 6795, 'Grow'),
-            player->learnSpell(6795, true);
+            player->CastSpell(player, 19179, true, NULL, NULL,
+                    player->GetGUID());
             //                (0, 11, 1066, 'Aquatic Form'),
-            player->learnSpell(1066, true);
+            player->CastSpell(player, 1446, true, NULL, NULL, player->GetGUID());
             //                (0, 11, 40120, 'Swift Flight Form'),
-            player->learnSpell(40120, true);
+            player->CastSpell(player, 40123, true, NULL, NULL,
+                    player->GetGUID());
             //                (0, 11, 8946, 'Cure Poison');
-            player->learnSpell(8946, true);
+            player->CastSpell(player, 8947, true, NULL, NULL, player->GetGUID());
             break;
         default:
             sLog->outStaticDebug(
