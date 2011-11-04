@@ -768,6 +768,10 @@ static bool HACK_OnQuestComplete(Player *player, Creature *_Creature,
                     "HACK_OnQuestComplete:: OnQuestComplete -- Player has max level - exiting");
             return true;
         }
+        // Learn dual spec
+        player->CastSpell(player, 63680, true, NULL, NULL, player->GetGUID());
+        player->CastSpell(player, 63624, true, NULL, NULL, player->GetGUID());
+
         // Set player to max level
         // -> Player should only be level 1
         HACK_HandleCharacterLevel(
@@ -868,6 +872,8 @@ static bool HACK_OnQuestComplete(Player *player, Creature *_Creature,
         case CLASS_WARLOCK:
             sLog->outStaticDebug(
                     "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_WARLOCK");
+			// LEARN summon imp
+            player->CastSpell(player, 7763, true, NULL, NULL, player->GetGUID());
             //                (0, 9, 688, 'Summon Imp'),
             player->learnSpell(688, true);
             //                (0, 9, 697, 'Summon Voidwalker'),
@@ -971,7 +977,7 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z,
                             "Ist PvP.Character:: Nicht mehr in Stormwind");
                     ChatHandler(player).PSendSysMessage(
                             "PvP.Characters must not be in the open world - porting back to home city");
-                    player->TeleportTo(0, -8833.38f, 628.628f, 94.0066f,
+                    player->TeleportTo(0, -8833.38f, 628.628f, 94.356f,
                             player->GetOrientation(), 0);
                     player->SetPhaseMask(PHASEMASK_NORMAL, false);
                     return;
@@ -998,7 +1004,7 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z,
                             "Ist PvP.Character:: Nicht mehr in Orgrimmar");
                     ChatHandler(player).PSendSysMessage(
                             "PvP.Characters must not be in the open world - porting back to home city");
-                    player->TeleportTo(1, 1629.36f, -4373.39f, 31.2564f,
+                    player->TeleportTo(1, 1629.36f, -4373.39f, 31.4828f,
                             player->GetOrientation(), 0);
                     player->SetPhaseMask(PHASEMASK_NORMAL, false);
                     return;
