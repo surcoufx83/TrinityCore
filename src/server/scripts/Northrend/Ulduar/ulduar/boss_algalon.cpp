@@ -157,11 +157,12 @@ class boss_algalon : public CreatureScript
                 _phase = 0;
                 _stepTimer = 0;
                 _starCount = 0;
+                _constellationCount = 0;
                 _wipeRaid = false;
                 _firstStars = true;
 
                 DoCast(me, SPELL_DUAL_WIELD, true);
-                me->SetAttackTime(OFF_ATTACK, 1200);
+                me->SetAttackTime(OFF_ATTACK, 1100);
                 me->SetStatFloatValue(UNIT_FIELD_MINOFFHANDDAMAGE, float(RAID_MODE<uint32>(15000, 28000)));
                 me->SetStatFloatValue(UNIT_FIELD_MAXOFFHANDDAMAGE, float(RAID_MODE<uint32>(18000, 35000)));
                 me->SetStatFloatValue(UNIT_FIELD_MINDAMAGE, float(RAID_MODE<uint32>(28000, 50000)));
@@ -236,6 +237,7 @@ class boss_algalon : public CreatureScript
                         summon->GetMotionMaster()->MoveRandom(15.0f);
                         break;
                     case NPC_LIVING_CONSTELLATION:
+                        ++_constellationCount;
                         summon->SetInCombatWithZone();
                         if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
                             summon->AI()->AttackStart(target);
@@ -257,6 +259,9 @@ class boss_algalon : public CreatureScript
                     case NPC_COLLAPSING_STAR:
                         --_starCount;
                         me->SummonCreature(NPC_BLACK_HOLE, summon->GetPositionX(), summon->GetPositionY(), summon->GetPositionZ());
+                        break;
+                    case NPC_LIVING_CONSTELLATION:
+                        --_constellationCount;
                         break;
                     default:
                         break;
@@ -474,12 +479,12 @@ class boss_algalon : public CreatureScript
                             }
                             for (uint8 i = _starCount; i < 4; ++i)
                                 me->SummonCreature(NPC_COLLAPSING_STAR, collapsingLocations[i], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3*IN_MILLISECONDS);
-                            events.ScheduleEvent(EVENT_COLLAPSINGSTAR, 45*IN_MILLISECONDS);
+                            events.ScheduleEvent(EVENT_COLLAPSINGSTAR, 60*IN_MILLISECONDS);
                             break;
                         case EVENT_LIVINGCONSTELLATION:
-                            for (uint8 i = 0; i < 3; ++i)
+                            for (uint8 i = _constellationCount; i < 3; ++i)
                                 me->SummonCreature(NPC_LIVING_CONSTELLATION, constellationLocations[i], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 1*IN_MILLISECONDS);
-                            events.ScheduleEvent(EVENT_LIVINGCONSTELLATION, 50*IN_MILLISECONDS);
+                            events.ScheduleEvent(EVENT_LIVINGCONSTELLATION, 45*IN_MILLISECONDS);
                             break;
                         case EVENT_DARKMATTER:
                             for (uint8 i = 0; i < 4; ++i)
@@ -505,6 +510,7 @@ class boss_algalon : public CreatureScript
             }
 
         private:
+            uint8 _constellationCount;
             uint8 _starCount;
             uint8 _phase;
             uint8 _step;
@@ -606,7 +612,7 @@ class npc_living_constellation : public CreatureScript
                 if (_arcaneBarrageTimer <= diff)
                 {
                     DoCast(RAID_MODE<uint32>(SPELL_ARCANE_BARAGE_10, SPELL_ARCANE_BARAGE_25));
-                    _arcaneBarrageTimer = urand(5*IN_MILLISECONDS, 8*IN_MILLISECONDS);
+                    _arcaneBarrageTimer = urand(5*IN_MILLISECONDS, 7*IN_MILLISECONDS);
                 }
                 else
                     _arcaneBarrageTimer -= diff;
