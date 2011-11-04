@@ -872,22 +872,32 @@ static bool HACK_OnQuestComplete(Player *player, Creature *_Creature,
         case CLASS_WARLOCK:
             sLog->outStaticDebug(
                     "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_WARLOCK");
-			// LEARN summon imp
+            // LEARN summon imp
             player->CastSpell(player, 7763, true, NULL, NULL, player->GetGUID());
             //                (0, 9, 688, 'Summon Imp'),
-            player->learnSpell(688, true);
+            // player->learnSpell(688, true);
             //                (0, 9, 697, 'Summon Voidwalker'),
-            player->learnSpell(697, true);
+            //player->learnSpell(697, true);
+            player->CastSpell(player, 11520, true, NULL, NULL,
+                    player->GetGUID());
             //                (0, 9, 712, 'Summon Succubus'),
-            player->learnSpell(712, true);
+            // player->learnSpell(712, true);
+            player->CastSpell(player, 11519, true, NULL, NULL,
+                    player->GetGUID());
             //                (0, 9, 691, 'Summon Felhunter'),
-            player->learnSpell(691, true);
+            //player->learnSpell(691, true);
+            player->CastSpell(player, 1373, true, NULL, NULL, player->GetGUID());
             //                (0, 9, 1122, 'Summon Inferno'),
-            player->learnSpell(1122, true);
+            // player->learnSpell(1122, true);
+            player->CastSpell(player, 1122, true, NULL, NULL, player->GetGUID());
             //                (0, 9, 18540, 'Ritual of Doom'),
-            player->learnSpell(18540, true);
+            //player->learnSpell(18540, true);
+            player->CastSpell(player, 18540, true, NULL, NULL,
+                    player->GetGUID());
             //                (0, 9, 23161, 'Dreadsteed');
-            player->learnSpell(23161, true);
+            //player->learnSpell(23161, true);
+            player->CastSpell(player, 23160, true, NULL, NULL,
+                    player->GetGUID());
             break;
         case CLASS_DRUID:
             sLog->outStaticDebug(
