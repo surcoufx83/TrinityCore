@@ -799,9 +799,9 @@ static bool HACK_OnQuestComplete(Player *player, Creature *_Creature,
             sLog->outStaticDebug(
                     "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_PALADIN");
             //                (0, 2, 5502, 'Sense Undead'),
-            player->learnSpell(5502, true);
+            player->CastSpell(player, 5503, true, NULL, NULL, player->GetGUID());
             //                (0, 2, 7328, 'Redemption');
-            player->learnSpell(7328, true);
+            player->CastSpell(player, 7329, true, NULL, NULL, player->GetGUID());
             switch (player->getRace()) {
             player->learnSpell(31801, true);
         case RACE_BLOODELF:
@@ -813,16 +813,14 @@ static bool HACK_OnQuestComplete(Player *player, Creature *_Creature,
         case CLASS_HUNTER:
             sLog->outStaticDebug(
                     "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_HUNTER");
-            //                (0, 3, 883, 'Call Pet'),
-            player->learnSpell(883, true);
-            //                (0, 3, 6991, 'Feed Pet'),
-            player->learnSpell(6991, true);
             //                (0, 3, 2641, 'Dismiss Pet'),
-            player->learnSpell(2641, true);
-            //                (0, 3, 982, 'Revive Pet'),
-            player->learnSpell(982, true);
+            //                (0, 3, 883, 'Call Pet'),
             //                (0, 3, 1515, 'Tame Beast');
-            player->learnSpell(1515, true);
+            player->CastSpell(player, 1579, true, NULL, NULL, player->GetGUID());
+            //                (0, 3, 982, 'Revive Pet'),
+            //                (0, 3, 6991, 'Feed Pet'),
+            player->CastSpell(player, 5300, true, NULL, NULL, player->GetGUID());
+
             break;
         case CLASS_ROGUE:
             sLog->outStaticDebug(
