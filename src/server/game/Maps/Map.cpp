@@ -817,10 +817,9 @@ static bool HACK_OnQuestComplete(Player *player, Creature *_Creature,
             {
                 StableSlotPricesEntry const* SlotPrice =
                         sStableSlotPricesStore.LookupEntry(
-                                GetPlayer()->m_stableSlots + 1);
+                                player->m_stableSlots + 1);
                 // PvP.Chars do not pay for stable slots
-                ++GetPlayer()->m_stableSlots;
-                SendStableResult( STABLE_SUCCESS_BUY_SLOT);
+                ++(player->m_stableSlots);
             }
 
             //                (0, 3, 2641, 'Dismiss Pet'),
