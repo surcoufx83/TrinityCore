@@ -881,7 +881,7 @@ public:
         std::string GossipItem;
         bool CanLearn = false;
 
-        if (player->HasSkill(SKILL_ENGINERING))
+        if (player->HasSkill(SKILL_ENGINEERING))
         {
             switch(creature->GetEntry())
             {
