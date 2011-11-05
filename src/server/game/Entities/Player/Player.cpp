@@ -4396,6 +4396,9 @@ void Player::_SaveSpellCooldowns(SQLTransaction& trans)
 bool Player::isPvPCharacter() {
     uint32 questId = sWorld->getIntConfig(CONFIG_INT_PVP_CHARACTER_QUESTID);
     QuestStatus qStatus = this->GetQuestStatus(questId);
+
+    sLog->outStaticDebug("isPvPCharacter:: GetQuestStatus; %d", qStatus);
+
     if (qStatus == QUEST_STATUS_COMPLETE) {
         return true;
     }
@@ -20533,7 +20536,7 @@ inline bool Player::_StoreOrEquipNewItem(uint32 vendorslot, uint32 item, uint8 c
             if (ci->SubName.compare(configSub) == 0) {
                 sLog->outStaticDebug("BuyItemFromVendor:: Special PvP Vendor -> Buyprice == 0");
                 ChatHandler(this).PSendSysMessage(
-                        "PvP.Characters has not to pay for items - buyprice is always 0");
+                        "PvP.Characters have not to pay for items - buyprice is always 0");
                 freeForPvPChar = true;
             } else {
                 sLog->outStaticDebug("BuyItemFromVendor:: Not a PvP Vendor -> Buyprice normal");
@@ -20669,7 +20672,7 @@ bool Player::BuyItemFromVendorSlot(uint64 vendorguid, uint32 vendorslot, uint32 
             if (ci->SubName.compare(configSub) == 0) {
                 sLog->outStaticDebug("BuyItemFromVendor:: Special PvP Vendor -> Buyprice == 0");
                 ChatHandler(this).PSendSysMessage(
-                        "PvP.Characters has not to pay for items - buyprice is always 0");
+                        "PvP.Characters have not to pay for items - buyprice is always 0");
                 freeForPvPChar = true;
             } else {
                 sLog->outStaticDebug("BuyItemFromVendor:: Not a PvP Vendor -> Buyprice normal");
