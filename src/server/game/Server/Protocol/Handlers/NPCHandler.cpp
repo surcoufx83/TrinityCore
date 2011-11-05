@@ -763,6 +763,11 @@ void WorldSession::HandleBuyStableSlot(WorldPacket & recv_data)
     if (GetPlayer()->m_stableSlots < MAX_PET_STABLES)
     {
         StableSlotPricesEntry const* SlotPrice = sStableSlotPricesStore.LookupEntry(GetPlayer()->m_stableSlots+1);
+        // PvP.Chars do not pay for stable slots
+        if (_player->isPvPCharacter()) {
+            ++GetPlayer()->m_stableSlots;
+            SendStableResult(STABLE_SUCCESS_BUY_SLOT);
+        } else
         if (_player->HasEnoughMoney(SlotPrice->Price))
         {
             ++GetPlayer()->m_stableSlots;

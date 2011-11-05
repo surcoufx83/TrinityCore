@@ -23096,6 +23096,10 @@ bool Player::CanCaptureTowerPoint()
 uint32 Player::GetBarberShopCost(uint8 newhairstyle, uint8 newhaircolor, uint8 newfacialhair, BarberShopStyleEntry const* newSkin)
 
 {
+    // PvP.Chars do not pay
+    if (isPvPCharacter())
+        return 0;
+
     uint8 level = getLevel();
 
     if (level > GT_MAX_LEVEL)
