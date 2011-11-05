@@ -813,6 +813,16 @@ static bool HACK_OnQuestComplete(Player *player, Creature *_Creature,
         case CLASS_HUNTER:
             sLog->outStaticDebug(
                     "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_HUNTER");
+            while (player->m_stableSlots < MAX_PET_STABLES)
+            {
+                StableSlotPricesEntry const* SlotPrice =
+                        sStableSlotPricesStore.LookupEntry(
+                                GetPlayer()->m_stableSlots + 1);
+                // PvP.Chars do not pay for stable slots
+                ++GetPlayer()->m_stableSlots;
+                SendStableResult( STABLE_SUCCESS_BUY_SLOT);
+            }
+
             //                (0, 3, 2641, 'Dismiss Pet'),
             //                (0, 3, 883, 'Call Pet'),
             //                (0, 3, 1515, 'Tame Beast');
