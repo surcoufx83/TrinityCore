@@ -6244,7 +6244,7 @@ SpellCastResult Spell::CheckItems()
             {
                 // gnomish army knife
                 if (m_spellInfo->Id == 54732)
-                    if (p_caster->GetSkillValue(SKILL_ENGINERING) < 350)
+                    if (p_caster->GetSkillValue(SKILL_ENGINEERING) < 350)
                     {
                         m_customError = SPELL_CUSTOM_ERROR_REQUIRES_350_ENGINEERING;
                         return SPELL_FAILED_CUSTOM_ERROR;

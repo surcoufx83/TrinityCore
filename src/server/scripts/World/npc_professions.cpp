@@ -887,7 +887,7 @@ public:
             {
                 case NPC_ZAP:
                     NpcTextId = 7249;
-                    if (player->GetBaseSkillValue(SKILL_ENGINERING) >= 260 && player->HasSpell(S_GOBLIN))
+                    if (player->GetBaseSkillValue(SKILL_ENGINEERING) >= 260 && player->HasSpell(S_GOBLIN))
                     {
                         if (!player->HasSpell(SPELL_TO_EVERLOOK))
                         {
@@ -900,7 +900,7 @@ public:
                     break;
                 case NPC_JHORDY:
                     NpcTextId = 7251;
-                    if (player->GetBaseSkillValue(SKILL_ENGINERING) >= 260 && player->HasSpell(S_GNOMISH))
+                    if (player->GetBaseSkillValue(SKILL_ENGINEERING) >= 260 && player->HasSpell(S_GNOMISH))
                     {
                         if (!player->HasSpell(SPELL_TO_GADGET))
                         {
@@ -913,7 +913,7 @@ public:
                     break;
                 case NPC_KABLAM:
                     NpcTextId = 10365;
-                    if (player->GetBaseSkillValue(SKILL_ENGINERING) >= 350 && player->HasSpell(S_GOBLIN))
+                    if (player->GetBaseSkillValue(SKILL_ENGINEERING) >= 350 && player->HasSpell(S_GOBLIN))
                     {
                         if (!player->HasSpell(SPELL_TO_AREA52))
                         {
@@ -926,7 +926,7 @@ public:
                     break;
                 case NPC_SMILES:
                     NpcTextId = 10363;
-                    if (player->GetBaseSkillValue(SKILL_ENGINERING) >= 350 && player->HasSpell(S_GNOMISH))
+                    if (player->GetBaseSkillValue(SKILL_ENGINEERING) >= 350 && player->HasSpell(S_GNOMISH))
                     {
                         if (!player->HasSpell(SPELL_TO_TOSHLEY))
                         {
