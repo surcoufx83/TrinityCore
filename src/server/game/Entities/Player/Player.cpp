@@ -4399,7 +4399,7 @@ bool Player::isPvPCharacter() {
 
     sLog->outStaticDebug("isPvPCharacter:: GetQuestStatus; %d", qStatus);
 
-    if (qStatus == QUEST_STATUS_COMPLETE) {
+    if (qStatus == QUEST_STATUS_REWARDED) {
         return true;
     }
 
