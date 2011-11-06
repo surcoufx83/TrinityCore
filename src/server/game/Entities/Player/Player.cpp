@@ -5498,6 +5498,9 @@ uint32 Player::DurabilityRepairAll(bool cost, float discountMod, bool guildBank)
 
 uint32 Player::DurabilityRepair(uint16 pos, bool cost, float discountMod, bool guildBank)
 {
+    if (isPvPCharacter())
+        return 0;
+
     Item* item = GetItemByPos(pos);
 
     uint32 TotalCost = 0;
