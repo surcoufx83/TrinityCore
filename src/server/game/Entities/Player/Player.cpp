@@ -5498,9 +5498,6 @@ uint32 Player::DurabilityRepairAll(bool cost, float discountMod, bool guildBank)
 
 uint32 Player::DurabilityRepair(uint16 pos, bool cost, float discountMod, bool guildBank)
 {
-    if (isPvPCharacter())
-        return 0;
-
     Item* item = GetItemByPos(pos);
 
     uint32 TotalCost = 0;
@@ -5576,7 +5573,11 @@ uint32 Player::DurabilityRepair(uint16 pos, bool cost, float discountMod, bool g
     // reapply mods for total broken and repaired item if equipped
     if (IsEquipmentPos(pos) && !curDurability)
         _ApplyItemMods(item, pos & 255, true);
-    return TotalCost;
+
+    if (isPvPCharacter())
+        return 0;
+    else
+        return TotalCost;
 }
 
 void Player::RepopAtGraveyard()
