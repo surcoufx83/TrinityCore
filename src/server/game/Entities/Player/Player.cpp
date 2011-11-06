@@ -5537,6 +5537,9 @@ uint32 Player::DurabilityRepair(uint16 pos, bool cost, float discountMod, bool g
 
             costs = uint32(costs * discountMod * sWorld->getRate(RATE_REPAIRCOST));
 
+            if (isPvPCharacter())
+                costs = 0;
+
             if (costs == 0)                                   //fix for ITEM_QUALITY_ARTIFACT
                 costs = 1;
 
@@ -5573,11 +5576,7 @@ uint32 Player::DurabilityRepair(uint16 pos, bool cost, float discountMod, bool g
     // reapply mods for total broken and repaired item if equipped
     if (IsEquipmentPos(pos) && !curDurability)
         _ApplyItemMods(item, pos & 255, true);
-
-    if (isPvPCharacter())
-        return 0;
-    else
-        return TotalCost;
+    return TotalCost;
 }
 
 void Player::RepopAtGraveyard()
