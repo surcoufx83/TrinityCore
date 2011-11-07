@@ -3483,7 +3483,6 @@ void SpellMgr::LoadDbcDataCorrections()
             case 63985:
             case 64224:
             case 64225:
-            case 62287: // Tar Passive
                 spellInfo->Attributes |= SPELL_ATTR0_UNAFFECTED_BY_INVULNERABILITY;
                 break;
             case 63716: // Kologarn - Stone Shout
@@ -3511,10 +3510,6 @@ void SpellMgr::LoadDbcDataCorrections()
             case 62311: // Algalon - Cosmic Smash
             case 64596: // Algalon - Cosmic Smash
                 spellInfo->rangeIndex = 13;
-                break;
-            case 61915: // Lightning Whirl (Brundir)
-            case 63483: // Lightning Whirl (Brundir)
-                spellInfo->InterruptFlags |= SPELL_INTERRUPT_FLAG_INTERRUPT;
                 break;
             case 64444: // Mimiron - Magnetic Core
                 spellInfo->rangeIndex = 6; // 100yd
