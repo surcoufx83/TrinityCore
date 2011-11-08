@@ -979,7 +979,8 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z,
             sLog->outStaticDebug("Ist PvP.Character:: RACEMASK_ALLIANCE");
             // In Stockade or DireMaul -> set PhaseMask
             if ((player->GetMapId() == 34) || (player->GetMapId() == 429)) {
-                sLog->outStaticDebug("Ist PvP.Character:: Stockade or Diremaul --> Phase 2");
+                sLog->outStaticDebug(
+                        "Ist PvP.Character:: Stockade or Diremaul --> Phase 2");
                 player->SetPhaseMask(2, false);
             } else {
                 // Still in Stormwind?
@@ -991,25 +992,26 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z,
                             "Ist PvP.Character:: Nicht mehr in Stormwind");
                     ChatHandler(player).PSendSysMessage(
                             "PvP.Characters must not be in the open world - porting back to home city");
+                    if (false) {
+                        GameTele const* tele =
+                                ChatHandler(player).extractGameTeleFromLink(
+                                        "Stormwind");
+                        if (!tele) {
+                            ChatHandler(player).PSendSysMessage(
+                                    "Teleport location 'Stormwind' not found in your game_tele table!");
+                            ChatHandler(player).SendSysMessage(
+                                    LANG_COMMAND_TELE_NOTFOUND);
+                            ChatHandler(player).SetSentErrorMessage(true);
+                            return;
+                        }
+                        player->TeleportTo(tele->mapId, tele->position_x,
+                                tele->position_y, tele->position_z,
+                                tele->orientation);
 
-                    GameTele const* tele =
-                            ChatHandler(player).extractGameTeleFromLink(
-                                    "Stormwind");
-                    if (!tele) {
-                        ChatHandler(player).PSendSysMessage(
-                                "Teleport location 'Stormwind' not found in your game_tele table!");
-                        ChatHandler(player).SendSysMessage(LANG_COMMAND_TELE_NOTFOUND);
-                        ChatHandler(player).SetSentErrorMessage(true);
-                        return;
+                    } else {
+                        player->TeleportTo(0, -8833.38f, 628.628f, 94.356f,
+                                player->GetOrientation(), 0);
                     }
-                    player->TeleportTo(tele->mapId, tele->position_x,
-                            tele->position_y, tele->position_z,
-                            tele->orientation);
-
-                    /*
-                     player->TeleportTo(0, -8833.38f, 628.628f, 94.356f,
-                     player->GetOrientation(), 0);
-                     */
                     player->SetPhaseMask(PHASEMASK_NORMAL, false);
                     return;
                 } else {
@@ -1023,7 +1025,8 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z,
             // Still in Orgrimmar or in PvP Kaserne?
             // In Ragefire or DireMaul -> set PhaseMask
             if ((player->GetMapId() == 389) || (player->GetMapId() == 429)) {
-                sLog->outStaticDebug("Ist PvP.Character:: Ragefire or Diremaul --> Phase 2");
+                sLog->outStaticDebug(
+                        "Ist PvP.Character:: Ragefire or Diremaul --> Phase 2");
                 player->SetPhaseMask(2, false);
             } else {
                 if (!((player->GetMapId() == 450) // Horde Kaserne
@@ -1035,23 +1038,25 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z,
                             "Ist PvP.Character:: Nicht mehr in Orgrimmar");
                     ChatHandler(player).PSendSysMessage(
                             "PvP.Characters must not be in the open world - porting back to home city");
-                    GameTele const* tele =
-                            ChatHandler(player).extractGameTeleFromLink(
-                                    "Orgrimmar");
-                    if (!tele) {
-                        ChatHandler(player).PSendSysMessage(
-                                "Teleport location 'Orgrimmar' not found in your game_tele table!");
-                        ChatHandler(player).SendSysMessage(LANG_COMMAND_TELE_NOTFOUND);
-                        ChatHandler(player).SetSentErrorMessage(true);
-                        return;
+                    if (false) {
+                        GameTele const* tele =
+                                ChatHandler(player).extractGameTeleFromLink(
+                                        "Orgrimmar");
+                        if (!tele) {
+                            ChatHandler(player).PSendSysMessage(
+                                    "Teleport location 'Orgrimmar' not found in your game_tele table!");
+                            ChatHandler(player).SendSysMessage(
+                                    LANG_COMMAND_TELE_NOTFOUND);
+                            ChatHandler(player).SetSentErrorMessage(true);
+                            return;
+                        }
+                        player->TeleportTo(tele->mapId, tele->position_x,
+                                tele->position_y, tele->position_z,
+                                tele->orientation);
+                    } else {
+                        player->TeleportTo(1, 1629.36f, -4373.39f, 31.4828f,
+                                player->GetOrientation(), 0);
                     }
-                    player->TeleportTo(tele->mapId, tele->position_x,
-                            tele->position_y, tele->position_z,
-                            tele->orientation);
-                    /*
-                     player->TeleportTo(1, 1629.36f, -4373.39f, 31.4828f,
-                     player->GetOrientation(), 0);
-                     */
                     player->SetPhaseMask(PHASEMASK_NORMAL, false);
                     return;
                 } else {
