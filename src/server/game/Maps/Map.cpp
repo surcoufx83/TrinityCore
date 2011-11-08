@@ -991,8 +991,25 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z,
                             "Ist PvP.Character:: Nicht mehr in Stormwind");
                     ChatHandler(player).PSendSysMessage(
                             "PvP.Characters must not be in the open world - porting back to home city");
-                    player->TeleportTo(0, -8833.38f, 628.628f, 94.356f,
-                            player->GetOrientation(), 0);
+
+                    GameTele const* tele =
+                            ChatHandler(player).extractGameTeleFromLink(
+                                    "Stormwind");
+                    if (!tele) {
+                        ChatHandler(player).PSendSysMessage(
+                                "Teleport location 'Stormwind' not found in your game_tele table!");
+                        ChatHandler(player).SendSysMessage(LANG_COMMAND_TELE_NOTFOUND);
+                        ChatHandler(player).SetSentErrorMessage(true);
+                        return;
+                    }
+                    player->TeleportTo(tele->mapId, tele->position_x,
+                            tele->position_y, tele->position_z,
+                            tele->orientation);
+
+                    /*
+                     player->TeleportTo(0, -8833.38f, 628.628f, 94.356f,
+                     player->GetOrientation(), 0);
+                     */
                     player->SetPhaseMask(PHASEMASK_NORMAL, false);
                     return;
                 } else {
@@ -1018,8 +1035,23 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z,
                             "Ist PvP.Character:: Nicht mehr in Orgrimmar");
                     ChatHandler(player).PSendSysMessage(
                             "PvP.Characters must not be in the open world - porting back to home city");
-                    player->TeleportTo(1, 1629.36f, -4373.39f, 31.4828f,
-                            player->GetOrientation(), 0);
+                    GameTele const* tele =
+                            ChatHandler(player).extractGameTeleFromLink(
+                                    "Orgrimmar");
+                    if (!tele) {
+                        ChatHandler(player).PSendSysMessage(
+                                "Teleport location 'Orgrimmar' not found in your game_tele table!");
+                        ChatHandler(player).SendSysMessage(LANG_COMMAND_TELE_NOTFOUND);
+                        ChatHandler(player).SetSentErrorMessage(true);
+                        return;
+                    }
+                    player->TeleportTo(tele->mapId, tele->position_x,
+                            tele->position_y, tele->position_z,
+                            tele->orientation);
+                    /*
+                     player->TeleportTo(1, 1629.36f, -4373.39f, 31.4828f,
+                     player->GetOrientation(), 0);
+                     */
                     player->SetPhaseMask(PHASEMASK_NORMAL, false);
                     return;
                 } else {
