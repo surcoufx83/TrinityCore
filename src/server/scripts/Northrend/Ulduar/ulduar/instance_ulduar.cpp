@@ -649,14 +649,13 @@ public:
                     break;
             }
         }
-        // void ProcessEvent(GameObject* /*go*/, uint32 eventId)
 
         void ProcessEvent(WorldObject* /*gameObject*/, uint32 eventId)
         {
             // Flame Leviathan's Tower Event triggers
             Creature* FlameLeviathan = instance->GetCreature(uiLeviathanGUID);
 
-            if (FlameLeviathan && FlameLeviathan->isAlive()) //No leviathan, no event triggering ;)
+            if (FlameLeviathan && FlameLeviathan->isAlive()) // No leviathan, no event triggering ;)
                 switch (eventId)
                 {
                     case EVENT_TOWER_OF_STORM_DESTROYED:
@@ -672,10 +671,6 @@ public:
                         FlameLeviathan->AI()->DoAction(4);
                         break;
                 }
-        }
-
-        void ProcessEvent(Unit* /*unit*/, uint32 /*eventId*/)
-        {
         }
 
         bool SetBossState(uint32 type, EncounterState state)
@@ -712,6 +707,7 @@ public:
                         HandleGameObject(ArchivumDoorGUID, true);
                     break;
                 case TYPE_AURIAYA:
+                case TYPE_FREYA:
                     break;
                 case TYPE_MIMIRON:
                     for (std::list<uint64>::iterator i = uiMimironDoorGUIDList.begin(); i != uiMimironDoorGUIDList.end(); i++)
@@ -760,11 +756,6 @@ public:
                     if (GameObject* obj = instance->GetGameObject(uiThorimDoorGUID))
                         obj->SetGoState(state == IN_PROGRESS ? GO_STATE_READY : GO_STATE_ACTIVE);
                     break;
-                case TYPE_FREYA:
-                    //if (state == DONE)
-                    //    if (GameObject* go = instance->GetGameObject(uiFreyaChestGUID))
-                    //        go->SetRespawnTime(go->GetRespawnDelay());
-                    break;
                 case TYPE_ALGALON:
                     switch (state)
                     {
@@ -774,6 +765,8 @@ public:
                                 algalon->setFaction(7);
                                 algalon->setActive(true);
                                 algalon->SetVisible(true);
+                                //DoUpdateWorldState(WORLDSTATE_ALGALON_SHOW, 1);
+                                //DoUpdateWorldState(WORLDSTATE_ALGALON_TIME, 60);
                             }
                             HandleGameObject(uiAlgalonDoor1GUID, true);
                             HandleGameObject(uiAlgalonDoor2GUID, true);

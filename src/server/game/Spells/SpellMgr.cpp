@@ -2871,18 +2871,19 @@ void SpellMgr::LoadSpellCustomAttr()
                 // ONLY SPELLS WITH SPELLFAMILY_GENERIC and EFFECT_SCHOOL_DAMAGE
                 spellInfo->AttributesCu |= SPELL_ATTR0_CU_SHARE_DAMAGE;
                 break;
+            case 62912: // Flame Leviathan - Thorim's Hammer
             case 63025: // XT-002 Gravity Bomb
             case 64233: // XT-002 Gravity Bomb
-            case 28836: //Mark - should not be resistet
-            case 28786: //Locust Swarm
-            case 54022: //Locust Swarm
-            case 57581: //Shadow Fissure - Sartharion Drakes
-            case 59128: //Shadow Fissure - Sartharion Drakes
-            case 57570: //Shadow Breath - Sartharion Drakes
-            case 59126: //Shadow Breath - Sartharion Drakes
-            case 56908: //Fire Breath - Sartharion
-            case 58956: //Fire Breath - Sartharion
-            case 57874: //Twilight Shift Damage - Sartharion
+            case 28836: // Mark - should not be resistet
+            case 28786: // Locust Swarm
+            case 54022: // Locust Swarm
+            case 57581: // Shadow Fissure - Sartharion Drakes
+            case 59128: // Shadow Fissure - Sartharion Drakes
+            case 57570: // Shadow Breath - Sartharion Drakes
+            case 59126: // Shadow Breath - Sartharion Drakes
+            case 56908: // Fire Breath - Sartharion
+            case 58956: // Fire Breath - Sartharion
+            case 57874: // Twilight Shift Damage - Sartharion
             case 64590: // Shield Breaker
             case 62626: // Shield Breaker
             case 64342: // Shield Breaker
@@ -3435,6 +3436,15 @@ void SpellMgr::LoadDbcDataCorrections()
             case 62016: // Thorim - Charge Orb
                 spellInfo->MaxAffectedTargets = 1;
                 spellInfo->AttributesEx6 |= SPELL_ATTR6_CAN_TARGET_UNTARGETABLE;
+                break;
+            case 64482: // Flame Leviathan - Tower of Life
+            case 65075: // Flame Leviathan - Tower of Flames
+            case 65076: // Flame Leviathan - Tower of Storms
+                spellInfo->Effect[1] = SPELL_EFFECT_APPLY_AURA;
+                spellInfo->Effect[2] = SPELL_EFFECT_APPLY_AURA;
+                break;
+            case 65077: // Flame Leviathan - Tower of Frost
+                spellInfo->Effect[0] = SPELL_EFFECT_APPLY_AURA;
                 break;
             //case 62374: // Pursued (Flame Leviathan)
                 //spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_50000_YARDS;   // 50000yd

@@ -442,6 +442,12 @@ void Spell::EffectSchoolDMG(SpellEffIndex effIndex)
                         damage = unitTarget->CountPctFromMaxHealth(damage);
                         break;
                     }
+                    case 62912: // Thorim's Hammer
+                    {
+                        if (effIndex == EFFECT_0)
+                            damage = unitTarget->CountPctFromMaxHealth(damage);
+                        break;
+                    }
                     // Gargoyle Strike
                     case 51963:
                     {
@@ -2624,6 +2630,10 @@ void Spell::EffectPersistentAA(SpellEffIndex effIndex)
             delete dynObj;
             return;
         }
+
+        // Mimiron's Inferno - prevent visual problems if players temporary get out of sight
+        if (m_spellInfo->Id == 62910)
+            dynObj->setActive(true);
 
         dynObj->GetMap()->AddToMap(dynObj);
 
