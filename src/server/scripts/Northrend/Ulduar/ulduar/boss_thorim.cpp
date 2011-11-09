@@ -301,6 +301,7 @@ public:
 
         uint8 PreAddsCount;
         uint32 EncounterTime;
+        uint32 _checkTargetTimer;
         bool Wipe;
         bool HardMode;
         bool OrbSummoned;
@@ -326,6 +327,7 @@ public:
             HardMode = false;
             OrbSummoned = false;
             summonChampion = false;
+            _checkTargetTimer = 7000;
             PreAddsCount = 0;
 
             // Respawn Mini Bosses
@@ -425,6 +427,19 @@ public:
                 me->getVictim()->getHostileRefManager().deleteReference(me);
                 return;
             }
+
+            if (_checkTargetTimer < diff)
+            {
+                // workaround, see mimiron script
+                if (!SelectTarget(SELECT_TARGET_RANDOM, 0, 200.0f, true))
+                {
+                    EnterEvadeMode();
+                    return;
+                }
+                _checkTargetTimer = 7000;
+            }
+            else
+                _checkTargetTimer -= diff;
 
             // still needed?
             if (phase == PHASE_2 && !IN_ARENA(me))

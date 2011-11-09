@@ -329,8 +329,7 @@ class boss_mimiron : public CreatureScript
                 // TODO: find out why this happens
                 if (_checkTargetTimer < diff)
                 {
-                    Unit* player = SelectTarget(SELECT_TARGET_RANDOM, 0, 200.0f, true);
-                    if (!player)
+                    if (!SelectTarget(SELECT_TARGET_RANDOM, 0, 200.0f, true))
                     {
                         EnterEvadeMode();
                         return;
@@ -924,11 +923,11 @@ public:
                             DoCast(SPELL_PLASMA_BLAST);
                             events.RescheduleEvent(EVENT_PLASMA_BLAST, urand(30000, 35000), 0, PHASE_LEVIATHAN_SOLO);
                             events.RescheduleEvent(EVENT_SHOCK_BLAST, urand(6000, 10000));
-                            break;
+                            return;
                         case EVENT_SHOCK_BLAST:
                             DoCastAOE(SPELL_SHOCK_BLAST);
                             events.RescheduleEvent(EVENT_SHOCK_BLAST, 35000);
-                            break;
+                            return;
                         case EVENT_FLAME_SUPPRESSANT:
                             DoCastAOE(SPELL_FLAME_SUPPRESSANT);
                             events.CancelEvent(EVENT_FLAME_SUPPRESSANT);
