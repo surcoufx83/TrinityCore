@@ -104,9 +104,6 @@ class boss_general_vezax : public CreatureScript
         {
             boss_general_vezaxAI(Creature* c) : BossAI(c, TYPE_VEZAX)
             {
-                SpellInfo* spell = (SpellInfo*)sSpellMgr->GetSpellInfo(SPELL_SEARING_FLAMES);
-                if (spell)
-                    spell->InterruptFlags |= SPELL_INTERRUPT_FLAG_INTERRUPT;
             }
 
             void Reset()

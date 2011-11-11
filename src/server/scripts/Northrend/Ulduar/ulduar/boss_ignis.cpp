@@ -328,7 +328,7 @@ class npc_iron_construct : public CreatureScript
 
             void DamageTaken(Unit* /*attacker*/, uint32& damage)
             {
-                if (me->HasAura(RAID_MODE(SPELL_BRITTLE, SPELL_BRITTLE_25)) && damage >= 5000)
+                if (me->HasAura(RAID_MODE<uint32>(SPELL_BRITTLE, SPELL_BRITTLE_25)) && damage >= 5000)
                 {
                     DoCast(me, SPELL_SHATTER, true);
                     if (Creature* ignis = me->GetCreature(*me, _instance->GetData64(TYPE_IGNIS)))
@@ -386,7 +386,7 @@ class npc_scorch_ground : public CreatureScript
             npc_scorch_groundAI(Creature* creature) : ScriptedAI(creature)
             {
                 me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE |UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
-                creature->SetDisplayId(16925); //model 2 in db cannot overwrite wdb fields
+                creature->SetDisplayId(16925);
             }
 
             void Reset()
@@ -450,6 +450,34 @@ class spell_ignis_slag_pot : public SpellScriptLoader
         }
 };
 
+class spell_ignis_flame_jets : public SpellScriptLoader
+{
+    public:
+        spell_ignis_flame_jets() : SpellScriptLoader("spell_ignis_flame_jets") { }
+
+        class spell_ignis_flame_jets_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_ignis_flame_jets_SpellScript);
+
+            void FilterTargets(std::list<Unit*>& unitList)
+            {
+                unitList.remove_if(PlayerOrPetCheck());
+            }
+
+            void Register()
+            {
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_ignis_flame_jets_SpellScript::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_ignis_flame_jets_SpellScript::FilterTargets, EFFECT_1, TARGET_UNIT_SRC_AREA_ENEMY);
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_ignis_flame_jets_SpellScript::FilterTargets, EFFECT_2, TARGET_UNIT_SRC_AREA_ENEMY);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_ignis_flame_jets_SpellScript();
+        }
+};
+
 class achievement_ignis_shattered : public AchievementCriteriaScript
 {
     public:
@@ -464,21 +492,12 @@ class achievement_ignis_shattered : public AchievementCriteriaScript
         }
 };
 
-/*
-DELETE FROM conditions WHERE SourceEntry IN (62488);
-INSERT INTO conditions
-(SourceTypeOrReferenceId,SourceGroup,SourceEntry,ElseGroup,
- ConditionTypeOrReference,ConditionValue1,ConditionValue2,ConditionValue3,
- ErrorTextId,ScriptName,COMMENT)
-VALUES
-(13,0,62488,0,18,1,33121,0,0,'','Effekt on Constructs');
-*/
-
 void AddSC_boss_ignis()
 {
     new boss_ignis();
     new npc_iron_construct();
     new npc_scorch_ground();
     new spell_ignis_slag_pot();
+    new spell_ignis_flame_jets();
     new achievement_ignis_shattered();
 }

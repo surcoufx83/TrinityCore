@@ -86,8 +86,9 @@ enum DarkRuneSpells
     SPELL_STORMSTRIKE                            = 64757,
     // Dark Rune Sentinel
     SPELL_BATTLE_SHOUT                           = 46763,
+    SPELL_BATTLE_SHOUT_25                        = 64062,
     SPELL_HEROIC_STRIKE                          = 45026,
-    SPELL_WHIRLWIND                              = 63807,
+    SPELL_WHIRLWIND                              = 63808,
 };
 
 enum Actions
@@ -323,7 +324,7 @@ class boss_razorscale : public CreatureScript
             boss_razorscaleAI(Creature* creature) : BossAI(creature, TYPE_RAZORSCALE)
             {
                 // Do not let Razorscale be affected by Battle Shout buff
-                me->ApplySpellImmune(0, IMMUNITY_ID, (SPELL_BATTLE_SHOUT), true);
+                me->ApplySpellImmune(0, IMMUNITY_ID, RAID_MODE<uint32>(SPELL_BATTLE_SHOUT, SPELL_BATTLE_SHOUT_25), true);
             }
 
             Phases phase;
@@ -658,7 +659,7 @@ class npc_expedition_commander : public CreatureScript
                             Phase = 2;
                             break;
                         case 2:
-                            for (uint8 n = 0; n < RAID_MODE(2, 4); n++)
+                            for (uint8 n = 0; n < RAID_MODE<uint8>(2, 4); ++n)
                             {
                                 Engineer[n] = me->SummonCreature(NPC_ENGINEER, PosEngSpawn, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000);
                                 Engineer[n]->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
@@ -671,7 +672,7 @@ class npc_expedition_commander : public CreatureScript
                             AttackStartTimer = 14000;
                             break;
                         case 3:
-                            for (uint8 n = 0; n < 4; n++)
+                            for (uint8 n = 0; n < 4; ++n)
                             {
                                 Defender[n] = me->SummonCreature(NPC_DEFENDER, PosDefSpawn[n], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000);
                                 Defender[n]->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
@@ -681,7 +682,7 @@ class npc_expedition_commander : public CreatureScript
                             Phase = 4;
                             break;
                         case 4:
-                            for (uint8 n = 0; n < RAID_MODE(2, 4); n++)
+                            for (uint8 n = 0; n < RAID_MODE<uint8>(2, 4); ++n)
                                 Engineer[n]->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_USESTANDING);
                             for (uint8 n = 0; n < 4; ++n)
                                 Defender[n]->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_READY2H);
@@ -962,8 +963,8 @@ class npc_darkrune_sentinel : public CreatureScript
             void Reset()
             {
                 HeroicTimer = urand(4000, 8000);
-                WhirlTimer = urand(20000, 25000);
-                ShoutTimer = urand(15000, 30000);
+                WhirlTimer = urand(5000, 10000);
+                ShoutTimer = urand(10000, 20000);
             }
 
             void UpdateAI(uint32 const diff)
@@ -979,17 +980,18 @@ class npc_darkrune_sentinel : public CreatureScript
                 else
                     HeroicTimer -= diff;
 
-                if (WhirlTimer <= diff)
-                {
-                    DoCastVictim(SPELL_WHIRLWIND);
-                    WhirlTimer = urand(20000, 25000);
-                }
-                else
-                    WhirlTimer -= diff;
+                if (Is25ManRaid())
+                    if (WhirlTimer <= diff)
+                    {
+                        DoCast(me, SPELL_WHIRLWIND);
+                        WhirlTimer = urand(15000, 20000);
+                    }
+                    else
+                        WhirlTimer -= diff;
 
                 if (ShoutTimer <= diff)
                 {
-                    DoCast(me, SPELL_BATTLE_SHOUT);
+                    DoCast(me, RAID_MODE<uint32>(SPELL_BATTLE_SHOUT, SPELL_BATTLE_SHOUT_25));
                     ShoutTimer = urand(30000, 40000);
                 }
                 else

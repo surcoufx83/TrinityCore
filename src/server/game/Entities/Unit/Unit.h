@@ -44,8 +44,8 @@ enum SpellInterruptFlags
 {
     SPELL_INTERRUPT_FLAG_MOVEMENT     = 0x01, // why need this for instant?
     SPELL_INTERRUPT_FLAG_PUSH_BACK    = 0x02, // push back
-    SPELL_INTERRUPT_FLAG_INTERRUPT    = 0x04, // interrupt
-    SPELL_INTERRUPT_FLAG_AUTOATTACK   = 0x08, // enter combat
+    SPELL_INTERRUPT_FLAG_UNK3         = 0x04, // any info?
+    SPELL_INTERRUPT_FLAG_INTERRUPT    = 0x08, // interrupt
     SPELL_INTERRUPT_FLAG_ABORT_ON_DMG = 0x10,               // _complete_ interrupt on direct damage
     //SPELL_INTERRUPT_UNK             = 0x20                // unk, 564 of 727 spells having this spell start with "Glyph"
 };
@@ -53,7 +53,8 @@ enum SpellInterruptFlags
 // See SpellAuraInterruptFlags for other values definitions
 enum SpellChannelInterruptFlags
 {
-    CHANNEL_FLAG_DELAY       = 0x4000
+    CHANNEL_INTERRUPT_FLAG_INTERRUPT    = 0x08,  // interrupt
+    CHANNEL_FLAG_DELAY                  = 0x4000
 };
 
 enum SpellAuraInterruptFlags
@@ -1007,8 +1008,8 @@ enum CurrentSpellTypes
 {
     CURRENT_MELEE_SPELL             = 0,
     CURRENT_GENERIC_SPELL           = 1,
-    CURRENT_AUTOREPEAT_SPELL        = 2,
-    CURRENT_CHANNELED_SPELL         = 3
+    CURRENT_CHANNELED_SPELL         = 2,
+    CURRENT_AUTOREPEAT_SPELL        = 3
 };
 
 #define CURRENT_FIRST_NON_MELEE_SPELL 1
@@ -1207,6 +1208,8 @@ enum ReactiveType
 #define SUMMON_SLOT_MINIPET 5
 #define SUMMON_SLOT_QUEST   6
 #define MAX_SUMMON_SLOT     7
+
+#define MAX_GAMEOBJECT_SLOT 4
 
 enum PlayerTotemType
 {
@@ -1755,7 +1758,7 @@ class Unit : public WorldObject
         AuraMap const& GetOwnedAuras() const { return m_ownedAuras; }
 
         void RemoveOwnedAura(AuraMap::iterator &i, AuraRemoveMode removeMode = AURA_REMOVE_BY_DEFAULT);
-        void RemoveOwnedAura(uint32 spellId, uint64 caster = 0, uint8 reqEffMask = 0, AuraRemoveMode removeMode = AURA_REMOVE_BY_DEFAULT);
+        void RemoveOwnedAura(uint32 spellId, uint64 casterGUID = 0, uint8 reqEffMask = 0, AuraRemoveMode removeMode = AURA_REMOVE_BY_DEFAULT);
         void RemoveOwnedAura(Aura* aura, AuraRemoveMode removeMode = AURA_REMOVE_BY_DEFAULT);
 
         Aura* GetOwnedAura(uint32 spellId, uint64 casterGUID = 0, uint64 itemCasterGUID = 0, uint8 reqEffMask = 0, Aura* except = NULL) const;
@@ -1765,12 +1768,12 @@ class Unit : public WorldObject
         AuraApplicationMap const& GetAppliedAuras() const { return m_appliedAuras; }
 
         void RemoveAura(AuraApplicationMap::iterator &i, AuraRemoveMode mode = AURA_REMOVE_BY_DEFAULT);
-        void RemoveAura(uint32 spellId, uint64 caster = 0, uint8 reqEffMask = 0, AuraRemoveMode removeMode = AURA_REMOVE_BY_DEFAULT);
+        void RemoveAura(uint32 spellId, uint64 casterGUID = 0, uint8 reqEffMask = 0, AuraRemoveMode removeMode = AURA_REMOVE_BY_DEFAULT);
         void RemoveAura(AuraApplication * aurApp, AuraRemoveMode mode = AURA_REMOVE_BY_DEFAULT);
         void RemoveAura(Aura* aur, AuraRemoveMode mode = AURA_REMOVE_BY_DEFAULT);
 
-        void RemoveAurasDueToSpell(uint32 spellId, uint64 caster = 0, uint8 reqEffMask = 0, AuraRemoveMode removeMode = AURA_REMOVE_BY_DEFAULT);
-        void RemoveAuraFromStack(uint32 spellId, uint64 caster = 0, AuraRemoveMode removeMode = AURA_REMOVE_BY_DEFAULT);
+        void RemoveAurasDueToSpell(uint32 spellId, uint64 casterGUID = 0, uint8 reqEffMask = 0, AuraRemoveMode removeMode = AURA_REMOVE_BY_DEFAULT);
+        void RemoveAuraFromStack(uint32 spellId, uint64 casterGUID = 0, AuraRemoveMode removeMode = AURA_REMOVE_BY_DEFAULT);
         void RemoveAurasDueToSpellByDispel(uint32 spellId, uint64 casterGUID, Unit* dispeller, uint8 chargesRemoved = 1);
         void RemoveAurasDueToSpellBySteal(uint32 spellId, uint64 casterGUID, Unit* stealer);
         void RemoveAurasDueToItemSpell(Item* castItem, uint32 spellId);
@@ -1891,7 +1894,7 @@ class Unit : public WorldObject
 
         uint32 m_addDmgOnce;
         uint64 m_SummonSlot[MAX_SUMMON_SLOT];
-        uint64 m_ObjectSlot[4];
+        uint64 m_ObjectSlot[MAX_GAMEOBJECT_SLOT];
 
         ShapeshiftForm GetShapeshiftForm() const { return ShapeshiftForm(GetByteValue(UNIT_FIELD_BYTES_2, 3)); }
         void SetShapeshiftForm(ShapeshiftForm form)
@@ -2068,7 +2071,7 @@ class Unit : public WorldObject
         float ApplyEffectModifiers(SpellInfo const* spellProto, uint8 effect_index, float value) const;
         int32 CalculateSpellDamage(Unit const* target, SpellInfo const* spellProto, uint8 effect_index, int32 const* basePoints = NULL) const;
         int32 CalcSpellDuration(SpellInfo const* spellProto);
-        int32 ModSpellDuration(SpellInfo const* spellProto, Unit const* target, int32 duration, bool positive);
+        int32 ModSpellDuration(SpellInfo const* spellProto, Unit const* target, int32 duration, bool positive, uint32 effectMask);
         void  ModSpellCastTime(SpellInfo const* spellProto, int32 & castTime, Spell* spell=NULL);
         float CalculateLevelPenalty(SpellInfo const* spellProto) const;
 

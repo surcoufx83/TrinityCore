@@ -329,8 +329,7 @@ class boss_mimiron : public CreatureScript
                 // TODO: find out why this happens
                 if (_checkTargetTimer < diff)
                 {
-                    Unit* player = SelectTarget(SELECT_TARGET_RANDOM, 0, 200.0f, true);
-                    if (!player)
+                    if (!SelectTarget(SELECT_TARGET_RANDOM, 0, 200.0f, true))
                     {
                         EnterEvadeMode();
                         return;
@@ -924,11 +923,11 @@ public:
                             DoCast(SPELL_PLASMA_BLAST);
                             events.RescheduleEvent(EVENT_PLASMA_BLAST, urand(30000, 35000), 0, PHASE_LEVIATHAN_SOLO);
                             events.RescheduleEvent(EVENT_SHOCK_BLAST, urand(6000, 10000));
-                            break;
+                            return;
                         case EVENT_SHOCK_BLAST:
                             DoCastAOE(SPELL_SHOCK_BLAST);
                             events.RescheduleEvent(EVENT_SHOCK_BLAST, 35000);
-                            break;
+                            return;
                         case EVENT_FLAME_SUPPRESSANT:
                             DoCastAOE(SPELL_FLAME_SUPPRESSANT);
                             events.CancelEvent(EVENT_FLAME_SUPPRESSANT);
@@ -1445,7 +1444,7 @@ public:
             MimironHardMode = false;
         }
 
-        void KilledUnit(Unit * /*who*/)
+        void KilledUnit(Unit* /*who*/)
         {
             if (!(rand()%5))
                 if (instance)
@@ -1458,7 +1457,7 @@ public:
                     }
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             if (Creature* Mimiron = me->GetCreature(*me, instance ? instance->GetData64(TYPE_MIMIRON) : 0))
                 MimironHardMode = Mimiron->AI()->GetData(DATA_GET_HARD_MODE);
@@ -1470,7 +1469,7 @@ public:
             events.ScheduleEvent(EVENT_SUMMON_BOTS, 10000, 0, PHASE_AERIAL_SOLO);
         }
 
-        void DoAction(const int32 action)
+        void DoAction(int32 const action)
         {
             switch (action)
             {
@@ -1482,19 +1481,18 @@ public:
                     DoZoneInCombat();
                     break;
                 case DO_DISABLE_AERIAL:
-                    if (phase != PHASE_AERIAL_SOLO)
-                        return;
-                    me->CastStop();
-                    me->SetReactState(REACT_PASSIVE);
-                    me->GetMotionMaster()->Clear(true);
-                    DoCast(me, SPELL_MAGNETIC_CORE);
-                    DoCast(me, SPELL_MAGNETIC_CORE_VISUAL);
-                    if (Creature* MagneticCore = me->GetCreature(*me, instance->GetData64(DATA_MAGNETIC_CORE)))
-                        if (MagneticCore->isAlive())
-                            me->NearTeleportTo(MagneticCore->GetPositionX(), MagneticCore->GetPositionY(), 368.965f, 0, false);
-                    events.RescheduleEvent(EVENT_PLASMA_BALL, 22000, 0, PHASE_AERIAL_SOLO);
-                    events.RescheduleEvent(EVENT_SUMMON_BOTS, 24000, 0, PHASE_AERIAL_SOLO);
-                    events.ScheduleEvent(EVENT_REACTIVATE_AERIAL, 20000, 0, PHASE_AERIAL_SOLO);
+                    if (phase == PHASE_AERIAL_SOLO)
+                    {
+                        me->CastStop();
+                        me->SetReactState(REACT_PASSIVE);
+                        me->GetMotionMaster()->Clear(true);
+                        DoCast(me, SPELL_MAGNETIC_CORE);
+                        DoCast(me, SPELL_MAGNETIC_CORE_VISUAL);
+                        me->NearTeleportTo(me->GetPositionX(), me->GetPositionY(), 368.965f, 0.0f);
+                        events.RescheduleEvent(EVENT_PLASMA_BALL, 22000, 0, PHASE_AERIAL_SOLO);
+                        events.RescheduleEvent(EVENT_SUMMON_BOTS, 24000, 0, PHASE_AERIAL_SOLO);
+                        events.ScheduleEvent(EVENT_REACTIVATE_AERIAL, 20000, 0, PHASE_AERIAL_SOLO);
+                    }
                     break;
                 case DO_AERIAL_ASSEMBLED:
                     if (MimironHardMode)
@@ -1513,7 +1511,7 @@ public:
             }
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             if (!UpdateVictim())
                 return;
@@ -1658,8 +1656,11 @@ class npc_magnetic_core : public CreatureScript
                 DoCast(SPELL_MAGNETIC_CORE);
                 me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
                 me->ForcedDespawn(21000);
-                if (Creature* AerialUnit = me->FindNearestCreature(NPC_AERIAL_COMMAND_UNIT, 20, true))
+                if (Creature* AerialUnit = me->FindNearestCreature(NPC_AERIAL_COMMAND_UNIT, 100.0f, true))
+                {
                     AerialUnit->AI()->DoAction(DO_DISABLE_AERIAL);
+                    me->GetMotionMaster()->MoveFall(364.314f);
+                }
             }
         };
 

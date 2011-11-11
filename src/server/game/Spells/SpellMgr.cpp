@@ -2871,18 +2871,19 @@ void SpellMgr::LoadSpellCustomAttr()
                 // ONLY SPELLS WITH SPELLFAMILY_GENERIC and EFFECT_SCHOOL_DAMAGE
                 spellInfo->AttributesCu |= SPELL_ATTR0_CU_SHARE_DAMAGE;
                 break;
+            case 62912: // Flame Leviathan - Thorim's Hammer
             case 63025: // XT-002 Gravity Bomb
             case 64233: // XT-002 Gravity Bomb
-            case 28836: //Mark - should not be resistet
-            case 28786: //Locust Swarm
-            case 54022: //Locust Swarm
-            case 57581: //Shadow Fissure - Sartharion Drakes
-            case 59128: //Shadow Fissure - Sartharion Drakes
-            case 57570: //Shadow Breath - Sartharion Drakes
-            case 59126: //Shadow Breath - Sartharion Drakes
-            case 56908: //Fire Breath - Sartharion
-            case 58956: //Fire Breath - Sartharion
-            case 57874: //Twilight Shift Damage - Sartharion
+            case 28836: // Mark - should not be resistet
+            case 28786: // Locust Swarm
+            case 54022: // Locust Swarm
+            case 57581: // Shadow Fissure - Sartharion Drakes
+            case 59128: // Shadow Fissure - Sartharion Drakes
+            case 57570: // Shadow Breath - Sartharion Drakes
+            case 59126: // Shadow Breath - Sartharion Drakes
+            case 56908: // Fire Breath - Sartharion
+            case 58956: // Fire Breath - Sartharion
+            case 57874: // Twilight Shift Damage - Sartharion
             case 64590: // Shield Breaker
             case 62626: // Shield Breaker
             case 64342: // Shield Breaker
@@ -3006,7 +3007,7 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectImplicitTargetB[0] = 0;
                 break;
             case 31344: // Howl of Azgalor
-                spellInfo->EffectRadiusIndex[0] = 12; // 100yards instead of 50000?!
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_100_YARDS; // 100yards instead of 50000?!
                 break;
             case 42818: // Headless Horseman - Wisp Flight Port
             case 42821: // Headless Horseman - Wisp Flight Missile
@@ -3053,7 +3054,7 @@ void SpellMgr::LoadDbcDataCorrections()
             case 59725: // Improved Spell Reflection - aoe aura
                 // Target entry seems to be wrong for this spell :/
                 spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER_AREA_PARTY;
-                spellInfo->EffectRadiusIndex[0] = 45;
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_10_YARDS_2;
                 break;
             case 44978: case 45001: case 45002: // Wild Magic
             case 45004: case 45006: case 45010: // Wild Magic
@@ -3231,7 +3232,7 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->MaxAffectedTargets = 1;
                 break;
             case 29809: // Desecration Arm - 36 instead of 37 - typo? :/
-                spellInfo->EffectRadiusIndex[0] = 37;
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_7_YARDS;
                 break;
             // Master Shapeshifter: missing stance data for forms other than bear - bear version has correct data
             // To prevent aura staying on target after talent unlearned
@@ -3429,12 +3430,24 @@ void SpellMgr::LoadDbcDataCorrections()
                 break;
             // ULDUAR SPELLS
             //
+            case 64206: // XT-002 - Consumption
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_5_YARDS;
+                break;
             case 62016: // Thorim - Charge Orb
                 spellInfo->MaxAffectedTargets = 1;
                 spellInfo->AttributesEx6 |= SPELL_ATTR6_CAN_TARGET_UNTARGETABLE;
                 break;
+            case 64482: // Flame Leviathan - Tower of Life
+            case 65075: // Flame Leviathan - Tower of Flames
+            case 65076: // Flame Leviathan - Tower of Storms
+                spellInfo->Effect[1] = SPELL_EFFECT_APPLY_AURA;
+                spellInfo->Effect[2] = SPELL_EFFECT_APPLY_AURA;
+                break;
+            case 65077: // Flame Leviathan - Tower of Frost
+                spellInfo->Effect[0] = SPELL_EFFECT_APPLY_AURA;
+                break;
             //case 62374: // Pursued (Flame Leviathan)
-                //spellInfo->EffectRadiusIndex[0] = 28;   // 50000yd
+                //spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_50000_YARDS;   // 50000yd
                 //break;
             case 62017: // Thorim - Lightning Shock
             case 62042: // Thorim - Stormhammer
@@ -3464,14 +3477,14 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_CASTER;
                 spellInfo->EffectImplicitTargetB[1] = 0;
                 break;
-            //case 62834: // Boom (XT-002)
+            case 62834: // Boom (XT-002)
             // This hack is here because we suspect our implementation of spell effect execution on targets
             // is done in the wrong order. We suspect that EFFECT_0 needs to be applied on all targets,
             // then EFFECT_1, etc - instead of applying each effect on target1, then target2, etc.
             // The above situation causes the visual for this spell to be bugged, so we remove the instakill
             // effect and implement a script hack for that.
-            //    spellInfo->Effect[EFFECT_1] = 0;
-            //    break;
+                spellInfo->Effect[EFFECT_1] = 0;
+                break;
             case 62899: // Razorscale - Summon Mole Machine
             case 64600: // Freya - Nature Bomb (GO Visual)
                 spellInfo->DurationIndex = 38; // 11 seconds
@@ -3480,7 +3493,6 @@ void SpellMgr::LoadDbcDataCorrections()
             case 63985:
             case 64224:
             case 64225:
-            case 62287: // Tar Passive
                 spellInfo->Attributes |= SPELL_ATTR0_UNAFFECTED_BY_INVULNERABILITY;
                 break;
             case 63716: // Kologarn - Stone Shout
@@ -3509,9 +3521,8 @@ void SpellMgr::LoadDbcDataCorrections()
             case 64596: // Algalon - Cosmic Smash
                 spellInfo->rangeIndex = 13;
                 break;
-            case 61915: // Lightning Whirl (Brundir)
-            case 63483: // Lightning Whirl (Brundir)
-                spellInfo->InterruptFlags |= SPELL_INTERRUPT_FLAG_INTERRUPT;
+            case 64444: // Mimiron - Magnetic Core
+                spellInfo->rangeIndex = 6; // 100yd
                 break;
             case 63414: // Mimiron - Spinning Up
             case 63274: // Mimiron - Laser Barrage
@@ -3551,7 +3562,7 @@ void SpellMgr::LoadDbcDataCorrections()
                 break;
             case 69055: // Saber Lash (Lord Marrowgar)
             case 70814: // Saber Lash (Lord Marrowgar)
-                spellInfo->EffectRadiusIndex[0] = 8;    // 5yd
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_5_YARDS;    // 5yd
                 break;
             case 69075: // Bone Storm (Lord Marrowgar)
             case 70834: // Bone Storm (Lord Marrowgar)
@@ -3563,7 +3574,7 @@ void SpellMgr::LoadDbcDataCorrections()
             case 71160: // Plague Stench (Stinky)
             case 71161: // Plague Stench (Stinky)
             case 71123: // Decimate (Stinky & Precious)
-                spellInfo->EffectRadiusIndex[0] = 12;   // 100yd
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_100_YARDS;   // 100yd
                 break;
             case 72723: // Resistant Skin (Deathbringer Saurfang adds)
                 // this spell initially granted Shadow damage immunity, however it was removed but the data was left in client
@@ -3590,7 +3601,7 @@ void SpellMgr::LoadDbcDataCorrections()
             case 72464: // Mutated Plague (Professor Putricide)
             case 72506: // Mutated Plague (Professor Putricide)
             case 72507: // Mutated Plague (Professor Putricide)
-                spellInfo->EffectRadiusIndex[0] = 28;   // 50000yd
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_50000_YARDS;   // 50000yd
                 break;
             case 70911: // Unbound Plague (Professor Putricide) (needs target selection script)
             case 72854: // Unbound Plague (Professor Putricide) (needs target selection script)
@@ -3601,7 +3612,7 @@ void SpellMgr::LoadDbcDataCorrections()
             case 71518: // Unholy Infusion Quest Credit (Professor Putricide)
             case 72934: // Blood Infusion Quest Credit (Blood-Queen Lana'thel)
             case 72289: // Frost Infusion Quest Credit (Sindragosa)
-                spellInfo->EffectRadiusIndex[0] = 28;   // another missing radius
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_50000_YARDS;   // another missing radius
                 break;
             case 71708: // Empowered Flare (Blood Prince Council)
             case 72785: // Empowered Flare (Blood Prince Council)
@@ -3628,7 +3639,7 @@ void SpellMgr::LoadDbcDataCorrections()
                 break;
             case 72706: // Achievement Check (Valithria Dreamwalker)
             case 71357: // Order Whelp
-                spellInfo->EffectRadiusIndex[0] = 22;   // 200yd
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_200_YARDS;   // 200yd
                 break;
             case 70598: // Sindragosa's Fury
                 spellInfo->EffectImplicitTargetA[0] = TARGET_DEST_CASTER;
@@ -3652,12 +3663,12 @@ void SpellMgr::LoadDbcDataCorrections()
             case 73708: // Defile
             case 73709: // Defile
             case 73710: // Defile
-                spellInfo->EffectRadiusIndex[0] = 22;   // 200yd
-                spellInfo->EffectRadiusIndex[1] = 22;   // 200yd
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_200_YARDS;   // 200yd
+                spellInfo->EffectRadiusIndex[1] = EFFECT_RADIUS_200_YARDS;   // 200yd
                 break;
             case 69030: // Val'kyr Target Search
-                spellInfo->EffectRadiusIndex[0] = 22;   // 200yd
-                spellInfo->EffectRadiusIndex[1] = 22;   // 200yd
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_200_YARDS;   // 200yd
+                spellInfo->EffectRadiusIndex[1] = EFFECT_RADIUS_200_YARDS;   // 200yd
                 break;
             case 69198: // Raging Spirit Visual
                 spellInfo->rangeIndex = 13;             // 50000yd
@@ -3666,9 +3677,9 @@ void SpellMgr::LoadDbcDataCorrections()
             case 74295: // Harvest Souls
             case 74296: // Harvest Souls
             case 74297: // Harvest Souls
-                spellInfo->EffectRadiusIndex[0] = 28;   // 50000yd
-                spellInfo->EffectRadiusIndex[1] = 28;   // 50000yd
-                spellInfo->EffectRadiusIndex[2] = 28;   // 50000yd
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_50000_YARDS;   // 50000yd
+                spellInfo->EffectRadiusIndex[1] = EFFECT_RADIUS_50000_YARDS;   // 50000yd
+                spellInfo->EffectRadiusIndex[2] = EFFECT_RADIUS_50000_YARDS;   // 50000yd
                 break;
             case 73655: // Harvest Soul
                 spellInfo->AttributesEx3 |= SPELL_ATTR3_NO_DONE_BONUS;
@@ -3680,34 +3691,34 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->DurationIndex = 28;          // 5 seconds
                 break;
             case 73529: // Shadow Trap
-                spellInfo->EffectRadiusIndex[1] = 13;   // 10yd
+                spellInfo->EffectRadiusIndex[1] = EFFECT_RADIUS_10_YARDS;   // 10yd
                 break;
             case 74282: // Shadow Trap (searcher)
-                spellInfo->EffectRadiusIndex[0] = 15;   // 3yd
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_3_YARDS;   // 3yd
                 break;
             case 72595: // Restore Soul
             case 73650: // Restore Soul
-                spellInfo->EffectRadiusIndex[0] = 22;   // 200yd
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_200_YARDS;   // 200yd
                 break;
             case 74086: // Destroy Soul
-                spellInfo->EffectRadiusIndex[0] = 22;   // 200yd
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_200_YARDS;   // 200yd
                 break;
             case 74302: // Summon Spirit Bomb
             case 74342: // Summon Spirit Bomb
-                spellInfo->EffectRadiusIndex[0] = 22;   // 200yd
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_200_YARDS;   // 200yd
                 spellInfo->MaxAffectedTargets = 1;
                 break;
             case 74341: // Summon Spirit Bomb
             case 74343: // Summon Spirit Bomb
-                spellInfo->EffectRadiusIndex[0] = 22;   // 200yd
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_200_YARDS;   // 200yd
                 spellInfo->MaxAffectedTargets = 3;
                 break;
             case 73579: // Summon Spirit Bomb
-                spellInfo->EffectRadiusIndex[0] = 20;   // 25yd
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_25_YARDS;   // 25yd
                 break;
             case 72350: // Fury of Frostmourne
-                spellInfo->EffectRadiusIndex[0] = 28;   // 50000yd
-                spellInfo->EffectRadiusIndex[1] = 28;   // 50000yd
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_50000_YARDS;   // 50000yd
+                spellInfo->EffectRadiusIndex[1] = EFFECT_RADIUS_50000_YARDS;   // 50000yd
                 break;
             case 75127: // Kill Frostmourne Players
             case 72351: // Fury of Frostmourne
@@ -3715,18 +3726,18 @@ void SpellMgr::LoadDbcDataCorrections()
             case 72429: // Mass Resurrection
             case 73159: // Play Movie
             case 73582: // Trigger Vile Spirit (Inside, Heroic)
-                spellInfo->EffectRadiusIndex[0] = 28;   // 50000yd
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_50000_YARDS;   // 50000yd
                 break;
             case 72376: // Raise Dead
                 spellInfo->MaxAffectedTargets = 3;
-                spellInfo->EffectRadiusIndex[0] = 28;   // 50000yd
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_50000_YARDS;   // 50000yd
                 break;
             case 71809: // Jump
                 spellInfo->rangeIndex = 3;              // 20yd
-                spellInfo->EffectRadiusIndex[0] = 20;   // 25yd
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_25_YARDS;   // 25yd
                 break;
             case 72405: // Broken Frostmourne
-                spellInfo->EffectRadiusIndex[1] = 22;   // 200yd
+                spellInfo->EffectRadiusIndex[1] = EFFECT_RADIUS_200_YARDS;   // 200yd
                 break;
             default:
                 break;
