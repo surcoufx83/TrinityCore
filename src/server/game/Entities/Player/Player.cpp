@@ -4393,9 +4393,10 @@ void Player::_SaveSpellCooldowns(SQLTransaction& trans)
  * Is this character a PvP only character?<br/>
  * <br/>
  */
-bool Player::isPvPCharacter() {
+bool Player::isPvPCharacter() const
+{
     uint32 questId = sWorld->getIntConfig(CONFIG_INT_PVP_CHARACTER_QUESTID);
-    QuestStatus qStatus = this->GetQuestStatus(questId);
+    QuestStatus qStatus = GetQuestStatus(questId);
 
     sLog->outStaticDebug("isPvPCharacter:: GetQuestStatus; %d", qStatus);
 

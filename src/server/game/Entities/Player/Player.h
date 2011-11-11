@@ -1703,7 +1703,7 @@ class Player : public Unit, public GridObject<Player>
         // PvP.Character?
         // Is this character a special PvP Character?
         // -> Then the character finished the "I want PvP only" quest
-        bool isPvPCharacter();
+        bool isPvPCharacter() const;
 
         // Dual Spec
         void UpdateSpecCount(uint8 count);
