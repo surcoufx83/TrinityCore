@@ -81,6 +81,9 @@ SET @CT_VENDOR_GEMS = @CREA_TEMPLATE+75;
 SET @CT_VENDOR_METAGEMS = @CREA_TEMPLATE+76;
 SET @CT_VENDOR_CONSUMABLES = @CREA_TEMPLATE+77;
 SET @CT_VENDOR_PVP_STARTINGGEAR = @CREA_TEMPLATE+78;
+SET @CT_VENDOR_GEMS_FREE = @CREA_TEMPLATE+79;
+SET @CT_VENDOR_METAGEMS_FREE = @CREA_TEMPLATE+80;
+
 SET @CT_CLASS_TRAINER = @CREA_TEMPLATE+100;
 SET @CT_WEAPON_MASTER = @CREA_TEMPLATE+111;
 
@@ -1931,7 +1934,491 @@ INSERT INTO `npc_trainer` (entry, spell, spellcost, reqskill, reqskillvalue, req
 VALUES (@CT_WEAPON_MASTER+9, '264', '1000', '0', '0', '0');
 INSERT INTO `npc_trainer` (entry, spell, spellcost, reqskill, reqskillvalue, reqlevel)
 VALUES (@CT_WEAPON_MASTER+9, '2567', '1000', '0', '0', '0');
- 
+
+
+
+-- Enchantment Scrolls // Verzauberkunst
+DELETE FROM `creature_template` WHERE `entry` = @CT_ENCHANTMENT_SCROLLS;
+INSERT INTO `creature_template` (`entry`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`,
+`gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_walk`,
+`speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, 
+`baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`,
+`trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`,
+`type`, `type_flags`,
+`AIName`,
+`equipment_id`,`mechanic_immune_mask`, `flags_extra`, `ScriptName`, `WDBVerified`)
+VALUES(@CT_ENCHANTMENT_SCROLLS,@MODEL_ALANURA_FEUERWOLKE,'0','0','0',
+'Enchantment Scrolls','','','0','80','80','2','35','35',@NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR,'1',
+'1.14286','1','0','346','499','0','287','1',
+'2000','0','8','32768','8','0','0','0','0','0','315','468','69','7','4096',
+'',
+'897','0','0','','12340');
+DELETE FROM `locales_creature` WHERE `entry` = @CT_ENCHANTMENT_SCROLLS;
+INSERT INTO `locales_creature` (`entry`, `name_loc1`, `name_loc2`, `name_loc3`, `name_loc4`, `name_loc5`,
+ `name_loc6`, `name_loc7`, `name_loc8`, `subname_loc1`, `subname_loc2`, `subname_loc3`, `subname_loc4`,
+ `subname_loc5`, `subname_loc6`, `subname_loc7`, `subname_loc8`)
+VALUES(@CT_ENCHANTMENT_SCROLLS,'','','Verzauberkunst Rollen','','','','','',
+ NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+DELETE FROM npc_vendor WHERE entry = @CT_ENCHANTMENT_SCROLLS;
+INSERT INTO `npc_vendor` (entry, item, ExtendedCost, slot)
+VALUES
+(@CT_ENCHANTMENT_SCROLLS, '46098', '501', '0'), -- Scroll of Enchant Weapon - Blood Draining
+(@CT_ENCHANTMENT_SCROLLS, '44497', '501', '1'), -- Scroll of Enchant Weapon - Accuracy
+(@CT_ENCHANTMENT_SCROLLS, '38973', '501', '2'), -- Scroll of Enchant Cloak - Spell Piercing
+(@CT_ENCHANTMENT_SCROLLS, '44457', '501', '3'), -- Scroll of Enchant Cloak - Major Agility
+(@CT_ENCHANTMENT_SCROLLS, '39001', '501', '4'), -- Scroll of Enchant Cloak - Mighty Armor
+(@CT_ENCHANTMENT_SCROLLS, '38978', '501', '5'), -- Scroll of Enchant Cloak - Titanweave
+(@CT_ENCHANTMENT_SCROLLS, '39004', '501', '6'), -- Scroll of Enchant Cloak - Wisdom
+(@CT_ENCHANTMENT_SCROLLS, '38993', '501', '7'), -- Scroll of Enchant Cloak - Shadow Armor
+(@CT_ENCHANTMENT_SCROLLS, '38979', '501', '8'), -- Scroll of Enchant Gloves - Exceptional Spellpower
+(@CT_ENCHANTMENT_SCROLLS, '38951', '501', '9'), -- Scroll of Enchant Gloves - Expertise
+(@CT_ENCHANTMENT_SCROLLS, '38953', '501', '10'), -- Scroll of Enchant Gloves - Precision
+(@CT_ENCHANTMENT_SCROLLS, '38967', '501', '11'), -- Scroll of Enchant Gloves - Major Agility
+(@CT_ENCHANTMENT_SCROLLS, '44458', '501', '12'), -- Scroll of Enchant Gloves - Crusher
+(@CT_ENCHANTMENT_SCROLLS, '38990', '501', '13'), -- Scroll of Enchant Gloves - Armsman
+(@CT_ENCHANTMENT_SCROLLS, '38968', '501', '14'), -- Scroll of Enchant Bracers - Exceptional Intellect
+(@CT_ENCHANTMENT_SCROLLS, '38987', '501', '15'), -- Scroll of Enchant Bracers - Greater Stats
+(@CT_ENCHANTMENT_SCROLLS, '38980', '501', '16'), -- Scroll of Enchant Bracers - Major Spirit
+(@CT_ENCHANTMENT_SCROLLS, '44815', '501', '17'), -- Scroll of Enchant Bracers - Greater Assault
+(@CT_ENCHANTMENT_SCROLLS, '38966', '501', '18'), -- Scroll of Enchant Boots - Greater Fortitude
+(@CT_ENCHANTMENT_SCROLLS, '38986', '501', '19'), -- Scroll of Enchant Boots - Icewalker
+(@CT_ENCHANTMENT_SCROLLS, '38974', '501', '20'), -- Scroll of Enchant Boots - Greater Vitality
+(@CT_ENCHANTMENT_SCROLLS, '38961', '501', '21'), -- Scroll of Enchant Boots - Greater Spirit
+(@CT_ENCHANTMENT_SCROLLS, '38976', '501', '22'), -- Scroll of Enchant Boots - Superior Agility
+(@CT_ENCHANTMENT_SCROLLS, '38954', '501', '23'), -- Scroll of Enchant Shield - Defense
+(@CT_ENCHANTMENT_SCROLLS, '39006', '501', '24'), -- Scroll of Enchant Boots - Tuskarr's Vitality
+(@CT_ENCHANTMENT_SCROLLS, '44469', '501', '25'), -- Scroll of Enchant Boots - Greater Assault
+(@CT_ENCHANTMENT_SCROLLS, '38912', '501', '26'), -- Scroll of Enchant Chest - Exceptional Mana
+(@CT_ENCHANTMENT_SCROLLS, '39002', '501', '27'), -- Scroll of Enchant Chest - Greater Defense
+(@CT_ENCHANTMENT_SCROLLS, '44493', '501', '28'), -- Scroll of Enchant Weapon - Berserking
+(@CT_ENCHANTMENT_SCROLLS, '43987', '501', '29'), -- Scroll of Enchant Weapon - Black Magic
+(@CT_ENCHANTMENT_SCROLLS, '44467', '501', '30'), -- Scroll of Enchant Weapon - Mighty Spellpower
+(@CT_ENCHANTMENT_SCROLLS, '44466', '501', '31'), -- Scroll of Enchant Weapon - Superior Potency
+(@CT_ENCHANTMENT_SCROLLS, '38988', '501', '32'), -- Scroll of Enchant Weapon - Giant Slayer
+(@CT_ENCHANTMENT_SCROLLS, '38965', '501', '33'), -- Scroll of Enchant Weapon - Icebreaker
+(@CT_ENCHANTMENT_SCROLLS, '38962', '501', '34'), -- Scroll of Enchant Chest - Greater Mana Restoration
+(@CT_ENCHANTMENT_SCROLLS, '38972', '501', '35'), -- Scroll of Enchant Weapon - Lifeward
+(@CT_ENCHANTMENT_SCROLLS, '38995', '501', '36'), -- Scroll of Enchant Weapon - Exceptional Agility
+(@CT_ENCHANTMENT_SCROLLS, '38963', '501', '37'), -- Scroll of Enchant Weapon - Exceptional Spirit
+(@CT_ENCHANTMENT_SCROLLS, '38948', '501', '38'), -- Scroll of Enchant Weapon - Executioner
+(@CT_ENCHANTMENT_SCROLLS, '38925', '501', '39'), -- Scroll of Enchant Weapon - Mongoose
+(@CT_ENCHANTMENT_SCROLLS, '38838', '501', '40'), -- Scroll of Enchant Weapon - Fiery Weapon
+(@CT_ENCHANTMENT_SCROLLS, '45056', '501', '41'), -- Scroll of Enchant Staff - Greater Spellpower
+(@CT_ENCHANTMENT_SCROLLS, '44463', '501', '42'), -- Scroll of Enchant 2H Weapon - Massacre
+(@CT_ENCHANTMENT_SCROLLS, '38981', '501', '43'), -- Scroll of Enchant 2H Weapon - Scourgebane
+(@CT_ENCHANTMENT_SCROLLS, '44455', '501', '44'), -- Scroll of Enchant Shield - Greater Intellect
+(@CT_ENCHANTMENT_SCROLLS, '38945', '501', '45'), -- Scroll of Enchant Shield - Major Stamina
+(@CT_ENCHANTMENT_SCROLLS, '39005', '501', '46'), -- Scroll of Enchant Chest - Super Health
+(@CT_ENCHANTMENT_SCROLLS, '38975', '501', '47'), -- Scroll of Enchant Chest - Exceptional Resilience
+(@CT_ENCHANTMENT_SCROLLS, '44465', '501', '48'), -- Scroll of Enchant Chest - Powerful Stats
+(@CT_ENCHANTMENT_SCROLLS, '39003', '501', '49'), -- Scroll of Enchant Cloak - Greater Speed
+(@CT_ENCHANTMENT_SCROLLS, '44470', '501', '50'), -- Scroll of Enchant Bracer - Superior Spellpower
+(@CT_ENCHANTMENT_SCROLLS, '44947', '501', '51'), -- Scroll of Enchant Bracer - Major Stamina
+(@CT_ENCHANTMENT_SCROLLS, '46026', '501', '52'), -- Scroll of Enchant Weapon - Blade Ward
+(@CT_ENCHANTMENT_SCROLLS, '38949', '501', '53'), -- Scroll of Enchant Shield - Resilience
+(@CT_ENCHANTMENT_SCROLLS, '38871', '501', '54'); -- Scroll of Enchant Weapon - Lifestealing
+--
+--
+-- Enchantment Scrolls // Verzauberkunst_ ENDE
+--
+-- Head, Shoulder, Trousers Enchantment // Kopf, Schulter, Hose Verzauberungen
+DELETE FROM `creature_template` WHERE `entry` = @CT_ENCHANTMENT_HEADSHOULDER;
+INSERT INTO `creature_template` (`entry`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`,
+`gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_walk`,
+`speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, 
+`baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`,
+`trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`,
+`type`, `type_flags`,
+`AIName`,
+`equipment_id`,`mechanic_immune_mask`, `flags_extra`, `ScriptName`, `WDBVerified`)
+VALUES(@CT_ENCHANTMENT_HEADSHOULDER,@MODEL_ALANURA_FEUERWOLKE,'0','0','0',
+'Head, Shoulder, Trousers Enchantment','','','0','80','80','2','35','35',@NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR,'1',
+'1.14286','1','0','346','499','0','287','1',
+'2000','0','8','32768','8','0','0','0','0','0','315','468','69','7','4096',
+'EventAI',
+'897','0','0','','12340');
+DELETE FROM `locales_creature` WHERE `entry` = @CT_ENCHANTMENT_HEADSHOULDER;
+INSERT INTO `locales_creature` (`entry`, `name_loc1`, `name_loc2`, `name_loc3`, `name_loc4`, `name_loc5`,
+ `name_loc6`, `name_loc7`, `name_loc8`, `subname_loc1`, `subname_loc2`, `subname_loc3`, `subname_loc4`,
+ `subname_loc5`, `subname_loc6`, `subname_loc7`, `subname_loc8`)
+VALUES(@CT_ENCHANTMENT_HEADSHOULDER,'','','Kopf, Schulter, Hose Verzauberungen','','','','','',
+ NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+DELETE FROM npc_vendor WHERE entry = @CT_ENCHANTMENT_HEADSHOULDER;
+INSERT INTO `npc_vendor` (entry, item, ExtendedCost, slot)
+VALUES
+(@CT_ENCHANTMENT_HEADSHOULDER, '41602', '501', '0'), -- Brilliant Spellthread
+(@CT_ENCHANTMENT_HEADSHOULDER, '44877', '501', '1'), -- Arcanum of Burning Mysteries
+(@CT_ENCHANTMENT_HEADSHOULDER, '44876', '501', '2'), -- Arcanum of Blissful Mending
+(@CT_ENCHANTMENT_HEADSHOULDER, '44878', '501', '3'), -- Arcanum of the Stalwart Protector
+(@CT_ENCHANTMENT_HEADSHOULDER, '44879', '501', '4'), -- Arcanum of Torment
+(@CT_ENCHANTMENT_HEADSHOULDER, '44075', '501', '5'), -- Arcanum of Dominance
+(@CT_ENCHANTMENT_HEADSHOULDER, '44069', '501', '6'), -- Arcanum of Triumph
+(@CT_ENCHANTMENT_HEADSHOULDER, '44957', '501', '7'), -- Greater Inscription of the Gladiator
+(@CT_ENCHANTMENT_HEADSHOULDER, '44873', '501', '8'), -- Greater Inscription of the Pinnacle
+(@CT_ENCHANTMENT_HEADSHOULDER, '44874', '501', '9'), -- Greater Inscription of the Storm
+(@CT_ENCHANTMENT_HEADSHOULDER, '44872', '501', '10'), -- Greater Inscription of the Crag
+(@CT_ENCHANTMENT_HEADSHOULDER, '44871', '501', '11'), -- Greater Inscription of the Axe
+(@CT_ENCHANTMENT_HEADSHOULDER, '41604', '501', '12'), -- Sapphire Spellthread
+(@CT_ENCHANTMENT_HEADSHOULDER, '38373', '501', '13'), -- Frosthide Leg Armor
+(@CT_ENCHANTMENT_HEADSHOULDER, '38374', '501', '14'), -- Icescale Leg Armor
+(@CT_ENCHANTMENT_HEADSHOULDER, '41611', '501', '15'), -- Eternal Belt Buckle
+(@CT_ENCHANTMENT_HEADSHOULDER, '41167', '501', '16'), -- Heartseeker Scope
+(@CT_ENCHANTMENT_HEADSHOULDER, '23765', '501', '17'), -- Khorium Scope
+(@CT_ENCHANTMENT_HEADSHOULDER, '41146', '501', '18'), -- Sun Scope
+(@CT_ENCHANTMENT_HEADSHOULDER, '44068', '501', '19'), -- Inscription of Dominance
+(@CT_ENCHANTMENT_HEADSHOULDER, '44067', '501', '20'), -- Inscription of Triumph
+(@CT_ENCHANTMENT_HEADSHOULDER, '41976', '501', '21'), -- Titanium Weapon Chain
+(@CT_ENCHANTMENT_HEADSHOULDER, '44936', '501', '22'), -- Titanium Plating
+(@CT_ENCHANTMENT_HEADSHOULDER, '44963', '501', '23'), -- Earthen Leg Armor
+(@CT_ENCHANTMENT_HEADSHOULDER, '42500', '501', '24'); -- Titanium Shield Spike
+--
+-- Head and Shoulder Enchantment // Kopf- und Schulter Verzauberungen ENDE
+--
+-- Gem // Edelsteine
+DELETE FROM `creature_template` WHERE `entry` = @CT_VENDOR_GEMS;
+INSERT INTO `creature_template` (`entry`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`,
+`gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_walk`,
+`speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, 
+`baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`,
+`trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`,
+`type`, `type_flags`,
+`AIName`,
+`equipment_id`,`mechanic_immune_mask`, `flags_extra`, `ScriptName`, `WDBVerified`)
+VALUES(@CT_VENDOR_GEMS,@MODEL_ALANURA_FEUERWOLKE,'0','0','0',
+'Gems','','','0','80','80','2','35','35',@NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR,'1',
+'1.14286','1','0','346','499','0','287','1',
+'2000','0','8','32768','8','0','0','0','0','0','315','468','69','7','4096',
+'',
+'897','0','0','','12340');
+DELETE FROM `locales_creature` WHERE `entry` = @CT_VENDOR_GEMS;
+INSERT INTO `locales_creature` (`entry`, `name_loc1`, `name_loc2`, `name_loc3`, `name_loc4`, `name_loc5`,
+ `name_loc6`, `name_loc7`, `name_loc8`, `subname_loc1`, `subname_loc2`, `subname_loc3`, `subname_loc4`,
+ `subname_loc5`, `subname_loc6`, `subname_loc7`, `subname_loc8`)
+VALUES(@CT_VENDOR_GEMS,'','','Edelsteine','','','','','',
+ NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+DELETE FROM npc_vendor WHERE entry = @CT_VENDOR_GEMS;
+INSERT INTO `npc_vendor` (entry, item, ExtendedCost, slot)
+VALUES
+(@CT_VENDOR_GEMS, '40148', '2588', '0'), -- Glinting Ametrine
+(@CT_VENDOR_GEMS, '40143', '2588', '1'), -- Etched Ametrine
+(@CT_VENDOR_GEMS, '40161', '2588', '2'), -- Glimmering Ametrine
+(@CT_VENDOR_GEMS, '40154', '2588', '3'), -- Durable Ametrine
+(@CT_VENDOR_GEMS, '40150', '2588', '4'), -- Deft Ametrine
+(@CT_VENDOR_GEMS, '40147', '2588', '5'), -- Deadly Ametrine
+(@CT_VENDOR_GEMS, '40146', '2588', '6'), -- Fierce Ametrine
+(@CT_VENDOR_GEMS, '40158', '2588', '7'), -- Empowered Ametrine
+(@CT_VENDOR_GEMS, '40166', '2588', '8'), -- Vivid Eye of Zul
+(@CT_VENDOR_GEMS, '40144', '2588', '9'), -- Champion's Ametrine
+(@CT_VENDOR_GEMS, '40162', '2588', '10'), -- Accurate Ametrine
+(@CT_VENDOR_GEMS, '40173', '2588', '11'), -- Turbid Eye of Zul
+(@CT_VENDOR_GEMS, '40164', '2588', '12'), -- Timeless Eye of Zul
+(@CT_VENDOR_GEMS, '40172', '2588', '13'), -- Shining Eye of Zul
+(@CT_VENDOR_GEMS, '40182', '2588', '14'), -- Shattered Eye of Zul
+(@CT_VENDOR_GEMS, '40181', '2588', '15'), -- Tense Eye of Zul
+(@CT_VENDOR_GEMS, '40168', '2588', '16'), -- Steady Eye of Zul
+(@CT_VENDOR_GEMS, '40165', '2588', '17'), -- Jagged Eye of Zul
+(@CT_VENDOR_GEMS, '40179', '2588', '18'), -- Energized Eye of Zul
+(@CT_VENDOR_GEMS, '40178', '2588', '19'), -- Opaque Eye of Zul
+(@CT_VENDOR_GEMS, '40175', '2588', '20'), -- Dazzling Eye of Zul
+(@CT_VENDOR_GEMS, '40174', '2588', '21'), -- Intricate Eye of Zul
+(@CT_VENDOR_GEMS, '40177', '2588', '22'), -- Lambent Eye of Zul
+(@CT_VENDOR_GEMS, '40167', '2588', '23'), -- Enduring Eye of Zul
+(@CT_VENDOR_GEMS, '40171', '2588', '24'), -- Misty Eye of Zul
+(@CT_VENDOR_GEMS, '40169', '2588', '25'), -- Forceful Eye of Zul
+(@CT_VENDOR_GEMS, '40117', '2588', '26'), -- Fractured Cardinal Ruby
+(@CT_VENDOR_GEMS, '40114', '2588', '27'), -- Bright Cardinal Ruby
+(@CT_VENDOR_GEMS, '40115', '2588', '28'), -- Subtle Cardinal Ruby
+(@CT_VENDOR_GEMS, '40116', '2588', '29'), -- Flashing Cardinal Ruby
+(@CT_VENDOR_GEMS, '40120', '2588', '30'), -- Sparkling Majestic Zircon
+(@CT_VENDOR_GEMS, '40132', '2588', '31'), -- Glowing Dreadstone
+(@CT_VENDOR_GEMS, '40135', '2588', '32'), -- Mysterious Dreadstone
+(@CT_VENDOR_GEMS, '40138', '2588', '33'), -- Regal Dreadstone
+(@CT_VENDOR_GEMS, '40130', '2588', '34'), -- Shifting Dreadstone
+(@CT_VENDOR_GEMS, '40128', '2588', '35'), -- Quick King's Amber
+(@CT_VENDOR_GEMS, '40139', '2588', '36'), -- Defender's Dreadstone
+(@CT_VENDOR_GEMS, '40137', '2588', '37'), -- Infused Dreadstone
+(@CT_VENDOR_GEMS, '40122', '2588', '38'), -- Stormy Majestic Zircon
+(@CT_VENDOR_GEMS, '40140', '2588', '39'), -- Puissant Dreadstone
+(@CT_VENDOR_GEMS, '40136', '2588', '40'), -- Balanced Dreadstone
+(@CT_VENDOR_GEMS, '40133', '2588', '41'), -- Purified Dreadstone
+(@CT_VENDOR_GEMS, '40134', '2588', '42'), -- Royal Dreadstone
+(@CT_VENDOR_GEMS, '40131', '2588', '43'), -- Tenuous Dreadstone
+(@CT_VENDOR_GEMS, '40125', '2588', '44'), -- Rigid King's Amber
+(@CT_VENDOR_GEMS, '40126', '2588', '45'), -- Thick King's Amber
+(@CT_VENDOR_GEMS, '40119', '2588', '46'), -- Solid Majestic Zircon
+(@CT_VENDOR_GEMS, '40141', '2588', '47'), -- Guardian's Dreadstone
+(@CT_VENDOR_GEMS, '40123', '2588', '48'), -- Brilliant King's Amber
+(@CT_VENDOR_GEMS, '40127', '2588', '49'), -- Mystic King's Amber
+(@CT_VENDOR_GEMS, '40129', '2588', '50'), -- Sovereign Dreadstone
+(@CT_VENDOR_GEMS, '40124', '2588', '51'), -- Smooth King's Amber
+(@CT_VENDOR_GEMS, '40176', '2588', '52'), -- Sundered Eye of Zul
+(@CT_VENDOR_GEMS, '40170', '2588', '53'), -- Seer's Eye of Zul
+(@CT_VENDOR_GEMS, '40113', '2588', '54'), -- Runed Cardinal Ruby
+(@CT_VENDOR_GEMS, '40111', '2588', '55'), -- Bold Cardinal Ruby
+(@CT_VENDOR_GEMS, '40118', '2588', '56'), -- Precise Cardinal Ruby
+(@CT_VENDOR_GEMS, '40180', '2588', '57'), -- Radiant Eye of Zul
+(@CT_VENDOR_GEMS, '40121', '2588', '58'), -- Lustrous Majestic Zircon
+(@CT_VENDOR_GEMS, '40112', '2588', '59'), -- Delicate Cardinal Ruby
+(@CT_VENDOR_GEMS, '40142', '2588', '60'), -- Inscribed Ametrine
+(@CT_VENDOR_GEMS, '40149', '2588', '61'), -- Lucent Ametrine
+(@CT_VENDOR_GEMS, '40151', '2588', '62'), -- Luminous Ametrine
+(@CT_VENDOR_GEMS, '40152', '2588', '63'), -- Potent Ametrine
+(@CT_VENDOR_GEMS, '40157', '2588', '64'), -- Pristine Ametrine
+(@CT_VENDOR_GEMS, '40155', '2588', '65'), -- Reckless Ametrine
+(@CT_VENDOR_GEMS, '40163', '2588', '66'), -- Resolute Ametrine
+(@CT_VENDOR_GEMS, '40145', '2588', '67'), -- Resplendent Ametrine
+(@CT_VENDOR_GEMS, '40160', '2588', '68'), -- Stalwart Ametrine
+(@CT_VENDOR_GEMS, '40159', '2588', '69'), -- Stark Ametrine
+(@CT_VENDOR_GEMS, '40153', '2588', '70'), -- Veiled Ametrine
+(@CT_VENDOR_GEMS, '40156', '2588', '71'), -- Wicked Ametrine
+(@CT_VENDOR_GEMS, '49110', '2588', '72'); -- Nightmare Tear
+--
+-- Gem // Edelsteine ENDE
+--
+-- Meta Gem // Meta Edelsteine
+DELETE FROM `creature_template` WHERE `entry` = @CT_VENDOR_METAGEMS;
+INSERT INTO `creature_template` (`entry`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`,
+`gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_walk`,
+`speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, 
+`baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`,
+`trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`,
+`type`, `type_flags`,
+`AIName`,
+`equipment_id`,`mechanic_immune_mask`, `flags_extra`, `ScriptName`, `WDBVerified`)
+VALUES(@CT_VENDOR_METAGEMS,@MODEL_ALANURA_FEUERWOLKE,'0','0','0',
+'Meta Gems','','','0','80','80','2','35','35',@NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR,'1',
+'1.14286','1','0','346','499','0','287','1',
+'2000','0','8','32768','8','0','0','0','0','0','315','468','69','7','4096',
+'',
+'897','0','0','','12340');
+DELETE FROM `locales_creature` WHERE `entry` = @CT_VENDOR_METAGEMS;
+INSERT INTO `locales_creature` (`entry`, `name_loc1`, `name_loc2`, `name_loc3`, `name_loc4`, `name_loc5`,
+ `name_loc6`, `name_loc7`, `name_loc8`, `subname_loc1`, `subname_loc2`, `subname_loc3`, `subname_loc4`,
+ `subname_loc5`, `subname_loc6`, `subname_loc7`, `subname_loc8`)
+VALUES(@CT_VENDOR_METAGEMS,'','','Meta Edelsteine','','','','','',
+ NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+DELETE FROM npc_vendor WHERE entry = @CT_VENDOR_METAGEMS;
+INSERT INTO `npc_vendor` (entry, item, ExtendedCost, slot)
+VALUES
+(@CT_VENDOR_METAGEMS, '41380', '2588', '0'), -- Austere Earthsiege Diamond
+(@CT_VENDOR_METAGEMS, '41389', '2588', '1'), -- Beaming Earthsiege Diamond
+(@CT_VENDOR_METAGEMS, '41395', '2588', '2'), -- Bracing Earthsiege Diamond
+(@CT_VENDOR_METAGEMS, '25897', '2588', '3'), -- Bracing Earthstorm Diamond
+(@CT_VENDOR_METAGEMS, '25899', '2588', '4'), -- Brutal Earthstorm Diamond
+(@CT_VENDOR_METAGEMS, '34220', '2588', '5'), -- Chaotic Skyfire Diamond
+(@CT_VENDOR_METAGEMS, '41285', '2588', '6'), -- Chaotic Skyflare Diamond
+(@CT_VENDOR_METAGEMS, '25890', '2588', '7'), -- Destructive Skyfire Diamond
+(@CT_VENDOR_METAGEMS, '41307', '2588', '8'), -- Destructive Skyflare Diamond
+(@CT_VENDOR_METAGEMS, '41377', '2588', '9'), -- Effulgent Skyflare Diamond
+(@CT_VENDOR_METAGEMS, '35503', '2588', '10'), -- Ember Skyfire Diamond
+(@CT_VENDOR_METAGEMS, '41333', '2588', '11'), -- Ember Skyflare Diamond
+(@CT_VENDOR_METAGEMS, '25895', '2588', '12'), -- Enigmatic Skyfire Diamond
+(@CT_VENDOR_METAGEMS, '41335', '2588', '13'), -- Enigmatic Skyflare Diamond
+(@CT_VENDOR_METAGEMS, '44081', '2588', '14'), -- Enigmatic Starflare Diamond
+(@CT_VENDOR_METAGEMS, '41396', '2588', '15'), -- Eternal Earthsiege Diamond
+(@CT_VENDOR_METAGEMS, '352588', '2588', '16'), -- Eternal Earthstorm Diamond
+(@CT_VENDOR_METAGEMS, '41378', '2588', '17'), -- Forlorn Skyflare Diamond
+(@CT_VENDOR_METAGEMS, '44084', '2588', '18'), -- Forlorn Starflare Diamond
+(@CT_VENDOR_METAGEMS, '32641', '2588', '19'), -- Imbued Unstable Diamond
+(@CT_VENDOR_METAGEMS, '41379', '2588', '20'), -- Impassive Skyflare Diamond
+(@CT_VENDOR_METAGEMS, '44082', '2588', '21'), -- Impassive Starflare Diamond
+(@CT_VENDOR_METAGEMS, '41401', '2588', '22'), -- Insightful Earthsiege Diamond
+(@CT_VENDOR_METAGEMS, '25901', '2588', '23'), -- Insightful Earthstorm Diamond
+(@CT_VENDOR_METAGEMS, '41385', '2588', '24'), -- Invigorating Earthsiege Diamond
+(@CT_VENDOR_METAGEMS, '25893', '2588', '25'), -- Mystical Skyfire Diamond
+(@CT_VENDOR_METAGEMS, '44087', '2588', '26'), -- Persistent Earthshatter Diamond
+(@CT_VENDOR_METAGEMS, '41381', '2588', '27'), -- Persistent Earthsiege Diamond
+(@CT_VENDOR_METAGEMS, '25896', '2588', '28'), -- Powerful Earthstorm Diamond
+(@CT_VENDOR_METAGEMS, '41398', '2588', '29'), -- Relentless Earthsiege Diamond
+(@CT_VENDOR_METAGEMS, '32409', '2588', '30'), -- Relentless Earthstorm Diamond
+(@CT_VENDOR_METAGEMS, '41376', '2588', '31'), -- Revitalizing Skyflare Diamond
+(@CT_VENDOR_METAGEMS, '25894', '2588', '32'), -- Swift Skyfire Diamond
+(@CT_VENDOR_METAGEMS, '41339', '2588', '33'), -- Swift Skyflare Diamond
+(@CT_VENDOR_METAGEMS, '28557', '2588', '34'), -- Swift Starfire Diamond
+(@CT_VENDOR_METAGEMS, '44076', '2588', '35'), -- Swift Starflare Diamond
+(@CT_VENDOR_METAGEMS, '28556', '2588', '36'), -- Swift Windfire Diamond
+(@CT_VENDOR_METAGEMS, '25898', '2588', '37'), -- Tenacious Earthstorm Diamond
+(@CT_VENDOR_METAGEMS, '32410', '2588', '38'), -- Thundering Skyfire Diamond
+(@CT_VENDOR_METAGEMS, '41400', '2588', '39'), -- Thundering Skyflare Diamond
+(@CT_VENDOR_METAGEMS, '41375', '2588', '40'), -- Tireless Skyflare Diamond
+(@CT_VENDOR_METAGEMS, '44078', '2588', '41'), -- Tireless Starflare Diamond
+(@CT_VENDOR_METAGEMS, '44089', '2588', '42'), -- Trenchant Earthshatter Diamond
+(@CT_VENDOR_METAGEMS, '41382', '2588', '43'), -- Trenchant Earthsiege Diamond
+(@CT_VENDOR_METAGEMS, '41397', '2588', '44'); -- Powerful Earthsiege Diamond
+
+---
+-- Free Meta Gems // Kostenlose Meta Edelsteine
+-- Thanks to Nicola
+DELETE FROM `creature_template` WHERE `entry` = @CT_VENDOR_METAGEMS_FREE;
+INSERT INTO `creature_template` (`entry`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`,
+`gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_walk`,
+`speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, 
+`baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`,
+`trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`,
+`type`, `type_flags`,
+`AIName`,
+`equipment_id`,`mechanic_immune_mask`, `flags_extra`, `ScriptName`, `WDBVerified`)
+VALUES(@CT_VENDOR_METAGEMS_FREE,@HAENDLER_KOSTENLOS_MODEL,'0','0','0',
+'Free Meta Gems',@LOL_TEAM,'','0','80','80','2','35','35',@NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR,'1',
+'1.14286','1','0','346','499','0','287','1',
+'2000','0','8','32768','8','0','0','0','0','0','315','468','69','7','4096',
+'',
+'897','0','0','','12340');
+DELETE FROM `locales_creature` WHERE `entry` = @CT_VENDOR_METAGEMS_FREE;
+INSERT INTO `locales_creature` (`entry`, `name_loc1`, `name_loc2`, `name_loc3`, `name_loc4`, `name_loc5`,
+ `name_loc6`, `name_loc7`, `name_loc8`, `subname_loc1`, `subname_loc2`, `subname_loc3`, `subname_loc4`,
+ `subname_loc5`, `subname_loc6`, `subname_loc7`, `subname_loc8`)
+VALUES(@CT_VENDOR_METAGEMS_FREE,'','','Kostenlose Metas','','','','','',
+ NULL,NULL,@LOL_TEAM,NULL,NULL,NULL,NULL,NULL);
+DELETE FROM npc_vendor WHERE entry = @CT_VENDOR_METAGEMS_FREE;
+INSERT INTO `npc_vendor` (entry, item, ExtendedCost, slot)
+VALUES
+(@CT_VENDOR_METAGEMS_FREE, '25897', '0', '0'), --  Bracing Earthstorm Diamond
+(@CT_VENDOR_METAGEMS_FREE, '25899', '0', '1'), --  Brutal Earthstorm Diamond
+(@CT_VENDOR_METAGEMS_FREE, '34220', '0', '2'), --  Chaotic Skyfire Diamond
+(@CT_VENDOR_METAGEMS_FREE, '25890', '0', '3'), --  Destructive Skyfire Diamond
+(@CT_VENDOR_METAGEMS_FREE, '35503', '0', '4'), --  Ember Skyfire Diamond
+(@CT_VENDOR_METAGEMS_FREE, '25895', '0', '5'), --  Enigmatic Skyfire Diamond
+(@CT_VENDOR_METAGEMS_FREE, '35501', '0', '6'), --  Eternal Earthstorm Diamond
+(@CT_VENDOR_METAGEMS_FREE, '32641', '0', '7'), --  Imbued Unstable Diamond
+(@CT_VENDOR_METAGEMS_FREE, '25901', '0', '8'), --  Insightful Earthstorm Diamond
+(@CT_VENDOR_METAGEMS_FREE, '25893', '0', '9'), --  Mystical Skyfire Diamond
+(@CT_VENDOR_METAGEMS_FREE, '25896', '0', '10'), --  Powerful Earthstorm Diamond
+(@CT_VENDOR_METAGEMS_FREE, '32409', '0', '11'), --  Relentless Earthstorm Diamond
+(@CT_VENDOR_METAGEMS_FREE, '25894', '0', '12'), --  Swift Skyfire Diamond
+(@CT_VENDOR_METAGEMS_FREE, '28556', '0', '13'), --  Swift Windfire Diamond
+(@CT_VENDOR_METAGEMS_FREE, '25898', '0', '14'), --  Tenacious Earthstorm Diamond
+(@CT_VENDOR_METAGEMS_FREE, '32410', '0', '15'); --  Thundering Skyfire Diamond
+-- Free Meta Gems // Kostenlose Meta Edelsteine: END
+---
+
+---
+-- Free Gems // Kostenlose Edelsteine
+-- Thanks to Nature12
+DELETE FROM `creature_template` WHERE `entry` = @CT_VENDOR_GEMS_FREE;
+INSERT INTO `creature_template` (`entry`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`,
+`gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_walk`,
+`speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, 
+`baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`,
+`trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`,
+`type`, `type_flags`,
+`AIName`,
+`equipment_id`,`mechanic_immune_mask`, `flags_extra`, `ScriptName`, `WDBVerified`)
+VALUES(@CT_VENDOR_GEMS_FREE,@HAENDLER_KOSTENLOS_MODEL,'0','0','0',
+'Free Gems',@LOL_TEAM,'','0','80','80','2','35','35',@NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR,'1',
+'1.14286','1','0','346','499','0','287','1',
+'2000','0','8','32768','8','0','0','0','0','0','315','468','69','7','4096',
+'',
+'897','0','0','','12340');
+DELETE FROM `locales_creature` WHERE `entry` = @CT_VENDOR_GEMS_FREE;
+INSERT INTO `locales_creature` (`entry`, `name_loc1`, `name_loc2`, `name_loc3`, `name_loc4`, `name_loc5`,
+ `name_loc6`, `name_loc7`, `name_loc8`, `subname_loc1`, `subname_loc2`, `subname_loc3`, `subname_loc4`,
+ `subname_loc5`, `subname_loc6`, `subname_loc7`, `subname_loc8`)
+VALUES(@CT_VENDOR_GEMS_FREE,'','','Kostenlose Edelsteine','','','','','',
+ NULL,NULL,@LOL_TEAM,NULL,NULL,NULL,NULL,NULL);
+DELETE FROM npc_vendor WHERE entry = @CT_VENDOR_GEMS_FREE;
+INSERT INTO `npc_vendor` (entry, item, ExtendedCost, slot)
+VALUES
+(@CT_VENDOR_GEMS_FREE, '40148', '0', '0'), -- Glinting Ametrine
+(@CT_VENDOR_GEMS_FREE, '40043', '0', '1'), --  (Agi + Crit)
+(@CT_VENDOR_GEMS_FREE, '40050', '0', '2'), --  (Int + Abhärtung)
+(@CT_VENDOR_GEMS_FREE, '40046', '0', '3'), --  (Agi + Tempo)
+(@CT_VENDOR_GEMS_FREE, '40037', '0', '4'), --  (Stäe + Crit)
+(@CT_VENDOR_GEMS_FREE, '40048', '0', '5'), -- (Int+ Crit)
+(@CT_VENDOR_GEMS_FREE, '40040', '0', '6'), --  (Stäe + Abhärtung)
+(@CT_VENDOR_GEMS_FREE, '40051', '0', '7'), --  (Int + Tempo)
+(@CT_VENDOR_GEMS_FREE, '40054', '0', '8'), --  (Agi + Abhärtung)
+(@CT_VENDOR_GEMS_FREE, '40052', '0', '9'), --  (Agi + Crit)
+(@CT_VENDOR_GEMS_FREE, '40010', '0', '10'), --  (Wille)
+(@CT_VENDOR_GEMS_FREE, '40008', '0', '11'), --  (Ausdauer)
+(@CT_VENDOR_GEMS_FREE, '40011', '0', '12'), --  (Zauberdurchschlagskraft)
+(@CT_VENDOR_GEMS_FREE, '40013', '0', '13'), --  (Crit)
+(@CT_VENDOR_GEMS_FREE, '40016', '0', '14'), --  (Abhärtung)
+(@CT_VENDOR_GEMS_FREE, '40017', '0', '15'), --  (Tempo)
+(@CT_VENDOR_GEMS_FREE, '40012', '0', '16'), --  (Int)
+(@CT_VENDOR_GEMS_FREE, '40090', '0', '17'), -- (Ausdauer + Abhärtung)
+(@CT_VENDOR_GEMS_FREE, '40100', '0', '18'), -- (Hit + Tempo)
+(@CT_VENDOR_GEMS_FREE, '40105', '0', '19'), -- (Tempo + Wille)
+(@CT_VENDOR_GEMS_FREE, '40033', '0', '20'), -- (Crit + Ausdauer)
+(@CT_VENDOR_GEMS_FREE, '40091', '0', '21'), -- (Tempo + Ausdauer)
+(@CT_VENDOR_GEMS_FREE, '40095', '0', '22'), -- (Crit + Wille)
+(@CT_VENDOR_GEMS_FREE, '40101', '0', '23'), -- (Crit + Zauberdurchschlag)
+(@CT_VENDOR_GEMS_FREE, '40102', '0', '24'), -- (Abhäung + Wille)
+(@CT_VENDOR_GEMS_FREE, '40058', '0', '25'), -- (Wk + Hit)
+(@CT_VENDOR_GEMS_FREE, '40028', '0', '26'), -- (Int+ Zauberdurchschlag)
+(@CT_VENDOR_GEMS_FREE, '40092', '0', '27'), -- (Int + Wille)
+(@CT_VENDOR_GEMS_FREE, '40038', '0', '28'), -- (Stärke + Hit)
+(@CT_VENDOR_GEMS_FREE, '40053', '0', '29'), -- (Agi + Hit)
+(@CT_VENDOR_GEMS_FREE, '40022', '0', '30'), -- (Stäe + Ausdauer)
+(@CT_VENDOR_GEMS_FREE, '40049', '0', '31'), -- (Int + Hit)
+(@CT_VENDOR_GEMS_FREE, '40023', '0', '32'), -- (Agi + Ausdauer)
+(@CT_VENDOR_GEMS_FREE, '39997', '0', '33'), -- (Beweglichkeit)
+(@CT_VENDOR_GEMS_FREE, '39996', '0', '34'), -- (Stärke)
+(@CT_VENDOR_GEMS_FREE, '40003', '0', '35'); -- (Wk)
+--
+-- Free Gems // Kostenlose Edelsteine ENDE
+--
+
+
+-- --
+-- Händler: Consumables
+-- --
+DELETE FROM `creature_template` WHERE `entry` = @CT_VENDOR_CONSUMABLES;
+INSERT INTO `creature_template` (`entry`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`,
+`gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_walk`,
+`speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, 
+`baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`,
+`trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`,
+`type`, `type_flags`,
+`AIName`,
+`equipment_id`,`mechanic_immune_mask`, `flags_extra`, `ScriptName`, `WDBVerified`)
+VALUES(@CT_VENDOR_CONSUMABLES,@MODEL_ALANURA_FEUERWOLKE,'0','0','0',
+'Consumables','','','0','80','80','2','35','35',@NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR,'1',
+'1.14286','1','0','346','499','0','287','1',
+'2000','0','8','32768','8','0','0','0','0','0','315','468','69','7','4096',
+'',
+'897','0','0','','12340');
+DELETE FROM `locales_creature` WHERE `entry` = @CT_VENDOR_CONSUMABLES;
+INSERT INTO `locales_creature` (`entry`, `name_loc1`, `name_loc2`, `name_loc3`, `name_loc4`, `name_loc5`,
+ `name_loc6`, `name_loc7`, `name_loc8`, `subname_loc1`, `subname_loc2`, `subname_loc3`, `subname_loc4`,
+ `subname_loc5`, `subname_loc6`, `subname_loc7`, `subname_loc8`)
+VALUES(@CT_VENDOR_CONSUMABLES,'','','Verbrauchswaren','','','','','',
+ NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+DELETE FROM npc_vendor WHERE entry = @CT_VENDOR_CONSUMABLES;
+INSERT INTO `npc_vendor` (entry, item, ExtendedCost, slot)
+VALUES
+(@CT_VENDOR_CONSUMABLES, '43466', '501', '0'), -- Scroll of Strength VIII
+(@CT_VENDOR_CONSUMABLES, '43464', '501', '1'), -- Scroll of Agility VIII
+(@CT_VENDOR_CONSUMABLES, '37098', '501', '2'), -- Scroll of Spirit VIII
+(@CT_VENDOR_CONSUMABLES, '37094', '501', '3'), -- Scroll of Stamina VIII
+(@CT_VENDOR_CONSUMABLES, '37092', '501', '4'), -- Scroll of Intellect VIII
+(@CT_VENDOR_CONSUMABLES, '46377', '501', '5'), -- Flask of Endless Rage
+(@CT_VENDOR_CONSUMABLES, '46378', '501', '6'), -- Flask of Pure Mojo
+(@CT_VENDOR_CONSUMABLES, '46379', '501', '7'), -- Flask of Stoneblood
+(@CT_VENDOR_CONSUMABLES, '46376', '501', '8'), -- Flask of the Frost Wyrm
+(@CT_VENDOR_CONSUMABLES, '33208', '501', '9'), -- Flask of Chromatic Wonder
+(@CT_VENDOR_CONSUMABLES, '13511', '501', '10'), -- Flask of Distilled Wisdom
+(@CT_VENDOR_CONSUMABLES, '44325', '501', '11'), -- Elixir of Accuracy
+(@CT_VENDOR_CONSUMABLES, '44330', '501', '12'), -- Elixir of Armor Piercing
+(@CT_VENDOR_CONSUMABLES, '44327', '501', '13'), -- Elixir of Deadly Strikes
+(@CT_VENDOR_CONSUMABLES, '44329', '501', '14'), -- Elixir of Expertise
+(@CT_VENDOR_CONSUMABLES, '44331', '501', '15'), -- Elixir of Lightning Speed
+(@CT_VENDOR_CONSUMABLES, '39666', '501', '16'), -- Elixir of Mighty Agility
+(@CT_VENDOR_CONSUMABLES, '44328', '501', '17'), -- Elixir of Mighty Defense
+(@CT_VENDOR_CONSUMABLES, '40078', '501', '18'), -- Elixir of Mighty Fortitude
+(@CT_VENDOR_CONSUMABLES, '40109', '501', '19'), -- Elixir of Mighty Mageblood
+(@CT_VENDOR_CONSUMABLES, '40073', '501', '20'), -- Elixir of Mighty Strength
+(@CT_VENDOR_CONSUMABLES, '44332', '501', '21'), -- Elixir of Mighty Thoughts
+(@CT_VENDOR_CONSUMABLES, '40097', '501', '22'), -- Elixir of Protection
+(@CT_VENDOR_CONSUMABLES, '40072', '501', '23'), -- Elixir of Spirit
+(@CT_VENDOR_CONSUMABLES, '22831', '501', '24'), -- Elixir of Major Agility
+(@CT_VENDOR_CONSUMABLES, '32062', '501', '25'), -- Elixir of Major Fortitude
+(@CT_VENDOR_CONSUMABLES, '22824', '501', '26'), -- Elixir of Major Strength
+(@CT_VENDOR_CONSUMABLES, '8827', '501', '27'), -- Elixir of Water Walking
+(@CT_VENDOR_CONSUMABLES, '18294', '501', '28'), -- Elixir of Greater Water Breathing
+(@CT_VENDOR_CONSUMABLES, '41166', '501', '29'), -- Runic Healing Injector
+(@CT_VENDOR_CONSUMABLES, '42545', '501', '30'); -- Runic Mana Injector
+
  
 -- -------------------------------------------------------------------------
 -- ---- IMPORTANT: ONLY SET THESE VARIABLES, DO NOT TOUCH THE REST!!!! -----
