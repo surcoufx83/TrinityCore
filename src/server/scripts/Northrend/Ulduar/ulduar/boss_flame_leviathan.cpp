@@ -82,6 +82,8 @@ enum Spells
 enum Creatures
 {
     NPC_SEAT                       = 33114,
+    NPC_DEFENSE_TURRET             = 33142,
+    NPC_OVERLOAD_DEVICE            = 33143,
     NPC_MECHANOLIFT                = 33214,
     NPC_LIQUID                     = 33189,
     NPC_CONTAINER                  = 33218,
@@ -292,6 +294,12 @@ class boss_flame_leviathan : public CreatureScript
                 me->SetReactState(REACT_DEFENSIVE);
             }
 
+            void JustReachedHome()
+            {
+                _JustReachedHome();
+                vehicle->InstallAllAccessories(false);
+            }
+
             void EnterCombat(Unit* /*who*/)
             {
                 _EnterCombat();
@@ -302,7 +310,7 @@ class boss_flame_leviathan : public CreatureScript
                 events.ScheduleEvent(EVENT_SHUTDOWN, 150*IN_MILLISECONDS);
                 events.ScheduleEvent(EVENT_SPEED, 15*IN_MILLISECONDS);
                 ActiveTower();
-                vehicle->InstallAllAccessories(false);
+                ClearSeats();
 
                 // TODO: remove later
                 me->RemoveLootMode(LOOT_MODE_DEFAULT);
@@ -314,6 +322,19 @@ class boss_flame_leviathan : public CreatureScript
                 _EnterEvadeMode();
                 me->GetMotionMaster()->MoveTargetedHome();
                 Reset();
+            }
+
+            // installing accessorys to creatures that have different vehicle ids in there difficulty modes seems nyi
+            // so remove 2 unecessary turrets/overload devices in 10 man mode
+            void ClearSeats()
+            {
+                if (Is25ManRaid())
+                    return;
+
+                for (uint8 i = 0; i < 2; ++i)
+                    if (Unit* seat = vehicle->GetPassenger(i))
+                        if (seat->ToCreature())
+                            seat->ToCreature()->DespawnOrUnsummon();
             }
 
             void ActiveTower()
@@ -614,84 +635,20 @@ class boss_flame_leviathan : public CreatureScript
         }
 };
 
-class boss_flame_leviathan_seat : public CreatureScript
+class npc_flame_leviathan_defense_cannon : public CreatureScript
 {
     public:
-        boss_flame_leviathan_seat() : CreatureScript("boss_flame_leviathan_seat") { }
+        npc_flame_leviathan_defense_cannon() : CreatureScript("npc_flame_leviathan_defense_cannon") { }
 
-        struct boss_flame_leviathan_seatAI : public ScriptedAI
+        struct npc_flame_leviathan_defense_cannonAI : public ScriptedAI
         {
-            boss_flame_leviathan_seatAI(Creature* creature) : ScriptedAI(creature), vehicle(creature->GetVehicleKit())
-            {
-                ASSERT(vehicle);
-                me->SetReactState(REACT_PASSIVE);
-                me->SetDisplayId(me->GetCreatureInfo()->Modelid2);
-                instance = creature->GetInstanceScript();
-            }
-
-            InstanceScript* instance;
-            Vehicle* vehicle;
-
-            void PassengerBoarded(Unit* who, int8 seatId, bool apply)
-            {
-                if (!me->GetVehicle())
-                    return;
-
-                if (seatId == SEAT_PLAYER)
-                {
-                    if (!apply)
-                        return;
-                    else
-                        DoScriptText(SAY_PLAYER_RIDING, me);
-
-                    if (Creature* turret = me->GetVehicleKit()->GetPassenger(SEAT_TURRET)->ToCreature())
-                    {
-                        turret->setFaction(me->GetVehicleBase()->getFaction());
-                        turret->SetUInt32Value(UNIT_FIELD_FLAGS, 0); // unselectable
-                        turret->AI()->AttackStart(who);
-                    }
-                    if (Creature* device = me->GetVehicleKit()->GetPassenger(SEAT_DEVICE)->ToCreature())
-                    {
-                        device->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPELLCLICK);
-                        device->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    }
-
-                    me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                }
-                else if (seatId == SEAT_TURRET)
-                {
-                    if (apply)
-                        return;
-
-                    if (Unit* device = vehicle->GetPassenger(SEAT_DEVICE))
-                    {
-                        device->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPELLCLICK);
-                        device->SetUInt32Value(UNIT_FIELD_FLAGS, 0); // unselectable
-                    }
-                }
-            }
-        };
-
-        CreatureAI* GetAI(Creature* creature) const
-        {
-            return new boss_flame_leviathan_seatAI(creature);
-        }
-};
-
-class boss_flame_leviathan_defense_cannon : public CreatureScript
-{
-    public:
-        boss_flame_leviathan_defense_cannon() : CreatureScript("boss_flame_leviathan_defense_cannon") { }
-
-        struct boss_flame_leviathan_defense_cannonAI : public ScriptedAI
-        {
-            boss_flame_leviathan_defense_cannonAI(Creature* creature) : ScriptedAI(creature)
+            npc_flame_leviathan_defense_cannonAI(Creature* creature) : ScriptedAI(creature)
             {
             }
 
             uint32 NapalmTimer;
 
-            void Reset ()
+            void Reset()
             {
                 NapalmTimer = 5000;
             }
@@ -723,18 +680,89 @@ class boss_flame_leviathan_defense_cannon : public CreatureScript
 
         CreatureAI* GetAI(Creature* creature) const
         {
-            return new boss_flame_leviathan_defense_cannonAI(creature);
+            return new npc_flame_leviathan_defense_cannonAI(creature);
         }
 };
 
-class boss_flame_leviathan_defense_turret : public CreatureScript
+class npc_flame_leviathan_seat : public CreatureScript
 {
     public:
-        boss_flame_leviathan_defense_turret() : CreatureScript("boss_flame_leviathan_defense_turret") { }
+        npc_flame_leviathan_seat() : CreatureScript("npc_flame_leviathan_seat") { }
 
-        struct boss_flame_leviathan_defense_turretAI : public TurretAI
+        struct npc_flame_leviathan_seatAI : public ScriptedAI
         {
-            boss_flame_leviathan_defense_turretAI(Creature* creature) : TurretAI(creature) {}
+            npc_flame_leviathan_seatAI(Creature* creature) : ScriptedAI(creature), vehicle(creature->GetVehicleKit())
+            {
+                ASSERT(vehicle);
+                me->SetReactState(REACT_PASSIVE);
+                me->SetDisplayId(me->GetCreatureInfo()->Modelid1);
+                instance = creature->GetInstanceScript();
+            }
+
+            InstanceScript* instance;
+            Vehicle* vehicle;
+
+            void PassengerBoarded(Unit* who, int8 seatId, bool apply)
+            {
+                //if (!me->GetVehicle())
+                //    return;
+
+                /*
+                if (seatId == SEAT_PLAYER)
+                {
+                    if (!apply)
+                        return;
+                    else
+                        DoScriptText(SAY_PLAYER_RIDING, me);
+
+                    if (Creature* turret = me->GetVehicleKit()->GetPassenger(SEAT_TURRET)->ToCreature())
+                    {
+                        turret->setFaction(me->GetVehicleBase()->getFaction());
+                        turret->SetUInt32Value(UNIT_FIELD_FLAGS, 0); // unselectable
+                        turret->AI()->AttackStart(who);
+                    }
+                    if (Creature* device = me->GetVehicleKit()->GetPassenger(SEAT_DEVICE)->ToCreature())
+                    {
+                        device->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPELLCLICK);
+                        device->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    }
+
+                    me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                }
+                else if (seatId == SEAT_TURRET)
+                {
+                    if (apply)
+                        return;
+
+                    if (Unit* device = vehicle->GetPassenger(SEAT_DEVICE))
+                    {
+                        device->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPELLCLICK);
+                        device->SetUInt32Value(UNIT_FIELD_FLAGS, 0); // unselectable
+                    }
+                }*/
+            }
+
+            /*
+            void UpdateAI(uint32 const diff)
+            {
+            }
+            */
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new npc_flame_leviathan_seatAI(creature);
+        }
+};
+
+class npc_flame_leviathan_defense_turret : public CreatureScript
+{
+    public:
+        npc_flame_leviathan_defense_turret() : CreatureScript("npc_flame_leviathan_defense_turret") { }
+
+        struct npc_flame_leviathan_defense_turretAI : public TurretAI
+        {
+            npc_flame_leviathan_defense_turretAI(Creature* creature) : TurretAI(creature) {}
 
             void DamageTaken(Unit* who, uint32 &damage)
             {
@@ -752,19 +780,20 @@ class boss_flame_leviathan_defense_turret : public CreatureScript
 
         CreatureAI* GetAI(Creature* creature) const
         {
-            return new boss_flame_leviathan_defense_turretAI(creature);
+            return new npc_flame_leviathan_defense_turretAI(creature);
         }
 };
 
-class boss_flame_leviathan_overload_device : public CreatureScript
+class npc_flame_leviathan_overload_device : public CreatureScript
 {
     public:
-        boss_flame_leviathan_overload_device() : CreatureScript("boss_flame_leviathan_overload_device") { }
+        npc_flame_leviathan_overload_device() : CreatureScript("npc_flame_leviathan_overload_device") { }
 
-        struct boss_flame_leviathan_overload_deviceAI : public PassiveAI
+        struct npc_flame_leviathan_overload_deviceAI : public PassiveAI
         {
-            boss_flame_leviathan_overload_deviceAI(Creature* creature) : PassiveAI(creature)
+            npc_flame_leviathan_overload_deviceAI(Creature* creature) : PassiveAI(creature)
             {
+                me->SetDisplayId(me->GetCreatureInfo()->Modelid3);
             }
 
             void DoAction(const int32 param)
@@ -788,7 +817,7 @@ class boss_flame_leviathan_overload_device : public CreatureScript
 
         CreatureAI* GetAI(Creature* creature) const
         {
-            return new boss_flame_leviathan_overload_deviceAI(creature);
+            return new npc_flame_leviathan_overload_deviceAI(creature);
         }
 };
 
@@ -1875,10 +1904,10 @@ class spell_freyas_ward_summon : public SpellScriptLoader
 void AddSC_boss_flame_leviathan()
 {
     new boss_flame_leviathan();
-    new boss_flame_leviathan_seat();
-    new boss_flame_leviathan_defense_turret();
-    new boss_flame_leviathan_defense_cannon();
-    new boss_flame_leviathan_overload_device();
+    new npc_flame_leviathan_seat();
+    new npc_flame_leviathan_defense_turret();
+    new npc_flame_leviathan_defense_cannon();
+    new npc_flame_leviathan_overload_device();
     new npc_mechanolift();
     new npc_liquid_pyrite();
     new npc_pool_of_tar();
