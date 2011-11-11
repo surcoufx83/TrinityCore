@@ -454,7 +454,9 @@ class boss_algalon : public CreatureScript
                         case EVENT_BIGBANG:
                             DoScriptText(RAND(SAY_BIG_BANG_1, SAY_BIG_BANG_2), me);
                             DoScriptText(EMOTE_BANG, me);
+                            me->GetMotionMaster()->MoveDistract(10*IN_MILLISECONDS);
                             DoCast(RAID_MODE<uint32>(SPELL_BIG_BANG_10, SPELL_BIG_BANG_25));
+                            events.RescheduleEvent(EVENT_COSMICSMASH, urand(10, 15) *IN_MILLISECONDS);
                             events.ScheduleEvent(EVENT_BIGBANG, 90*IN_MILLISECONDS);
                             return;
                         case EVENT_PHASEPUNCH:

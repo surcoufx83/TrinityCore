@@ -324,7 +324,7 @@ class boss_razorscale : public CreatureScript
             boss_razorscaleAI(Creature* creature) : BossAI(creature, TYPE_RAZORSCALE)
             {
                 // Do not let Razorscale be affected by Battle Shout buff
-                me->ApplySpellImmune(0, IMMUNITY_ID, (SPELL_BATTLE_SHOUT), true);
+                me->ApplySpellImmune(0, IMMUNITY_ID, RAID_MODE<uint32>(SPELL_BATTLE_SHOUT, SPELL_BATTLE_SHOUT_25), true);
             }
 
             Phases phase;
