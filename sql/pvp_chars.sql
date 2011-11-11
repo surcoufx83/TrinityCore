@@ -194,7 +194,7 @@ INSERT INTO `creature_template` (`entry`, `modelid1`, `modelid2`, `modelid3`, `m
 `type`, `type_flags`,
 `AIName`,
 `equipment_id`,`mechanic_immune_mask`, `flags_extra`, `ScriptName`, `WDBVerified`)
-VALUES(@CT_VENDOR_MISC,@MODEL_ALANURA_FEUERWOLKE,'0','0','0',
+VALUES(@CT_VENDOR_MISC,@HAENDLER_KOSTENLOS_MODEL,'0','0','0',
 'Miscellaneous',@LOL_TEAM,'','0','80','80','2','35','35',@NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR,'1',
 '1.14286','1','0','346','499','0','287','1',
 '2000','0','8','32768','8','0','0','0','0','0','315','468','69','7','4096',
@@ -1240,10 +1240,10 @@ INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`
 -- Death Knight Trainer and Runeforge 33251
 DELETE FROM `creature_template` WHERE `entry` = (@CT_CLASS_TRAINER+0);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_CLASS_TRAINER+0, '0', '0', '0', '0', '0', '28516', '0', '0', '0', 'Death Knight Trainer and Runeforge', NULL, NULL, '0', '1', '1', '0', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.0', '1.14286', '1.0', '0', '2.0', '2.0', '0', '24', '1.0', '2000', '0', '1', '0', '8', '0', '0', '0', '6', '0', '1.0', '1.0', '0', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '3', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
+VALUES (@CT_CLASS_TRAINER+0, '0', '0', '0', '0', '0', '28516', '0', '0', '0', 'Death Knight Trainer and Runeforge', @LOL_TEAM, NULL, '0', '1', '1', '0', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.0', '1.14286', '1.0', '0', '2.0', '2.0', '0', '24', '1.0', '2000', '0', '1', '0', '8', '0', '0', '0', '6', '0', '1.0', '1.0', '0', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '3', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_CLASS_TRAINER+0);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
-VALUES (@CT_CLASS_TRAINER+0, '', '', 'Todesritterlehrer', '', '', '', '', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+VALUES (@CT_CLASS_TRAINER+0, '', '', 'Todesritterlehrer', '', '', '', '', '', NULL, NULL, @LOL_TEAM, NULL, NULL, NULL, NULL, NULL);
 DELETE FROM `npc_trainer` WHERE `entry` = (@CT_CLASS_TRAINER+0);
 INSERT INTO `npc_trainer` (entry, spell, spellcost, reqskill, reqskillvalue, reqlevel)
 VALUES (@CT_CLASS_TRAINER+0, '-200019', '0', '0', '0', '0');
@@ -1251,47 +1251,47 @@ DELETE FROM `npc_vendor` WHERE `entry` = (@CT_CLASS_TRAINER+0);
 INSERT INTO `npc_vendor` (entry, item, ExtendedCost)
 VALUES
 -- (@CT_CLASS_TRAINER+0, '37301', '501'), -- Deprecated Test Glyph
-(@CT_CLASS_TRAINER+0, '43533', '501'), -- Glyph of Anti-Magic Shell
-(@CT_CLASS_TRAINER+0, '43826', '501'), -- Glyph of Blood Strike
-(@CT_CLASS_TRAINER+0, '43535', '501'), -- Glyph of Blood Tap
-(@CT_CLASS_TRAINER+0, '43536', '501'), -- Glyph of Bone Shield
-(@CT_CLASS_TRAINER+0, '43537', '501'), -- Glyph of Chains of Ice
-(@CT_CLASS_TRAINER+0, '43671', '501'), -- Glyph of Corpse Explosion
-(@CT_CLASS_TRAINER+0, '45799', '501'), -- Glyph of Dancing Rune Weapon
-(@CT_CLASS_TRAINER+0, '43538', '501'), -- Glyph of Dark Command
-(@CT_CLASS_TRAINER+0, '45804', '501'), -- Glyph of Dark Death
-(@CT_CLASS_TRAINER+0, '43542', '501'), -- Glyph of Death and Decay
-(@CT_CLASS_TRAINER+0, '43541', '501'), -- Glyph of Death Grip
-(@CT_CLASS_TRAINER+0, '43827', '501'), -- Glyph of Death Strike
-(@CT_CLASS_TRAINER+0, '43539', '501'), -- Glyph of Death's Embrace
-(@CT_CLASS_TRAINER+0, '45805', '501'), -- Glyph of Disease
-(@CT_CLASS_TRAINER+0, '43543', '501'), -- Glyph of Frost Strike
-(@CT_CLASS_TRAINER+0, '43534', '501'), -- Glyph of Heart Strike
-(@CT_CLASS_TRAINER+0, '43544', '501'), -- Glyph of Horn of Winter
-(@CT_CLASS_TRAINER+0, '45806', '501'), -- Glyph of Howling Blast
-(@CT_CLASS_TRAINER+0, '45800', '501'), -- Glyph of Hungering Cold
-(@CT_CLASS_TRAINER+0, '43545', '501'), -- Glyph of Icebound Fortitude
-(@CT_CLASS_TRAINER+0, '43546', '501'), -- Glyph of Icy Touch
-(@CT_CLASS_TRAINER+0, '43547', '501'), -- Glyph of Obliterate
-(@CT_CLASS_TRAINER+0, '43672', '501'), -- Glyph of Pestilence
-(@CT_CLASS_TRAINER+0, '43548', '501'), -- Glyph of Plague Strike
-(@CT_CLASS_TRAINER+0, '43673', '501'), -- Glyph of Raise Dead
-(@CT_CLASS_TRAINER+0, '44432', '501'), -- Glyph of Raise Dead
-(@CT_CLASS_TRAINER+0, '43550', '501'), -- Glyph of Rune Strike
-(@CT_CLASS_TRAINER+0, '43825', '501'), -- Glyph of Rune Tap
-(@CT_CLASS_TRAINER+0, '43551', '501'), -- Glyph of Scourge Strike
-(@CT_CLASS_TRAINER+0, '43552', '501'), -- Glyph of Strangulate
-(@CT_CLASS_TRAINER+0, '43549', '501'), -- Glyph of the Ghoul
-(@CT_CLASS_TRAINER+0, '43553', '501'), -- Glyph of Unbreakable Armor
-(@CT_CLASS_TRAINER+0, '45803', '501'), -- Glyph of Unholy Blight
+(@CT_CLASS_TRAINER+0, '43533', '0'), -- Glyph of Anti-Magic Shell
+(@CT_CLASS_TRAINER+0, '43826', '0'), -- Glyph of Blood Strike
+(@CT_CLASS_TRAINER+0, '43535', '0'), -- Glyph of Blood Tap
+(@CT_CLASS_TRAINER+0, '43536', '0'), -- Glyph of Bone Shield
+(@CT_CLASS_TRAINER+0, '43537', '0'), -- Glyph of Chains of Ice
+(@CT_CLASS_TRAINER+0, '43671', '0'), -- Glyph of Corpse Explosion
+(@CT_CLASS_TRAINER+0, '45799', '0'), -- Glyph of Dancing Rune Weapon
+(@CT_CLASS_TRAINER+0, '43538', '0'), -- Glyph of Dark Command
+(@CT_CLASS_TRAINER+0, '45804', '0'), -- Glyph of Dark Death
+(@CT_CLASS_TRAINER+0, '43542', '0'), -- Glyph of Death and Decay
+(@CT_CLASS_TRAINER+0, '43541', '0'), -- Glyph of Death Grip
+(@CT_CLASS_TRAINER+0, '43827', '0'), -- Glyph of Death Strike
+(@CT_CLASS_TRAINER+0, '43539', '0'), -- Glyph of Death's Embrace
+(@CT_CLASS_TRAINER+0, '45805', '0'), -- Glyph of Disease
+(@CT_CLASS_TRAINER+0, '43543', '0'), -- Glyph of Frost Strike
+(@CT_CLASS_TRAINER+0, '43534', '0'), -- Glyph of Heart Strike
+(@CT_CLASS_TRAINER+0, '43544', '0'), -- Glyph of Horn of Winter
+(@CT_CLASS_TRAINER+0, '45806', '0'), -- Glyph of Howling Blast
+(@CT_CLASS_TRAINER+0, '45800', '0'), -- Glyph of Hungering Cold
+(@CT_CLASS_TRAINER+0, '43545', '0'), -- Glyph of Icebound Fortitude
+(@CT_CLASS_TRAINER+0, '43546', '0'), -- Glyph of Icy Touch
+(@CT_CLASS_TRAINER+0, '43547', '0'), -- Glyph of Obliterate
+(@CT_CLASS_TRAINER+0, '43672', '0'), -- Glyph of Pestilence
+(@CT_CLASS_TRAINER+0, '43548', '0'), -- Glyph of Plague Strike
+(@CT_CLASS_TRAINER+0, '43673', '0'), -- Glyph of Raise Dead
+(@CT_CLASS_TRAINER+0, '44432', '0'), -- Glyph of Raise Dead
+(@CT_CLASS_TRAINER+0, '43550', '0'), -- Glyph of Rune Strike
+(@CT_CLASS_TRAINER+0, '43825', '0'), -- Glyph of Rune Tap
+(@CT_CLASS_TRAINER+0, '43551', '0'), -- Glyph of Scourge Strike
+(@CT_CLASS_TRAINER+0, '43552', '0'), -- Glyph of Strangulate
+(@CT_CLASS_TRAINER+0, '43549', '0'), -- Glyph of the Ghoul
+(@CT_CLASS_TRAINER+0, '43553', '0'), -- Glyph of Unbreakable Armor
+(@CT_CLASS_TRAINER+0, '45803', '0'), -- Glyph of Unholy Blight
 (@CT_CLASS_TRAINER+0, '43554', '501'); -- Glyph of Vampiric Blood
 -- Warrior Trainer 26332
 DELETE FROM `creature_template` WHERE `entry` = (@CT_CLASS_TRAINER+1);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_CLASS_TRAINER+1, '0', '0', '0', '0', '0', '24036', '0', '0', '0', 'Warrior Trainer', NULL, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '252.0', '357.0', '0', '304', '1.0', '2000', '0', '1', '768', '8', '0', '0', '0', '1', '0', '215.0', '320.0', '44', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
+VALUES (@CT_CLASS_TRAINER+1, '0', '0', '0', '0', '0', '24036', '0', '0', '0', 'Warrior Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '252.0', '357.0', '0', '304', '1.0', '2000', '0', '1', '768', '8', '0', '0', '0', '1', '0', '215.0', '320.0', '44', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_CLASS_TRAINER+1);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
-VALUES (@CT_CLASS_TRAINER+1, '', '', 'Kriegerlehrer', '', '', '', '', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+VALUES (@CT_CLASS_TRAINER+1, '', '', 'Kriegerlehrer', '', '', '', '', '', NULL, NULL, @LOL_TEAM, NULL, NULL, NULL, NULL, NULL);
 DELETE FROM `npc_trainer` WHERE `entry` = (@CT_CLASS_TRAINER+1);
 INSERT INTO `npc_trainer` (entry, spell, spellcost, reqskill, reqskillvalue, reqlevel)
 VALUES (@CT_CLASS_TRAINER+1, '-200002', '0', '0', '0', '0');
@@ -1299,47 +1299,47 @@ INSERT INTO `npc_trainer` (entry, spell, spellcost, reqskill, reqskillvalue, req
 VALUES (@CT_CLASS_TRAINER+1, '-200001', '0', '0', '0', '0');
 DELETE FROM `npc_vendor` WHERE `entry` = (@CT_CLASS_TRAINER+1);
 INSERT INTO `npc_vendor` (entry, item, ExtendedCost)
-VALUES (@CT_CLASS_TRAINER+1, '43420', '501'), -- Glyph of Barbaric Insults
-(@CT_CLASS_TRAINER+1, '43395', '501'), -- Glyph of Battle
-(@CT_CLASS_TRAINER+1, '45790', '501'), -- Glyph of Bladestorm
-(@CT_CLASS_TRAINER+1, '43425', '501'), -- Glyph of Blocking
-(@CT_CLASS_TRAINER+1, '43396', '501'), -- Glyph of Bloodrage
-(@CT_CLASS_TRAINER+1, '43412', '501'), -- Glyph of Bloodthirst
-(@CT_CLASS_TRAINER+1, '43397', '501'), -- Glyph of Charge
-(@CT_CLASS_TRAINER+1, '43414', '501'), -- Glyph of Cleaving
-(@CT_CLASS_TRAINER+1, '49084', '501'), -- Glyph of Command
-(@CT_CLASS_TRAINER+1, '43415', '501'), -- Glyph of Devastate
-(@CT_CLASS_TRAINER+1, '43400', '501'), -- Glyph of Enduring Victory
-(@CT_CLASS_TRAINER+1, '45794', '501'), -- Glyph of Enraged Regeneration
-(@CT_CLASS_TRAINER+1, '43416', '501'), -- Glyph of Execution
-(@CT_CLASS_TRAINER+1, '43417', '501'), -- Glyph of Hamstring
-(@CT_CLASS_TRAINER+1, '43418', '501'), -- Glyph of Heroic Strike
-(@CT_CLASS_TRAINER+1, '43419', '501'), -- Glyph of Intervene
-(@CT_CLASS_TRAINER+1, '43426', '501'), -- Glyph of Last Stand
-(@CT_CLASS_TRAINER+1, '43398', '501'), -- Glyph of Mocking Blow
-(@CT_CLASS_TRAINER+1, '43421', '501'), -- Glyph of Mortal Strike
-(@CT_CLASS_TRAINER+1, '43422', '501'), -- Glyph of Overpower
-(@CT_CLASS_TRAINER+1, '43413', '501'), -- Glyph of Rapid Charge
-(@CT_CLASS_TRAINER+1, '43423', '501'), -- Glyph of Rending
-(@CT_CLASS_TRAINER+1, '43430', '501'), -- Glyph of Resonating Power
-(@CT_CLASS_TRAINER+1, '43424', '501'), -- Glyph of Revenge
-(@CT_CLASS_TRAINER+1, '45797', '501'), -- Glyph of Shield Wall
-(@CT_CLASS_TRAINER+1, '45792', '501'), -- Glyph of Shockwave
-(@CT_CLASS_TRAINER+1, '45795', '501'), -- Glyph of Spell Reflection
-(@CT_CLASS_TRAINER+1, '43427', '501'), -- Glyph of Sunder Armor
-(@CT_CLASS_TRAINER+1, '43428', '501'), -- Glyph of Sweeping Strikes
-(@CT_CLASS_TRAINER+1, '43429', '501'), -- Glyph of Taunt
-(@CT_CLASS_TRAINER+1, '43399', '501'), -- Glyph of Thunder Clap
-(@CT_CLASS_TRAINER+1, '43431', '501'), -- Glyph of Victory Rush
-(@CT_CLASS_TRAINER+1, '45793', '501'), -- Glyph of Vigilance
+VALUES (@CT_CLASS_TRAINER+1, '43420', '0'), -- Glyph of Barbaric Insults
+(@CT_CLASS_TRAINER+1, '43395', '0'), -- Glyph of Battle
+(@CT_CLASS_TRAINER+1, '45790', '0'), -- Glyph of Bladestorm
+(@CT_CLASS_TRAINER+1, '43425', '0'), -- Glyph of Blocking
+(@CT_CLASS_TRAINER+1, '43396', '0'), -- Glyph of Bloodrage
+(@CT_CLASS_TRAINER+1, '43412', '0'), -- Glyph of Bloodthirst
+(@CT_CLASS_TRAINER+1, '43397', '0'), -- Glyph of Charge
+(@CT_CLASS_TRAINER+1, '43414', '0'), -- Glyph of Cleaving
+(@CT_CLASS_TRAINER+1, '49084', '0'), -- Glyph of Command
+(@CT_CLASS_TRAINER+1, '43415', '0'), -- Glyph of Devastate
+(@CT_CLASS_TRAINER+1, '43400', '0'), -- Glyph of Enduring Victory
+(@CT_CLASS_TRAINER+1, '45794', '0'), -- Glyph of Enraged Regeneration
+(@CT_CLASS_TRAINER+1, '43416', '0'), -- Glyph of Execution
+(@CT_CLASS_TRAINER+1, '43417', '0'), -- Glyph of Hamstring
+(@CT_CLASS_TRAINER+1, '43418', '0'), -- Glyph of Heroic Strike
+(@CT_CLASS_TRAINER+1, '43419', '0'), -- Glyph of Intervene
+(@CT_CLASS_TRAINER+1, '43426', '0'), -- Glyph of Last Stand
+(@CT_CLASS_TRAINER+1, '43398', '0'), -- Glyph of Mocking Blow
+(@CT_CLASS_TRAINER+1, '43421', '0'), -- Glyph of Mortal Strike
+(@CT_CLASS_TRAINER+1, '43422', '0'), -- Glyph of Overpower
+(@CT_CLASS_TRAINER+1, '43413', '0'), -- Glyph of Rapid Charge
+(@CT_CLASS_TRAINER+1, '43423', '0'), -- Glyph of Rending
+(@CT_CLASS_TRAINER+1, '43430', '0'), -- Glyph of Resonating Power
+(@CT_CLASS_TRAINER+1, '43424', '0'), -- Glyph of Revenge
+(@CT_CLASS_TRAINER+1, '45797', '0'), -- Glyph of Shield Wall
+(@CT_CLASS_TRAINER+1, '45792', '0'), -- Glyph of Shockwave
+(@CT_CLASS_TRAINER+1, '45795', '0'), -- Glyph of Spell Reflection
+(@CT_CLASS_TRAINER+1, '43427', '0'), -- Glyph of Sunder Armor
+(@CT_CLASS_TRAINER+1, '43428', '0'), -- Glyph of Sweeping Strikes
+(@CT_CLASS_TRAINER+1, '43429', '0'), -- Glyph of Taunt
+(@CT_CLASS_TRAINER+1, '43399', '0'), -- Glyph of Thunder Clap
+(@CT_CLASS_TRAINER+1, '43431', '0'), -- Glyph of Victory Rush
+(@CT_CLASS_TRAINER+1, '45793', '0'), -- Glyph of Vigilance
 (@CT_CLASS_TRAINER+1, '43432', '501'); -- Glyph of Whirlwind
 -- Warlock Trainer 26331
 DELETE FROM `creature_template` WHERE `entry` = (@CT_CLASS_TRAINER+2);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_CLASS_TRAINER+2, '0', '0', '0', '0', '0', '24035', '0', '0', '0', 'Warlock Trainer', NULL, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '248.0', '363.0', '0', '135', '1.0', '2000', '0', '8', '768', '8', '0', '0', '0', '9', '0', '233.0', '347.0', '28', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
+VALUES (@CT_CLASS_TRAINER+2, '0', '0', '0', '0', '0', '24035', '0', '0', '0', 'Warlock Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '248.0', '363.0', '0', '135', '1.0', '2000', '0', '8', '768', '8', '0', '0', '0', '9', '0', '233.0', '347.0', '28', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_CLASS_TRAINER+2);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
-VALUES (@CT_CLASS_TRAINER+2, '', '', 'Hexenmeisterlehrer', '', '', '', '', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+VALUES (@CT_CLASS_TRAINER+2, '', '', 'Hexenmeisterlehrer', '', '', '', '', '', NULL, NULL, @LOL_TEAM, NULL, NULL, NULL, NULL, NULL);
 DELETE FROM `npc_trainer` WHERE `entry` = (@CT_CLASS_TRAINER+2);
 INSERT INTO `npc_trainer` (entry, spell, spellcost, reqskill, reqskillvalue, reqlevel)
 VALUES (@CT_CLASS_TRAINER+2, '-200010', '0', '0', '0', '0');
@@ -1347,40 +1347,40 @@ INSERT INTO `npc_trainer` (entry, spell, spellcost, reqskill, reqskillvalue, req
 VALUES (@CT_CLASS_TRAINER+2, '-200009', '0', '0', '0', '0');
 DELETE FROM `npc_vendor` WHERE `entry` = (@CT_CLASS_TRAINER+2);
 INSERT INTO `npc_vendor` (entry, item, ExtendedCost)
-VALUES (@CT_CLASS_TRAINER+2, '45781', '501'), -- Glyph of Chaos Bolt
-(@CT_CLASS_TRAINER+2, '42454', '501'), -- Glyph of Conflagrate
-(@CT_CLASS_TRAINER+2, '42455', '501'), -- Glyph of Corruption
-(@CT_CLASS_TRAINER+2, '42456', '501'), -- Glyph of Curse of Agony
-(@CT_CLASS_TRAINER+2, '43392', '501'), -- Glyph of Curse of Exhaustion
-(@CT_CLASS_TRAINER+2, '42457', '501'), -- Glyph of Death Coil
-(@CT_CLASS_TRAINER+2, '45782', '501'), -- Glyph of Demonic Circle
-(@CT_CLASS_TRAINER+2, '43390', '501'), -- Glyph of Drain Soul
-(@CT_CLASS_TRAINER+2, '43393', '501'), -- Glyph of Enslave Demon
-(@CT_CLASS_TRAINER+2, '42458', '501'), -- Glyph of Fear
-(@CT_CLASS_TRAINER+2, '42459', '501'), -- Glyph of Felguard
-(@CT_CLASS_TRAINER+2, '42460', '501'), -- Glyph of Felhunter
-(@CT_CLASS_TRAINER+2, '45779', '501'), -- Glyph of Haunt
-(@CT_CLASS_TRAINER+2, '42461', '501'), -- Glyph of Health Funnel
-(@CT_CLASS_TRAINER+2, '42462', '501'), -- Glyph of Healthstone
-(@CT_CLASS_TRAINER+2, '42463', '501'), -- Glyph of Howl of Terror
-(@CT_CLASS_TRAINER+2, '42464', '501'), -- Glyph of Immolate
-(@CT_CLASS_TRAINER+2, '42465', '501'), -- Glyph of Imp
-(@CT_CLASS_TRAINER+2, '42453', '501'), -- Glyph of Incinerate
-(@CT_CLASS_TRAINER+2, '43391', '501'), -- Glyph of Kilrogg
-(@CT_CLASS_TRAINER+2, '45785', '501'), -- Glyph of Life Tap
-(@CT_CLASS_TRAINER+2, '45780', '501'), -- Glyph of Metamorphosis
-(@CT_CLASS_TRAINER+2, '50077', '501'), -- Glyph of Quick Decay
-(@CT_CLASS_TRAINER+2, '42466', '501'), -- Glyph of Searing Pain
-(@CT_CLASS_TRAINER+2, '42467', '501'), -- Glyph of Shadow Bolt
-(@CT_CLASS_TRAINER+2, '42468', '501'), -- Glyph of Shadowburn
-(@CT_CLASS_TRAINER+2, '45783', '501'), -- Glyph of Shadowflame
-(@CT_CLASS_TRAINER+2, '42469', '501'), -- Glyph of Siphon Life
-(@CT_CLASS_TRAINER+2, '45789', '501'), -- Glyph of Soul Link
-(@CT_CLASS_TRAINER+2, '43394', '501'), -- Glyph of Souls
-(@CT_CLASS_TRAINER+2, '42470', '501'), -- Glyph of Soulstone
-(@CT_CLASS_TRAINER+2, '42471', '501'), -- Glyph of Succubus
-(@CT_CLASS_TRAINER+2, '43389', '501'), -- Glyph of Unending Breath
-(@CT_CLASS_TRAINER+2, '42472', '501'), -- Glyph of Unstable Affliction
+VALUES (@CT_CLASS_TRAINER+2, '45781', '0'), -- Glyph of Chaos Bolt
+(@CT_CLASS_TRAINER+2, '42454', '0'), -- Glyph of Conflagrate
+(@CT_CLASS_TRAINER+2, '42455', '0'), -- Glyph of Corruption
+(@CT_CLASS_TRAINER+2, '42456', '0'), -- Glyph of Curse of Agony
+(@CT_CLASS_TRAINER+2, '43392', '0'), -- Glyph of Curse of Exhaustion
+(@CT_CLASS_TRAINER+2, '42457', '0'), -- Glyph of Death Coil
+(@CT_CLASS_TRAINER+2, '45782', '0'), -- Glyph of Demonic Circle
+(@CT_CLASS_TRAINER+2, '43390', '0'), -- Glyph of Drain Soul
+(@CT_CLASS_TRAINER+2, '43393', '0'), -- Glyph of Enslave Demon
+(@CT_CLASS_TRAINER+2, '42458', '0'), -- Glyph of Fear
+(@CT_CLASS_TRAINER+2, '42459', '0'), -- Glyph of Felguard
+(@CT_CLASS_TRAINER+2, '42460', '0'), -- Glyph of Felhunter
+(@CT_CLASS_TRAINER+2, '45779', '0'), -- Glyph of Haunt
+(@CT_CLASS_TRAINER+2, '42461', '0'), -- Glyph of Health Funnel
+(@CT_CLASS_TRAINER+2, '42462', '0'), -- Glyph of Healthstone
+(@CT_CLASS_TRAINER+2, '42463', '0'), -- Glyph of Howl of Terror
+(@CT_CLASS_TRAINER+2, '42464', '0'), -- Glyph of Immolate
+(@CT_CLASS_TRAINER+2, '42465', '0'), -- Glyph of Imp
+(@CT_CLASS_TRAINER+2, '42453', '0'), -- Glyph of Incinerate
+(@CT_CLASS_TRAINER+2, '43391', '0'), -- Glyph of Kilrogg
+(@CT_CLASS_TRAINER+2, '45785', '0'), -- Glyph of Life Tap
+(@CT_CLASS_TRAINER+2, '45780', '0'), -- Glyph of Metamorphosis
+(@CT_CLASS_TRAINER+2, '50077', '0'), -- Glyph of Quick Decay
+(@CT_CLASS_TRAINER+2, '42466', '0'), -- Glyph of Searing Pain
+(@CT_CLASS_TRAINER+2, '42467', '0'), -- Glyph of Shadow Bolt
+(@CT_CLASS_TRAINER+2, '42468', '0'), -- Glyph of Shadowburn
+(@CT_CLASS_TRAINER+2, '45783', '0'), -- Glyph of Shadowflame
+(@CT_CLASS_TRAINER+2, '42469', '0'), -- Glyph of Siphon Life
+(@CT_CLASS_TRAINER+2, '45789', '0'), -- Glyph of Soul Link
+(@CT_CLASS_TRAINER+2, '43394', '0'), -- Glyph of Souls
+(@CT_CLASS_TRAINER+2, '42470', '0'), -- Glyph of Soulstone
+(@CT_CLASS_TRAINER+2, '42471', '0'), -- Glyph of Succubus
+(@CT_CLASS_TRAINER+2, '43389', '0'), -- Glyph of Unending Breath
+(@CT_CLASS_TRAINER+2, '42472', '0'), -- Glyph of Unstable Affliction
 (@CT_CLASS_TRAINER+2, '42473', '501'); -- Glyph of Voidwalker
 -- Shaman Trainer 26330
 DELETE FROM `creature_template` WHERE `entry` = (@CT_CLASS_TRAINER+3);
@@ -1388,13 +1388,13 @@ INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, 
 gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H,
 npcflag,
 speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_CLASS_TRAINER+3, '0', '0', '0', '0', '0', '24034', '0', '0', '0', 'Shaman Trainer', NULL, NULL,
+VALUES (@CT_CLASS_TRAINER+3, '0', '0', '0', '0', '0', '24034', '0', '0', '0', 'Shaman Trainer', @LOL_TEAM, NULL,
 '0', '70', '70', '2', '189', '189',
 @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR,
 '1.1', '1.14286', '1.0', '0', '234.0', '331.0', '0', '286', '1.0', '2000', '0', '2', '768', '8', '0', '0', '0', '7', '0', '198.0', '295.0', '33', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_CLASS_TRAINER+3);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
-VALUES (@CT_CLASS_TRAINER+3, '', '', 'Schamanenlehrer', '', '', '', '', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+VALUES (@CT_CLASS_TRAINER+3, '', '', 'Schamanenlehrer', '', '', '', '', '', NULL, NULL, @LOL_TEAM, NULL, NULL, NULL, NULL, NULL);
 DELETE FROM `npc_trainer` WHERE `entry` = (@CT_CLASS_TRAINER+3);
 INSERT INTO `npc_trainer` (entry, spell, spellcost, reqskill, reqskillvalue, reqlevel)
 VALUES (@CT_CLASS_TRAINER+3, '-200018', '0', '0', '0', '0');
@@ -1402,48 +1402,48 @@ INSERT INTO `npc_trainer` (entry, spell, spellcost, reqskill, reqskillvalue, req
 VALUES (@CT_CLASS_TRAINER+3, '-200017', '0', '0', '0', '0');
 DELETE FROM `npc_vendor` WHERE `entry` = (@CT_CLASS_TRAINER+3);
 INSERT INTO `npc_vendor` (entry, item, ExtendedCost)
-VALUES (@CT_CLASS_TRAINER+3, '43381', '501'), -- Glyph of Astral Recall
-(@CT_CLASS_TRAINER+3, '41517', '501'), -- Glyph of Chain Heal
-(@CT_CLASS_TRAINER+3, '41518', '501'), -- Glyph of Chain Lightning
-(@CT_CLASS_TRAINER+3, '45775', '501'), -- Glyph of Earth Shield
-(@CT_CLASS_TRAINER+3, '41527', '501'), -- Glyph of Earthliving Weapon
-(@CT_CLASS_TRAINER+3, '41552', '501'), -- Glyph of Elemental Mastery
-(@CT_CLASS_TRAINER+3, '45771', '501'), -- Glyph of Feral Spirit
-(@CT_CLASS_TRAINER+3, '41529', '501'), -- Glyph of Fire Elemental Totem
-(@CT_CLASS_TRAINER+3, '41530', '501'), -- Glyph of Fire Nova
-(@CT_CLASS_TRAINER+3, '41531', '501'), -- Glyph of Flame Shock
-(@CT_CLASS_TRAINER+3, '41532', '501'), -- Glyph of Flametongue Weapon
-(@CT_CLASS_TRAINER+3, '41547', '501'), -- Glyph of Frost Shock
-(@CT_CLASS_TRAINER+3, '43725', '501'), -- Glyph of Ghost Wolf
-(@CT_CLASS_TRAINER+3, '41533', '501'), -- Glyph of Healing Stream Totem
-(@CT_CLASS_TRAINER+3, '41534', '501'), -- Glyph of Healing Wave
-(@CT_CLASS_TRAINER+3, '45777', '501'), -- Glyph of Hex
-(@CT_CLASS_TRAINER+3, '41524', '501'), -- Glyph of Lava
-(@CT_CLASS_TRAINER+3, '41540', '501'), -- Glyph of Lava Lash
-(@CT_CLASS_TRAINER+3, '41535', '501'), -- Glyph of Lesser Healing Wave
-(@CT_CLASS_TRAINER+3, '41536', '501'), -- Glyph of Lightning Bolt
-(@CT_CLASS_TRAINER+3, '41537', '501'), -- Glyph of Lightning Shield
-(@CT_CLASS_TRAINER+3, '41538', '501'), -- Glyph of Mana Tide Totem
-(@CT_CLASS_TRAINER+3, '43385', '501'), -- Glyph of Renewed Life
-(@CT_CLASS_TRAINER+3, '45772', '501'), -- Glyph of Riptide
-(@CT_CLASS_TRAINER+3, '41526', '501'), -- Glyph of Shocking
-(@CT_CLASS_TRAINER+3, '45778', '501'), -- Glyph of Stoneclaw Totem
-(@CT_CLASS_TRAINER+3, '41539', '501'), -- Glyph of Stormstrike
-(@CT_CLASS_TRAINER+3, '45770', '501'), -- Glyph of Thunder
-(@CT_CLASS_TRAINER+3, '44923', '501'), -- Glyph of Thunderstorm
-(@CT_CLASS_TRAINER+3, '45776', '501'), -- Glyph of Totem of Wrath
-(@CT_CLASS_TRAINER+3, '43344', '501'), -- Glyph of Water Breathing
-(@CT_CLASS_TRAINER+3, '41541', '501'), -- Glyph of Water Mastery
-(@CT_CLASS_TRAINER+3, '43386', '501'), -- Glyph of Water Shield
-(@CT_CLASS_TRAINER+3, '43388', '501'), -- Glyph of Water Walking
+VALUES (@CT_CLASS_TRAINER+3, '43381', '0'), -- Glyph of Astral Recall
+(@CT_CLASS_TRAINER+3, '41517', '0'), -- Glyph of Chain Heal
+(@CT_CLASS_TRAINER+3, '41518', '0'), -- Glyph of Chain Lightning
+(@CT_CLASS_TRAINER+3, '45775', '0'), -- Glyph of Earth Shield
+(@CT_CLASS_TRAINER+3, '41527', '0'), -- Glyph of Earthliving Weapon
+(@CT_CLASS_TRAINER+3, '41552', '0'), -- Glyph of Elemental Mastery
+(@CT_CLASS_TRAINER+3, '45771', '0'), -- Glyph of Feral Spirit
+(@CT_CLASS_TRAINER+3, '41529', '0'), -- Glyph of Fire Elemental Totem
+(@CT_CLASS_TRAINER+3, '41530', '0'), -- Glyph of Fire Nova
+(@CT_CLASS_TRAINER+3, '41531', '0'), -- Glyph of Flame Shock
+(@CT_CLASS_TRAINER+3, '41532', '0'), -- Glyph of Flametongue Weapon
+(@CT_CLASS_TRAINER+3, '41547', '0'), -- Glyph of Frost Shock
+(@CT_CLASS_TRAINER+3, '43725', '0'), -- Glyph of Ghost Wolf
+(@CT_CLASS_TRAINER+3, '41533', '0'), -- Glyph of Healing Stream Totem
+(@CT_CLASS_TRAINER+3, '41534', '0'), -- Glyph of Healing Wave
+(@CT_CLASS_TRAINER+3, '45777', '0'), -- Glyph of Hex
+(@CT_CLASS_TRAINER+3, '41524', '0'), -- Glyph of Lava
+(@CT_CLASS_TRAINER+3, '41540', '0'), -- Glyph of Lava Lash
+(@CT_CLASS_TRAINER+3, '41535', '0'), -- Glyph of Lesser Healing Wave
+(@CT_CLASS_TRAINER+3, '41536', '0'), -- Glyph of Lightning Bolt
+(@CT_CLASS_TRAINER+3, '41537', '0'), -- Glyph of Lightning Shield
+(@CT_CLASS_TRAINER+3, '41538', '0'), -- Glyph of Mana Tide Totem
+(@CT_CLASS_TRAINER+3, '43385', '0'), -- Glyph of Renewed Life
+(@CT_CLASS_TRAINER+3, '45772', '0'), -- Glyph of Riptide
+(@CT_CLASS_TRAINER+3, '41526', '0'), -- Glyph of Shocking
+(@CT_CLASS_TRAINER+3, '45778', '0'), -- Glyph of Stoneclaw Totem
+(@CT_CLASS_TRAINER+3, '41539', '0'), -- Glyph of Stormstrike
+(@CT_CLASS_TRAINER+3, '45770', '0'), -- Glyph of Thunder
+(@CT_CLASS_TRAINER+3, '44923', '0'), -- Glyph of Thunderstorm
+(@CT_CLASS_TRAINER+3, '45776', '0'), -- Glyph of Totem of Wrath
+(@CT_CLASS_TRAINER+3, '43344', '0'), -- Glyph of Water Breathing
+(@CT_CLASS_TRAINER+3, '41541', '0'), -- Glyph of Water Mastery
+(@CT_CLASS_TRAINER+3, '43386', '0'), -- Glyph of Water Shield
+(@CT_CLASS_TRAINER+3, '43388', '0'), -- Glyph of Water Walking
 (@CT_CLASS_TRAINER+3, '41542', '501'); -- Glyph of Windfury Weapon
 -- Rogue Trainer 26329
 DELETE FROM `creature_template` WHERE `entry` = (@CT_CLASS_TRAINER+4);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_CLASS_TRAINER+4, '0', '0', '0', '0', '0', '23777', '0', '0', '0', 'Rogue Trainer', NULL, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '252.0', '357.0', '0', '304', '1.0', '2000', '0', '1', '768', '8', '0', '0', '0', '4', '0', '215.0', '320.0', '44', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
+VALUES (@CT_CLASS_TRAINER+4, '0', '0', '0', '0', '0', '23777', '0', '0', '0', 'Rogue Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '252.0', '357.0', '0', '304', '1.0', '2000', '0', '1', '768', '8', '0', '0', '0', '4', '0', '215.0', '320.0', '44', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_CLASS_TRAINER+4);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
-VALUES (@CT_CLASS_TRAINER+4, '', '', 'Schurkenlehrer', '', '', '', '', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+VALUES (@CT_CLASS_TRAINER+4, '', '', 'Schurkenlehrer', '', '', '', '', '', NULL, NULL, @LOL_TEAM, NULL, NULL, NULL, NULL, NULL);
 DELETE FROM `npc_trainer` WHERE `entry` = (@CT_CLASS_TRAINER+4);
 INSERT INTO `npc_trainer` (entry, spell, spellcost, reqskill, reqskillvalue, reqlevel)
 VALUES (@CT_CLASS_TRAINER+4, '-200016', '0', '0', '0', '0');
@@ -1451,48 +1451,48 @@ INSERT INTO `npc_trainer` (entry, spell, spellcost, reqskill, reqskillvalue, req
 VALUES (@CT_CLASS_TRAINER+4, '-200015', '0', '0', '0', '0');
 DELETE FROM `npc_vendor` WHERE `entry` = (@CT_CLASS_TRAINER+4);
 INSERT INTO `npc_vendor` (entry, item, ExtendedCost)
-VALUES (@CT_CLASS_TRAINER+4, '42954', '501'), -- Glyph of Adrenaline Rush
-(@CT_CLASS_TRAINER+4, '42955', '501'), -- Glyph of Ambush
-(@CT_CLASS_TRAINER+4, '42956', '501'), -- Glyph of Backstab
-(@CT_CLASS_TRAINER+4, '42957', '501'), -- Glyph of Blade Flurry
-(@CT_CLASS_TRAINER+4, '43379', '501'), -- Glyph of Blurred Speed
-(@CT_CLASS_TRAINER+4, '45769', '501'), -- Glyph of Cloak of Shadows
-(@CT_CLASS_TRAINER+4, '42958', '501'), -- Glyph of Crippling Poison
-(@CT_CLASS_TRAINER+4, '42959', '501'), -- Glyph of Deadly Throw
-(@CT_CLASS_TRAINER+4, '43376', '501'), -- Glyph of Distract
-(@CT_CLASS_TRAINER+4, '45908', '501'), -- Glyph of Envenom
-(@CT_CLASS_TRAINER+4, '42960', '501'), -- Glyph of Evasion
-(@CT_CLASS_TRAINER+4, '42961', '501'), -- Glyph of Eviscerate
-(@CT_CLASS_TRAINER+4, '42962', '501'), -- Glyph of Expose Armor
-(@CT_CLASS_TRAINER+4, '45766', '501'), -- Glyph of Fan of Knives
-(@CT_CLASS_TRAINER+4, '42963', '501'), -- Glyph of Feint
-(@CT_CLASS_TRAINER+4, '42964', '501'), -- Glyph of Garrote
-(@CT_CLASS_TRAINER+4, '42965', '501'), -- Glyph of Ghostly Strike
-(@CT_CLASS_TRAINER+4, '42966', '501'), -- Glyph of Gouge
-(@CT_CLASS_TRAINER+4, '42967', '501'), -- Glyph of Hemorrhage
-(@CT_CLASS_TRAINER+4, '45761', '501'), -- Glyph of Hunger for Blood
-(@CT_CLASS_TRAINER+4, '45762', '501'), -- Glyph of Killing Spree
-(@CT_CLASS_TRAINER+4, '45768', '501'), -- Glyph of Mutilate
-(@CT_CLASS_TRAINER+4, '43377', '501'), -- Glyph of Pick Lock
-(@CT_CLASS_TRAINER+4, '43343', '501'), -- Glyph of Pick Pocket
-(@CT_CLASS_TRAINER+4, '42968', '501'), -- Glyph of Preparation
-(@CT_CLASS_TRAINER+4, '42969', '501'), -- Glyph of Rupture
-(@CT_CLASS_TRAINER+4, '43378', '501'), -- Glyph of Safe Fall
-(@CT_CLASS_TRAINER+4, '42970', '501'), -- Glyph of Sap
-(@CT_CLASS_TRAINER+4, '45764', '501'), -- Glyph of Shadow Dance
-(@CT_CLASS_TRAINER+4, '42972', '501'), -- Glyph of Sinister Strike
-(@CT_CLASS_TRAINER+4, '42973', '501'), -- Glyph of Slice and Dice
-(@CT_CLASS_TRAINER+4, '42974', '501'), -- Glyph of Sprint
-(@CT_CLASS_TRAINER+4, '45767', '501'), -- Glyph of Tricks of the Trade
-(@CT_CLASS_TRAINER+4, '43380', '501'), -- Glyph of Vanish
+VALUES (@CT_CLASS_TRAINER+4, '42954', '0'), -- Glyph of Adrenaline Rush
+(@CT_CLASS_TRAINER+4, '42955', '0'), -- Glyph of Ambush
+(@CT_CLASS_TRAINER+4, '42956', '0'), -- Glyph of Backstab
+(@CT_CLASS_TRAINER+4, '42957', '0'), -- Glyph of Blade Flurry
+(@CT_CLASS_TRAINER+4, '43379', '0'), -- Glyph of Blurred Speed
+(@CT_CLASS_TRAINER+4, '45769', '0'), -- Glyph of Cloak of Shadows
+(@CT_CLASS_TRAINER+4, '42958', '0'), -- Glyph of Crippling Poison
+(@CT_CLASS_TRAINER+4, '42959', '0'), -- Glyph of Deadly Throw
+(@CT_CLASS_TRAINER+4, '43376', '0'), -- Glyph of Distract
+(@CT_CLASS_TRAINER+4, '45908', '0'), -- Glyph of Envenom
+(@CT_CLASS_TRAINER+4, '42960', '0'), -- Glyph of Evasion
+(@CT_CLASS_TRAINER+4, '42961', '0'), -- Glyph of Eviscerate
+(@CT_CLASS_TRAINER+4, '42962', '0'), -- Glyph of Expose Armor
+(@CT_CLASS_TRAINER+4, '45766', '0'), -- Glyph of Fan of Knives
+(@CT_CLASS_TRAINER+4, '42963', '0'), -- Glyph of Feint
+(@CT_CLASS_TRAINER+4, '42964', '0'), -- Glyph of Garrote
+(@CT_CLASS_TRAINER+4, '42965', '0'), -- Glyph of Ghostly Strike
+(@CT_CLASS_TRAINER+4, '42966', '0'), -- Glyph of Gouge
+(@CT_CLASS_TRAINER+4, '42967', '0'), -- Glyph of Hemorrhage
+(@CT_CLASS_TRAINER+4, '45761', '0'), -- Glyph of Hunger for Blood
+(@CT_CLASS_TRAINER+4, '45762', '0'), -- Glyph of Killing Spree
+(@CT_CLASS_TRAINER+4, '45768', '0'), -- Glyph of Mutilate
+(@CT_CLASS_TRAINER+4, '43377', '0'), -- Glyph of Pick Lock
+(@CT_CLASS_TRAINER+4, '43343', '0'), -- Glyph of Pick Pocket
+(@CT_CLASS_TRAINER+4, '42968', '0'), -- Glyph of Preparation
+(@CT_CLASS_TRAINER+4, '42969', '0'), -- Glyph of Rupture
+(@CT_CLASS_TRAINER+4, '43378', '0'), -- Glyph of Safe Fall
+(@CT_CLASS_TRAINER+4, '42970', '0'), -- Glyph of Sap
+(@CT_CLASS_TRAINER+4, '45764', '0'), -- Glyph of Shadow Dance
+(@CT_CLASS_TRAINER+4, '42972', '0'), -- Glyph of Sinister Strike
+(@CT_CLASS_TRAINER+4, '42973', '0'), -- Glyph of Slice and Dice
+(@CT_CLASS_TRAINER+4, '42974', '0'), -- Glyph of Sprint
+(@CT_CLASS_TRAINER+4, '45767', '0'), -- Glyph of Tricks of the Trade
+(@CT_CLASS_TRAINER+4, '43380', '0'), -- Glyph of Vanish
 (@CT_CLASS_TRAINER+4, '42971', '501'); -- Glyph of Vigor
 -- Priest Trainer 26328
 DELETE FROM `creature_template` WHERE `entry` = (@CT_CLASS_TRAINER+5);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_CLASS_TRAINER+5, '0', '0', '0', '0', '0', '24033', '0', '0', '0', 'Priest Trainer', NULL, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '248.0', '363.0', '0', '135', '1.0', '2000', '0', '8', '768', '8', '0', '0', '0', '5', '0', '233.0', '347.0', '28', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
+VALUES (@CT_CLASS_TRAINER+5, '0', '0', '0', '0', '0', '24033', '0', '0', '0', 'Priest Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '248.0', '363.0', '0', '135', '1.0', '2000', '0', '8', '768', '8', '0', '0', '0', '5', '0', '233.0', '347.0', '28', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_CLASS_TRAINER+5);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
-VALUES (@CT_CLASS_TRAINER+5, '', '', 'Priesterlehrer', '', '', '', '', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+VALUES (@CT_CLASS_TRAINER+5, '', '', 'Priesterlehrer', '', '', '', '', '', NULL, NULL, @LOL_TEAM, NULL, NULL, NULL, NULL, NULL);
 DELETE FROM `npc_trainer` WHERE `entry` = (@CT_CLASS_TRAINER+5);
 INSERT INTO `npc_trainer` (entry, spell, spellcost, reqskill, reqskillvalue, reqlevel)
 VALUES (@CT_CLASS_TRAINER+5, '-200012', '0', '0', '0', '0');
@@ -1500,46 +1500,46 @@ INSERT INTO `npc_trainer` (entry, spell, spellcost, reqskill, reqskillvalue, req
 VALUES (@CT_CLASS_TRAINER+5, '-200011', '0', '0', '0', '0');
 DELETE FROM `npc_vendor` WHERE `entry` = (@CT_CLASS_TRAINER+5);
 INSERT INTO `npc_vendor` (entry, item, ExtendedCost)
-VALUES (@CT_CLASS_TRAINER+5, '42396', '501'), -- Glyph of Circle of Healing
-(@CT_CLASS_TRAINER+5, '42397', '501'), -- Glyph of Dispel Magic
-(@CT_CLASS_TRAINER+5, '45753', '501'), -- Glyph of Dispersion
-(@CT_CLASS_TRAINER+5, '42398', '501'), -- Glyph of Fade
-(@CT_CLASS_TRAINER+5, '43342', '501'), -- Glyph of Fading
-(@CT_CLASS_TRAINER+5, '42399', '501'), -- Glyph of Fear Ward
-(@CT_CLASS_TRAINER+5, '42400', '501'), -- Glyph of Flash Heal
-(@CT_CLASS_TRAINER+5, '43371', '501'), -- Glyph of Fortitude
-(@CT_CLASS_TRAINER+5, '45755', '501'), -- Glyph of Guardian Spirit
-(@CT_CLASS_TRAINER+5, '42401', '501'), -- Glyph of Holy Nova
-(@CT_CLASS_TRAINER+5, '45758', '501'), -- Glyph of Hymn of Hope
-(@CT_CLASS_TRAINER+5, '42402', '501'), -- Glyph of Inner Fire
-(@CT_CLASS_TRAINER+5, '43370', '501'), -- Glyph of Levitate
-(@CT_CLASS_TRAINER+5, '42403', '501'), -- Glyph of Lightwell
-(@CT_CLASS_TRAINER+5, '42404', '501'), -- Glyph of Mass Dispel
-(@CT_CLASS_TRAINER+5, '42405', '501'), -- Glyph of Mind Control
-(@CT_CLASS_TRAINER+5, '42415', '501'), -- Glyph of Mind Flay
-(@CT_CLASS_TRAINER+5, '45757', '501'), -- Glyph of Mind Sear
-(@CT_CLASS_TRAINER+5, '45760', '501'), -- Glyph of Pain Suppression
-(@CT_CLASS_TRAINER+5, '45756', '501'), -- Glyph of Penance
-(@CT_CLASS_TRAINER+5, '42408', '501'), -- Glyph of Power Word: Shield
-(@CT_CLASS_TRAINER+5, '42409', '501'), -- Glyph of Prayer of Healing
-(@CT_CLASS_TRAINER+5, '42410', '501'), -- Glyph of Psychic Scream
-(@CT_CLASS_TRAINER+5, '42411', '501'), -- Glyph of Renew
-(@CT_CLASS_TRAINER+5, '42412', '501'), -- Glyph of Scourge Imprisonment
-(@CT_CLASS_TRAINER+5, '43373', '501'), -- Glyph of Shackle Undead
-(@CT_CLASS_TRAINER+5, '42407', '501'), -- Glyph of Shadow
-(@CT_CLASS_TRAINER+5, '43372', '501'), -- Glyph of Shadow Protection
-(@CT_CLASS_TRAINER+5, '42414', '501'), -- Glyph of Shadow Word: Death
-(@CT_CLASS_TRAINER+5, '42406', '501'), -- Glyph of Shadow Word: Pain
-(@CT_CLASS_TRAINER+5, '43374', '501'), -- Glyph of Shadowfiend
-(@CT_CLASS_TRAINER+5, '42416', '501'), -- Glyph of Smite
+VALUES (@CT_CLASS_TRAINER+5, '42396', '0'), -- Glyph of Circle of Healing
+(@CT_CLASS_TRAINER+5, '42397', '0'), -- Glyph of Dispel Magic
+(@CT_CLASS_TRAINER+5, '45753', '0'), -- Glyph of Dispersion
+(@CT_CLASS_TRAINER+5, '42398', '0'), -- Glyph of Fade
+(@CT_CLASS_TRAINER+5, '43342', '0'), -- Glyph of Fading
+(@CT_CLASS_TRAINER+5, '42399', '0'), -- Glyph of Fear Ward
+(@CT_CLASS_TRAINER+5, '42400', '0'), -- Glyph of Flash Heal
+(@CT_CLASS_TRAINER+5, '43371', '0'), -- Glyph of Fortitude
+(@CT_CLASS_TRAINER+5, '45755', '0'), -- Glyph of Guardian Spirit
+(@CT_CLASS_TRAINER+5, '42401', '0'), -- Glyph of Holy Nova
+(@CT_CLASS_TRAINER+5, '45758', '0'), -- Glyph of Hymn of Hope
+(@CT_CLASS_TRAINER+5, '42402', '0'), -- Glyph of Inner Fire
+(@CT_CLASS_TRAINER+5, '43370', '0'), -- Glyph of Levitate
+(@CT_CLASS_TRAINER+5, '42403', '0'), -- Glyph of Lightwell
+(@CT_CLASS_TRAINER+5, '42404', '0'), -- Glyph of Mass Dispel
+(@CT_CLASS_TRAINER+5, '42405', '0'), -- Glyph of Mind Control
+(@CT_CLASS_TRAINER+5, '42415', '0'), -- Glyph of Mind Flay
+(@CT_CLASS_TRAINER+5, '45757', '0'), -- Glyph of Mind Sear
+(@CT_CLASS_TRAINER+5, '45760', '0'), -- Glyph of Pain Suppression
+(@CT_CLASS_TRAINER+5, '45756', '0'), -- Glyph of Penance
+(@CT_CLASS_TRAINER+5, '42408', '0'), -- Glyph of Power Word: Shield
+(@CT_CLASS_TRAINER+5, '42409', '0'), -- Glyph of Prayer of Healing
+(@CT_CLASS_TRAINER+5, '42410', '0'), -- Glyph of Psychic Scream
+(@CT_CLASS_TRAINER+5, '42411', '0'), -- Glyph of Renew
+(@CT_CLASS_TRAINER+5, '42412', '0'), -- Glyph of Scourge Imprisonment
+(@CT_CLASS_TRAINER+5, '43373', '0'), -- Glyph of Shackle Undead
+(@CT_CLASS_TRAINER+5, '42407', '0'), -- Glyph of Shadow
+(@CT_CLASS_TRAINER+5, '43372', '0'), -- Glyph of Shadow Protection
+(@CT_CLASS_TRAINER+5, '42414', '0'), -- Glyph of Shadow Word: Death
+(@CT_CLASS_TRAINER+5, '42406', '0'), -- Glyph of Shadow Word: Pain
+(@CT_CLASS_TRAINER+5, '43374', '0'), -- Glyph of Shadowfiend
+(@CT_CLASS_TRAINER+5, '42416', '0'), -- Glyph of Smite
 (@CT_CLASS_TRAINER+5, '42417', '501'); -- Glyph of Spirit of Redemption
 -- Paladin Trainer 26327
 DELETE FROM `creature_template` WHERE `entry` = (@CT_CLASS_TRAINER+6);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_CLASS_TRAINER+6, '0', '0', '0', '0', '0', '24032', '0', '0', '0', 'Paladin Trainer', NULL, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '234.0', '331.0', '0', '286', '1.0', '2000', '0', '2', '768', '8', '0', '0', '0', '2', '0', '198.0', '295.0', '33', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
+VALUES (@CT_CLASS_TRAINER+6, '0', '0', '0', '0', '0', '24032', '0', '0', '0', 'Paladin Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '234.0', '331.0', '0', '286', '1.0', '2000', '0', '2', '768', '8', '0', '0', '0', '2', '0', '198.0', '295.0', '33', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_CLASS_TRAINER+6);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
-VALUES (@CT_CLASS_TRAINER+6, '', '', 'Paladinlehrer', '', '', '', '', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+VALUES (@CT_CLASS_TRAINER+6, '', '', 'Paladinlehrer', '', '', '', '', '', NULL, NULL, @LOL_TEAM, NULL, NULL, NULL, NULL, NULL);
 DELETE FROM `npc_trainer` WHERE `entry` = (@CT_CLASS_TRAINER+6);
 INSERT INTO `npc_trainer` (entry, spell, spellcost, reqskill, reqskillvalue, reqlevel)
 VALUES (@CT_CLASS_TRAINER+6, '-200004', '0', '0', '0', '0');
@@ -1548,47 +1548,47 @@ VALUES (@CT_CLASS_TRAINER+6, '-200003', '0', '0', '0', '0');
 DELETE FROM `npc_vendor` WHERE `entry` = (@CT_CLASS_TRAINER+6);
 INSERT INTO `npc_vendor` (entry, item, ExtendedCost)
 VALUES 
-(@CT_CLASS_TRAINER+6, '41101', '501'), -- Glyph of Avenger's Shield
-(@CT_CLASS_TRAINER+6, '41107', '501'), -- Glyph of Avenging Wrath
-(@CT_CLASS_TRAINER+6, '45741', '501'), -- Glyph of Beacon of Light
-(@CT_CLASS_TRAINER+6, '43365', '501'), -- Glyph of Blessing of Kings
-(@CT_CLASS_TRAINER+6, '43340', '501'), -- Glyph of Blessing of Might
-(@CT_CLASS_TRAINER+6, '43366', '501'), -- Glyph of Blessing of Wisdom
-(@CT_CLASS_TRAINER+6, '41104', '501'), -- Glyph of Cleansing
-(@CT_CLASS_TRAINER+6, '41099', '501'), -- Glyph of Consecration
-(@CT_CLASS_TRAINER+6, '41098', '501'), -- Glyph of Crusader Strike
-(@CT_CLASS_TRAINER+6, '45745', '501'), -- Glyph of Divine Plea
-(@CT_CLASS_TRAINER+6, '45743', '501'), -- Glyph of Divine Storm
-(@CT_CLASS_TRAINER+6, '41108', '501'), -- Glyph of Divinity
-(@CT_CLASS_TRAINER+6, '41103', '501'), -- Glyph of Exorcism
-(@CT_CLASS_TRAINER+6, '41105', '501'), -- Glyph of Flash of Light
-(@CT_CLASS_TRAINER+6, '41095', '501'), -- Glyph of Hammer of Justice
-(@CT_CLASS_TRAINER+6, '45742', '501'), -- Glyph of Hammer of the Righteous
-(@CT_CLASS_TRAINER+6, '41097', '501'), -- Glyph of Hammer of Wrath
-(@CT_CLASS_TRAINER+6, '41106', '501'), -- Glyph of Holy Light
-(@CT_CLASS_TRAINER+6, '45746', '501'), -- Glyph of Holy Shock
-(@CT_CLASS_TRAINER+6, '43867', '501'), -- Glyph of Holy Wrath
-(@CT_CLASS_TRAINER+6, '41092', '501'), -- Glyph of Judgement
-(@CT_CLASS_TRAINER+6, '43367', '501'), -- Glyph of Lay on Hands
-(@CT_CLASS_TRAINER+6, '41100', '501'), -- Glyph of Righteous Defense
-(@CT_CLASS_TRAINER+6, '45747', '501'), -- Glyph of Salvation
-(@CT_CLASS_TRAINER+6, '41094', '501'), -- Glyph of Seal of Command
-(@CT_CLASS_TRAINER+6, '41110', '501'), -- Glyph of Seal of Light
-(@CT_CLASS_TRAINER+6, '43868', '501'), -- Glyph of Seal of Righteousness
-(@CT_CLASS_TRAINER+6, '43869', '501'), -- Glyph of Seal of Vengeance
-(@CT_CLASS_TRAINER+6, '41109', '501'), -- Glyph of Seal of Wisdom
-(@CT_CLASS_TRAINER+6, '43368', '501'), -- Glyph of Sense Undead
-(@CT_CLASS_TRAINER+6, '45744', '501'), -- Glyph of Shield of Righteousness
-(@CT_CLASS_TRAINER+6, '41096', '501'), -- Glyph of Spiritual Attunement
-(@CT_CLASS_TRAINER+6, '43369', '501'), -- Glyph of the Wise
+(@CT_CLASS_TRAINER+6, '41101', '0'), -- Glyph of Avenger's Shield
+(@CT_CLASS_TRAINER+6, '41107', '0'), -- Glyph of Avenging Wrath
+(@CT_CLASS_TRAINER+6, '45741', '0'), -- Glyph of Beacon of Light
+(@CT_CLASS_TRAINER+6, '43365', '0'), -- Glyph of Blessing of Kings
+(@CT_CLASS_TRAINER+6, '43340', '0'), -- Glyph of Blessing of Might
+(@CT_CLASS_TRAINER+6, '43366', '0'), -- Glyph of Blessing of Wisdom
+(@CT_CLASS_TRAINER+6, '41104', '0'), -- Glyph of Cleansing
+(@CT_CLASS_TRAINER+6, '41099', '0'), -- Glyph of Consecration
+(@CT_CLASS_TRAINER+6, '41098', '0'), -- Glyph of Crusader Strike
+(@CT_CLASS_TRAINER+6, '45745', '0'), -- Glyph of Divine Plea
+(@CT_CLASS_TRAINER+6, '45743', '0'), -- Glyph of Divine Storm
+(@CT_CLASS_TRAINER+6, '41108', '0'), -- Glyph of Divinity
+(@CT_CLASS_TRAINER+6, '41103', '0'), -- Glyph of Exorcism
+(@CT_CLASS_TRAINER+6, '41105', '0'), -- Glyph of Flash of Light
+(@CT_CLASS_TRAINER+6, '41095', '0'), -- Glyph of Hammer of Justice
+(@CT_CLASS_TRAINER+6, '45742', '0'), -- Glyph of Hammer of the Righteous
+(@CT_CLASS_TRAINER+6, '41097', '0'), -- Glyph of Hammer of Wrath
+(@CT_CLASS_TRAINER+6, '41106', '0'), -- Glyph of Holy Light
+(@CT_CLASS_TRAINER+6, '45746', '0'), -- Glyph of Holy Shock
+(@CT_CLASS_TRAINER+6, '43867', '0'), -- Glyph of Holy Wrath
+(@CT_CLASS_TRAINER+6, '41092', '0'), -- Glyph of Judgement
+(@CT_CLASS_TRAINER+6, '43367', '0'), -- Glyph of Lay on Hands
+(@CT_CLASS_TRAINER+6, '41100', '0'), -- Glyph of Righteous Defense
+(@CT_CLASS_TRAINER+6, '45747', '0'), -- Glyph of Salvation
+(@CT_CLASS_TRAINER+6, '41094', '0'), -- Glyph of Seal of Command
+(@CT_CLASS_TRAINER+6, '41110', '0'), -- Glyph of Seal of Light
+(@CT_CLASS_TRAINER+6, '43868', '0'), -- Glyph of Seal of Righteousness
+(@CT_CLASS_TRAINER+6, '43869', '0'), -- Glyph of Seal of Vengeance
+(@CT_CLASS_TRAINER+6, '41109', '0'), -- Glyph of Seal of Wisdom
+(@CT_CLASS_TRAINER+6, '43368', '0'), -- Glyph of Sense Undead
+(@CT_CLASS_TRAINER+6, '45744', '0'), -- Glyph of Shield of Righteousness
+(@CT_CLASS_TRAINER+6, '41096', '0'), -- Glyph of Spiritual Attunement
+(@CT_CLASS_TRAINER+6, '43369', '0'), -- Glyph of the Wise
 (@CT_CLASS_TRAINER+6, '41102', '501'); -- Glyph of Turn Evil
 -- Mage Trainer 26326
 DELETE FROM `creature_template` WHERE `entry` = (@CT_CLASS_TRAINER+7);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_CLASS_TRAINER+7, '0', '0', '0', '0', '0', '24031', '0', '0', '0', 'Mage Trainer', NULL, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '248.0', '363.0', '0', '135', '1.0', '2000', '0', '8', '768', '8', '0', '0', '0', '8', '0', '233.0', '347.0', '28', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
+VALUES (@CT_CLASS_TRAINER+7, '0', '0', '0', '0', '0', '24031', '0', '0', '0', 'Mage Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '248.0', '363.0', '0', '135', '1.0', '2000', '0', '8', '768', '8', '0', '0', '0', '8', '0', '233.0', '347.0', '28', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_CLASS_TRAINER+7);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
-VALUES (@CT_CLASS_TRAINER+7, '', '', 'Magierlehrer', '', '', '', '', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+VALUES (@CT_CLASS_TRAINER+7, '', '', 'Magierlehrer', '', '', '', '', '', NULL, NULL, @LOL_TEAM, NULL, NULL, NULL, NULL, NULL);
 DELETE FROM `npc_trainer` WHERE `entry` = (@CT_CLASS_TRAINER+7);
 INSERT INTO `npc_trainer` (entry, spell, spellcost, reqskill, reqskillvalue, reqlevel)
 VALUES (@CT_CLASS_TRAINER+7, '-200008', '0', '0', '0', '0');
@@ -1596,50 +1596,50 @@ INSERT INTO `npc_trainer` (entry, spell, spellcost, reqskill, reqskillvalue, req
 VALUES (@CT_CLASS_TRAINER+7, '-200007', '0', '0', '0', '0');
 DELETE FROM `npc_vendor` WHERE `entry` = (@CT_CLASS_TRAINER+7);
 INSERT INTO `npc_vendor` (entry, item, ExtendedCost)
-VALUES (@CT_CLASS_TRAINER+7, '45738', '501'), -- Glyph of Arcane Barrage
-(@CT_CLASS_TRAINER+7, '44955', '501'), -- Glyph of Arcane Blast
-(@CT_CLASS_TRAINER+7, '42734', '501'), -- Glyph of Arcane Explosion
-(@CT_CLASS_TRAINER+7, '43339', '501'), -- Glyph of Arcane Intellect
-(@CT_CLASS_TRAINER+7, '42735', '501'), -- Glyph of Arcane Missiles
-(@CT_CLASS_TRAINER+7, '42736', '501'), -- Glyph of Arcane Power
-(@CT_CLASS_TRAINER+7, '44920', '501'), -- Glyph of Blast Wave
-(@CT_CLASS_TRAINER+7, '42737', '501'), -- Glyph of Blink
-(@CT_CLASS_TRAINER+7, '45736', '501'), -- Glyph of Deep Freeze
-(@CT_CLASS_TRAINER+7, '50045', '501'), -- Glyph of Eternal Water
-(@CT_CLASS_TRAINER+7, '42738', '501'), -- Glyph of Evocation
-(@CT_CLASS_TRAINER+7, '42740', '501'), -- Glyph of Fire Blast
-(@CT_CLASS_TRAINER+7, '43357', '501'), -- Glyph of Fire Ward
-(@CT_CLASS_TRAINER+7, '42739', '501'), -- Glyph of Fireball
-(@CT_CLASS_TRAINER+7, '43359', '501'), -- Glyph of Frost Armor
-(@CT_CLASS_TRAINER+7, '42741', '501'), -- Glyph of Frost Nova
-(@CT_CLASS_TRAINER+7, '43360', '501'), -- Glyph of Frost Ward
-(@CT_CLASS_TRAINER+7, '42742', '501'), -- Glyph of Frostbolt
-(@CT_CLASS_TRAINER+7, '44684', '501'), -- Glyph of Frostfire
-(@CT_CLASS_TRAINER+7, '42743', '501'), -- Glyph of Ice Armor
-(@CT_CLASS_TRAINER+7, '45740', '501'), -- Glyph of Ice Barrier
-(@CT_CLASS_TRAINER+7, '42744', '501'), -- Glyph of Ice Block
-(@CT_CLASS_TRAINER+7, '42745', '501'), -- Glyph of Ice Lance
-(@CT_CLASS_TRAINER+7, '42746', '501'), -- Glyph of Icy Veins
-(@CT_CLASS_TRAINER+7, '42748', '501'), -- Glyph of Invisibility
-(@CT_CLASS_TRAINER+7, '45737', '501'), -- Glyph of Living Bomb
-(@CT_CLASS_TRAINER+7, '42749', '501'), -- Glyph of Mage Armor
-(@CT_CLASS_TRAINER+7, '42750', '501'), -- Glyph of Mana Gem
-(@CT_CLASS_TRAINER+7, '45739', '501'), -- Glyph of Mirror Image
-(@CT_CLASS_TRAINER+7, '42751', '501'), -- Glyph of Molten Armor
-(@CT_CLASS_TRAINER+7, '42752', '501'), -- Glyph of Polymorph
-(@CT_CLASS_TRAINER+7, '42753', '501'), -- Glyph of Remove Curse
-(@CT_CLASS_TRAINER+7, '42747', '501'), -- Glyph of Scorch
-(@CT_CLASS_TRAINER+7, '43364', '501'), -- Glyph of Slow Fall
-(@CT_CLASS_TRAINER+7, '43362', '501'), -- Glyph of the Bear Cub
-(@CT_CLASS_TRAINER+7, '43361', '501'), -- Glyph of the Penguin
+VALUES (@CT_CLASS_TRAINER+7, '45738', '0'), -- Glyph of Arcane Barrage
+(@CT_CLASS_TRAINER+7, '44955', '0'), -- Glyph of Arcane Blast
+(@CT_CLASS_TRAINER+7, '42734', '0'), -- Glyph of Arcane Explosion
+(@CT_CLASS_TRAINER+7, '43339', '0'), -- Glyph of Arcane Intellect
+(@CT_CLASS_TRAINER+7, '42735', '0'), -- Glyph of Arcane Missiles
+(@CT_CLASS_TRAINER+7, '42736', '0'), -- Glyph of Arcane Power
+(@CT_CLASS_TRAINER+7, '44920', '0'), -- Glyph of Blast Wave
+(@CT_CLASS_TRAINER+7, '42737', '0'), -- Glyph of Blink
+(@CT_CLASS_TRAINER+7, '45736', '0'), -- Glyph of Deep Freeze
+(@CT_CLASS_TRAINER+7, '50045', '0'), -- Glyph of Eternal Water
+(@CT_CLASS_TRAINER+7, '42738', '0'), -- Glyph of Evocation
+(@CT_CLASS_TRAINER+7, '42740', '0'), -- Glyph of Fire Blast
+(@CT_CLASS_TRAINER+7, '43357', '0'), -- Glyph of Fire Ward
+(@CT_CLASS_TRAINER+7, '42739', '0'), -- Glyph of Fireball
+(@CT_CLASS_TRAINER+7, '43359', '0'), -- Glyph of Frost Armor
+(@CT_CLASS_TRAINER+7, '42741', '0'), -- Glyph of Frost Nova
+(@CT_CLASS_TRAINER+7, '43360', '0'), -- Glyph of Frost Ward
+(@CT_CLASS_TRAINER+7, '42742', '0'), -- Glyph of Frostbolt
+(@CT_CLASS_TRAINER+7, '44684', '0'), -- Glyph of Frostfire
+(@CT_CLASS_TRAINER+7, '42743', '0'), -- Glyph of Ice Armor
+(@CT_CLASS_TRAINER+7, '45740', '0'), -- Glyph of Ice Barrier
+(@CT_CLASS_TRAINER+7, '42744', '0'), -- Glyph of Ice Block
+(@CT_CLASS_TRAINER+7, '42745', '0'), -- Glyph of Ice Lance
+(@CT_CLASS_TRAINER+7, '42746', '0'), -- Glyph of Icy Veins
+(@CT_CLASS_TRAINER+7, '42748', '0'), -- Glyph of Invisibility
+(@CT_CLASS_TRAINER+7, '45737', '0'), -- Glyph of Living Bomb
+(@CT_CLASS_TRAINER+7, '42749', '0'), -- Glyph of Mage Armor
+(@CT_CLASS_TRAINER+7, '42750', '0'), -- Glyph of Mana Gem
+(@CT_CLASS_TRAINER+7, '45739', '0'), -- Glyph of Mirror Image
+(@CT_CLASS_TRAINER+7, '42751', '0'), -- Glyph of Molten Armor
+(@CT_CLASS_TRAINER+7, '42752', '0'), -- Glyph of Polymorph
+(@CT_CLASS_TRAINER+7, '42753', '0'), -- Glyph of Remove Curse
+(@CT_CLASS_TRAINER+7, '42747', '0'), -- Glyph of Scorch
+(@CT_CLASS_TRAINER+7, '43364', '0'), -- Glyph of Slow Fall
+(@CT_CLASS_TRAINER+7, '43362', '0'), -- Glyph of the Bear Cub
+(@CT_CLASS_TRAINER+7, '43361', '0'), -- Glyph of the Penguin
 (@CT_CLASS_TRAINER+7, '42754', '501'); -- Glyph of Water Elemental
 -- Hunter Trainer 26325
 DELETE FROM `creature_template` WHERE `entry` = (@CT_CLASS_TRAINER+8);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_CLASS_TRAINER+8, '0', '0', '0', '0', '0', '24030', '0', '0', '0', 'Hunter Trainer', NULL, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '234.0', '331.0', '0', '286', '1.0', '2000', '0', '2', '768', '8', '0', '0', '0', '3', '0', '198.0', '295.0', '33', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
+VALUES (@CT_CLASS_TRAINER+8, '0', '0', '0', '0', '0', '24030', '0', '0', '0', 'Hunter Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '234.0', '331.0', '0', '286', '1.0', '2000', '0', '2', '768', '8', '0', '0', '0', '3', '0', '198.0', '295.0', '33', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_CLASS_TRAINER+8);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
-VALUES (@CT_CLASS_TRAINER+8, '', '', 'Jägerlehrer', '', '', '', '', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+VALUES (@CT_CLASS_TRAINER+8, '', '', 'Jägerlehrer', '', '', '', '', '', NULL, NULL, @LOL_TEAM, NULL, NULL, NULL, NULL, NULL);
 DELETE FROM `npc_trainer` WHERE `entry` = (@CT_CLASS_TRAINER+8);
 INSERT INTO `npc_trainer` (entry, spell, spellcost, reqskill, reqskillvalue, reqlevel)
 VALUES (@CT_CLASS_TRAINER+8, '-200014', '0', '0', '0', '0');
@@ -1647,46 +1647,46 @@ INSERT INTO `npc_trainer` (entry, spell, spellcost, reqskill, reqskillvalue, req
 VALUES (@CT_CLASS_TRAINER+8, '-200013', '0', '0', '0', '0');
 DELETE FROM `npc_vendor` WHERE `entry` = (@CT_CLASS_TRAINER+8);
 INSERT INTO `npc_vendor` (entry, item, ExtendedCost)
-VALUES (@CT_CLASS_TRAINER+8, '42897', '501'), -- Glyph of Aimed Shot
-(@CT_CLASS_TRAINER+8, '42898', '501'), -- Glyph of Arcane Shot
-(@CT_CLASS_TRAINER+8, '42901', '501'), -- Glyph of Aspect of the Viper
-(@CT_CLASS_TRAINER+8, '42902', '501'), -- Glyph of Bestial Wrath
-(@CT_CLASS_TRAINER+8, '45625', '501'), -- Glyph of Chimera Shot
-(@CT_CLASS_TRAINER+8, '42903', '501'), -- Glyph of Deterrence
-(@CT_CLASS_TRAINER+8, '42904', '501'), -- Glyph of Disengage
-(@CT_CLASS_TRAINER+8, '45731', '501'), -- Glyph of Explosive Shot
-(@CT_CLASS_TRAINER+8, '45733', '501'), -- Glyph of Explosive Trap
-(@CT_CLASS_TRAINER+8, '43351', '501'), -- Glyph of Feign Death
-(@CT_CLASS_TRAINER+8, '42905', '501'), -- Glyph of Freezing Trap
-(@CT_CLASS_TRAINER+8, '42906', '501'), -- Glyph of Frost Trap
-(@CT_CLASS_TRAINER+8, '42907', '501'), -- Glyph of Hunter's Mark
-(@CT_CLASS_TRAINER+8, '42908', '501'), -- Glyph of Immolation Trap
-(@CT_CLASS_TRAINER+8, '45732', '501'), -- Glyph of Kill Shot
-(@CT_CLASS_TRAINER+8, '43350', '501'), -- Glyph of Mend Pet
-(@CT_CLASS_TRAINER+8, '42900', '501'), -- Glyph of Mending
-(@CT_CLASS_TRAINER+8, '42910', '501'), -- Glyph of Multi-Shot
-(@CT_CLASS_TRAINER+8, '43354', '501'), -- Glyph of Possessed Strength
-(@CT_CLASS_TRAINER+8, '42911', '501'), -- Glyph of Rapid Fire
-(@CT_CLASS_TRAINER+8, '45735', '501'), -- Glyph of Raptor Strike
-(@CT_CLASS_TRAINER+8, '43338', '501'), -- Glyph of Revive Pet
-(@CT_CLASS_TRAINER+8, '43356', '501'), -- Glyph of Scare Beast
-(@CT_CLASS_TRAINER+8, '45734', '501'), -- Glyph of Scatter Shot
-(@CT_CLASS_TRAINER+8, '42912', '501'), -- Glyph of Serpent Sting
-(@CT_CLASS_TRAINER+8, '42913', '501'), -- Glyph of Snake Trap
-(@CT_CLASS_TRAINER+8, '42914', '501'), -- Glyph of Steady Shot
-(@CT_CLASS_TRAINER+8, '42899', '501'), -- Glyph of the Beast
-(@CT_CLASS_TRAINER+8, '42909', '501'), -- Glyph of the Hawk
-(@CT_CLASS_TRAINER+8, '43355', '501'), -- Glyph of the Pack
-(@CT_CLASS_TRAINER+8, '42915', '501'), -- Glyph of Trueshot Aura
-(@CT_CLASS_TRAINER+8, '42916', '501'), -- Glyph of Volley
+VALUES (@CT_CLASS_TRAINER+8, '42897', '0'), -- Glyph of Aimed Shot
+(@CT_CLASS_TRAINER+8, '42898', '0'), -- Glyph of Arcane Shot
+(@CT_CLASS_TRAINER+8, '42901', '0'), -- Glyph of Aspect of the Viper
+(@CT_CLASS_TRAINER+8, '42902', '0'), -- Glyph of Bestial Wrath
+(@CT_CLASS_TRAINER+8, '45625', '0'), -- Glyph of Chimera Shot
+(@CT_CLASS_TRAINER+8, '42903', '0'), -- Glyph of Deterrence
+(@CT_CLASS_TRAINER+8, '42904', '0'), -- Glyph of Disengage
+(@CT_CLASS_TRAINER+8, '45731', '0'), -- Glyph of Explosive Shot
+(@CT_CLASS_TRAINER+8, '45733', '0'), -- Glyph of Explosive Trap
+(@CT_CLASS_TRAINER+8, '43351', '0'), -- Glyph of Feign Death
+(@CT_CLASS_TRAINER+8, '42905', '0'), -- Glyph of Freezing Trap
+(@CT_CLASS_TRAINER+8, '42906', '0'), -- Glyph of Frost Trap
+(@CT_CLASS_TRAINER+8, '42907', '0'), -- Glyph of Hunter's Mark
+(@CT_CLASS_TRAINER+8, '42908', '0'), -- Glyph of Immolation Trap
+(@CT_CLASS_TRAINER+8, '45732', '0'), -- Glyph of Kill Shot
+(@CT_CLASS_TRAINER+8, '43350', '0'), -- Glyph of Mend Pet
+(@CT_CLASS_TRAINER+8, '42900', '0'), -- Glyph of Mending
+(@CT_CLASS_TRAINER+8, '42910', '0'), -- Glyph of Multi-Shot
+(@CT_CLASS_TRAINER+8, '43354', '0'), -- Glyph of Possessed Strength
+(@CT_CLASS_TRAINER+8, '42911', '0'), -- Glyph of Rapid Fire
+(@CT_CLASS_TRAINER+8, '45735', '0'), -- Glyph of Raptor Strike
+(@CT_CLASS_TRAINER+8, '43338', '0'), -- Glyph of Revive Pet
+(@CT_CLASS_TRAINER+8, '43356', '0'), -- Glyph of Scare Beast
+(@CT_CLASS_TRAINER+8, '45734', '0'), -- Glyph of Scatter Shot
+(@CT_CLASS_TRAINER+8, '42912', '0'), -- Glyph of Serpent Sting
+(@CT_CLASS_TRAINER+8, '42913', '0'), -- Glyph of Snake Trap
+(@CT_CLASS_TRAINER+8, '42914', '0'), -- Glyph of Steady Shot
+(@CT_CLASS_TRAINER+8, '42899', '0'), -- Glyph of the Beast
+(@CT_CLASS_TRAINER+8, '42909', '0'), -- Glyph of the Hawk
+(@CT_CLASS_TRAINER+8, '43355', '0'), -- Glyph of the Pack
+(@CT_CLASS_TRAINER+8, '42915', '0'), -- Glyph of Trueshot Aura
+(@CT_CLASS_TRAINER+8, '42916', '0'), -- Glyph of Volley
 (@CT_CLASS_TRAINER+8, '42917', '501'); -- Glyph of Wyvern Sting
 -- Druid Trainer 26324
 DELETE FROM `creature_template` WHERE `entry` = (@CT_CLASS_TRAINER+9);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_CLASS_TRAINER+9, '0', '0', '0', '0', '0', '24029', '0', '0', '0', 'Druid Trainer', NULL, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '234.0', '331.0', '0', '286', '1.0', '2000', '0', '2', '768', '8', '0', '0', '0', '11', '0', '198.0', '295.0', '33', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
+VALUES (@CT_CLASS_TRAINER+9, '0', '0', '0', '0', '0', '24029', '0', '0', '0', 'Druid Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '234.0', '331.0', '0', '286', '1.0', '2000', '0', '2', '768', '8', '0', '0', '0', '11', '0', '198.0', '295.0', '33', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_CLASS_TRAINER+9);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
-VALUES (@CT_CLASS_TRAINER+9, '', '', 'Druidenlehrer', '', '', '', '', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+VALUES (@CT_CLASS_TRAINER+9, '', '', 'Druidenlehrer', '', '', '', '', '', NULL, NULL, @LOL_TEAM, NULL, NULL, NULL, NULL, NULL);
 DELETE FROM `npc_trainer` WHERE `entry` = (@CT_CLASS_TRAINER+9);
 INSERT INTO `npc_trainer` (entry, spell, spellcost, reqskill, reqskillvalue, reqlevel)
 VALUES (@CT_CLASS_TRAINER+9, '-200006', '0', '0', '0', '0');
@@ -1698,51 +1698,51 @@ VALUES
 -- (@CT_CLASS_TRAINER+9, '43336', '501'), -- Deprecated Glyph of the Black Bear
 -- (@CT_CLASS_TRAINER+9, '40948', '501'), -- Deprecated Glyph of the Red Lynx
 -- (@CT_CLASS_TRAINER+9, '40484', '501'), -- Deprecated Glyph of the White Bear
-(@CT_CLASS_TRAINER+9, '43316', '501'), -- Glyph of Aquatic Form
-(@CT_CLASS_TRAINER+9, '45623', '501'), -- Glyph of Barkskin
-(@CT_CLASS_TRAINER+9, '45601', '501'), -- Glyph of Berserk
-(@CT_CLASS_TRAINER+9, '43334', '501'), -- Glyph of Challenging Roar
-(@CT_CLASS_TRAINER+9, '48720', '501'), -- Glyph of Claw
-(@CT_CLASS_TRAINER+9, '43674', '501'), -- Glyph of Dash
-(@CT_CLASS_TRAINER+9, '40924', '501'), -- Glyph of Entangling Roots
-(@CT_CLASS_TRAINER+9, '44928', '501'), -- Glyph of Focus
-(@CT_CLASS_TRAINER+9, '40896', '501'), -- Glyph of Frenzied Regeneration
-(@CT_CLASS_TRAINER+9, '40899', '501'), -- Glyph of Growl
-(@CT_CLASS_TRAINER+9, '40914', '501'), -- Glyph of Healing Touch
-(@CT_CLASS_TRAINER+9, '40920', '501'), -- Glyph of Hurricane
-(@CT_CLASS_TRAINER+9, '40908', '501'), -- Glyph of Innervate
-(@CT_CLASS_TRAINER+9, '40919', '501'), -- Glyph of Insect Swarm
-(@CT_CLASS_TRAINER+9, '40915', '501'), -- Glyph of Lifebloom
-(@CT_CLASS_TRAINER+9, '40900', '501'), -- Glyph of Mangle
-(@CT_CLASS_TRAINER+9, '40897', '501'), -- Glyph of Maul
-(@CT_CLASS_TRAINER+9, '45622', '501'), -- Glyph of Monsoon
-(@CT_CLASS_TRAINER+9, '40923', '501'), -- Glyph of Moonfire
-(@CT_CLASS_TRAINER+9, '45603', '501'), -- Glyph of Nourish
-(@CT_CLASS_TRAINER+9, '40903', '501'), -- Glyph of Rake
-(@CT_CLASS_TRAINER+9, '50125', '501'), -- Glyph of Rapid Rejuvenation
-(@CT_CLASS_TRAINER+9, '40909', '501'), -- Glyph of Rebirth
-(@CT_CLASS_TRAINER+9, '40912', '501'), -- Glyph of Regrowth
-(@CT_CLASS_TRAINER+9, '40913', '501'), -- Glyph of Rejuvenation
-(@CT_CLASS_TRAINER+9, '40902', '501'), -- Glyph of Rip
-(@CT_CLASS_TRAINER+9, '45604', '501'), -- Glyph of Savage Roar
-(@CT_CLASS_TRAINER+9, '40901', '501'), -- Glyph of Shred
-(@CT_CLASS_TRAINER+9, '40921', '501'), -- Glyph of Starfall
-(@CT_CLASS_TRAINER+9, '40916', '501'), -- Glyph of Starfire
-(@CT_CLASS_TRAINER+9, '46372', '501'), -- Glyph of Survival Instincts
-(@CT_CLASS_TRAINER+9, '40906', '501'), -- Glyph of Swiftmend
-(@CT_CLASS_TRAINER+9, '43335', '501'), -- Glyph of the Wild
-(@CT_CLASS_TRAINER+9, '43332', '501'), -- Glyph of Thorns
-(@CT_CLASS_TRAINER+9, '44922', '501'), -- Glyph of Typhoon
-(@CT_CLASS_TRAINER+9, '43331', '501'), -- Glyph of Unburdened Rebirth
-(@CT_CLASS_TRAINER+9, '45602', '501'), -- Glyph of Wild Growth
+(@CT_CLASS_TRAINER+9, '43316', '0'), -- Glyph of Aquatic Form
+(@CT_CLASS_TRAINER+9, '45623', '0'), -- Glyph of Barkskin
+(@CT_CLASS_TRAINER+9, '45601', '0'), -- Glyph of Berserk
+(@CT_CLASS_TRAINER+9, '43334', '0'), -- Glyph of Challenging Roar
+(@CT_CLASS_TRAINER+9, '48720', '0'), -- Glyph of Claw
+(@CT_CLASS_TRAINER+9, '43674', '0'), -- Glyph of Dash
+(@CT_CLASS_TRAINER+9, '40924', '0'), -- Glyph of Entangling Roots
+(@CT_CLASS_TRAINER+9, '44928', '0'), -- Glyph of Focus
+(@CT_CLASS_TRAINER+9, '40896', '0'), -- Glyph of Frenzied Regeneration
+(@CT_CLASS_TRAINER+9, '40899', '0'), -- Glyph of Growl
+(@CT_CLASS_TRAINER+9, '40914', '0'), -- Glyph of Healing Touch
+(@CT_CLASS_TRAINER+9, '40920', '0'), -- Glyph of Hurricane
+(@CT_CLASS_TRAINER+9, '40908', '0'), -- Glyph of Innervate
+(@CT_CLASS_TRAINER+9, '40919', '0'), -- Glyph of Insect Swarm
+(@CT_CLASS_TRAINER+9, '40915', '0'), -- Glyph of Lifebloom
+(@CT_CLASS_TRAINER+9, '40900', '0'), -- Glyph of Mangle
+(@CT_CLASS_TRAINER+9, '40897', '0'), -- Glyph of Maul
+(@CT_CLASS_TRAINER+9, '45622', '0'), -- Glyph of Monsoon
+(@CT_CLASS_TRAINER+9, '40923', '0'), -- Glyph of Moonfire
+(@CT_CLASS_TRAINER+9, '45603', '0'), -- Glyph of Nourish
+(@CT_CLASS_TRAINER+9, '40903', '0'), -- Glyph of Rake
+(@CT_CLASS_TRAINER+9, '50125', '0'), -- Glyph of Rapid Rejuvenation
+(@CT_CLASS_TRAINER+9, '40909', '0'), -- Glyph of Rebirth
+(@CT_CLASS_TRAINER+9, '40912', '0'), -- Glyph of Regrowth
+(@CT_CLASS_TRAINER+9, '40913', '0'), -- Glyph of Rejuvenation
+(@CT_CLASS_TRAINER+9, '40902', '0'), -- Glyph of Rip
+(@CT_CLASS_TRAINER+9, '45604', '0'), -- Glyph of Savage Roar
+(@CT_CLASS_TRAINER+9, '40901', '0'), -- Glyph of Shred
+(@CT_CLASS_TRAINER+9, '40921', '0'), -- Glyph of Starfall
+(@CT_CLASS_TRAINER+9, '40916', '0'), -- Glyph of Starfire
+(@CT_CLASS_TRAINER+9, '46372', '0'), -- Glyph of Survival Instincts
+(@CT_CLASS_TRAINER+9, '40906', '0'), -- Glyph of Swiftmend
+(@CT_CLASS_TRAINER+9, '43335', '0'), -- Glyph of the Wild
+(@CT_CLASS_TRAINER+9, '43332', '0'), -- Glyph of Thorns
+(@CT_CLASS_TRAINER+9, '44922', '0'), -- Glyph of Typhoon
+(@CT_CLASS_TRAINER+9, '43331', '0'), -- Glyph of Unburdened Rebirth
+(@CT_CLASS_TRAINER+9, '45602', '0'), -- Glyph of Wild Growth
 (@CT_CLASS_TRAINER+9, '40922', '501'); -- Glyph of Wrath
 -- Beastmaster 26307
 DELETE FROM `creature_template` WHERE `entry` = (@CT_CLASS_TRAINER+10);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_CLASS_TRAINER+10, '0', '0', '0', '0', '0', '24028', '0', '0', '0', 'Beastmaster', NULL, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '234.0', '331.0', '0', '286', '1.0', '2000', '0', '2', '768', '8', '0', '0', '0', '0', '0', '198.0', '295.0', '33', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
+VALUES (@CT_CLASS_TRAINER+10, '0', '0', '0', '0', '0', '24028', '0', '0', '0', 'Beastmaster', @LOL_TEAM, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '234.0', '331.0', '0', '286', '1.0', '2000', '0', '2', '768', '8', '0', '0', '0', '0', '0', '198.0', '295.0', '33', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_CLASS_TRAINER+10);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
-VALUES (@CT_CLASS_TRAINER+10, '', '', 'Bestienmeister', '', '', '', '', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+VALUES (@CT_CLASS_TRAINER+10, '', '', 'Bestienmeister', '', '', '', '', '', NULL, NULL, @LOL_TEAM, NULL, NULL, NULL, NULL, NULL);
 
 
 -- Waffenmeister

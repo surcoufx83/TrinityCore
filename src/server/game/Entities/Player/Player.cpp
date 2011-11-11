@@ -11936,8 +11936,10 @@ InventoryResult Player::CanUseItem(ItemTemplate const* proto) const
         {
             if (GetSkillValue(proto->RequiredSkill) == 0)
                 return EQUIP_ERR_NO_REQUIRED_PROFICIENCY;
-            else if (GetSkillValue(proto->RequiredSkill) < proto->RequiredSkillRank)
-                return EQUIP_ERR_CANT_EQUIP_SKILL;
+            else if (GetSkillValue(proto->RequiredSkill)
+                    < proto->RequiredSkillRank)
+                if (!isPvPCharacter())
+                    return EQUIP_ERR_CANT_EQUIP_SKILL;
         }
 
         if (proto->RequiredSpell != 0 && !HasSpell(proto->RequiredSpell))
