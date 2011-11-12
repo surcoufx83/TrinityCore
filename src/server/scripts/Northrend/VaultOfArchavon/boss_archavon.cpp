@@ -44,6 +44,7 @@ enum Events
     EVENT_LEAP,
     EVENT_STOMP,
     EVENT_BERSERK,
+    EVENT_IMPALE_DAMAGE,
 
     // Warders
     EVENT_ROCK_SHOWER,
@@ -62,6 +63,12 @@ class boss_archavon : public CreatureScript
             {
             }
 
+            void Reset()
+            {
+                _Reset();
+                _impaleTarget = 0;
+            }
+
             void PassengerBoarded(Unit* who, int8 /*seatId*/, bool apply)
             {
                 if (!who->ToPlayer())
@@ -77,7 +84,10 @@ class boss_archavon : public CreatureScript
                 {
                     me->resetAttackTimer();
                     who->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_ALL, false);
-                    DoCast(who, SPELL_IMPALE, true);
+                    // TODO: move knockback / jump?
+                    events.DelayEvents(500, 1);
+                    events.ScheduleEvent(EVENT_IMPALE_DAMAGE, 250);
+                    _impaleTarget = who->GetGUID();
                 }
             }
 
@@ -125,6 +135,16 @@ class boss_archavon : public CreatureScript
                             events.DelayEvents(3000, 1);
                             events.ScheduleEvent(EVENT_STOMP, 45000);
                             break;
+                        case EVENT_IMPALE_DAMAGE:
+                        {
+                            Unit* target = ObjectAccessor::GetUnit(*me, _impaleTarget);
+                            if (target && target->isAlive())
+                            {
+                                DoCast(target, SPELL_IMPALE, true);
+                                _impaleTarget = 0;
+                            }
+                            break;
+                        }
                         case EVENT_BERSERK:
                             DoCast(me, SPELL_BERSERK, true);
                             DoScriptText(EMOTE_BERSERK, me);
@@ -136,6 +156,9 @@ class boss_archavon : public CreatureScript
 
                 DoMeleeAttackIfReady();
             }
+
+        private:
+            uint64 _impaleTarget;
         };
 
         CreatureAI* GetAI(Creature* creature) const
