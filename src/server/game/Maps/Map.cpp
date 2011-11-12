@@ -1003,6 +1003,8 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z,
                                 tele->orientation);
 
                     } else {
+                        // Slow fall
+                        player->CastSpell(player, 12438, false);
                         player->TeleportTo(0, -8833.38f, 628.628f, 94.356f,
                                 player->GetOrientation(), 0);
                     }
@@ -1048,6 +1050,8 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z,
                                 tele->position_y, tele->position_z,
                                 tele->orientation);
                     } else {
+                        // Slow fall
+                        player->CastSpell(player, 12438, false);
                         player->TeleportTo(1, 1629.36f, -4373.39f, 31.4828f,
                                 player->GetOrientation(), 0);
                     }
