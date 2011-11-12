@@ -401,7 +401,10 @@ public:
             events.ScheduleEvent(EVENT_SAY_AGGRO_2, 10000, 0, PHASE_1);
 
             if (Creature* runic = me->GetCreature(*me, instance->GetData64(DATA_RUNIC_COLOSSUS)))
+            {
+                runic->setActive(true);
                 runic->AI()->DoAction(ACTION_RUNIC_SMASH);
+            }
 
             if (GameObject* go = me->FindNearestGameObject(GO_LEVER, 500.0f))
                 go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
@@ -871,6 +874,7 @@ class npc_runic_colossus : public CreatureScript
                 RunicSmashTimer = 1000;
                 Side = 0;
 
+                me->setActive(false);
                 me->GetMotionMaster()->MoveTargetedHome();
 
                 // Runed Door closed
