@@ -98,6 +98,8 @@ SET @CREA_PVPCHAR_QUESTGIVER_05 = @CREATURE+6;
 SET @CREA_PVPCHAR_QUESTGIVER_06 = @CREATURE+7;
 SET @CREA_PVPCHAR_QUESTGIVER_07 = @CREATURE+8;
 SET @CREA_PVPCHAR_QUESTGIVER_08 = @CREATURE+9;
+SET @CREA_STOCKADE = @CREATURE+10;
+SET @CREA_RAGEFIRE = @CREATURE+50;
 SET @CREA_HUNTER_PET = @CREATURE + 100;
 
 
@@ -2418,6 +2420,278 @@ VALUES
 (@CT_VENDOR_CONSUMABLES, '18294', '501', '28'), -- Elixir of Greater Water Breathing
 (@CT_VENDOR_CONSUMABLES, '41166', '501', '29'), -- Runic Healing Injector
 (@CT_VENDOR_CONSUMABLES, '42545', '501', '30'); -- Runic Mana Injector
+
+
+-- Stockade
+-- Savage Gladiator Complete 150211
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+0);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+0, @SAVAGE_GLADIATOR, '34', '1', @PHASEMASK, '0', '0', '84.954', '28.6151', '-26.5279', '4.81247', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Miscellaneous 150218
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+1);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+1, @CT_VENDOR_MISC, '34', '1', @PHASEMASK, '0', '897', '87.7281', '14.0952', '-26.5227', '3.12468', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Ulf 150270
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+2);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+2, @CT_RIDING_TRAINER, '34', '1', @PHASEMASK, '0', '0', '79.0913', '2.96038', '-25.6062', '4.66062', '300', '0.0', '0', '9416', '8459', '0', '0', '33587200', '0');
+-- Mounts 150271
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+3);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+3, @CT_MOUNT_VENDOR, '34', '1', @PHASEMASK, '0', '897', '80.576', '-2.45216', '-25.6062', '1.76635', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Teleporter Mage 150272
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+4);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+4, @CT_TELEPORTER_MAGE, '34', '1', @PHASEMASK, '0', '0', '105.172', '0.540484', '-25.6062', '3.22444', '300', '0.0', '0', '100800', '88140', '0', '0', '0', '0');
+-- Enchantment Scrolls 150273
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+5);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+5, @CT_ENCHANTMENT_SCROLLS, '34', '1', @PHASEMASK, '0', '897', '80.22', '20.9002', '-26.5241', '4.69154', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Head, Shoulder, Trousers Enchantment 150274
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+6);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+6, @CT_ENCHANTMENT_HEADSHOULDER, '34', '1', @PHASEMASK, '0', '897', '82.5877', '21.2924', '-26.5241', '4.71511', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Gems 150275
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+7);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+7, @CT_VENDOR_GEMS, '34', '1', @PHASEMASK, '0', '897', '85.6704', '21.5266', '-26.5227', '4.99785', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Meta Gems 150276
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+8);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+8, @CT_VENDOR_METAGEMS, '34', '1', @PHASEMASK, '0', '897', '88.2729', '21.6267', '-26.5272', '4.39702', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Consumables 150277
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+9);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+9, @CT_VENDOR_CONSUMABLES, '34', '1', @PHASEMASK, '0', '897', '82.1073', '14.2091', '-26.5227', '6.02673', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Crafted PvP Gear 150278
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+10);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+10, @CT_VENDOR_PVP_STARTINGGEAR, '34', '1', @PHASEMASK, '0', '0', '87.4375', '30.0799', '-26.5237', '4.03732', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Free Gems 150279
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+11);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+11, @CT_VENDOR_GEMS_FREE, '34', '1', @PHASEMASK, '0', '897', '87.9591', '11.5155', '-26.5229', '3.19695', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Free Meta Gems 150280
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+12);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+12, @CT_VENDOR_METAGEMS_FREE, '34', '1', @PHASEMASK, '7193', '897', '88.5222', '8.80133', '-26.5229', '3.00845', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Death Knight Trainer and Runeforge 150300
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+13);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+13, @CT_CLASS_TRAINER, '34', '1', @PHASEMASK, '0', '0', '92.2726', '5.66879', '-25.6062', '4.55923', '300', '0.0', '0', '42', '0', '0', '0', '0', '0');
+-- Warrior Trainer 150301
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+14);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+14, (@CT_CLASS_TRAINER+1), '34', '1', @PHASEMASK, '0', '0', '96.0764', '5.77721', '-25.6062', '4.68883', '300', '0.0', '0', '8982', '0', '0', '0', '0', '0');
+-- Warlock Trainer 150302
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+15);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+15, (@CT_CLASS_TRAINER+2), '34', '1', @PHASEMASK, '0', '0', '94.2883', '5.77715', '-25.6062', '4.74773', '300', '0.0', '0', '7185', '7196', '0', '0', '0', '0');
+-- Rogue Trainer 150304
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+16);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+16, (@CT_CLASS_TRAINER+4), '34', '1', @PHASEMASK, '0', '0', '98.4629', '5.77621', '-25.6062', '4.60243', '300', '0.0', '0', '8982', '0', '0', '0', '0', '0');
+-- Priest Trainer 150305
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+17);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+17, (@CT_CLASS_TRAINER+5), '34', '1', @PHASEMASK, '0', '0', '101.029', '4.10182', '-25.6062', '4.63385', '300', '0.0', '0', '7185', '7196', '0', '0', '0', '0');
+-- Paladin Trainer 150306
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+18);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+18, (@CT_CLASS_TRAINER+6), '34', '1', @PHASEMASK, '0', '0', '101.007', '-1.92245', '-25.6062', '1.49225', '300', '0.0', '0', '8982', '3155', '0', '0', '0', '0');
+-- Mage Trainer 150307
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+19);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+19, (@CT_CLASS_TRAINER+7), '34', '1', @PHASEMASK, '0', '0', '98.9987', '-4.28586', '-25.6062', '1.61399', '300', '0.0', '0', '7185', '7196', '0', '0', '0', '0');
+-- Hunter Trainer 150308
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+20);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+20, (@CT_CLASS_TRAINER+8), '34', '1', @PHASEMASK, '0', '0', '97.1904', '-4.28586', '-25.6062', '1.51581', '300', '0.0', '0', '8982', '3155', '0', '0', '0', '0');
+-- Druid Trainer 150309
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+21);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+21, (@CT_CLASS_TRAINER+9), '34', '1', @PHASEMASK, '0', '0', '94.757', '-4.09328', '-25.6062', '1.6886', '300', '0.0', '0', '8982', '3155', '0', '0', '0', '0');
+-- Beastmaster 150310
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+22);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+22, (@CT_CLASS_TRAINER+10), '34', '1', @PHASEMASK, '0', '0', '92.9177', '-2.56495', '-25.6062', '1.65718', '300', '0.0', '0', '8982', '3155', '0', '0', '0', '0');
+-- Handiir 150311
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+23);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+23, @CT_WEAPON_MASTER, '34', '1', @PHASEMASK, '0', '0', '81.6713', '-8.1279', '-26.5229', '0.0160863', '300', '0.0', '0', '955', '0', '0', '0', '0', '0');
+-- Ileda 150312
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+24);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+24, (@CT_WEAPON_MASTER+1), '34', '1', @PHASEMASK, '0', '0', '78.9712', '-11.1387', '-26.5229', '0.0435768', '300', '0.0', '0', '737', '2175', '0', '0', '0', '0');
+-- Bixi Wobblebonk 150313
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+25);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+25, (@CT_WEAPON_MASTER+2), '34', '1', @PHASEMASK, '0', '210', '78.803', '-14.3822', '-26.5229', '0.169241', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+-- Archibald 150314
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+26);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+26, (@CT_WEAPON_MASTER+3), '34', '1', @PHASEMASK, '0', '264', '81.116', '-17.8875', '-26.5229', '1.72825', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+-- Ansekhwa 150315
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+27);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+27, (@CT_WEAPON_MASTER+4), '34', '1', @PHASEMASK, '0', '473', '84.6594', '-21.1488', '-26.5229', '1.49891', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+-- Sayoc 150316
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+28);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+28, (@CT_WEAPON_MASTER+5), '34', '1', @PHASEMASK, '0', '1331', '90.0426', '-13.2656', '-26.5229', '3.18517', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+-- Woo Ping 150317
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+29);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+29, (@CT_WEAPON_MASTER+6), '34', '1', @PHASEMASK, '0', '202', '88.3166', '-10.6606', '-26.5229', '3.32889', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+-- Woo Ping 150317
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+30);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+30, (@CT_WEAPON_MASTER+6), '34', '1', @PHASEMASK, '0', '202', '89.6137', '-10.0428', '-26.5229', '3.22836', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+-- Ilyenia Moonfire 150318
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+31);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+31, (@CT_WEAPON_MASTER+7), '34', '1', @PHASEMASK, '0', '109', '87.2705', '-7.87775', '-26.5229', '3.16395', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+-- Buliwyf Stonehand 150319
+DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+32);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_STOCKADE+32, (@CT_WEAPON_MASTER+8), '34', '1', @PHASEMASK, '0', '201', '87.8121', '-17.7614', '-26.5229', '1.42036', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+----
+-- Ragefire
+----
+-- Savage Gladiator Complete 150211
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+0);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+0, @SAVAGE_GLADIATOR, '389', '1', @PHASEMASK, '0', '0', '-30.6252', '-51.5702', '-21.5339', '1.3057', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Savage Gladiator Complete 150211
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+1);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+1, @SAVAGE_GLADIATOR, '389', '1', @PHASEMASK, '0', '0', '-30.6252', '-51.5702', '-21.5339', '1.3057', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Miscellaneous 150218
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+2);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+2, @CT_VENDOR_MISC, '389', '1', @PHASEMASK, '0', '897', '-34.8669', '-46.3351', '-21.8637', '1.03949', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Ulf 150270
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+3);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+3, @CT_RIDING_TRAINER, '389', '1', @PHASEMASK, '0', '897', '-8.26827', '-54.2675', '-21.7976', '2.50897', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Mounts 150271
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+4);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+4, @CT_MOUNT_VENDOR, '389', '1', @PHASEMASK, '0', '897', '-5.90433', '-50.5969', '-21.8637', '2.5396', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Teleporter Mage 150272
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+5);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+5, @CT_TELEPORTER_MAGE, '389', '1', @PHASEMASK, '0', '0', '-9.39756', '-35.8637', '-19.8875', '4.6806', '300', '0.0', '0', '100800', '88140', '0', '0', '0', '0');
+-- Enchantment Scrolls 150273
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+6);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+6, @CT_ENCHANTMENT_SCROLLS, '389', '1', @PHASEMASK, '0', '897', '-19.7524', '-62.4821', '-21.3729', '1.21462', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Head, Shoulder, Trousers Enchantment 150274
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+7);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+7, @CT_ENCHANTMENT_HEADSHOULDER, '389', '1', @PHASEMASK, '0', '897', '-21.7667', '-62.6689', '-21.3739', '1.45809', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Gems 150275
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+8);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+8, @CT_VENDOR_GEMS, '389', '1', @PHASEMASK, '0', '897', '-24.9795', '-63.056', '-21.3721', '1.45024', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Meta Gems 150276
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+9);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+9, @CT_VENDOR_METAGEMS, '389', '1', @PHASEMASK, '0', '897', '-27.4354', '-63.0227', '-21.3721', '1.15179', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Crafted PvP Gear 150278
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+10);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+10, @CT_VENDOR_PVP_STARTINGGEAR, '389', '1', @PHASEMASK, '0', '0', '-26.7781', '-53.6912', '-21.4093', '1.52168', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Free Gems 150279
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+11);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+11, @CT_VENDOR_GEMS_FREE, '389', '1', @PHASEMASK, '0', '897', '-36.3407', '-44.8284', '-21.8637', '0.262726', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Free Meta Gems 150280
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+12);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+12, @CT_VENDOR_METAGEMS_FREE, '389', '1', @PHASEMASK, '0', '897', '-37.2862', '-43.2576', '-21.8637', '0.265868', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Death Knight Trainer and Runeforge 150300
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+13);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+13, @CT_CLASS_TRAINER, '389', '1', @PHASEMASK, '0', '0', '-21.9826', '-36.9566', '-21.6223', '3.70116', '300', '0.0', '0', '42', '0', '0', '0', '0', '0');
+-- Warrior Trainer 150301
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+14);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+14, (@CT_CLASS_TRAINER+1), '389', '1', @PHASEMASK, '0', '0', '-23.1808', '-34.0125', '-21.6233', '3.52838', '300', '0.0', '0', '8982', '0', '0', '0', '0', '0');
+-- Warlock Trainer 150302
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+15);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+15, (@CT_CLASS_TRAINER+2), '389', '1', @PHASEMASK, '0', '0', '-24.4265', '-31.58', '-21.6233', '3.62655', '300', '0.0', '0', '7185', '7196', '0', '0', '0', '0');
+-- Shaman Trainer 150303
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+16);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+16, (@CT_CLASS_TRAINER+3), '389', '1', @PHASEMASK, '0', '0', '-26.1071', '-27.9898', '-21.6233', '3.86217', '300', '0.0', '0', '8982', '3155', '0', '0', '0', '0');
+-- Rogue Trainer 150304
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+17);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+17, (@CT_CLASS_TRAINER+4), '389', '1', @PHASEMASK, '0', '0', '-28.3722', '-25.8137', '-21.6233', '4.40017', '300', '0.0', '0', '8982', '0', '0', '0', '0', '0');
+-- Priest Trainer 150305
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+18);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+18, (@CT_CLASS_TRAINER+5), '389', '1', @PHASEMASK, '0', '0', '-31.9662', '-23.5542', '-21.6233', '4.23916', '300', '0.0', '0', '7185', '7196', '0', '0', '0', '0');
+-- Paladin Trainer 150306
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+19);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+19, (@CT_CLASS_TRAINER+6), '389', '1', @PHASEMASK, '0', '0', '-36.1417', '-21.4753', '-21.6233', '4.30984', '300', '0.0', '0', '8982', '3155', '0', '0', '0', '0');
+-- Mage Trainer 150307
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+20);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+20, (@CT_CLASS_TRAINER+7), '389', '1', @PHASEMASK, '0', '0', '-40.1978', '-20.4412', '-21.6233', '4.54546', '300', '0.0', '0', '7185', '7196', '0', '0', '0', '0');
+-- Hunter Trainer 150308
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+21);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+21, (@CT_CLASS_TRAINER+8), '389', '1', @PHASEMASK, '0', '0', '-43.9324', '-20.2919', '-21.2703', '5.03633', '300', '0.0', '0', '8982', '3155', '0', '0', '0', '0');
+-- Druid Trainer 150309
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+22);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+22, (@CT_CLASS_TRAINER+9), '389', '1', @PHASEMASK, '0', '0', '-46.4213', '-21.2876', '-20.7178', '5.44866', '300', '0.0', '0', '8982', '3155', '0', '0', '0', '0');
+-- Beastmaster 150310
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+23);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+23, (@CT_CLASS_TRAINER+10), '389', '1', @PHASEMASK, '0', '0', '-49.1372', '-24.4804', '-20.5039', '5.51935', '300', '0.0', '0', '8982', '3155', '0', '0', '0', '0');
+-- Handiir 150311
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+24);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+24, @CT_WEAPON_MASTER, '389', '1', @PHASEMASK, '0', '0', '-60.0632', '-43.6085', '-18.7787', '0.0208325', '300', '0.0', '0', '955', '0', '0', '0', '0', '0');
+-- Ileda 150312
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+25);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+25, (@CT_WEAPON_MASTER+1), '389', '1', @PHASEMASK, '0', '0', '-55.933', '-46.3286', '-20.1907', '0.735546', '300', '0.0', '0', '737', '2175', '0', '0', '0', '0');
+-- Bixi Wobblebonk 150313
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+26);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+26, (@CT_WEAPON_MASTER+2), '389', '1', @PHASEMASK, '0', '210', '-50.908', '-48.5629', '-21.1167', '0.586324', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+-- Archibald 150314
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+27);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+27, (@CT_WEAPON_MASTER+3), '389', '1', @PHASEMASK, '0', '264', '-46.7545', '-50.8826', '-21.4354', '0.935827', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+-- Ansekhwa 150315
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+28);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+28, (@CT_WEAPON_MASTER+4), '389', '1', @PHASEMASK, '0', '473', '-42.7968', '-53.7797', '-21.3972', '0.586325', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+-- Sayoc 150316
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+29);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+29, (@CT_WEAPON_MASTER+5), '389', '1', @PHASEMASK, '0', '1331', '-38.6787', '-58.2021', '-21.3704', '0.382122', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+-- Woo Ping 150317
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+30);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+30, (@CT_WEAPON_MASTER+6), '389', '1', @PHASEMASK, '0', '202', '-53.5901', '-47.6344', '-20.6139', '0.786603', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+-- Ilyenia Moonfire 150318
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+31);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+31, (@CT_WEAPON_MASTER+7), '389', '1', @PHASEMASK, '0', '109', '-58.095', '-44.8808', '-19.4533', '0.692355', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+-- Buliwyf Stonehand 150319
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+32);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+32, (@CT_WEAPON_MASTER+8), '389', '1', @PHASEMASK, '0', '201', '-62.8359', '-42.2307', '-18.0544', '0.625594', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+
+
 
  
 -- -------------------------------------------------------------------------

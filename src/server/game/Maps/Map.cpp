@@ -765,6 +765,11 @@ static bool HACK_OnQuestComplete(Player *player, Creature *_Creature,
         // Learn dual spec
         player->CastSpell(player, 63680, true, NULL, NULL, player->GetGUID());
         player->CastSpell(player, 63624, true, NULL, NULL, player->GetGUID());
+		// Learn first aid -- Illustrious Grand Master First Aid
+        player->CastSpell(player, 65292, true, NULL, NULL, player->GetGUID());
+        // Set first aid to 450
+        uint32 skill = 129;
+        player->SetSkill(skill, player->GetSkillStep(skill), 450, 450);
 
         // Set player to max level
         // -> Player should only be level 1
