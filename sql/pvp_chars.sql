@@ -64,7 +64,7 @@ SET @NPCFLAG_QUEST_GIVER =2;
 
 -- Neue Creature_Template Einträge
 -- Notwendig, damit die PvE Welt komplett unangetastet bleibt
-SET @SAVAGE_GLADIATOR = @CREA_TEMPLATE+11;
+SET @CT_SAVAGE_GLADIATOR = @CREA_TEMPLATE+11;
 SET @CT_HUNTER_FOOD_VENDOR = @CREA_TEMPLATE+17;
 SET @CT_VENDOR_MISC = @CREA_TEMPLATE+18;
 SET @PVPCHAR_QUESTGIVER = @CREA_TEMPLATE+19;
@@ -125,7 +125,10 @@ INSERT INTO `quest_template` ( `entry`,
  `RewXPId`, `MaxLevel`,
  `SkillOrClassMask`,
  `CompleteEmote`,
- `RewItemCount1`, `RewItemId1`  )
+ `RewItemCount1`, `RewItemId1`,
+ `RewItemCount2`, `RewItemId2`,
+ `RewItemCount3`, `RewItemId3`
+ )
  VALUES
  ( @QUEST_TEMPLATE,
  'Ich will ein PvP.Char sein', '',
@@ -142,7 +145,9 @@ INSERT INTO `quest_template` ( `entry`,
 '0', '1', 
 '0',
 '1',
-4, 41599 -- 4x Froststofftasche
+4, 41599, -- 4x Froststofftasche
+1, 44225, -- 1x Zügel des gepanzerten Braunbären
+1, 44226  -- 1x Zügel des gepanzerten Braunbären
 );
 -- Creature, that gives the quest
 DELETE FROM `creature_template` WHERE `entry` = @PVPCHAR_QUESTGIVER;
@@ -285,7 +290,7 @@ VALUES
 (@CT_RIDING_TRAINER, '0', '0', '0', '0', '0', '15759', '0', '0', '0',
  'Ulf', 'Meister des fliegens', NULL,
 '10723', '78', '78', '2',
-'189', '189', '209', '1.0', '1.38571',
+'35', '35', '209', '1.0', '1.38571',
 '1.0', '0', '322.0', '466.0', '0', '236', '1.0', '2000', '0', '8', '32768', '8', '0', '1', '0', 
 '0', '0', '296.0', '440.0', '58', '7', '4096', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
 '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '7', '1.0', '1.0', '1.0', '0', '0', '0', '0',
@@ -330,7 +335,7 @@ INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, 
  trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
 VALUES (@CT_MOUNT_VENDOR, '0', '0', '0', '0', '0',
  '27822', '0', '0', '0', 'Mounts', NULL, NULL,
- '0', '80', '80', '2', '189', '189',
+ '0', '80', '80', '2', '35', '35',
  @NPCFLAG_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR,
  '1.0', '1.14286', '1.0', '0', '346.0', '499.0', '0', '287', '1.0',
  '2000', '0', '8', '32768', '8', '0',
@@ -393,7 +398,7 @@ VALUES
 
 -- Savage Gladiator // Grausamer Gladiator -- Item Level 200 Blau
 -- Komplett
-DELETE FROM `creature_template` WHERE `entry` = @SAVAGE_GLADIATOR;
+DELETE FROM `creature_template` WHERE `entry` = @CT_SAVAGE_GLADIATOR;
 INSERT INTO `creature_template` (`entry`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`,
 `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_walk`,
 `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, 
@@ -402,64 +407,64 @@ INSERT INTO `creature_template` (`entry`, `modelid1`, `modelid2`, `modelid3`, `m
 `type`, `type_flags`,
 `AIName`,
 `equipment_id`,`mechanic_immune_mask`, `flags_extra`, `ScriptName`, `WDBVerified`)
-VALUES(@SAVAGE_GLADIATOR,@MODEL_OBSIDIAN_GOLEM,'0','0','0',
+VALUES(@CT_SAVAGE_GLADIATOR,@MODEL_OBSIDIAN_GOLEM,'0','0','0',
 'Savage Gladiator Complete',@LOL_TEAM,'','0','80','80','2','35','35',@NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR,'1',
 '1.14286','1','0','346','499','0','287','1',
 '2000','0','8','32768','8','0','0','0','0','0','315','468','69','7','4096',
 '',
 '0','0','0','','12340');
-DELETE FROM `locales_creature` WHERE `entry` = @SAVAGE_GLADIATOR;
+DELETE FROM `locales_creature` WHERE `entry` = @CT_SAVAGE_GLADIATOR;
 INSERT INTO `locales_creature` (`entry`, `name_loc1`, `name_loc2`, `name_loc3`, `name_loc4`, `name_loc5`,
  `name_loc6`, `name_loc7`, `name_loc8`, `subname_loc1`, `subname_loc2`, `subname_loc3`, `subname_loc4`,
  `subname_loc5`, `subname_loc6`, `subname_loc7`, `subname_loc8`)
-VALUES(@SAVAGE_GLADIATOR,'','','Grausamer Gladiator Alles','','','','','',
+VALUES(@CT_SAVAGE_GLADIATOR,'','','Grausamer Gladiator Alles','','','','','',
  NULL,NULL,@LOL_TEAM,NULL,NULL,NULL,NULL,NULL);
-DELETE FROM npc_vendor WHERE entry = @SAVAGE_GLADIATOR;
+DELETE FROM npc_vendor WHERE entry = @CT_SAVAGE_GLADIATOR;
 INSERT INTO `npc_vendor` (`entry`, `slot`, `item`)
 VALUES
-(@SAVAGE_GLADIATOR,'0','40778'),
-(@SAVAGE_GLADIATOR,'0','40779'), (@SAVAGE_GLADIATOR,'0','40780'), (@SAVAGE_GLADIATOR,'0','40797'), 
-(@SAVAGE_GLADIATOR,'0','40798'), (@SAVAGE_GLADIATOR,'0','40799'), (@SAVAGE_GLADIATOR,'0','40816'), 
-(@SAVAGE_GLADIATOR,'0','40817'), (@SAVAGE_GLADIATOR,'0','40818'), (@SAVAGE_GLADIATOR,'0','40836'), 
-(@SAVAGE_GLADIATOR,'0','40837'), (@SAVAGE_GLADIATOR,'0','40838'), (@SAVAGE_GLADIATOR,'0','40856'), 
-(@SAVAGE_GLADIATOR,'0','40857'), (@SAVAGE_GLADIATOR,'0','40858'), (@SAVAGE_GLADIATOR,'0','40898'), 
-(@SAVAGE_GLADIATOR,'0','40918'), (@SAVAGE_GLADIATOR,'0','40930'), (@SAVAGE_GLADIATOR,'0','40936'), 
-(@SAVAGE_GLADIATOR,'0','40960'), (@SAVAGE_GLADIATOR,'0','40986'), (@SAVAGE_GLADIATOR,'0','40987'), 
-(@SAVAGE_GLADIATOR,'0','40998'), (@SAVAGE_GLADIATOR,'0','41004'), (@SAVAGE_GLADIATOR,'0','41010'), 
-(@SAVAGE_GLADIATOR,'0','41016'), (@SAVAGE_GLADIATOR,'0','41023'), (@SAVAGE_GLADIATOR,'0','41024'), 
-(@SAVAGE_GLADIATOR,'0','41030'), (@SAVAGE_GLADIATOR,'0','41041'), (@SAVAGE_GLADIATOR,'0','41078'), 
-(@SAVAGE_GLADIATOR,'0','41084'), (@SAVAGE_GLADIATOR,'0','41134'), (@SAVAGE_GLADIATOR,'0','41140'), 
-(@SAVAGE_GLADIATOR,'0','41148'), (@SAVAGE_GLADIATOR,'0','41154'), (@SAVAGE_GLADIATOR,'0','41160'), 
-(@SAVAGE_GLADIATOR,'0','41202'), (@SAVAGE_GLADIATOR,'0','41208'), (@SAVAGE_GLADIATOR,'0','41214'), 
-(@SAVAGE_GLADIATOR,'0','41268'), (@SAVAGE_GLADIATOR,'0','41269'), (@SAVAGE_GLADIATOR,'0','41270'), 
-(@SAVAGE_GLADIATOR,'0','41271'), (@SAVAGE_GLADIATOR,'0','41272'), (@SAVAGE_GLADIATOR,'0','41278'), 
-(@SAVAGE_GLADIATOR,'0','41290'), (@SAVAGE_GLADIATOR,'0','41301'), (@SAVAGE_GLADIATOR,'0','41313'), 
-(@SAVAGE_GLADIATOR,'0','41324'), (@SAVAGE_GLADIATOR,'0','41643'), (@SAVAGE_GLADIATOR,'0','41644'), 
-(@SAVAGE_GLADIATOR,'0','41645'), (@SAVAGE_GLADIATOR,'0','41646'), (@SAVAGE_GLADIATOR,'0','41647'), 
-(@SAVAGE_GLADIATOR,'0','41658'), (@SAVAGE_GLADIATOR,'0','41664'), (@SAVAGE_GLADIATOR,'0','41675'), 
-(@SAVAGE_GLADIATOR,'0','41712'), (@SAVAGE_GLADIATOR,'0','41770'), (@SAVAGE_GLADIATOR,'0','41847'), 
-(@SAVAGE_GLADIATOR,'0','41848'), (@SAVAGE_GLADIATOR,'0','41849'), (@SAVAGE_GLADIATOR,'0','41850'), 
-(@SAVAGE_GLADIATOR,'0','41851'), (@SAVAGE_GLADIATOR,'0','41912'), (@SAVAGE_GLADIATOR,'0','41918'), 
-(@SAVAGE_GLADIATOR,'0','41924'), (@SAVAGE_GLADIATOR,'0','41930'), (@SAVAGE_GLADIATOR,'0','41937'), 
-(@SAVAGE_GLADIATOR,'0','41943'), (@SAVAGE_GLADIATOR,'0','41949'), (@SAVAGE_GLADIATOR,'0','41956'), 
-(@SAVAGE_GLADIATOR,'0','41962'), (@SAVAGE_GLADIATOR,'0','41968'), (@SAVAGE_GLADIATOR,'0','41990'), 
-(@SAVAGE_GLADIATOR,'0','41996'), (@SAVAGE_GLADIATOR,'0','42002'), (@SAVAGE_GLADIATOR,'0','42008'), 
-(@SAVAGE_GLADIATOR,'0','42014'), (@SAVAGE_GLADIATOR,'0','42206'), (@SAVAGE_GLADIATOR,'0','42212'), 
-(@SAVAGE_GLADIATOR,'0','42213'), (@SAVAGE_GLADIATOR,'0','42214'), (@SAVAGE_GLADIATOR,'0','42215'), 
-(@SAVAGE_GLADIATOR,'0','42216'), (@SAVAGE_GLADIATOR,'0','42217'), (@SAVAGE_GLADIATOR,'0','42218'), 
-(@SAVAGE_GLADIATOR,'0','42219'), (@SAVAGE_GLADIATOR,'0','42221'), (@SAVAGE_GLADIATOR,'0','42222'), 
-(@SAVAGE_GLADIATOR,'0','42224'), (@SAVAGE_GLADIATOR,'0','42294'), (@SAVAGE_GLADIATOR,'0','42295'), 
-(@SAVAGE_GLADIATOR,'0','42296'), (@SAVAGE_GLADIATOR,'0','42297'), (@SAVAGE_GLADIATOR,'0','42343'), 
-(@SAVAGE_GLADIATOR,'0','42344'), (@SAVAGE_GLADIATOR,'0','42356'), (@SAVAGE_GLADIATOR,'0','42382'), 
-(@SAVAGE_GLADIATOR,'0','42388'), (@SAVAGE_GLADIATOR,'0','42444'), (@SAVAGE_GLADIATOR,'0','42445'), 
-(@SAVAGE_GLADIATOR,'0','42446'), (@SAVAGE_GLADIATOR,'0','42447'), (@SAVAGE_GLADIATOR,'0','42448'), 
-(@SAVAGE_GLADIATOR,'0','42511'), (@SAVAGE_GLADIATOR,'0','42517'), (@SAVAGE_GLADIATOR,'0','42523'), 
-(@SAVAGE_GLADIATOR,'0','42529'), (@SAVAGE_GLADIATOR,'0','42535'), (@SAVAGE_GLADIATOR,'0','42556'), 
-(@SAVAGE_GLADIATOR,'0','42557'), (@SAVAGE_GLADIATOR,'0','42568'), (@SAVAGE_GLADIATOR,'0','42574'), 
-(@SAVAGE_GLADIATOR,'0','42575'), (@SAVAGE_GLADIATOR,'0','42576'), (@SAVAGE_GLADIATOR,'0','42593'), 
-(@SAVAGE_GLADIATOR,'0','42594'), (@SAVAGE_GLADIATOR,'0','42595'), (@SAVAGE_GLADIATOR,'0','42611'), 
-(@SAVAGE_GLADIATOR,'0','42612'), (@SAVAGE_GLADIATOR,'0','42618'), (@SAVAGE_GLADIATOR,'0','44415'), 
-(@SAVAGE_GLADIATOR,'0','44416');
+(@CT_SAVAGE_GLADIATOR,'0','40778'),
+(@CT_SAVAGE_GLADIATOR,'0','40779'), (@CT_SAVAGE_GLADIATOR,'0','40780'), (@CT_SAVAGE_GLADIATOR,'0','40797'), 
+(@CT_SAVAGE_GLADIATOR,'0','40798'), (@CT_SAVAGE_GLADIATOR,'0','40799'), (@CT_SAVAGE_GLADIATOR,'0','40816'), 
+(@CT_SAVAGE_GLADIATOR,'0','40817'), (@CT_SAVAGE_GLADIATOR,'0','40818'), (@CT_SAVAGE_GLADIATOR,'0','40836'), 
+(@CT_SAVAGE_GLADIATOR,'0','40837'), (@CT_SAVAGE_GLADIATOR,'0','40838'), (@CT_SAVAGE_GLADIATOR,'0','40856'), 
+(@CT_SAVAGE_GLADIATOR,'0','40857'), (@CT_SAVAGE_GLADIATOR,'0','40858'), (@CT_SAVAGE_GLADIATOR,'0','40898'), 
+(@CT_SAVAGE_GLADIATOR,'0','40918'), (@CT_SAVAGE_GLADIATOR,'0','40930'), (@CT_SAVAGE_GLADIATOR,'0','40936'), 
+(@CT_SAVAGE_GLADIATOR,'0','40960'), (@CT_SAVAGE_GLADIATOR,'0','40986'), (@CT_SAVAGE_GLADIATOR,'0','40987'), 
+(@CT_SAVAGE_GLADIATOR,'0','40998'), (@CT_SAVAGE_GLADIATOR,'0','41004'), (@CT_SAVAGE_GLADIATOR,'0','41010'), 
+(@CT_SAVAGE_GLADIATOR,'0','41016'), (@CT_SAVAGE_GLADIATOR,'0','41023'), (@CT_SAVAGE_GLADIATOR,'0','41024'), 
+(@CT_SAVAGE_GLADIATOR,'0','41030'), (@CT_SAVAGE_GLADIATOR,'0','41041'), (@CT_SAVAGE_GLADIATOR,'0','41078'), 
+(@CT_SAVAGE_GLADIATOR,'0','41084'), (@CT_SAVAGE_GLADIATOR,'0','41134'), (@CT_SAVAGE_GLADIATOR,'0','41140'), 
+(@CT_SAVAGE_GLADIATOR,'0','41148'), (@CT_SAVAGE_GLADIATOR,'0','41154'), (@CT_SAVAGE_GLADIATOR,'0','41160'), 
+(@CT_SAVAGE_GLADIATOR,'0','41202'), (@CT_SAVAGE_GLADIATOR,'0','41208'), (@CT_SAVAGE_GLADIATOR,'0','41214'), 
+(@CT_SAVAGE_GLADIATOR,'0','41268'), (@CT_SAVAGE_GLADIATOR,'0','41269'), (@CT_SAVAGE_GLADIATOR,'0','41270'), 
+(@CT_SAVAGE_GLADIATOR,'0','41271'), (@CT_SAVAGE_GLADIATOR,'0','41272'), (@CT_SAVAGE_GLADIATOR,'0','41278'), 
+(@CT_SAVAGE_GLADIATOR,'0','41290'), (@CT_SAVAGE_GLADIATOR,'0','41301'), (@CT_SAVAGE_GLADIATOR,'0','41313'), 
+(@CT_SAVAGE_GLADIATOR,'0','41324'), (@CT_SAVAGE_GLADIATOR,'0','41643'), (@CT_SAVAGE_GLADIATOR,'0','41644'), 
+(@CT_SAVAGE_GLADIATOR,'0','41645'), (@CT_SAVAGE_GLADIATOR,'0','41646'), (@CT_SAVAGE_GLADIATOR,'0','41647'), 
+(@CT_SAVAGE_GLADIATOR,'0','41658'), (@CT_SAVAGE_GLADIATOR,'0','41664'), (@CT_SAVAGE_GLADIATOR,'0','41675'), 
+(@CT_SAVAGE_GLADIATOR,'0','41712'), (@CT_SAVAGE_GLADIATOR,'0','41770'), (@CT_SAVAGE_GLADIATOR,'0','41847'), 
+(@CT_SAVAGE_GLADIATOR,'0','41848'), (@CT_SAVAGE_GLADIATOR,'0','41849'), (@CT_SAVAGE_GLADIATOR,'0','41850'), 
+(@CT_SAVAGE_GLADIATOR,'0','41851'), (@CT_SAVAGE_GLADIATOR,'0','41912'), (@CT_SAVAGE_GLADIATOR,'0','41918'), 
+(@CT_SAVAGE_GLADIATOR,'0','41924'), (@CT_SAVAGE_GLADIATOR,'0','41930'), (@CT_SAVAGE_GLADIATOR,'0','41937'), 
+(@CT_SAVAGE_GLADIATOR,'0','41943'), (@CT_SAVAGE_GLADIATOR,'0','41949'), (@CT_SAVAGE_GLADIATOR,'0','41956'), 
+(@CT_SAVAGE_GLADIATOR,'0','41962'), (@CT_SAVAGE_GLADIATOR,'0','41968'), (@CT_SAVAGE_GLADIATOR,'0','41990'), 
+(@CT_SAVAGE_GLADIATOR,'0','41996'), (@CT_SAVAGE_GLADIATOR,'0','42002'), (@CT_SAVAGE_GLADIATOR,'0','42008'), 
+(@CT_SAVAGE_GLADIATOR,'0','42014'), (@CT_SAVAGE_GLADIATOR,'0','42206'), (@CT_SAVAGE_GLADIATOR,'0','42212'), 
+(@CT_SAVAGE_GLADIATOR,'0','42213'), (@CT_SAVAGE_GLADIATOR,'0','42214'), (@CT_SAVAGE_GLADIATOR,'0','42215'), 
+(@CT_SAVAGE_GLADIATOR,'0','42216'), (@CT_SAVAGE_GLADIATOR,'0','42217'), (@CT_SAVAGE_GLADIATOR,'0','42218'), 
+(@CT_SAVAGE_GLADIATOR,'0','42219'), (@CT_SAVAGE_GLADIATOR,'0','42221'), (@CT_SAVAGE_GLADIATOR,'0','42222'), 
+(@CT_SAVAGE_GLADIATOR,'0','42224'), (@CT_SAVAGE_GLADIATOR,'0','42294'), (@CT_SAVAGE_GLADIATOR,'0','42295'), 
+(@CT_SAVAGE_GLADIATOR,'0','42296'), (@CT_SAVAGE_GLADIATOR,'0','42297'), (@CT_SAVAGE_GLADIATOR,'0','42343'), 
+(@CT_SAVAGE_GLADIATOR,'0','42344'), (@CT_SAVAGE_GLADIATOR,'0','42356'), (@CT_SAVAGE_GLADIATOR,'0','42382'), 
+(@CT_SAVAGE_GLADIATOR,'0','42388'), (@CT_SAVAGE_GLADIATOR,'0','42444'), (@CT_SAVAGE_GLADIATOR,'0','42445'), 
+(@CT_SAVAGE_GLADIATOR,'0','42446'), (@CT_SAVAGE_GLADIATOR,'0','42447'), (@CT_SAVAGE_GLADIATOR,'0','42448'), 
+(@CT_SAVAGE_GLADIATOR,'0','42511'), (@CT_SAVAGE_GLADIATOR,'0','42517'), (@CT_SAVAGE_GLADIATOR,'0','42523'), 
+(@CT_SAVAGE_GLADIATOR,'0','42529'), (@CT_SAVAGE_GLADIATOR,'0','42535'), (@CT_SAVAGE_GLADIATOR,'0','42556'), 
+(@CT_SAVAGE_GLADIATOR,'0','42557'), (@CT_SAVAGE_GLADIATOR,'0','42568'), (@CT_SAVAGE_GLADIATOR,'0','42574'), 
+(@CT_SAVAGE_GLADIATOR,'0','42575'), (@CT_SAVAGE_GLADIATOR,'0','42576'), (@CT_SAVAGE_GLADIATOR,'0','42593'), 
+(@CT_SAVAGE_GLADIATOR,'0','42594'), (@CT_SAVAGE_GLADIATOR,'0','42595'), (@CT_SAVAGE_GLADIATOR,'0','42611'), 
+(@CT_SAVAGE_GLADIATOR,'0','42612'), (@CT_SAVAGE_GLADIATOR,'0','42618'), (@CT_SAVAGE_GLADIATOR,'0','44415'), 
+(@CT_SAVAGE_GLADIATOR,'0','44416');
 
 ---
 -- Crafted PvP Gear - Item Level 187: START
@@ -566,7 +571,7 @@ INSERT INTO `creature_template` (`entry`, `modelid1`, `modelid2`, `modelid3`, `m
 `equipment_id`,`mechanic_immune_mask`, `flags_extra`, `ScriptName`, `WDBVerified`)
 VALUES(@CT_HUNTER_FOOD_VENDOR,5782,'0','0','0',
 'Food and Drink',@LOL_TEAM,NULL,
-'0','80','80','2','189','189',@NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR,'1',
+'0','80','80','2','35', '35',@NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR,'1',
 '1.14286','1','0','346','499','0','287','1',
 '2000','0','8',
 '0','8','0','0',
@@ -605,7 +610,7 @@ INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entr
 `faction_A`, `faction_H`, `npcflag`, `speed_walk`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `Armor_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`, `WDBVerified`)
 VALUES(@CT_HUNTER_PET_TRAINER,'0','0','0','0','0','9336','0','0','0',
 'Pet Trainer',@LOL_TEAM,NULL,'4783','40','40','0',
-'189','189','19','1.1','1.14286','1','0','56','74','0','136','1','2000','1771','1','512','8','0','3','0','0','0','39','57','14','7','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','1.15','1','1','0','0','0','0','0','0','0','0','1','191','0','2','npc_pet_trainer','12340');
+'35', '35','19','1.1','1.14286','1','0','56','74','0','136','1','2000','1771','1','512','8','0','3','0','0','0','39','57','14','7','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','1.15','1','1','0','0','0','0','0','0','0','0','1','191','0','2','npc_pet_trainer','12340');
 DELETE FROM `locales_creature` WHERE `entry` = @CT_HUNTER_PET_TRAINER;
 INSERT INTO `locales_creature` (`entry`, `name_loc1`, `name_loc2`, `name_loc3`, `name_loc4`, `name_loc5`,
  `name_loc6`, `name_loc7`, `name_loc8`, `subname_loc1`, `subname_loc2`, `subname_loc3`, `subname_loc4`,
@@ -623,7 +628,7 @@ insert into `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entr
 `faction_A`, `faction_H`, `npcflag`, `speed_walk`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `Armor_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`, `WDBVerified`)
 values(@CT_HUNTER_STABLE_MASTER,'0','0','0','0','0','25607','0','0','0',
 'Stable Master',@LOL_TEAM,'','9821','75','75','2',
-'189','189','4194305','1','1.14286','1','0','342','485','0','392','1','2000','0','1','32768','8','0','0','0','0','0','295','438','68','7','4096','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','1','1','1','0','0','0','0','0','0','0','0','1','0','0','0','','12340');
+'35', '35','4194305','1','1.14286','1','0','342','485','0','392','1','2000','0','1','32768','8','0','0','0','0','0','295','438','68','7','4096','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','1','1','1','0','0','0','0','0','0','0','0','1','0','0','0','','12340');
 DELETE FROM `locales_creature` WHERE `entry` = @CT_HUNTER_STABLE_MASTER;
 INSERT INTO `locales_creature` (`entry`, `name_loc1`, `name_loc2`, `name_loc3`, `name_loc4`, `name_loc5`, `name_loc6`, `name_loc7`, `name_loc8`,
 `subname_loc1`, `subname_loc2`, `subname_loc3`, `subname_loc4`, `subname_loc5`, `subname_loc6`, `subname_loc7`, `subname_loc8`)
@@ -1221,7 +1226,7 @@ INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`
 -- Death Knight Trainer and Runeforge 33251
 DELETE FROM `creature_template` WHERE `entry` = (@CT_CLASS_TRAINER+0);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_CLASS_TRAINER+0, '0', '0', '0', '0', '0', '28516', '0', '0', '0', 'Death Knight Trainer and Runeforge', @LOL_TEAM, NULL, '0', '1', '1', '0', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.0', '1.14286', '1.0', '0', '2.0', '2.0', '0', '24', '1.0', '2000', '0', '1', '0', '8', '0', '0', '0', '6', '0', '1.0', '1.0', '0', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '3', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
+VALUES (@CT_CLASS_TRAINER+0, '0', '0', '0', '0', '0', '28516', '0', '0', '0', 'Death Knight Trainer and Runeforge', @LOL_TEAM, NULL, '0', '1', '1', '0', '35', '35', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.0', '1.14286', '1.0', '0', '2.0', '2.0', '0', '24', '1.0', '2000', '0', '1', '0', '8', '0', '0', '0', '6', '0', '1.0', '1.0', '0', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '3', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_CLASS_TRAINER+0);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
 VALUES (@CT_CLASS_TRAINER+0, '', '', 'Todesritterlehrer', '', '', '', '', '', NULL, NULL, @LOL_TEAM, NULL, NULL, NULL, NULL, NULL);
@@ -1269,7 +1274,7 @@ VALUES
 -- Warrior Trainer 26332
 DELETE FROM `creature_template` WHERE `entry` = (@CT_CLASS_TRAINER+1);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_CLASS_TRAINER+1, '0', '0', '0', '0', '0', '24036', '0', '0', '0', 'Warrior Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '252.0', '357.0', '0', '304', '1.0', '2000', '0', '1', '768', '8', '0', '0', '0', '1', '0', '215.0', '320.0', '44', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
+VALUES (@CT_CLASS_TRAINER+1, '0', '0', '0', '0', '0', '24036', '0', '0', '0', 'Warrior Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '35', '35', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '252.0', '357.0', '0', '304', '1.0', '2000', '0', '1', '768', '8', '0', '0', '0', '1', '0', '215.0', '320.0', '44', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_CLASS_TRAINER+1);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
 VALUES (@CT_CLASS_TRAINER+1, '', '', 'Kriegerlehrer', '', '', '', '', '', NULL, NULL, @LOL_TEAM, NULL, NULL, NULL, NULL, NULL);
@@ -1317,7 +1322,7 @@ VALUES (@CT_CLASS_TRAINER+1, '43420', '0'), -- Glyph of Barbaric Insults
 -- Warlock Trainer 26331
 DELETE FROM `creature_template` WHERE `entry` = (@CT_CLASS_TRAINER+2);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_CLASS_TRAINER+2, '0', '0', '0', '0', '0', '24035', '0', '0', '0', 'Warlock Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '248.0', '363.0', '0', '135', '1.0', '2000', '0', '8', '768', '8', '0', '0', '0', '9', '0', '233.0', '347.0', '28', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
+VALUES (@CT_CLASS_TRAINER+2, '0', '0', '0', '0', '0', '24035', '0', '0', '0', 'Warlock Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '35', '35', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '248.0', '363.0', '0', '135', '1.0', '2000', '0', '8', '768', '8', '0', '0', '0', '9', '0', '233.0', '347.0', '28', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_CLASS_TRAINER+2);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
 VALUES (@CT_CLASS_TRAINER+2, '', '', 'Hexenmeisterlehrer', '', '', '', '', '', NULL, NULL, @LOL_TEAM, NULL, NULL, NULL, NULL, NULL);
@@ -1370,7 +1375,7 @@ gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H,
 npcflag,
 speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
 VALUES (@CT_CLASS_TRAINER+3, '0', '0', '0', '0', '0', '24034', '0', '0', '0', 'Shaman Trainer', @LOL_TEAM, NULL,
-'0', '70', '70', '2', '189', '189',
+'0', '70', '70', '2', '35', '35',
 @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR,
 '1.1', '1.14286', '1.0', '0', '234.0', '331.0', '0', '286', '1.0', '2000', '0', '2', '768', '8', '0', '0', '0', '7', '0', '198.0', '295.0', '33', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_CLASS_TRAINER+3);
@@ -1421,7 +1426,7 @@ VALUES (@CT_CLASS_TRAINER+3, '43381', '0'), -- Glyph of Astral Recall
 -- Rogue Trainer 26329
 DELETE FROM `creature_template` WHERE `entry` = (@CT_CLASS_TRAINER+4);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_CLASS_TRAINER+4, '0', '0', '0', '0', '0', '23777', '0', '0', '0', 'Rogue Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '252.0', '357.0', '0', '304', '1.0', '2000', '0', '1', '768', '8', '0', '0', '0', '4', '0', '215.0', '320.0', '44', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
+VALUES (@CT_CLASS_TRAINER+4, '0', '0', '0', '0', '0', '23777', '0', '0', '0', 'Rogue Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '35', '35', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '252.0', '357.0', '0', '304', '1.0', '2000', '0', '1', '768', '8', '0', '0', '0', '4', '0', '215.0', '320.0', '44', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_CLASS_TRAINER+4);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
 VALUES (@CT_CLASS_TRAINER+4, '', '', 'Schurkenlehrer', '', '', '', '', '', NULL, NULL, @LOL_TEAM, NULL, NULL, NULL, NULL, NULL);
@@ -1470,7 +1475,7 @@ VALUES (@CT_CLASS_TRAINER+4, '42954', '0'), -- Glyph of Adrenaline Rush
 -- Priest Trainer 26328
 DELETE FROM `creature_template` WHERE `entry` = (@CT_CLASS_TRAINER+5);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_CLASS_TRAINER+5, '0', '0', '0', '0', '0', '24033', '0', '0', '0', 'Priest Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '248.0', '363.0', '0', '135', '1.0', '2000', '0', '8', '768', '8', '0', '0', '0', '5', '0', '233.0', '347.0', '28', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
+VALUES (@CT_CLASS_TRAINER+5, '0', '0', '0', '0', '0', '24033', '0', '0', '0', 'Priest Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '35', '35', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '248.0', '363.0', '0', '135', '1.0', '2000', '0', '8', '768', '8', '0', '0', '0', '5', '0', '233.0', '347.0', '28', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_CLASS_TRAINER+5);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
 VALUES (@CT_CLASS_TRAINER+5, '', '', 'Priesterlehrer', '', '', '', '', '', NULL, NULL, @LOL_TEAM, NULL, NULL, NULL, NULL, NULL);
@@ -1517,7 +1522,7 @@ VALUES (@CT_CLASS_TRAINER+5, '42396', '0'), -- Glyph of Circle of Healing
 -- Paladin Trainer 26327
 DELETE FROM `creature_template` WHERE `entry` = (@CT_CLASS_TRAINER+6);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_CLASS_TRAINER+6, '0', '0', '0', '0', '0', '24032', '0', '0', '0', 'Paladin Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '234.0', '331.0', '0', '286', '1.0', '2000', '0', '2', '768', '8', '0', '0', '0', '2', '0', '198.0', '295.0', '33', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
+VALUES (@CT_CLASS_TRAINER+6, '0', '0', '0', '0', '0', '24032', '0', '0', '0', 'Paladin Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '35', '35', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '234.0', '331.0', '0', '286', '1.0', '2000', '0', '2', '768', '8', '0', '0', '0', '2', '0', '198.0', '295.0', '33', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_CLASS_TRAINER+6);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
 VALUES (@CT_CLASS_TRAINER+6, '', '', 'Paladinlehrer', '', '', '', '', '', NULL, NULL, @LOL_TEAM, NULL, NULL, NULL, NULL, NULL);
@@ -1566,7 +1571,7 @@ VALUES
 -- Mage Trainer 26326
 DELETE FROM `creature_template` WHERE `entry` = (@CT_CLASS_TRAINER+7);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_CLASS_TRAINER+7, '0', '0', '0', '0', '0', '24031', '0', '0', '0', 'Mage Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '248.0', '363.0', '0', '135', '1.0', '2000', '0', '8', '768', '8', '0', '0', '0', '8', '0', '233.0', '347.0', '28', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
+VALUES (@CT_CLASS_TRAINER+7, '0', '0', '0', '0', '0', '24031', '0', '0', '0', 'Mage Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '35', '35', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '248.0', '363.0', '0', '135', '1.0', '2000', '0', '8', '768', '8', '0', '0', '0', '8', '0', '233.0', '347.0', '28', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_CLASS_TRAINER+7);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
 VALUES (@CT_CLASS_TRAINER+7, '', '', 'Magierlehrer', '', '', '', '', '', NULL, NULL, @LOL_TEAM, NULL, NULL, NULL, NULL, NULL);
@@ -1617,7 +1622,7 @@ VALUES (@CT_CLASS_TRAINER+7, '45738', '0'), -- Glyph of Arcane Barrage
 -- Hunter Trainer 26325
 DELETE FROM `creature_template` WHERE `entry` = (@CT_CLASS_TRAINER+8);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_CLASS_TRAINER+8, '0', '0', '0', '0', '0', '24030', '0', '0', '0', 'Hunter Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '234.0', '331.0', '0', '286', '1.0', '2000', '0', '2', '768', '8', '0', '0', '0', '3', '0', '198.0', '295.0', '33', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
+VALUES (@CT_CLASS_TRAINER+8, '0', '0', '0', '0', '0', '24030', '0', '0', '0', 'Hunter Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '35', '35', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '234.0', '331.0', '0', '286', '1.0', '2000', '0', '2', '768', '8', '0', '0', '0', '3', '0', '198.0', '295.0', '33', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_CLASS_TRAINER+8);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
 VALUES (@CT_CLASS_TRAINER+8, '', '', 'Jägerlehrer', '', '', '', '', '', NULL, NULL, @LOL_TEAM, NULL, NULL, NULL, NULL, NULL);
@@ -1664,7 +1669,7 @@ VALUES (@CT_CLASS_TRAINER+8, '42897', '0'), -- Glyph of Aimed Shot
 -- Druid Trainer 26324
 DELETE FROM `creature_template` WHERE `entry` = (@CT_CLASS_TRAINER+9);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_CLASS_TRAINER+9, '0', '0', '0', '0', '0', '24029', '0', '0', '0', 'Druid Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '234.0', '331.0', '0', '286', '1.0', '2000', '0', '2', '768', '8', '0', '0', '0', '11', '0', '198.0', '295.0', '33', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
+VALUES (@CT_CLASS_TRAINER+9, '0', '0', '0', '0', '0', '24029', '0', '0', '0', 'Druid Trainer', @LOL_TEAM, NULL, '0', '70', '70', '2', '35', '35', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '234.0', '331.0', '0', '286', '1.0', '2000', '0', '2', '768', '8', '0', '0', '0', '11', '0', '198.0', '295.0', '33', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_CLASS_TRAINER+9);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
 VALUES (@CT_CLASS_TRAINER+9, '', '', 'Druidenlehrer', '', '', '', '', '', NULL, NULL, @LOL_TEAM, NULL, NULL, NULL, NULL, NULL);
@@ -1720,7 +1725,7 @@ VALUES
 -- Beastmaster 26307
 DELETE FROM `creature_template` WHERE `entry` = (@CT_CLASS_TRAINER+10);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_CLASS_TRAINER+10, '0', '0', '0', '0', '0', '24028', '0', '0', '0', 'Beastmaster', @LOL_TEAM, NULL, '0', '70', '70', '2', '189', '189', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '234.0', '331.0', '0', '286', '1.0', '2000', '0', '2', '768', '8', '0', '0', '0', '0', '0', '198.0', '295.0', '33', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
+VALUES (@CT_CLASS_TRAINER+10, '0', '0', '0', '0', '0', '24028', '0', '0', '0', 'Beastmaster', @LOL_TEAM, NULL, '0', '70', '70', '2', '35', '35', @NPCFLAG_TRAINER | @NPCFLAG_CLASS_TRAINER | @NPCFLAG_REPAIRER | @NPCFLAG_GOSSIP | @NPCFLAG_VENDOR_REAGENT | @NPCFLAG_VENDOR_POISON | @NPCFLAG_VENDOR, '1.1', '1.14286', '1.0', '0', '234.0', '331.0', '0', '286', '1.0', '2000', '0', '2', '768', '8', '0', '0', '0', '0', '0', '198.0', '295.0', '33', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_CLASS_TRAINER+10);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
 VALUES (@CT_CLASS_TRAINER+10, '', '', 'Bestienmeister', '', '', '', '', '', NULL, NULL, @LOL_TEAM, NULL, NULL, NULL, NULL, NULL);
@@ -1731,7 +1736,7 @@ VALUES (@CT_CLASS_TRAINER+10, '', '', 'Bestienmeister', '', '', '', '', '', NULL
 -- Handiir 16773
 DELETE FROM `creature_template` WHERE `entry` = (@CT_WEAPON_MASTER+0);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_WEAPON_MASTER+0, '0', '0', '0', '0', '0', '17216', '0', '0', '0', 'Handiir', 'Weapon Master', NULL, '8591', '30', '30', '0', '189', '189', '81', '1.0', '1.14286', '1.0', '0', '42.0', '56.0', '0', '102', '1.0', '1500', '0', '1', '512', '8', '0', '2', '0', '0', '0', '29.0', '42.0', '9', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '1', '3', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '2', '', '12340');
+VALUES (@CT_WEAPON_MASTER+0, '0', '0', '0', '0', '0', '17216', '0', '0', '0', 'Handiir', 'Weapon Master', NULL, '8591', '30', '30', '0', '35', '35', '81', '1.0', '1.14286', '1.0', '0', '42.0', '56.0', '0', '102', '1.0', '1500', '0', '1', '512', '8', '0', '2', '0', '0', '0', '29.0', '42.0', '9', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '1', '3', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '2', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_WEAPON_MASTER+0);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
 VALUES (@CT_WEAPON_MASTER+0, '', '', 'Handiir', '', '', '', '', '', NULL, NULL, 'Waffenmeister', NULL, NULL, NULL, NULL, NULL);
@@ -1751,7 +1756,7 @@ VALUES (@CT_WEAPON_MASTER+0, '5011', '1000', '0', '0', '0');
 -- Ileda 16621
 DELETE FROM `creature_template` WHERE `entry` = (@CT_WEAPON_MASTER+1);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_WEAPON_MASTER+1, '0', '0', '0', '0', '0', '16775', '0', '0', '0', 'Ileda', 'Weapon Master', NULL, '8612', '30', '30', '0', '189', '189', '81', '1.0', '1.14286', '1.0', '0', '30.0', '42.0', '0', '44', '1.0', '1500', '0', '8', '4608', '8', '0', '2', '0', '0', '0', '26.0', '38.0', '16', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '1', '3', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '2', '', '12340');
+VALUES (@CT_WEAPON_MASTER+1, '0', '0', '0', '0', '0', '16775', '0', '0', '0', 'Ileda', 'Weapon Master', NULL, '8612', '30', '30', '0', '35', '35', '81', '1.0', '1.14286', '1.0', '0', '30.0', '42.0', '0', '44', '1.0', '1500', '0', '8', '4608', '8', '0', '2', '0', '0', '0', '26.0', '38.0', '16', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '1', '3', '1.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '2', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_WEAPON_MASTER+1);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
 VALUES (@CT_WEAPON_MASTER+1, '', '', 'Ileda', '', '', '', '', '', NULL, NULL, 'Waffenmeisterin', NULL, NULL, NULL, NULL, NULL);
@@ -1771,7 +1776,7 @@ VALUES (@CT_WEAPON_MASTER+1, '2567', '1000', '0', '0', '0');
 -- Bixi Wobblebonk 13084
 DELETE FROM `creature_template` WHERE `entry` = (@CT_WEAPON_MASTER+2);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_WEAPON_MASTER+2, '0', '0', '0', '0', '0', '12992', '0', '0', '0', 'Bixi Wobblebonk', 'Weapon Master', NULL, '5277', '50', '50', '0', '189', '189', '83', '1.0', '1.14286', '1.0', '1', '85.0', '112.0', '0', '206', '2.4', '1500', '0', '1', '0', '8', '0', '2', '0', '0', '0', '58.0', '86.0', '20', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '3', '7.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '210', '0', '2', '', '12340');
+VALUES (@CT_WEAPON_MASTER+2, '0', '0', '0', '0', '0', '12992', '0', '0', '0', 'Bixi Wobblebonk', 'Weapon Master', NULL, '5277', '50', '50', '0', '35', '35', '83', '1.0', '1.14286', '1.0', '1', '85.0', '112.0', '0', '206', '2.4', '1500', '0', '1', '0', '8', '0', '2', '0', '0', '0', '58.0', '86.0', '20', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '3', '7.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '210', '0', '2', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_WEAPON_MASTER+2);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
 VALUES (@CT_WEAPON_MASTER+2, '', '', 'Bixi Wobbelbonk', '', '', '', '', '', NULL, NULL, 'Waffenmeister', NULL, NULL, NULL, NULL, NULL);
@@ -1785,7 +1790,7 @@ VALUES (@CT_WEAPON_MASTER+2, '5011', '1000', '0', '0', '0');
 -- Archibald 11870
 DELETE FROM `creature_template` WHERE `entry` = (@CT_WEAPON_MASTER+3);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_WEAPON_MASTER+3, '0', '0', '0', '0', '0', '11805', '0', '0', '0', 'Archibald', 'Weapon Master', NULL, '5269', '50', '50', '0', '189', '189', '83', '1.0', '1.14286', '1.0', '1', '85.0', '112.0', '0', '206', '2.4', '2000', '0', '1', '37376', '8', '0', '2', '0', '0', '0', '58.0', '86.0', '20', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '3', '7.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '264', '0', '2', '', '12340');
+VALUES (@CT_WEAPON_MASTER+3, '0', '0', '0', '0', '0', '11805', '0', '0', '0', 'Archibald', 'Weapon Master', NULL, '5269', '50', '50', '0', '35', '35', '83', '1.0', '1.14286', '1.0', '1', '85.0', '112.0', '0', '206', '2.4', '2000', '0', '1', '37376', '8', '0', '2', '0', '0', '0', '58.0', '86.0', '20', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '3', '7.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '264', '0', '2', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_WEAPON_MASTER+3);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
 VALUES (@CT_WEAPON_MASTER+3, '', '', 'Archibald', '', '', '', '', '', NULL, NULL, 'Waffenmeister', NULL, NULL, NULL, NULL, NULL);
@@ -1803,7 +1808,7 @@ VALUES (@CT_WEAPON_MASTER+3, '5011', '1000', '0', '0', '0');
 -- Ansekhwa 11869
 DELETE FROM `creature_template` WHERE `entry` = (@CT_WEAPON_MASTER+4);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_WEAPON_MASTER+4, '0', '0', '0', '0', '0', '11803', '0', '0', '0', 'Ansekhwa', 'Weapon Master', NULL, '5266', '50', '50', '0', '189', '189', '83', '1.0', '1.14286', '1.0', '1', '85.0', '112.0', '0', '206', '2.4', '2000', '0', '1', '4096', '8', '0', '2', '0', '0', '0', '58.0', '86.0', '20', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '7.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '473', '0', '2', '', '12340');
+VALUES (@CT_WEAPON_MASTER+4, '0', '0', '0', '0', '0', '11803', '0', '0', '0', 'Ansekhwa', 'Weapon Master', NULL, '5266', '50', '50', '0', '35', '35', '83', '1.0', '1.14286', '1.0', '1', '85.0', '112.0', '0', '206', '2.4', '2000', '0', '1', '4096', '8', '0', '2', '0', '0', '0', '58.0', '86.0', '20', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '1', '7.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '473', '0', '2', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_WEAPON_MASTER+4);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
 VALUES (@CT_WEAPON_MASTER+4, '', '', 'Ansekhwa', '', '', '', '', '', NULL, NULL, 'Waffenmeister', NULL, NULL, NULL, NULL, NULL);
@@ -1819,7 +1824,7 @@ VALUES (@CT_WEAPON_MASTER+4, '266', '1000', '0', '0', '0');
 -- Sayoc 11868
 DELETE FROM `creature_template` WHERE `entry` = (@CT_WEAPON_MASTER+5);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_WEAPON_MASTER+5, '0', '0', '0', '0', '0', '11801', '0', '0', '0', 'Sayoc', 'Weapon Master', NULL, '5221', '50', '50', '0', '189', '189', '83', '1.1', '1.14286', '1.0', '1', '85.0', '112.0', '0', '206', '2.4', '2000', '0', '1', '4096', '8', '0', '2', '0', '0', '0', '58.0', '86.0', '20', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '3', '7.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '1331', '0', '2', '', '12340');
+VALUES (@CT_WEAPON_MASTER+5, '0', '0', '0', '0', '0', '11801', '0', '0', '0', 'Sayoc', 'Weapon Master', NULL, '5221', '50', '50', '0', '35', '35', '83', '1.1', '1.14286', '1.0', '1', '85.0', '112.0', '0', '206', '2.4', '2000', '0', '1', '4096', '8', '0', '2', '0', '0', '0', '58.0', '86.0', '20', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '3', '7.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '1331', '0', '2', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_WEAPON_MASTER+5);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
 VALUES (@CT_WEAPON_MASTER+5, '', '', 'Sayoc', '', '', '', '', '', NULL, NULL, 'Waffenmeister', NULL, NULL, NULL, NULL, NULL);
@@ -1839,7 +1844,7 @@ VALUES (@CT_WEAPON_MASTER+5, '15590', '1000', '0', '0', '0');
 -- Woo Ping 11867
 DELETE FROM `creature_template` WHERE `entry` = (@CT_WEAPON_MASTER+6);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_WEAPON_MASTER+6, '0', '0', '0', '0', '0', '11804', '0', '0', '0', 'Woo Ping', 'Weapon Master', NULL, '5271', '50', '50', '0', '189', '189', '81', '1.0', '1.14286', '1.0', '1', '85.0', '112.0', '0', '206', '2.4', '1500', '0', '1', '0', '8', '0', '2', '0', '0', '0', '58.0', '86.0', '20', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '3', '7.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '202', '0', '2', '', '12340');
+VALUES (@CT_WEAPON_MASTER+6, '0', '0', '0', '0', '0', '11804', '0', '0', '0', 'Woo Ping', 'Weapon Master', NULL, '5271', '50', '50', '0', '35', '35', '81', '1.0', '1.14286', '1.0', '1', '85.0', '112.0', '0', '206', '2.4', '1500', '0', '1', '0', '8', '0', '2', '0', '0', '0', '58.0', '86.0', '20', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '3', '7.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '202', '0', '2', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_WEAPON_MASTER+6);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
 VALUES (@CT_WEAPON_MASTER+6, '', '', 'Woo Ping', '', '', '', '', '', NULL, NULL, 'Waffenmeister', NULL, NULL, NULL, NULL, NULL);
@@ -1859,7 +1864,7 @@ VALUES (@CT_WEAPON_MASTER+6, '5011', '1000', '0', '0', '0');
 -- Ilyenia Moonfire 11866
 DELETE FROM `creature_template` WHERE `entry` = (@CT_WEAPON_MASTER+7);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_WEAPON_MASTER+7, '0', '0', '0', '0', '0', '11802', '0', '0', '0', 'Ilyenia Moonfire', 'Weapon Master', NULL, '5273', '50', '50', '0', '189', '189', '83', '1.0', '1.14286', '1.0', '1', '85.0', '112.0', '0', '206', '2.4', '2000', '0', '1', '4096', '8', '0', '2', '0', '0', '0', '58.0', '86.0', '20', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '3', '7.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '109', '0', '2', '', '12340');
+VALUES (@CT_WEAPON_MASTER+7, '0', '0', '0', '0', '0', '11802', '0', '0', '0', 'Ilyenia Moonfire', 'Weapon Master', NULL, '5273', '50', '50', '0', '35', '35', '83', '1.0', '1.14286', '1.0', '1', '85.0', '112.0', '0', '206', '2.4', '2000', '0', '1', '4096', '8', '0', '2', '0', '0', '0', '58.0', '86.0', '20', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '3', '7.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '109', '0', '2', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_WEAPON_MASTER+7);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
 VALUES (@CT_WEAPON_MASTER+7, '', '', 'Ilyenia Mondfeuer', '', '', '', '', '', NULL, NULL, 'Waffenmeisterin', NULL, NULL, NULL, NULL, NULL);
@@ -1877,7 +1882,7 @@ VALUES (@CT_WEAPON_MASTER+7, '15590', '1000', '0', '0', '0');
 -- Buliwyf Stonehand 11865
 DELETE FROM `creature_template` WHERE `entry` = (@CT_WEAPON_MASTER+8);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_WEAPON_MASTER+8, '0', '0', '0', '0', '0', '11806', '0', '0', '0', 'Buliwyf Stonehand', 'Weapon Master', NULL, '5275', '50', '50', '0', '189', '189', '83', '1.0', '1.14286', '1.0', '1', '85.0', '112.0', '0', '206', '2.4', '1500', '0', '1', '0', '8', '0', '2', '0', '0', '0', '58.0', '86.0', '20', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '3', '7.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '201', '0', '2', '', '12340');
+VALUES (@CT_WEAPON_MASTER+8, '0', '0', '0', '0', '0', '11806', '0', '0', '0', 'Buliwyf Stonehand', 'Weapon Master', NULL, '5275', '50', '50', '0', '35', '35', '83', '1.0', '1.14286', '1.0', '1', '85.0', '112.0', '0', '206', '2.4', '1500', '0', '1', '0', '8', '0', '2', '0', '0', '0', '58.0', '86.0', '20', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '3', '7.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '201', '0', '2', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_WEAPON_MASTER+8);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
 VALUES (@CT_WEAPON_MASTER+8, '', '', 'Buliwyf Steinhand', '', '', '', '', '', NULL, NULL, 'Waffenmeister', NULL, NULL, NULL, NULL, NULL);
@@ -1897,7 +1902,7 @@ VALUES (@CT_WEAPON_MASTER+8, '15590', '1000', '0', '0', '0');
 -- Hanashi 2704
 DELETE FROM `creature_template` WHERE `entry` = (@CT_WEAPON_MASTER+9);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
-VALUES (@CT_WEAPON_MASTER+9, '0', '0', '0', '0', '0', '12989', '0', '0', '0', 'Hanashi', 'Weapon Master', NULL, '5263', '50', '50', '0', '189', '189', '81', '1.1', '1.14286', '1.0', '0', '85.0', '112.0', '0', '206', '1.0', '2000', '0', '1', '4096', '8', '0', '2', '0', '0', '0', '58.0', '86.0', '20', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '3', '7.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '835', '0', '2', '', '12340');
+VALUES (@CT_WEAPON_MASTER+9, '0', '0', '0', '0', '0', '12989', '0', '0', '0', 'Hanashi', 'Weapon Master', NULL, '5263', '50', '50', '0', '35', '35', '81', '1.1', '1.14286', '1.0', '0', '85.0', '112.0', '0', '206', '1.0', '2000', '0', '1', '4096', '8', '0', '2', '0', '0', '0', '58.0', '86.0', '20', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '3', '7.0', '1.0', '1.0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '835', '0', '2', '', '12340');
 DELETE FROM `locales_creature` WHERE `entry` = (@CT_WEAPON_MASTER+9);
 INSERT INTO `locales_creature` (entry, name_loc1, name_loc2, name_loc3, name_loc4, name_loc5, name_loc6, name_loc7, name_loc8, subname_loc1, subname_loc2, subname_loc3, subname_loc4, subname_loc5, subname_loc6, subname_loc7, subname_loc8)
 VALUES (@CT_WEAPON_MASTER+9, '', '', 'Hanashi', '', '', '', '', '', NULL, NULL, 'Waffenmeister', NULL, NULL, NULL, NULL, NULL);
@@ -2448,7 +2453,7 @@ VALUES
 -- Savage Gladiator Complete 150211
 DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+0);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_STOCKADE+0, @SAVAGE_GLADIATOR, '34', '1', @PHASEMASK, '0', '0', '80.5359', '29.8368', '-26.5292', '5.37093', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+VALUES (@CREA_STOCKADE+0, @CT_SAVAGE_GLADIATOR, '34', '1', @PHASEMASK, '0', '0', '80.5359', '29.8368', '-26.5292', '5.37093', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
 -- Miscellaneous 150218
 DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+1);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
@@ -2568,26 +2573,23 @@ VALUES (@CREA_STOCKADE+29, (@CT_WEAPON_MASTER+5), '34', '1', @PHASEMASK, '0', '1
 -- Woo Ping 150317
 DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+30);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_STOCKADE+30, (@CT_WEAPON_MASTER+6), '34', '1', @PHASEMASK, '0', '202', '88.3166', '-10.6606', '-26.5229', '3.32889', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
--- Woo Ping 150317
+VALUES (@CREA_STOCKADE+30, (@CT_WEAPON_MASTER+6), '34', '1', @PHASEMASK, '0', '202', '89.6137', '-10.0428', '-26.5229', '3.22836', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+-- Ilyenia Moonfire 150318
 DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+31);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_STOCKADE+31, (@CT_WEAPON_MASTER+6), '34', '1', @PHASEMASK, '0', '202', '89.6137', '-10.0428', '-26.5229', '3.22836', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
--- Ilyenia Moonfire 150318
+VALUES (@CREA_STOCKADE+31, (@CT_WEAPON_MASTER+7), '34', '1', @PHASEMASK, '0', '109', '87.2705', '-7.87775', '-26.5229', '3.16395', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+-- Buliwyf Stonehand 150319
 DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+32);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_STOCKADE+32, (@CT_WEAPON_MASTER+7), '34', '1', @PHASEMASK, '0', '109', '87.2705', '-7.87775', '-26.5229', '3.16395', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
--- Buliwyf Stonehand 150319
-DELETE FROM `creature` WHERE `guid` = (@CREA_STOCKADE+33);
-INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_STOCKADE+33, (@CT_WEAPON_MASTER+8), '34', '1', @PHASEMASK, '0', '201', '87.8121', '-17.7614', '-26.5229', '1.42036', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+VALUES (@CREA_STOCKADE+32, (@CT_WEAPON_MASTER+8), '34', '1', @PHASEMASK, '0', '201', '87.8121', '-17.7614', '-26.5229', '1.42036', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+
 ----
 -- Ragefire
 ----
 -- Savage Gladiator Complete 150211
 DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+0);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_RAGEFIRE+0, @SAVAGE_GLADIATOR, '389', '1', @PHASEMASK, '0', '0', '-30.6252', '-51.5702', '-21.5339', '1.3057', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+VALUES (@CREA_RAGEFIRE+0, @CT_SAVAGE_GLADIATOR, '389', '1', @PHASEMASK, '0', '0', '-30.6252', '-51.5702', '-21.5339', '1.3057', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
 -- Miscellaneous 150218
 DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+1);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
@@ -2636,86 +2638,90 @@ VALUES (@CREA_RAGEFIRE+11, @CT_VENDOR_METAGEMS_FREE, '389', '1', @PHASEMASK, '0'
 DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+12);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
 VALUES (@CREA_RAGEFIRE+12, @CT_VENDOR_NECK_FINGER_FREE, '389', '1', @PHASEMASK, '7193', '897', '-39.7221', '-40.4763', '-21.7986', '0.199057', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
--- Death Knight Trainer and Runeforge 150300
+-- Free Necklaces and Stuff 150281
 DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+13);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_RAGEFIRE+13, @CT_CLASS_TRAINER, '389', '1', @PHASEMASK, '0', '0', '-21.9826', '-36.9566', '-21.6223', '3.70116', '300', '0.0', '0', '42', '0', '0', '0', '0', '0');
--- Warrior Trainer 150301
+VALUES (@CREA_RAGEFIRE+13, @CT_VENDOR_NECK_FINGER_FREE, '389', '1', @PHASEMASK, '7193', '897', '-39.7221', '-40.4763', '-21.7986', '0.199057', '300', '0.0', '0', '10080', '8814', '0', '0', '0', '0');
+-- Death Knight Trainer and Runeforge 150300
 DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+14);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_RAGEFIRE+14, (@CT_CLASS_TRAINER+1), '389', '1', @PHASEMASK, '0', '0', '-23.1808', '-34.0125', '-21.6233', '3.52838', '300', '0.0', '0', '8982', '0', '0', '0', '0', '0');
--- Warlock Trainer 150302
+VALUES (@CREA_RAGEFIRE+14, @CT_CLASS_TRAINER, '389', '1', @PHASEMASK, '0', '0', '-21.9826', '-36.9566', '-21.6223', '3.70116', '300', '0.0', '0', '42', '0', '0', '0', '0', '0');
+-- Warrior Trainer 150301
 DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+15);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_RAGEFIRE+15, (@CT_CLASS_TRAINER+2), '389', '1', @PHASEMASK, '0', '0', '-24.4265', '-31.58', '-21.6233', '3.62655', '300', '0.0', '0', '7185', '7196', '0', '0', '0', '0');
--- Shaman Trainer 150303
+VALUES (@CREA_RAGEFIRE+15, (@CT_CLASS_TRAINER+1), '389', '1', @PHASEMASK, '0', '0', '-23.1808', '-34.0125', '-21.6233', '3.52838', '300', '0.0', '0', '8982', '0', '0', '0', '0', '0');
+-- Warlock Trainer 150302
 DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+16);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_RAGEFIRE+16, (@CT_CLASS_TRAINER+3), '389', '1', @PHASEMASK, '0', '0', '-26.1071', '-27.9898', '-21.6233', '3.86217', '300', '0.0', '0', '8982', '3155', '0', '0', '0', '0');
--- Rogue Trainer 150304
+VALUES (@CREA_RAGEFIRE+16, (@CT_CLASS_TRAINER+2), '389', '1', @PHASEMASK, '0', '0', '-24.4265', '-31.58', '-21.6233', '3.62655', '300', '0.0', '0', '7185', '7196', '0', '0', '0', '0');
+-- Shaman Trainer 150303
 DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+17);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_RAGEFIRE+17, (@CT_CLASS_TRAINER+4), '389', '1', @PHASEMASK, '0', '0', '-28.3722', '-25.8137', '-21.6233', '4.40017', '300', '0.0', '0', '8982', '0', '0', '0', '0', '0');
--- Priest Trainer 150305
+VALUES (@CREA_RAGEFIRE+17, (@CT_CLASS_TRAINER+3), '389', '1', @PHASEMASK, '0', '0', '-26.1071', '-27.9898', '-21.6233', '3.86217', '300', '0.0', '0', '8982', '3155', '0', '0', '0', '0');
+-- Rogue Trainer 150304
 DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+18);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_RAGEFIRE+18, (@CT_CLASS_TRAINER+5), '389', '1', @PHASEMASK, '0', '0', '-31.9662', '-23.5542', '-21.6233', '4.23916', '300', '0.0', '0', '7185', '7196', '0', '0', '0', '0');
--- Paladin Trainer 150306
+VALUES (@CREA_RAGEFIRE+18, (@CT_CLASS_TRAINER+4), '389', '1', @PHASEMASK, '0', '0', '-28.3722', '-25.8137', '-21.6233', '4.40017', '300', '0.0', '0', '8982', '0', '0', '0', '0', '0');
+-- Priest Trainer 150305
 DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+19);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_RAGEFIRE+19, (@CT_CLASS_TRAINER+6), '389', '1', @PHASEMASK, '0', '0', '-36.1417', '-21.4753', '-21.6233', '4.30984', '300', '0.0', '0', '8982', '3155', '0', '0', '0', '0');
--- Mage Trainer 150307
+VALUES (@CREA_RAGEFIRE+19, (@CT_CLASS_TRAINER+5), '389', '1', @PHASEMASK, '0', '0', '-31.9662', '-23.5542', '-21.6233', '4.23916', '300', '0.0', '0', '7185', '7196', '0', '0', '0', '0');
+-- Paladin Trainer 150306
 DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+20);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_RAGEFIRE+20, (@CT_CLASS_TRAINER+7), '389', '1', @PHASEMASK, '0', '0', '-40.1978', '-20.4412', '-21.6233', '4.54546', '300', '0.0', '0', '7185', '7196', '0', '0', '0', '0');
--- Hunter Trainer 150308
+VALUES (@CREA_RAGEFIRE+20, (@CT_CLASS_TRAINER+6), '389', '1', @PHASEMASK, '0', '0', '-36.1417', '-21.4753', '-21.6233', '4.30984', '300', '0.0', '0', '8982', '3155', '0', '0', '0', '0');
+-- Mage Trainer 150307
 DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+21);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_RAGEFIRE+21, (@CT_CLASS_TRAINER+8), '389', '1', @PHASEMASK, '0', '0', '-43.9324', '-20.2919', '-21.2703', '5.03633', '300', '0.0', '0', '8982', '3155', '0', '0', '0', '0');
--- Druid Trainer 150309
+VALUES (@CREA_RAGEFIRE+21, (@CT_CLASS_TRAINER+7), '389', '1', @PHASEMASK, '0', '0', '-40.1978', '-20.4412', '-21.6233', '4.54546', '300', '0.0', '0', '7185', '7196', '0', '0', '0', '0');
+-- Hunter Trainer 150308
 DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+22);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_RAGEFIRE+22, (@CT_CLASS_TRAINER+9), '389', '1', @PHASEMASK, '0', '0', '-46.4213', '-21.2876', '-20.7178', '5.44866', '300', '0.0', '0', '8982', '3155', '0', '0', '0', '0');
--- Beastmaster 150310
+VALUES (@CREA_RAGEFIRE+22, (@CT_CLASS_TRAINER+8), '389', '1', @PHASEMASK, '0', '0', '-43.9324', '-20.2919', '-21.2703', '5.03633', '300', '0.0', '0', '8982', '3155', '0', '0', '0', '0');
+-- Druid Trainer 150309
 DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+23);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_RAGEFIRE+23, (@CT_CLASS_TRAINER+10), '389', '1', @PHASEMASK, '0', '0', '-49.1372', '-24.4804', '-20.5039', '5.51935', '300', '0.0', '0', '8982', '3155', '0', '0', '0', '0');
--- Handiir 150311
+VALUES (@CREA_RAGEFIRE+23, (@CT_CLASS_TRAINER+9), '389', '1', @PHASEMASK, '0', '0', '-46.4213', '-21.2876', '-20.7178', '5.44866', '300', '0.0', '0', '8982', '3155', '0', '0', '0', '0');
+-- Beastmaster 150310
 DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+24);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_RAGEFIRE+24, @CT_WEAPON_MASTER, '389', '1', @PHASEMASK, '0', '0', '-60.0632', '-43.6085', '-18.7787', '0.0208325', '300', '0.0', '0', '955', '0', '0', '0', '0', '0');
--- Ileda 150312
+VALUES (@CREA_RAGEFIRE+24, (@CT_CLASS_TRAINER+10), '389', '1', @PHASEMASK, '0', '0', '-49.1372', '-24.4804', '-20.5039', '5.51935', '300', '0.0', '0', '8982', '3155', '0', '0', '0', '0');
+-- Handiir 150311
 DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+25);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_RAGEFIRE+25, (@CT_WEAPON_MASTER+1), '389', '1', @PHASEMASK, '0', '0', '-55.933', '-46.3286', '-20.1907', '0.735546', '300', '0.0', '0', '737', '2175', '0', '0', '0', '0');
--- Bixi Wobblebonk 150313
+VALUES (@CREA_RAGEFIRE+25, @CT_WEAPON_MASTER, '389', '1', @PHASEMASK, '0', '0', '-60.0632', '-43.6085', '-18.7787', '0.0208325', '300', '0.0', '0', '955', '0', '0', '0', '0', '0');
+-- Ileda 150312
 DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+26);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_RAGEFIRE+26, (@CT_WEAPON_MASTER+2), '389', '1', @PHASEMASK, '0', '210', '-50.908', '-48.5629', '-21.1167', '0.586324', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
--- Archibald 150314
+VALUES (@CREA_RAGEFIRE+26, (@CT_WEAPON_MASTER+1), '389', '1', @PHASEMASK, '0', '0', '-55.933', '-46.3286', '-20.1907', '0.735546', '300', '0.0', '0', '737', '2175', '0', '0', '0', '0');
+-- Bixi Wobblebonk 150313
 DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+27);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_RAGEFIRE+27, (@CT_WEAPON_MASTER+3), '389', '1', @PHASEMASK, '0', '264', '-46.7545', '-50.8826', '-21.4354', '0.935827', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
--- Ansekhwa 150315
+VALUES (@CREA_RAGEFIRE+27, (@CT_WEAPON_MASTER+2), '389', '1', @PHASEMASK, '0', '210', '-50.908', '-48.5629', '-21.1167', '0.586324', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+-- Archibald 150314
 DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+28);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_RAGEFIRE+28, (@CT_WEAPON_MASTER+4), '389', '1', @PHASEMASK, '0', '473', '-42.7968', '-53.7797', '-21.3972', '0.586325', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
--- Sayoc 150316
+VALUES (@CREA_RAGEFIRE+28, (@CT_WEAPON_MASTER+3), '389', '1', @PHASEMASK, '0', '264', '-46.7545', '-50.8826', '-21.4354', '0.935827', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+-- Ansekhwa 150315
 DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+29);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_RAGEFIRE+29, (@CT_WEAPON_MASTER+5), '389', '1', @PHASEMASK, '0', '1331', '-38.6787', '-58.2021', '-21.3704', '0.382122', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
--- Woo Ping 150317
+VALUES (@CREA_RAGEFIRE+29, (@CT_WEAPON_MASTER+4), '389', '1', @PHASEMASK, '0', '473', '-42.7968', '-53.7797', '-21.3972', '0.586325', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+-- Sayoc 150316
 DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+30);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_RAGEFIRE+30, (@CT_WEAPON_MASTER+6), '389', '1', @PHASEMASK, '0', '202', '-53.5901', '-47.6344', '-20.6139', '0.786603', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
--- Ilyenia Moonfire 150318
+VALUES (@CREA_RAGEFIRE+30, (@CT_WEAPON_MASTER+5), '389', '1', @PHASEMASK, '0', '1331', '-38.6787', '-58.2021', '-21.3704', '0.382122', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+-- Woo Ping 150317
 DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+31);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_RAGEFIRE+31, (@CT_WEAPON_MASTER+7), '389', '1', @PHASEMASK, '0', '109', '-58.095', '-44.8808', '-19.4533', '0.692355', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
--- Buliwyf Stonehand 150319
+VALUES (@CREA_RAGEFIRE+31, (@CT_WEAPON_MASTER+6), '389', '1', @PHASEMASK, '0', '202', '-53.5901', '-47.6344', '-20.6139', '0.786603', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+-- Ilyenia Moonfire 150318
 DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+32);
 INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
-VALUES (@CREA_RAGEFIRE+32, (@CT_WEAPON_MASTER+8), '389', '1', @PHASEMASK, '0', '201', '-62.8359', '-42.2307', '-18.0544', '0.625594', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+VALUES (@CREA_RAGEFIRE+32, (@CT_WEAPON_MASTER+7), '389', '1', @PHASEMASK, '0', '109', '-58.095', '-44.8808', '-19.4533', '0.692355', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
+-- Buliwyf Stonehand 150319
+DELETE FROM `creature` WHERE `guid` = (@CREA_RAGEFIRE+33);
+INSERT INTO `creature` (guid, id, map, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags)
+VALUES (@CREA_RAGEFIRE+33, (@CT_WEAPON_MASTER+8), '389', '1', @PHASEMASK, '0', '201', '-62.8359', '-42.2307', '-18.0544', '0.625594', '300', '0.0', '0', '15505', '0', '0', '0', '0', '0');
 
 
 -- -------------------------------------------------------------------------
