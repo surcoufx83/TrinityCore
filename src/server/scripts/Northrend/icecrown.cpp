@@ -3203,5 +3203,6 @@ void AddSC_icecrown()
     new npc_argent_squire_gruntling();
     new vehicle_black_knights_gryphon();
     new npc_black_knights_grave();
+    new npc_slain_tualiq_villager();
     new spell_flaming_spear_targeting();
 }
