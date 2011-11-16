@@ -30,7 +30,7 @@
 #include "MapManager.h"
 #include "ObjectMgr.h"
 #include "Group.h"
-
+#include "Chat.h"
 union u_map_magic
 {
     char asChar[4];
