@@ -2387,7 +2387,9 @@ VALUES
 (@CT_VENDOR_NECK_FINGER_FREE, '38080', '0', '6'), --   (Crit + AP)
 (@CT_VENDOR_NECK_FINGER_FREE, '38763', '0', '7'), --   (Zm+ Wille)
 (@CT_VENDOR_NECK_FINGER_FREE, '38764', '0', '8'), --   (Crit + Hit)
-(@CT_VENDOR_NECK_FINGER_FREE, '38765', '0', '9'); --   (Hit + Zm)
+(@CT_VENDOR_NECK_FINGER_FREE, '38765', '0', '9'), --   (Hit + Zm)
+(@CT_VENDOR_NECK_FINGER_FREE, '44098', '0', '10'), --   Inherited Insignia of the Alliance
+(@CT_VENDOR_NECK_FINGER_FREE, '44097', '0', '11'); --   Inherited Insignia of the Horde
 --
 -- Free Necklaces and Stuff // Kostenloser Schmuck und Kram :: ENDE
 ---
