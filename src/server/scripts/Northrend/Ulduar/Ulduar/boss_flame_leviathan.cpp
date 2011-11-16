@@ -1338,6 +1338,9 @@ class npc_leviathan_player_vehicle : public CreatureScript
             npc_leviathan_player_vehicleAI(Creature* creature) : NullCreatureAI(creature)
             {
                 _instance = creature->GetInstanceScript();
+
+                if (VehicleSeatEntry* vehSeat = const_cast<VehicleSeatEntry*>(sVehicleSeatStore.LookupEntry(3013)))
+                    vehSeat->m_flags &= ~VEHICLE_SEAT_FLAG_UNK11;
             }
 
             void PassengerBoarded(Unit* unit, int8 seat, bool apply)
