@@ -727,7 +727,7 @@ public:
 
             // Note: summon must be done by trigger and not by KT.
             // Otherwise, they attack immediately as KT is in combat.
-            for (uint8 i = 0; i <= MAX_ABOMINATIONS; ++i)
+            for (uint8 i = 0; i < MAX_ABOMINATIONS; ++i)
             {
                 if (Creature* sum = trigger->SummonCreature(NPC_ABOMINATION, PosAbominations[i]))
                 {
@@ -737,7 +737,7 @@ public:
                     sum->setFaction(16); //prevent "chain" aggro
                 }
             }
-            for (uint8 i = 0; i <= MAX_WASTES; ++i)
+            for (uint8 i = 0; i < MAX_WASTES; ++i)
             {
                 if (Creature* sum = trigger->SummonCreature(NPC_WASTE, PosWastes[i]))
                 {
@@ -747,7 +747,7 @@ public:
                     sum->setFaction(16);
                 }
             }
-            for (uint8 i = 0; i <= MAX_WEAVERS; ++i)
+            for (uint8 i = 0; i < MAX_WEAVERS; ++i)
             {
                 if (Creature* sum = trigger->SummonCreature(NPC_WEAVER, PosWeavers[i]))
                 {

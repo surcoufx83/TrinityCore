@@ -601,6 +601,8 @@ void GameObject::Delete()
     SetLootState(GO_NOT_READY);
     RemoveFromOwner();
 
+    sLog->outCrash("GameObject::Delete() (GUID: %u Entry: %u SpellId: %u MapId: %u)", GetGUIDLow(), GetGOInfo()->entry, m_spellId, GetMapId());
+
     SendObjectDeSpawnAnim(GetGUID());
 
     SetGoState(GO_STATE_READY);

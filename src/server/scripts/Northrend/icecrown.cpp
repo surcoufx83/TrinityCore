@@ -3113,67 +3113,6 @@ public:
     };
 };
 
-/*########
-## npc_slain_tualiq_villager
-#########*/
-// Maybe rewrite with SmartAI
-
-// UPDATE creature_template SET scriptname = 'npc_slain_tualiq_villager' WHERE entry = 34852;
-
-class npc_slain_tualiq_villager : public CreatureScript
-{
-public:
-    npc_slain_tualiq_villager() : CreatureScript("npc_slain_tualiq_villager") { }
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_slain_tualiq_villagerAI (pCreature);
-    }
-
-    struct npc_slain_tualiq_villagerAI : public Scripted_NoMovementAI
-    {
-        npc_slain_tualiq_villagerAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature){ }
-
-        bool credited;
-
-        void Reset()
-        {
-            credited = false;
-        }
-
-        void SpellHit(Unit* caster, const SpellInfo* spellinfo)
-        {
-            if(credited)
-                return;
-
-            if(caster && caster->ToPlayer())
-            {
-                if(spellinfo->Id == 66390)
-                {
-                    credited = true;
-                    caster->ToPlayer()->KilledMonsterCredit(me->GetEntry(),me->GetGUID());
-                    me->DespawnOrUnsummon(3000);
-                }
-            }
-        }
-
-        void AttackStart(Unit* who)
-        {
-            return;
-        }
-
-        void MoveInLineOfSight(Unit *who) 
-        {
-            return;
-        }
-
-        void UpdateAI(const uint32 uiDiff)
-        {
-            return;
-        }
-    };
-};
-
 // Flaming Spear Targeting
 /*
 DELETE FROM spell_script_names WHERE spell_id IN (66588);

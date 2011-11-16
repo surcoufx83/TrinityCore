@@ -4,7 +4,7 @@ UPDATE `gameobject_template` SET `data5`=1, `AIName`= 'SmartGameObjectAI' WHERE 
 
 UPDATE `gameobject` SET `spawntimesecs` = 30 WHERE `id` = 184729;
 
-UPDATE `creature_template` SET `AIName` = 'SmartAI' WHERE `entry` = 21319;
+UPDATE `creature_template` SET `AIName` = 'SmartAI',`FactionA` = 16, `FactionH` = 16 WHERE `entry` = 21319;
 
 DELETE FROM `smart_scripts` WHERE entryorguid = 184729 AND source_type = 1;
 DELETE FROM `smart_scripts` WHERE entryorguid = 18472900 AND source_type = 9;

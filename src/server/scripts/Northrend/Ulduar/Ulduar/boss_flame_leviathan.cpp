@@ -307,7 +307,6 @@ class boss_flame_leviathan : public CreatureScript
                 events.ScheduleEvent(EVENT_PURSUE, 30*IN_MILLISECONDS);
                 events.ScheduleEvent(EVENT_MISSILE, urand(1500, 4*IN_MILLISECONDS));
                 events.ScheduleEvent(EVENT_VENT, 20*IN_MILLISECONDS);
-                events.ScheduleEvent(EVENT_SHUTDOWN, 150*IN_MILLISECONDS);
                 events.ScheduleEvent(EVENT_SPEED, 15*IN_MILLISECONDS);
                 ActiveTower();
                 ClearSeats();
@@ -335,6 +334,21 @@ class boss_flame_leviathan : public CreatureScript
                     if (Unit* seat = vehicle->GetPassenger(i))
                         if (seat->ToCreature())
                             seat->ToCreature()->DespawnOrUnsummon();
+            }
+
+            void SetGUID(uint64 guid, int32 /*id*/ = 0)
+            {
+                if (!me->isInCombat())
+                    return;
+
+                if (Unit* passenger = ObjectAccessor::GetUnit(*me, guid))
+                    for (uint8 i = RAID_MODE<uint8>(2, 0); i < 4; ++i)
+                        if (Unit* seat = vehicle->GetPassenger(i))
+                            if (seat->GetVehicleKit()->HasEmptySeat(SEAT_PLAYER) && !seat->GetVehicleKit()->HasEmptySeat(SEAT_TURRET))
+                            {
+                                passenger->EnterVehicle(seat, SEAT_PLAYER);
+                                return;
+                            }
             }
 
             void ActiveTower()
@@ -419,7 +433,10 @@ class boss_flame_leviathan : public CreatureScript
             void SpellHit(Unit* /*caster*/, SpellInfo const* spell)
             {
                 if (spell->Id == SPELL_START_THE_ENGINE)
+                {
                     vehicle->InstallAllAccessories(false);
+                    ClearSeats();
+                }
 
                 if (spell->Id == SPELL_ELECTROSHOCK)
                     me->InterruptSpell(CURRENT_CHANNELED_SPELL);
@@ -460,10 +477,8 @@ class boss_flame_leviathan : public CreatureScript
                 if (Shutdown == RAID_MODE<uint8>(2, 4))
                 {
                     Shutdown = 0;
-                    events.ScheduleEvent(EVENT_SHUTDOWN, 4000);
-                    me->RemoveAurasDueToSpell(SPELL_OVERLOAD_CIRCUIT);
+                    events.ScheduleEvent(EVENT_SHUTDOWN, 0);
                     me->InterruptNonMeleeSpells(true);
-                    return;
                 }
 
                 if (ShutdownActive)
@@ -527,7 +542,6 @@ class boss_flame_leviathan : public CreatureScript
                             break;
                         case EVENT_REPAIR:
                             me->MonsterTextEmote(EMOTE_REPAIR, 0, true);
-                            events.ScheduleEvent(EVENT_SHUTDOWN, 150*IN_MILLISECONDS);
                             break;
                         case EVENT_THORIMS_HAMMER:
                             for (uint8 i = 0; i < 15; ++i)
@@ -646,11 +660,9 @@ class npc_flame_leviathan_defense_cannon : public CreatureScript
             {
             }
 
-            uint32 NapalmTimer;
-
             void Reset()
             {
-                NapalmTimer = 5000;
+                _napalmTimer = 15000;
             }
 
             void UpdateAI(uint32 const diff)
@@ -658,24 +670,27 @@ class npc_flame_leviathan_defense_cannon : public CreatureScript
                 if (!UpdateVictim())
                     return;
 
-                if (NapalmTimer <= diff)
+                if (_napalmTimer <= diff)
                 {
                     if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
-                        if(CanAIAttack(target))
+                        if (CanNapalmAttack(target))
                             DoCast(target, SPELL_NAPALM, true);
 
-                    NapalmTimer = 5000;
+                    _napalmTimer = 10000;
                 }
                 else
-                    NapalmTimer -= diff;
+                    _napalmTimer -= diff;
             }
 
-            bool CanAIAttack(Unit const* who) const
+            bool CanNapalmAttack(Unit const* who) const
             {
-                if (who->GetTypeId() != TYPEID_PLAYER || !who->GetVehicle() || who->GetVehicleBase()->GetEntry() == NPC_SEAT)
+                if (who->GetTypeId() == TYPEID_PLAYER)
                     return false;
                 return true;
             }
+
+        private:
+            uint32 _napalmTimer;
         };
 
         CreatureAI* GetAI(Creature* creature) const
@@ -702,51 +717,36 @@ class npc_flame_leviathan_seat : public CreatureScript
             InstanceScript* instance;
             Vehicle* vehicle;
 
+            void SetImmunitys(Unit* target, bool apply)
+            {
+                // TODO: limit target selections instead?
+                target->ApplySpellImmune(0, IMMUNITY_ID, SPELL_PURSUED, apply);
+                target->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MISSILE_BARRAGE, apply);
+                target->ApplySpellImmune(0, IMMUNITY_ID, SPELL_BATTERING_RAM, apply);
+                target->ApplySpellImmune(0, IMMUNITY_ID, SPELL_LASH, apply);
+            }
+
             void PassengerBoarded(Unit* who, int8 seatId, bool apply)
             {
                 //if (!me->GetVehicle())
                 //    return;
 
-                /*
                 if (seatId == SEAT_PLAYER)
                 {
-                    if (!apply)
-                        return;
-                    else
-                        DoScriptText(SAY_PLAYER_RIDING, me);
+                    SetImmunitys(who, apply);
 
-                    if (Creature* turret = me->GetVehicleKit()->GetPassenger(SEAT_TURRET)->ToCreature())
+                    if (apply)
+                        DoScriptText(SAY_PLAYER_RIDING, me);
+                    else
+                        return;
+
+                    if (Unit* turret = me->GetVehicleKit()->GetPassenger(SEAT_TURRET))
                     {
                         turret->setFaction(me->GetVehicleBase()->getFaction());
-                        turret->SetUInt32Value(UNIT_FIELD_FLAGS, 0); // unselectable
-                        turret->AI()->AttackStart(who);
+                        turret->SetUInt32Value(UNIT_FIELD_FLAGS, 0);
                     }
-                    if (Creature* device = me->GetVehicleKit()->GetPassenger(SEAT_DEVICE)->ToCreature())
-                    {
-                        device->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPELLCLICK);
-                        device->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    }
-
-                    me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 }
-                else if (seatId == SEAT_TURRET)
-                {
-                    if (apply)
-                        return;
-
-                    if (Unit* device = vehicle->GetPassenger(SEAT_DEVICE))
-                    {
-                        device->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPELLCLICK);
-                        device->SetUInt32Value(UNIT_FIELD_FLAGS, 0); // unselectable
-                    }
-                }*/
             }
-
-            /*
-            void UpdateAI(uint32 const diff)
-            {
-            }
-            */
         };
 
         CreatureAI* GetAI(Creature* creature) const
@@ -762,18 +762,37 @@ class npc_flame_leviathan_defense_turret : public CreatureScript
 
         struct npc_flame_leviathan_defense_turretAI : public TurretAI
         {
-            npc_flame_leviathan_defense_turretAI(Creature* creature) : TurretAI(creature) {}
+            npc_flame_leviathan_defense_turretAI(Creature* creature) : TurretAI(creature)
+            {
+                // temporary immunities
+                me->ApplySpellImmune(0, IMMUNITY_ID, 62308, true);
+                me->ApplySpellImmune(0, IMMUNITY_ID, 62307, true);
+                me->ApplySpellImmune(0, IMMUNITY_ID, 62489, true);
+                me->ApplySpellImmune(0, IMMUNITY_ID, 62635, true);
+                me->ApplySpellImmune(0, IMMUNITY_ID, 62363, true);
+                me->ApplySpellImmune(0, IMMUNITY_ID, 62974, true);
+                me->ApplySpellImmune(0, IMMUNITY_ID, 62522, true);
+                me->ApplySpellImmune(0, IMMUNITY_ID, 62345, true);
+                me->ApplySpellImmune(0, IMMUNITY_ID, 62355, true);
+                me->ApplySpellImmune(0, IMMUNITY_ID, 62357, true);
+            }
 
             void DamageTaken(Unit* who, uint32 &damage)
             {
-                if (!CanAIAttack(who))
+                if (!CanTakeDamageFrom(who))
                     damage = 0;
+
+                if (damage >= me->GetHealth())
+                    if (Vehicle* seat = me->GetVehicle())
+                        if (Unit* device = seat->GetPassenger(SEAT_DEVICE))
+                            device->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             }
 
-            bool CanAIAttack(Unit const* who) const
+            bool CanTakeDamageFrom(Unit const* who) const
             {
                 if (who->GetTypeId() != TYPEID_PLAYER || !who->GetVehicle() || who->GetVehicleBase()->GetEntry() != NPC_SEAT)
                     return false;
+
                 return true;
             }
         };
@@ -796,7 +815,7 @@ class npc_flame_leviathan_overload_device : public CreatureScript
                 me->SetDisplayId(me->GetCreatureInfo()->Modelid3);
             }
 
-            void DoAction(const int32 param)
+            void DoAction(int32 const param)
             {
                 if (param == EVENT_SPELLCLICK)
                 {
@@ -804,11 +823,12 @@ class npc_flame_leviathan_overload_device : public CreatureScript
                     {
                         me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPELLCLICK);
                         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
                         if (Unit* player = me->GetVehicle()->GetPassenger(SEAT_PLAYER))
                         {
                             me->GetVehicleBase()->CastSpell(player, SPELL_SMOKE_TRAIL, true);
-                            player->GetMotionMaster()->MoveKnockbackFrom(me->GetVehicleBase()->GetPositionX(), me->GetVehicleBase()->GetPositionY(), 30, 30);
                             player->ExitVehicle();
+                            // player->GetMotionMaster()->MoveKnockbackFrom(me->GetVehicleBase()->GetPositionX(), me->GetVehicleBase()->GetPositionY(), 30.0f, 30.0f);
                         }
                     }
                 }
@@ -1318,6 +1338,9 @@ class npc_leviathan_player_vehicle : public CreatureScript
             npc_leviathan_player_vehicleAI(Creature* creature) : NullCreatureAI(creature)
             {
                 _instance = creature->GetInstanceScript();
+
+                if (VehicleSeatEntry* vehSeat = const_cast<VehicleSeatEntry*>(sVehicleSeatStore.LookupEntry(3013)))
+                    vehSeat->m_flags &= ~VEHICLE_SEAT_FLAG_UNK11;
             }
 
             void PassengerBoarded(Unit* unit, int8 seat, bool apply)
@@ -1856,6 +1879,40 @@ class spell_load_into_catapult : public SpellScriptLoader
         }
 };
 
+class spell_throw_passenger : public SpellScriptLoader
+{
+    public:
+        spell_throw_passenger() : SpellScriptLoader("spell_throw_passenger") { }
+
+        class spell_throw_passenger_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_throw_passenger_SpellScript);
+
+            void HandleDummy(SpellEffIndex /*effIndex*/)
+            {
+                Unit* caster = GetCaster();
+
+                if (caster && caster->GetVehicleKit())
+                    if (Unit* passenger = caster->GetVehicleKit()->GetPassenger(3))
+                    {
+                        passenger->ExitVehicle();
+                        if (Creature* leviathan = caster->FindNearestCreature(33113, 120.0f))
+                            leviathan->AI()->SetGUID(passenger->GetGUID());
+                    }
+            }
+
+            void Register()
+            {
+                OnEffectHit += SpellEffectFn(spell_throw_passenger_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_throw_passenger_SpellScript();
+        }
+};
+
 class spell_freyas_ward_summon : public SpellScriptLoader
 {
     public:
@@ -1901,6 +1958,81 @@ class spell_freyas_ward_summon : public SpellScriptLoader
         }
 };
 
+class FlameVentsTargetSelector
+{
+    public:
+        bool operator() (Unit* unit)
+        {
+            if (unit->GetTypeId() != TYPEID_PLAYER)
+            {
+                if (unit->ToCreature()->GetEntry() == VEHICLE_SIEGE ||
+                    unit->ToCreature()->GetEntry() == VEHICLE_CHOPPER ||
+                    unit->ToCreature()->GetEntry() == VEHICLE_DEMOLISHER)
+                    return false;
+
+                if (!unit->ToCreature()->isPet())
+                    return true;
+            }
+
+            // TODO: more check?
+            return unit->GetVehicle();
+        }
+};
+
+class spell_flame_leviathan_flame_vents : public SpellScriptLoader
+{
+    public:
+        spell_flame_leviathan_flame_vents() : SpellScriptLoader("spell_flame_leviathan_flame_vents") { }
+
+        class spell_flame_leviathan_flame_vents_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_flame_leviathan_flame_vents_SpellScript);
+
+            void FilterTargets(std::list<Unit*>& unitList)
+            {
+                unitList.remove_if(FlameVentsTargetSelector());
+            }
+
+            void Register()
+            {
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_flame_leviathan_flame_vents_SpellScript::FilterTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ENEMY);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_flame_leviathan_flame_vents_SpellScript();
+        }
+};
+
+class spell_shield_generator : public SpellScriptLoader
+{
+    public:
+        spell_shield_generator() : SpellScriptLoader("spell_shield_generator") { }
+
+        class spell_shield_generator_AuraScript : public AuraScript
+        {
+            PrepareAuraScript(spell_shield_generator_AuraScript);
+
+            void CalculateAmount(AuraEffect const* aurEff, int32 & amount, bool & /*canBeRecalculated*/)
+            {
+                if (Unit* caster = GetCaster())
+                    if (Unit* siege = caster->GetVehicleBase())
+                        amount = int32(siege->CountPctFromMaxHealth(15));
+            }
+
+            void Register()
+            {
+                DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_shield_generator_AuraScript::CalculateAmount, EFFECT_0, SPELL_AURA_SCHOOL_ABSORB);
+            }
+        };
+
+        AuraScript* GetAuraScript() const
+        {
+            return new spell_shield_generator_AuraScript();
+        }
+};
+
 void AddSC_boss_flame_leviathan()
 {
     new boss_flame_leviathan();
@@ -1931,5 +2063,8 @@ void AddSC_boss_flame_leviathan()
     new spell_pursued();
     new spell_flame_leviathan_flames();
     new spell_load_into_catapult();
+    new spell_throw_passenger();
     new spell_freyas_ward_summon();
+    new spell_flame_leviathan_flame_vents();
+    new spell_shield_generator();
 }
