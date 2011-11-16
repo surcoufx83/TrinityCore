@@ -37,9 +37,13 @@ SET @MODEL_MEI_FRANCIS = 27822;
 SET @MODEL_RUNE_GOLEM = 23823;
 -- Model Obsidian Golem // // http://loldb.landoflegends.de/?npc=4872
 SET @MODEL_OBSIDIAN_GOLEM = 2695;
+-- Model War Golem // // http://loldb.landoflegends.de/?npc=2751
+SET @MODEL_WAR_GOLEM = 5747;
 -- Pilot Vic
 SET @MODEL_RIDING_TRAINER = 25671;
 SET @MODEL_ALANURA_FEUERWOLKE = 26892;
+
+SET @UNIT_FLAG_DISABLE_MOVE = 4;
 
 /*
 -- Selbst gemachte Gegenstände
@@ -84,6 +88,7 @@ SET @CT_VENDOR_PVP_STARTINGGEAR = @CREA_TEMPLATE+78;
 SET @CT_VENDOR_GEMS_FREE = @CREA_TEMPLATE+79;
 SET @CT_VENDOR_METAGEMS_FREE = @CREA_TEMPLATE+80;
 SET @CT_VENDOR_NECK_FINGER_FREE = @CREA_TEMPLATE+81;
+SET @CT_NPC_WEAPON_SKILL = @CREA_TEMPLATE+82;
 
 SET @CT_CLASS_TRAINER = @CREA_TEMPLATE+100;
 SET @CT_WEAPON_MASTER = @CREA_TEMPLATE+111;
@@ -2446,6 +2451,41 @@ VALUES
 (@CT_VENDOR_CONSUMABLES, '18294', '501', '28'), -- Elixir of Greater Water Breathing
 (@CT_VENDOR_CONSUMABLES, '41166', '501', '29'), -- Runic Healing Injector
 (@CT_VENDOR_CONSUMABLES, '42545', '501', '30'); -- Runic Mana Injector
+
+
+----
+-- NPC: Fight this one to improve your weapon skill :: START
+----
+DELETE FROM `creature_template` WHERE `entry` = @CT_NPC_WEAPON_SKILL;
+INSERT INTO `creature_template` (`entry`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`,
+`gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`,
+`speed_walk`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, 
+`baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`,
+`trainer_spell`, `trainer_class`, `trainer_race`,
+`minrangedmg`, `maxrangedmg`, `rangedattackpower`,
+`type`, `type_flags`,
+`AIName`,
+`equipment_id`,`mechanic_immune_mask`, `flags_extra`, `ScriptName`, `WDBVerified`)
+VALUES(@CT_NPC_WEAPON_SKILL,@MODEL_WAR_GOLEM,'0','0','0',
+'Improve Your Weapon Skill!',NULL,'',
+'0','80','80','0','189','189',0,
+'1','1.14286','1','0',
+'0','0','0','0','0',
+'2000','0','8',@UNIT_FLAG_DISABLE_MOVE,'8','0','0','0','0','0',
+'0','0','0',
+'7','4096',
+'',
+'0','0','0','','12340');
+DELETE FROM `locales_creature` WHERE `entry` = @CT_NPC_WEAPON_SKILL;
+INSERT INTO `locales_creature` (`entry`, `name_loc1`, `name_loc2`, `name_loc3`, `name_loc4`, `name_loc5`,
+ `name_loc6`, `name_loc7`, `name_loc8`, `subname_loc1`, `subname_loc2`, `subname_loc3`, `subname_loc4`,
+ `subname_loc5`, `subname_loc6`, `subname_loc7`, `subname_loc8`)
+VALUES(@CT_NPC_WEAPON_SKILL,'','','Verbessere Deine Waffenfertigkeit!','','','','','',
+ NULL,NULL,@LOL_TEAM,NULL,NULL,NULL,NULL,NULL);
+----
+-- NPC: Fight this one to improve your weapon skill :: END
+----
+
 
 ----
 -- Stockade

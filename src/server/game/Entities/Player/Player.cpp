@@ -4406,6 +4406,37 @@ bool Player::isPvPCharacter() const
 
     return false;
 }
+/**
+ * Is this character located at a Battleground or Arena Map?<br/>
+ * <br/>
+ */
+bool Player::isInBGorArenaMap() const {
+    sLog->outStaticDebug("resetTisInBGorArenaMap:: %d", GetMapId());
+    // Battlegrounds
+    //  30 - Alterac Valley
+    // 489 - Warsong Gulch
+    // 529 - Arathi Basin
+    // 566 - Eye of the Storm
+    // 607 - Strand of the Ancients
+    if ((GetMapId() == 566) || (GetMapId() == 607) || (GetMapId() == 489)
+            || (GetMapId() == 30) || (GetMapId() == 529)) {
+        sLog->outStaticDebug("resetTisInBGorArenaMap:: Battleground");
+        return true;
+    }
+    // Arena
+    // 559 - Nagrand Arena
+    // 562 - Blade's Edge Arena
+    // 572 - Ruins of Lordaeron
+    // 618 - The Ring of Valor
+    if ((GetMapId() == 559) || (GetMapId() == 562) || (GetMapId() == 572)
+            || (GetMapId() == 618)) {
+        sLog->outStaticDebug("resetTisInBGorArenaMap:: Arena");
+        return true;
+    }
+    sLog->outStaticDebug("resetTisInBGorArenaMap:: FALSE");
+    return false;
+}
+
 
 uint32 Player::resetTalentsCost()
 {

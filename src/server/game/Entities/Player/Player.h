@@ -1704,6 +1704,8 @@ class Player : public Unit, public GridObject<Player>
         // Is this character a special PvP Character?
         // -> Then the character finished the "I want PvP only" quest
         bool isPvPCharacter() const;
+        // Is the character located at a Battleground or Arena map?
+        bool isInBGorArenaMap() const;
 
         // Dual Spec
         void UpdateSpecCount(uint8 count);

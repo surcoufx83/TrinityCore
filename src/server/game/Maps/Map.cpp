@@ -957,6 +957,10 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z,
 
     player->UpdateObjectVisibility(false);
 
+	// DEBUG
+	sLog->outStaticDebug("isPvPCharacter:: In MAP: %d", player->GetMapId());
+
+
     // PvP.Character? -> They are not allowed to be in the open world.
     if ((!player->InBattleground() || !player->InArena())
             && player->isPvPCharacter()) {
@@ -985,34 +989,17 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z,
                 // Still in Stormwind?
                 if (!(((player->GetMapId() == 0) && (area_id == 1519)) // SW Village
                         || ((player->GetMapId() == 0) && (area_id == 12)) // Elwynn forest in front of SW Village
+                        || player->isInBGorArenaMap()
                 )) {
                     // Relocate Player
                     sLog->outStaticDebug(
                             "Ist PvP.Character:: Nicht mehr in Stormwind");
                     ChatHandler(player).PSendSysMessage(
                             "PvP.Characters must not be in the open world - porting back to home city");
-                    if (false) {
-                        GameTele const* tele =
-                                ChatHandler(player).extractGameTeleFromLink(
-                                        "Stormwind");
-                        if (!tele) {
-                            ChatHandler(player).PSendSysMessage(
-                                    "Teleport location 'Stormwind' not found in your game_tele table!");
-                            ChatHandler(player).SendSysMessage(
-                                    LANG_COMMAND_TELE_NOTFOUND);
-                            ChatHandler(player).SetSentErrorMessage(true);
-                            return;
-                        }
-                        player->TeleportTo(tele->mapId, tele->position_x,
-                                tele->position_y, tele->position_z,
-                                tele->orientation);
-
-                    } else {
-                        // Slow fall
-                        player->CastSpell(player, 12438, false);
-                        player->TeleportTo(0, -8833.38f, 628.628f, 94.356f,
-                                player->GetOrientation(), 0);
-                    }
+                    // Slow fall
+                    player->CastSpell(player, 12438, false);
+                    player->TeleportTo(0, -8833.38f, 628.628f, 94.356f,
+                            player->GetOrientation(), 0);
                     player->SetPhaseMask(PHASEMASK_NORMAL, false);
                     return;
                 } else {
@@ -1033,7 +1020,9 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z,
                 if (!((player->GetMapId() == 450) // Horde Kaserne
                         || ((player->GetMapId() == 1) && (area_id == 1637)) // Org Village
                         || ((player->GetMapId() == 1) && (area_id == 14)) // Durotar in front of Org Village
-                )) {
+                        || player->isInBGorArenaMap()
+                )
+                ) {
                     // Relocate Player
                     sLog->outStaticDebug(
                             "Ist PvP.Character:: Nicht mehr in Orgrimmar");
