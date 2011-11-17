@@ -48,6 +48,7 @@ enum Spells
     SPELL_BLAZE                    = 62292,
     SPELL_TAR_PASSIVE              = 62288,
     SPELL_SMOKE_TRAIL              = 63575,
+    SPELL_SMOKE_TRAIL_VISUAL       = 61364,
     SPELL_ELECTROSHOCK             = 62522,
     SPELL_NAPALM                   = 63666,
     SPELL_INVIS_AND_STEALTH_DETECT = 18950, // Passive
@@ -74,7 +75,6 @@ enum Spells
     SPELL_LIQUID_PYRITE            = 62494,
     SPELL_DUSTY_EXPLOSION          = 63360,
     SPELL_DUST_CLOUD_IMPACT        = 54740,
-    SPELL_RIDE_VEHICLE             = 46598,
     SPELL_ANTI_AIR_ROCKET_DMG      = 62363,
     SPELL_GROUND_SLAM              = 62625
 };
@@ -246,11 +246,12 @@ class boss_flame_leviathan : public CreatureScript
             void InitializeAI()
             {
                 ASSERT(vehicle);
+
                 if (!me->isDead())
                     Reset();
+
                 ActiveTowersCount = 4;
                 Shutdown = 0;
-                ShutdownActive = false;
                 ActiveTowers = false;
                 towerOfStorms = false;
                 towerOfLife = false;
@@ -275,7 +276,6 @@ class boss_flame_leviathan : public CreatureScript
             Vehicle* vehicle;
             uint8 ActiveTowersCount;
             uint8 Shutdown;
-            bool ShutdownActive;
             bool ActiveTowers;
             bool towerOfStorms;
             bool towerOfLife;
@@ -313,14 +313,6 @@ class boss_flame_leviathan : public CreatureScript
 
                 // TODO: remove later
                 me->RemoveLootMode(LOOT_MODE_DEFAULT);
-            }
-
-            void EnterEvadeMode()
-            {
-                me->ClearUnitState(UNIT_STAT_STUNNED | UNIT_STAT_ROOT);
-                _EnterEvadeMode();
-                me->GetMotionMaster()->MoveTargetedHome();
-                Reset();
             }
 
             // installing accessorys to creatures that have different vehicle ids in there difficulty modes seems nyi
@@ -424,6 +416,7 @@ class boss_flame_leviathan : public CreatureScript
                 {
                     DoResetThreat();
                     me->AddThreat(target, 9999999.0f);
+                    me->GetMotionMaster()->MoveChase(target);
                     _pursueTarget = target->GetGUID();
                     if (Player* player = target->GetCharmerOrOwnerPlayerOrPlayerItself())
                         me->MonsterTextEmote(EMOTE_PURSUE, player->GetGUID(), true);
@@ -432,17 +425,16 @@ class boss_flame_leviathan : public CreatureScript
 
             void SpellHit(Unit* /*caster*/, SpellInfo const* spell)
             {
-                if (spell->Id == SPELL_START_THE_ENGINE)
+                switch (spell->Id)
                 {
-                    vehicle->InstallAllAccessories(false);
-                    ClearSeats();
+                    case SPELL_START_THE_ENGINE:
+                        vehicle->InstallAllAccessories(false);
+                        ClearSeats();
+                        break;
+                    case SPELL_ELECTROSHOCK:
+                        me->InterruptSpell(CURRENT_CHANNELED_SPELL);
+                        break;
                 }
-
-                if (spell->Id == SPELL_ELECTROSHOCK)
-                    me->InterruptSpell(CURRENT_CHANNELED_SPELL);
-
-                if (spell->Id == SPELL_OVERLOAD_CIRCUIT)
-                    ++Shutdown;
             }
 
             uint32 GetData(uint32 type)
@@ -468,34 +460,16 @@ class boss_flame_leviathan : public CreatureScript
 
             void UpdateAI(uint32 const diff)
             {
-                if (!UpdateVictim() || !CheckInRoom())
+                if (!UpdateVictim())
                     return;
 
                 events.Update(diff);
                 _DoAggroPulse(diff);
 
-                if (Shutdown == RAID_MODE<uint8>(2, 4))
-                {
-                    Shutdown = 0;
-                    events.ScheduleEvent(EVENT_SHUTDOWN, 0);
-                    me->InterruptNonMeleeSpells(true);
-                }
-
-                if (ShutdownActive)
-                {
-                    if (!me->HasAura(SPELL_SYSTEMS_SHUTDOWN))
-                    {
-                        ShutdownActive = false;
-                        me->ClearUnitState(UNIT_STAT_STUNNED | UNIT_STAT_ROOT);
-                        me->SetReactState(REACT_AGGRESSIVE);
-                        me->GetMotionMaster()->MoveChase(me->getVictim());
-                    }
-                }
-
-                if (me->HasUnitState(UNIT_STAT_CASTING) || me->HasAura(SPELL_SYSTEMS_SHUTDOWN))
+                if (me->HasUnitState(UNIT_STAT_CASTING))
                     return;
 
-                if (!Pursued && me->getVictim() && !me->getVictim()->HasAura(SPELL_PURSUED))
+                if (!Pursued && me->getVictim() && !me->getVictim()->HasAura(SPELL_PURSUED) && !me->HasAura(SPELL_SYSTEMS_SHUTDOWN))
                 {
                     Pursued = true;
                     events.RescheduleEvent(EVENT_PURSUE, 1000);
@@ -512,36 +486,34 @@ class boss_flame_leviathan : public CreatureScript
                             events.ScheduleEvent(EVENT_PURSUE, 30*IN_MILLISECONDS);
                             break;
                         case EVENT_MISSILE:
-                            if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM))
-                                DoCast(target, SPELL_MISSILE_BARRAGE);
+                            DoCast(me, SPELL_MISSILE_BARRAGE, true);
                             events.ScheduleEvent(EVENT_MISSILE, 1500);
                             break;
                         case EVENT_VENT:
-                            DoCast(SPELL_FLAME_VENTS);
+                            DoCastAOE(SPELL_FLAME_VENTS);
                             events.ScheduleEvent(EVENT_VENT, 20*IN_MILLISECONDS);
                             break;
                         case EVENT_SPEED:
-                            DoCast(SPELL_GATHERING_SPEED);
+                            DoCastAOE(SPELL_GATHERING_SPEED);
                             events.ScheduleEvent(EVENT_SPEED, 15*IN_MILLISECONDS);
                             break;
                         case EVENT_SHUTDOWN:
                             DoScriptText(RAND(SAY_OVERLOAD_1, SAY_OVERLOAD_2, SAY_OVERLOAD_3), me);
                             me->MonsterTextEmote(EMOTE_OVERLOAD, 0, true);
-                            me->AddAura(SPELL_SYSTEMS_SHUTDOWN, me);
-                            me->RemoveAurasDueToSpell(SPELL_GATHERING_SPEED);
-
-                            ShutdownActive = true;
-                            me->SetReactState(REACT_PASSIVE);
                             me->GetMotionMaster()->Clear();
                             me->GetMotionMaster()->MoveIdle();
-                            me->AddUnitState(UNIT_STAT_STUNNED | UNIT_STAT_ROOT);
+                            me->CastSpell(me, SPELL_SYSTEMS_SHUTDOWN, true);
                             if (Shutout)
                                 Shutout = false;
-
-                            events.ScheduleEvent(EVENT_REPAIR, 4000);
+                            events.DelayEvents(20*IN_MILLISECONDS);
+                            events.ScheduleEvent(EVENT_REPAIR, 4*IN_MILLISECONDS);
                             break;
                         case EVENT_REPAIR:
                             me->MonsterTextEmote(EMOTE_REPAIR, 0, true);
+                            for (uint8 i = RAID_MODE<uint8>(2, 0); i < 4; ++i)
+                                if (Unit* seat = vehicle->GetPassenger(i))
+                                    if (seat->ToCreature())
+                                        seat->ToCreature()->DespawnOrUnsummon();
                             break;
                         case EVENT_THORIMS_HAMMER:
                             for (uint8 i = 0; i < 15; ++i)
@@ -583,6 +555,26 @@ class boss_flame_leviathan : public CreatureScript
 
             void DoAction(int32 const action)
             {
+                // an overload device was just used
+                if (action == 11)
+                {
+                    ++Shutdown;
+
+                    if (Shutdown == RAID_MODE<uint8>(2, 4))
+                    {
+                        Shutdown = 0;
+                        events.ScheduleEvent(EVENT_SHUTDOWN, 0);
+                        me->InterruptNonMeleeSpells(true);
+
+                        // force all players to exit
+                        for (uint8 i = RAID_MODE<uint8>(2, 0); i < 4; ++i)
+                            if (Unit* seat = vehicle->GetPassenger(i))
+                                if (seat->GetVehicleKit())
+                                    if (Unit* passenger = seat->GetVehicleKit()->GetPassenger(SEAT_PLAYER))
+                                        passenger->ExitVehicle();
+                    }
+                }
+
                 // Start encounter
                 if (action == 10)
                 {
@@ -632,7 +624,7 @@ class boss_flame_leviathan : public CreatureScript
                     if (me->isAttackReady())
                     {
                         Unit* target = ObjectAccessor::GetUnit(*me, _pursueTarget);
-                        if (me->IsWithinCombatRange(target, 10.0f))
+                        if (me->IsWithinCombatRange(target, 15.0f))
                         {
                             DoCast(target, SPELL_BATTERING_RAM);
                             me->resetAttackTimer();
@@ -706,20 +698,16 @@ class npc_flame_leviathan_seat : public CreatureScript
 
         struct npc_flame_leviathan_seatAI : public ScriptedAI
         {
-            npc_flame_leviathan_seatAI(Creature* creature) : ScriptedAI(creature), vehicle(creature->GetVehicleKit())
+            npc_flame_leviathan_seatAI(Creature* creature) : ScriptedAI(creature), _vehicle(creature->GetVehicleKit())
             {
-                ASSERT(vehicle);
+                ASSERT(_vehicle);
                 me->SetReactState(REACT_PASSIVE);
                 me->SetDisplayId(me->GetCreatureInfo()->Modelid1);
-                instance = creature->GetInstanceScript();
             }
-
-            InstanceScript* instance;
-            Vehicle* vehicle;
 
             void SetImmunitys(Unit* target, bool apply)
             {
-                // TODO: limit target selections instead?
+                // TODO: limit target selections instead
                 target->ApplySpellImmune(0, IMMUNITY_ID, SPELL_PURSUED, apply);
                 target->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MISSILE_BARRAGE, apply);
                 target->ApplySpellImmune(0, IMMUNITY_ID, SPELL_BATTERING_RAM, apply);
@@ -736,17 +724,26 @@ class npc_flame_leviathan_seat : public CreatureScript
                     SetImmunitys(who, apply);
 
                     if (apply)
-                        DoScriptText(SAY_PLAYER_RIDING, me);
-                    else
-                        return;
-
-                    if (Unit* turret = me->GetVehicleKit()->GetPassenger(SEAT_TURRET))
                     {
-                        turret->setFaction(me->GetVehicleBase()->getFaction());
-                        turret->SetUInt32Value(UNIT_FIELD_FLAGS, 0);
+                        if (Unit* turret = _vehicle->GetPassenger(SEAT_TURRET))
+                        {
+                            turret->setFaction(me->GetVehicleBase()->getFaction());
+                            turret->SetUInt32Value(UNIT_FIELD_FLAGS, 0);
+                        }
+
+                        DoScriptText(SAY_PLAYER_RIDING, me);
+                    }
+                    else // exit player
+                    {
+                        who->CastSpell(who, SPELL_SMOKE_TRAIL, true);
+                        who->StopMoving();
+                        who->GetMotionMaster()->MoveJump(me->GetPositionX() + 20.0f, me->GetPositionY(), me->GetPositionZ() + 30.0f, 5.0f, 5.0f);
                     }
                 }
             }
+
+        private:
+            Vehicle* _vehicle;
         };
 
         CreatureAI* GetAI(Creature* creature) const
@@ -813,26 +810,26 @@ class npc_flame_leviathan_overload_device : public CreatureScript
             npc_flame_leviathan_overload_deviceAI(Creature* creature) : PassiveAI(creature)
             {
                 me->SetDisplayId(me->GetCreatureInfo()->Modelid3);
+                _instance = creature->GetInstanceScript();
             }
 
             void DoAction(int32 const param)
             {
                 if (param == EVENT_SPELLCLICK)
                 {
-                    if (me->GetVehicle())
+                    if (me->GetVehicle() && _instance)
                     {
+                        if (Creature* leviathan = ObjectAccessor::GetCreature(*me, _instance->GetData64(TYPE_LEVIATHAN)))
+                            leviathan->AI()->DoAction(11);
+
                         me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPELLCLICK);
                         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-
-                        if (Unit* player = me->GetVehicle()->GetPassenger(SEAT_PLAYER))
-                        {
-                            me->GetVehicleBase()->CastSpell(player, SPELL_SMOKE_TRAIL, true);
-                            player->ExitVehicle();
-                            // player->GetMotionMaster()->MoveKnockbackFrom(me->GetVehicleBase()->GetPositionX(), me->GetVehicleBase()->GetPositionY(), 30.0f, 30.0f);
-                        }
                     }
                 }
             }
+
+        private:
+            InstanceScript* _instance;
         };
 
         CreatureAI* GetAI(Creature* creature) const
@@ -1879,6 +1876,50 @@ class spell_load_into_catapult : public SpellScriptLoader
         }
 };
 
+class spell_systems_shutdown : public SpellScriptLoader
+{
+    public:
+        spell_systems_shutdown() : SpellScriptLoader("spell_systems_shutdown") { }
+
+        class spell_systems_shutdown_AuraScript : public AuraScript
+        {
+            PrepareAuraScript(spell_systems_shutdown_AuraScript);
+
+            void OnApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
+            {
+                Creature* owner = GetOwner()->ToCreature();
+                if (!owner)
+                    return;
+
+                //! This could probably in the SPELL_EFFECT_SEND_EVENT handler too:
+                owner->AddUnitState(UNIT_STAT_STUNNED | UNIT_STAT_ROOT);
+                owner->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_STUNNED);
+                owner->RemoveAurasDueToSpell(SPELL_GATHERING_SPEED);
+            }
+
+            void OnRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
+            {
+                Creature* owner = GetOwner()->ToCreature();
+                if (!owner)
+                    return;
+
+                owner->ClearUnitState(UNIT_STAT_STUNNED | UNIT_STAT_ROOT);
+                owner->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_STUNNED);
+            }
+
+            void Register()
+            {
+                OnEffectApply += AuraEffectApplyFn(spell_systems_shutdown_AuraScript::OnApply, EFFECT_0, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_REAL);
+                OnEffectRemove += AuraEffectRemoveFn(spell_systems_shutdown_AuraScript::OnRemove, EFFECT_0, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_REAL);
+            }
+        };
+
+        AuraScript* GetAuraScript() const
+        {
+            return new spell_systems_shutdown_AuraScript();
+        }
+};
+
 class spell_throw_passenger : public SpellScriptLoader
 {
     public:
@@ -2063,6 +2104,7 @@ void AddSC_boss_flame_leviathan()
     new spell_pursued();
     new spell_flame_leviathan_flames();
     new spell_load_into_catapult();
+    new spell_systems_shutdown();
     new spell_throw_passenger();
     new spell_freyas_ward_summon();
     new spell_flame_leviathan_flame_vents();
