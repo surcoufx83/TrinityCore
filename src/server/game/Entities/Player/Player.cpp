@@ -4397,13 +4397,20 @@ bool Player::isPvPCharacter() const
     uint32 questId = sWorld->getIntConfig(CONFIG_INT_PVP_CHARACTER_QUESTID);
     QuestStatus qStatus = GetQuestStatus(questId);
 
-    sLog->outStaticDebug("isPvPCharacter:: GetQuestStatus; %d", qStatus);
-
+    sLog->outStaticDebug("isPvPCharacter:: Quest: %d, GetQuestStatus; %d", questId, qStatus);
     if (qStatus == QUEST_STATUS_REWARDED) {
         return true;
     }
 
-    return false;
+    // Death Knight: Different Quest
+    qStatus = GetQuestStatus(questId + 1);
+    sLog->outStaticDebug("isPvPCharacter:: Quest: %d, GetQuestStatus; %d",
+            questId + 1, qStatus);
+    if (qStatus == QUEST_STATUS_REWARDED) {
+        return true;
+    }
+
+	return false;
 }
 /**
  * Is this character located at a Battleground or Arena Map?<br/>

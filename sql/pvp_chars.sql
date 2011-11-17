@@ -1,4 +1,6 @@
 ﻿-- Trainingspuppe für Allies: 32667
+-- Runenschmiede 201742
+
 --
 -- Einführung von PvP.Charakteren
 -- Introduction of PvP.Characters
@@ -154,6 +156,47 @@ INSERT INTO `quest_template` ( `entry`,
 1, 44225, -- 1x Zügel des gepanzerten Braunbären
 1, 44226  -- 1x Zügel des gepanzerten Braunbären
 );
+-- Quest for Death-Knights
+DELETE FROM `quest_template` WHERE `entry` = @QUEST_TEMPLATE+1;
+INSERT INTO `quest_template` ( `entry`,
+ `Title`, `OfferRewardText`,
+ `MinLevel`, `ZoneOrSort`, `ReqItemId1`,
+ `Type`, `Method`, 
+ `Details`,
+ `EndText`, `Objectives`,
+ `RequiredRaces`, `PrevQuestId`,
+ `QuestFlags`,
+ `RewSpell`, `RewMoneyMaxLevel`,
+ `QuestLevel`,
+ `SpecialFlags`,
+ `RewXPId`, `MaxLevel`,
+ `SkillOrClassMask`,
+ `CompleteEmote`,
+ `RewItemCount1`, `RewItemId1`,
+ `RewItemCount2`, `RewItemId2`,
+ `RewItemCount3`, `RewItemId3`
+ )
+ VALUES
+ ( @QUEST_TEMPLATE+1,
+ 'Ich will ein PvP.Char sein', '',
+'55', '-372', '0',
+'0', '2', 
+'Seid gegrüßt,$b$b\nwir suchen dringend Mitstreiter, die unseren Gegnern mal zeigen, was eine Harke ist.$b$bHier könnt Ihr sofort auf die Maximalstufe aufsteigen, aber Ihr dürft nur PvP spielen - sonst nichts.$b$bFalls Ihr dies wollt, so erledigt diese Quest und ich heiße Euch willkommen in der Welt des PvP - aber Vorsicht - NUR PvP.',
+'Seid Ihr sicher, dass Ihr NUR PvP spielen wollt?\n\nIhr könnt niemals eine Instanz betreten oder einem Raid beiwohnen!',
+'Nur wenn Ihr ganz sicher seid solltet Ihr es tun. Danach könnt Ihr niemals mehr PvE spielen - nur noch PvP in Arena oder BG.',
+'1791', '0',
+'0',
+'0', '4650',
+'55',
+'0',
+'0', '55', 
+'0',
+'1',
+4, 41599, -- 4x Froststofftasche
+1, 44225, -- 1x Zügel des gepanzerten Braunbären
+1, 44226  -- 1x Zügel des gepanzerten Braunbären
+);
+
 -- Creature, that gives the quest
 DELETE FROM `creature_template` WHERE `entry` = @PVPCHAR_QUESTGIVER;
 INSERT INTO `creature_template` (`entry`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`,
@@ -177,10 +220,12 @@ INSERT INTO `locales_creature` (`entry`, `name_loc1`, `name_loc2`, `name_loc3`, 
  `subname_loc5`, `subname_loc6`, `subname_loc7`, `subname_loc8`)
 VALUES(@PVPCHAR_QUESTGIVER,'','','PvP.Char Questgeber','','','','','',
  NULL,NULL,@LOL_TEAM,NULL,NULL,NULL,NULL,NULL);
-DELETE FROM `creature_questrelation` WHERE `quest` = @QUEST_TEMPLATE;
-DELETE FROM `creature_involvedrelation` WHERE `quest` = @QUEST_TEMPLATE;
+DELETE FROM `creature_questrelation` WHERE `quest` IN( @QUEST_TEMPLATE, @QUEST_TEMPLATE+1);
+DELETE FROM `creature_involvedrelation` WHERE `quest` IN ( @QUEST_TEMPLATE, @QUEST_TEMPLATE+1);
 INSERT INTO `creature_questrelation` ( `quest`, `id` )  VALUES ( @QUEST_TEMPLATE, @PVPCHAR_QUESTGIVER );
 INSERT INTO `creature_involvedrelation` ( `quest`, `id` )  VALUES ( @QUEST_TEMPLATE, @PVPCHAR_QUESTGIVER );
+INSERT INTO `creature_questrelation` ( `quest`, `id` )  VALUES ( @QUEST_TEMPLATE+1, @PVPCHAR_QUESTGIVER );
+INSERT INTO `creature_involvedrelation` ( `quest`, `id` )  VALUES ( @QUEST_TEMPLATE+1, @PVPCHAR_QUESTGIVER );
 
 DELETE FROM `creature` WHERE `guid` IN (
 @CREA_PVPCHAR_QUESTGIVER_01, @CREA_PVPCHAR_QUESTGIVER_02, @CREA_PVPCHAR_QUESTGIVER_03,
@@ -255,7 +300,8 @@ VALUES
 -- ( 23, @CT_VENDOR_MISC, 52021 ), -- Eisklingenpfeil; 230 epic
 -- ( 24, @CT_VENDOR_MISC, 52020 ), -- Splittermunition; 230 epic
 ( 25, @CT_VENDOR_MISC, 40359 ), -- Frisches Adlerfleisch, Benötigt Stufe 65
-( 26, @CT_VENDOR_MISC, 23162 ), -- Forors Kiste der endlosen Widerstandsausstattung, Beim Aufheben gebunden, 36 Platz Tasche
+-- ( 26, @CT_VENDOR_MISC, 23162 ), -- Forors Kiste der endlosen Widerstandsausstattung, Beim Aufheben gebunden, 36 Platz Tasche
+( 26, @CT_VENDOR_MISC, 41599 ), -- Froststofftasche
 ( 27, @CT_VENDOR_MISC, 44447 ), -- Drachenschuppenmunitionsbeutel, Beim Anlegen gebunden, 28 Platz Munitionsbeutel
 ( 28, @CT_VENDOR_MISC, 44448 ), -- Verstärkter nerubischer Köcher, Beim Anlegen gebunden, 28 Platz Köcher
 ( 29, @CT_VENDOR_MISC, 5175 ), -- Erdtotem
@@ -1276,6 +1322,14 @@ VALUES
 (@CT_CLASS_TRAINER+0, '43553', '0'), -- Glyph of Unbreakable Armor
 (@CT_CLASS_TRAINER+0, '45803', '0'), -- Glyph of Unholy Blight
 (@CT_CLASS_TRAINER+0, '43554', '501'); -- Glyph of Vampiric Blood
+
+DELETE FROM `gameobject` WHERE `id` = 201742 AND `map` IN (34, 389);
+INSERT INTO `gameobject` (`id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`)
+VALUES
+('201742','34', '1','2','115.216', '5.077',  '-25.6062','4.76', '0','0','0.0123592','0.999924','300','0','1'), -- Stockade
+('201742','389','1','2','-69.6914','-42.328','-17.092', '1.726','0','0','0.0237436','0.999718','300','0','1'); -- Ragefire Chasm
+
+
 -- Warrior Trainer 26332
 DELETE FROM `creature_template` WHERE `entry` = (@CT_CLASS_TRAINER+1);
 INSERT INTO `creature_template` (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, modelid1, modelid2, modelid3, modelid4, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, exp, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, mindmg, maxdmg, dmgschool, attackpower, dmg_multiplier, baseattacktime, rangeattacktime, unit_class, unit_flags, dynamicflags, family, trainer_type, trainer_spell, trainer_class, trainer_race, minrangedmg, maxrangedmg, rangedattackpower, type, type_flags, lootid, pickpocketloot, skinloot, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, spell1, spell2, spell3, spell4, spell5, spell6, spell7, spell8, PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, InhabitType, Health_mod, Mana_mod, Armor_mod, RacialLeader, questItem1, questItem2, questItem3, questItem4, questItem5, questItem6, movementId, RegenHealth, equipment_id, mechanic_immune_mask, flags_extra, ScriptName, WDBVerified)
@@ -2307,7 +2361,6 @@ VALUES(@CT_VENDOR_GEMS_FREE,'','','Kostenlose Edelsteine','','','','','',
 DELETE FROM npc_vendor WHERE entry = @CT_VENDOR_GEMS_FREE;
 INSERT INTO `npc_vendor` (entry, item, ExtendedCost, slot)
 VALUES
-(@CT_VENDOR_GEMS_FREE, '40148', '0', '0'), -- Glinting Ametrine
 (@CT_VENDOR_GEMS_FREE, '40043', '0', '1'), --  (Agi + Crit)
 (@CT_VENDOR_GEMS_FREE, '40050', '0', '2'), --  (Int + Abhärtung)
 (@CT_VENDOR_GEMS_FREE, '40046', '0', '3'), --  (Agi + Tempo)
