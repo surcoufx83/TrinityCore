@@ -5894,14 +5894,6 @@ void AuraEffect::HandlePeriodicDummyAuraTick(Unit* target, Unit* caster) const
                     // should we use custom damage?
                     target->CastSpell((Unit*)NULL, m_spellInfo->Effects[m_effIndex].TriggerSpell, true);
                     break;
-                case 62399: // Overload Circuit
-                    if (target->GetMap()->IsDungeon() && int(target->GetAppliedAuras().count(62399)) >= (target->GetMap()->IsHeroic() ? 4 : 2))
-                    {
-                         target->CastSpell(target, 62475, true); // System Shutdown
-                         if (Unit* veh = target->GetVehicleBase())
-                             veh->CastSpell(target, 62475, true);
-                    }
-                    break;
                 case 64821: // Fuse Armor (Razorscale)
                     if (GetBase()->GetStackAmount() == GetSpellInfo()->StackAmount)
                     {
