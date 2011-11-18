@@ -1160,6 +1160,130 @@ public:
     }
 };
 
+/*######
+## npc_archivist_mechaton
+######*/
+
+enum eMechaton
+{
+    NPC_ARCHIVIST_MECHATON  = 29775,
+    SPELL_ARCHIVISTS_SCAN   = 55224,
+    SPELL_CHARGED_DISK      = 55197,
+    GO_FLOOR_GLYPH          = 191762,
+    GO_ENERGY_COLUMN        = 191763,
+    SAY_1                   = 1,
+    SAY_2                   = 2,
+    SAY_3                   = 3,
+    SAY_4                   = 4,
+    EMOTE_1                 = 5,
+    SAY_5                   = 6,
+    SAY_6                   = 7,
+    SAY_7                   = 8
+};
+
+class npc_archivist_mechaton : public CreatureScript
+{
+public:
+    npc_archivist_mechaton() : CreatureScript("npc_archivist_mechaton") {}
+
+    struct npc_archivist_mechatonAI : public ScriptedAI
+    {
+        npc_archivist_mechatonAI(Creature* pCreature) : ScriptedAI(pCreature) 
+        {
+            if(me->isSummon())
+            {
+                me->SummonGameObject(GO_FLOOR_GLYPH, 7991.89f, -827.66f, 968.156f, -2.33874f, 0, 0, 0, 0, 27);
+                me->SummonGameObject(GO_ENERGY_COLUMN, 7991.8f, -827.639f, 968.16f, 0.90757f, 0, 0, 0, 0, 27);
+            }
+
+            FirstTime = true;
+        }
+
+        uint8   saycount;
+        uint32  saytimer;
+        bool    FirstTime;
+
+        void Reset()
+        {
+            saytimer = 0;
+        
+            if(FirstTime)
+                saycount = 1;
+            else
+            {   
+                saycount = 0;
+                me->DespawnOrUnsummon();
+            }
+        }
+        
+        void DoNextText(uint32 timer)
+        {
+            saytimer = timer;
+            ++saycount;
+        }
+
+        void UpdateAI(uint32 const diff)
+        {
+            if(saytimer <= diff)    
+            {            
+                Unit* pSummoner = me->ToTempSummon()->GetSummoner();
+                
+                switch(saycount)
+                {
+                    case 1:
+                        Talk(SAY_1);
+                        DoNextText(4000);
+                        break;
+                    case 2:
+                        Talk(SAY_2);
+                        DoNextText(3000);
+                        break;
+                    case 3:
+                        Talk(SAY_3);
+                        DoNextText(4000);
+                        break;
+                    case 4:
+                        Talk(SAY_4);
+                        me->CastSpell(pSummoner, SPELL_ARCHIVISTS_SCAN, true);
+                        DoNextText(1100);
+                        break;
+                    case 5:
+                        Talk(EMOTE_1);
+                        DoNextText(8000);
+                        break;
+                    case 6:
+                        Talk(SAY_5);
+                        me->CombatStop();
+                        DoNextText(4000);
+                        break;
+                    case 7:
+                        Talk(SAY_6);
+                        DoNextText(5000);
+                        break;
+                    case 8:
+                        Talk(SAY_7);
+                        me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                        me->SetReactState(REACT_AGGRESSIVE);
+                        me->AI()->AttackStart(pSummoner);
+                        DoNextText(0);
+                        FirstTime = false;
+                        break;
+                }
+            }else saytimer -= diff;
+
+            DoMeleeAttackIfReady();
+
+            if (!UpdateVictim())
+                return;
+        }  
+    };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_archivist_mechatonAI(pCreature);
+    }
+};
+
 void AddSC_storm_peaks()
 {
     new npc_agnetta_tyrsdottar();
@@ -1179,4 +1303,5 @@ void AddSC_storm_peaks()
     new npc_hyldsmeet_protodrake();
     new npc_dead_irongiant();
     new npc_snowblind_follower();
+    new npc_archivist_mechaton();
 }
