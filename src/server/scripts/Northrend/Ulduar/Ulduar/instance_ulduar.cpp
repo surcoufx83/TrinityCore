@@ -65,8 +65,6 @@ public:
 
         // Kologarn
         uint64 uiKologarnGUID;
-        uint64 uiLeftArmGUID;
-        uint64 uiRightArmGUID;
         uint64 uiKologarnChestGUID;
         uint64 uiKologarnBridgeGUID;
         uint64 uiKologarnDoorGUID;
@@ -156,8 +154,6 @@ public:
             IronCouncilEntranceGUID   = 0;
             ArchivumDoorGUID          = 0;
             uiKologarnGUID            = 0;
-            uiLeftArmGUID             = 0;
-            uiRightArmGUID            = 0;
             uiAuriayaGUID             = 0;
             uiHodirIceDoorGUID        = 0;
             uiHodirStoneDoorGUID      = 0;
@@ -864,19 +860,6 @@ public:
             }
         }
 
-        void SetData64(uint32 type, uint64 data)
-        {
-            switch (type)
-            {
-                case DATA_LEFT_ARM:
-                    uiLeftArmGUID = data;
-                    break;
-                case DATA_RIGHT_ARM:
-                    uiRightArmGUID = data;
-                    break;
-            }
-        }
-
         uint64 GetData64(uint32 data)
         {
             switch (data)
@@ -887,8 +870,6 @@ public:
                 case DATA_RAZORSCALE_CONTROL:   return uiRazorscaleController;
                 case TYPE_XT002:                return uiXT002GUID;
                 case TYPE_KOLOGARN:             return uiKologarnGUID;
-                case DATA_LEFT_ARM:             return uiLeftArmGUID;
-                case DATA_RIGHT_ARM:            return uiRightArmGUID;
                 case TYPE_AURIAYA:              return uiAuriayaGUID;
                 // Mimiron
                 case TYPE_MIMIRON:              return uiMimironGUID;

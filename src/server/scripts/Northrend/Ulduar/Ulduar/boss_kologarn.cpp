@@ -195,8 +195,6 @@ class boss_kologarn : public CreatureScript
                         DoScriptText(SAY_LEFT_ARM_GONE, me);
                         events.ScheduleEvent(EVENT_RESPAWN_LEFT_ARM, 40000);
                     }
-                    else
-                        instance->SetData64(DATA_LEFT_ARM, who->GetGUID());
                 }
 
                 else if (who->GetEntry() == NPC_RIGHT_ARM)
@@ -207,8 +205,6 @@ class boss_kologarn : public CreatureScript
                         DoScriptText(SAY_RIGHT_ARM_GONE, me);
                         events.ScheduleEvent(EVENT_RESPAWN_RIGHT_ARM, 40000);
                     }
-                    else
-                        instance->SetData64(DATA_RIGHT_ARM, who->GetGUID());
                 }
 
                 if (!isEncounterInProgress)
@@ -270,9 +266,7 @@ class boss_kologarn : public CreatureScript
                     if (playerList.empty())
                         return NULL;
 
-                    std::list<Player*>::const_iterator itr = playerList.begin();
-                    std::advance(itr, urand(0, playerList.size() - 1));
-                    return *itr;
+                    return SelectRandomContainerElement(playerList);
                 }
                 else
                     return NULL;
@@ -418,13 +412,10 @@ class boss_kologarn : public CreatureScript
 
             void RespawnArm(uint32 entry)
             {
-                // no way to get arms by guid as they got unsummoned in Unit::_ExitVehicle. temporary spawn them here
                 if (Creature* arm = me->SummonCreature(entry, *me))
                 {
                     arm->AddUnitTypeMask(UNIT_MASK_ACCESSORY);
-                    // HACK: We should send spell SPELL_ARM_ENTER_VEHICLE here, but this will not work, because
-                    // the aura system will not allow it to stack from two different casters
-                    int32 seatId = entry == NPC_LEFT_ARM ? 0 : 1;
+                    int32 seatId = (entry == NPC_LEFT_ARM) ? 0 : 1;
                     arm->CastCustomSpell(SPELL_ARM_ENTER_VEHICLE, SPELLVALUE_BASE_POINT0, seatId+1, me, true);
                     arm->CastSpell(arm, SPELL_ARM_ENTER_VISUAL, true);
                 }

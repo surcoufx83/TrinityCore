@@ -52,15 +52,11 @@ enum UlduarTypes
     DATA_EXP_COMMANDER,
     DATA_RAZORSCALE_CONTROL,
 
-    // Kologarn:
     // XT-002
     DATA_TOY_PILE_0,
     DATA_TOY_PILE_1,
     DATA_TOY_PILE_2,
     DATA_TOY_PILE_3,
-
-    DATA_LEFT_ARM,
-    DATA_RIGHT_ARM,
 
     // Freya Elders
     TYPE_ELDER_BRIGHTLEAF,
