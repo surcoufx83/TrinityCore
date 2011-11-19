@@ -5520,7 +5520,8 @@ void Player::DurabilityPointLossForEquipSlot(EquipmentSlots slot)
 
 uint32 Player::DurabilityRepairAll(bool cost, float discountMod, bool guildBank)
 {
-    uint32 TotalCost = 0;
+	sLog->outStaticDebug("DurabilityRepairAll(bool cost, float discountMod, bool guildBank)");
+	uint32 TotalCost = 0;
     // equipped, backpack, bags itself
     for (uint8 i = EQUIPMENT_SLOT_START; i < INVENTORY_SLOT_ITEM_END; i++)
         TotalCost += DurabilityRepair(((INVENTORY_SLOT_BAG_0 << 8) | i), cost, discountMod, guildBank);
@@ -5536,6 +5537,7 @@ uint32 Player::DurabilityRepairAll(bool cost, float discountMod, bool guildBank)
 
 uint32 Player::DurabilityRepair(uint16 pos, bool cost, float discountMod, bool guildBank)
 {
+	sLog->outStaticDebug("DurabilityRepair(uint16 pos, bool cost, float discountMod, bool guildBank)");
     Item* item = GetItemByPos(pos);
 
     uint32 TotalCost = 0;
@@ -5575,8 +5577,12 @@ uint32 Player::DurabilityRepair(uint16 pos, bool cost, float discountMod, bool g
 
             costs = uint32(costs * discountMod * sWorld->getRate(RATE_REPAIRCOST));
 
-            if (isPvPCharacter())
+            if (isPvPCharacter()) {
                 costs = 0;
+				sLog->outStaticDebug("DurabilityRepair:: isPvPChar -> costs = 0");
+			} else {
+				sLog->outStaticDebug("DurabilityRepair:: NOT isPvPChar");
+			}
 
             if (costs == 0)                                   //fix for ITEM_QUALITY_ARTIFACT
                 costs = 1;

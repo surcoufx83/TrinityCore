@@ -152,9 +152,9 @@ INSERT INTO `quest_template` ( `entry`,
 '0', '1', 
 '0',
 '1',
-4, 41599, -- 4x Froststofftasche
-1, 44225, -- 1x Zügel des gepanzerten Braunbären
-1, 44226  -- 1x Zügel des gepanzerten Braunbären
+0, 0, -- 4, 41599, -- 4x Froststofftasche
+0, 0, -- 1, 44225, -- 1x Zügel des gepanzerten Braunbären
+0, 0  -- 1, 44226   -- 1x Zügel des gepanzerten Braunbären
 );
 -- Quest for Death-Knights
 DELETE FROM `quest_template` WHERE `entry` = @QUEST_TEMPLATE+1;
@@ -192,9 +192,9 @@ INSERT INTO `quest_template` ( `entry`,
 '0', '55', 
 '0',
 '1',
-4, 41599, -- 4x Froststofftasche
-1, 44225, -- 1x Zügel des gepanzerten Braunbären
-1, 44226  -- 1x Zügel des gepanzerten Braunbären
+0, 0, -- 4, 41599, -- 4x Froststofftasche
+0, 0, -- 1, 44225, -- 1x Zügel des gepanzerten Braunbären
+0, 0  -- 1, 44226   -- 1x Zügel des gepanzerten Braunbären
 );
 
 -- Creature, that gives the quest
