@@ -52,15 +52,11 @@ enum UlduarTypes
     DATA_EXP_COMMANDER,
     DATA_RAZORSCALE_CONTROL,
 
-    // Kologarn:
     // XT-002
     DATA_TOY_PILE_0,
     DATA_TOY_PILE_1,
     DATA_TOY_PILE_2,
     DATA_TOY_PILE_3,
-
-    DATA_LEFT_ARM,
-    DATA_RIGHT_ARM,
 
     // Freya Elders
     TYPE_ELDER_BRIGHTLEAF,
@@ -82,7 +78,7 @@ enum UlduarTypes
     DATA_MIMIRON_ELEVATOR,
 
     //Pre YoggSaron
-    DATA_ADD_HELP_FLAG,
+    DATA_ADD_HELP_FLAG
 };
 
 enum UlduarNPCs
@@ -141,7 +137,7 @@ enum UlduarNPCs
     NPC_BATTLE_PRIEST_ELIZA     = 32948,
     NPC_BATTLE_PRIEST_GINA      = 33330,
     NPC_FIELD_MEDIC_PENNY       = 32897,
-    NPC_FIELD_MEDIC_JESSI       = 33326,
+    NPC_FIELD_MEDIC_JESSI       = 33326
 };
 
 enum UlduarGameObjects
@@ -198,7 +194,10 @@ enum UlduarGameObjects
     GO_ALGALON_B_VISUAL         = 194716,
     GO_ALGALON_B_DOOR           = 194910,
     GO_GIFT_OF_THE_OBSERVER_10  = 194821,
-    GO_GIFT_OF_THE_OBSERVER_25  = 194822
+    GO_GIFT_OF_THE_OBSERVER_25  = 194822,
+    // CUSTOM
+    GO_LEVIATHAN_CHEST_10       = 500005,
+    GO_LEVIATHAN_CHEST_25       = 500006
 };
 
 enum UlduarTowerEvents
@@ -297,7 +296,7 @@ enum UlduarBossDeadFlags
 
 enum UlduarData
 {
-    DATA_PORTAL_PHASE = 1,
+    DATA_PORTAL_PHASE = 1
 };
 
 enum UlduarWorldstates

@@ -239,9 +239,7 @@ class boss_general_vezax : public CreatureScript
                     if (size < PlayersMin)
                         return NULL;
 
-                    std::list<Player*>::const_iterator itr = playerList.begin();
-                    std::advance(itr, urand(0, size - 1));
-                    return *itr;
+                    return SelectRandomContainerElement(playerList);
                 }
                 else
                     return NULL;

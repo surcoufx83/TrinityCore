@@ -40,6 +40,7 @@ public:
         std::string m_strInstData;
 
         // Leviathan
+        uint64 leviathanChestGUID;
         uint64 uiLeviathanGUID;
         uint64 uiLeviathanGateGUID;
         std::list<uint64> uiLeviathanDoorGUIDList;
@@ -65,8 +66,6 @@ public:
 
         // Kologarn
         uint64 uiKologarnGUID;
-        uint64 uiLeftArmGUID;
-        uint64 uiRightArmGUID;
         uint64 uiKologarnChestGUID;
         uint64 uiKologarnBridgeGUID;
         uint64 uiKologarnDoorGUID;
@@ -148,6 +147,7 @@ public:
         {
             SetBossNumber(MAX_ENCOUNTER);
 
+            leviathanChestGUID        = 0;
             uiIgnisGUID               = 0;
             uiRazorscaleGUID          = 0;
             uiRazorscaleController    = 0;
@@ -156,8 +156,6 @@ public:
             IronCouncilEntranceGUID   = 0;
             ArchivumDoorGUID          = 0;
             uiKologarnGUID            = 0;
-            uiLeftArmGUID             = 0;
-            uiRightArmGUID            = 0;
             uiAuriayaGUID             = 0;
             uiHodirIceDoorGUID        = 0;
             uiHodirStoneDoorGUID      = 0;
@@ -475,6 +473,10 @@ public:
         {
             switch (go->GetEntry())
             {
+                case GO_LEVIATHAN_CHEST_10:
+                case GO_LEVIATHAN_CHEST_25:
+                    leviathanChestGUID = go->GetGUID();
+                    break;
                 case GO_IRON_COUNCIL_ENTRANCE:
                     IronCouncilEntranceGUID = go->GetGUID();
                     break;
@@ -694,7 +696,12 @@ public:
                     }
 
                     if (state == DONE)
+                    {
+                        if (GameObject* go = instance->GetGameObject(leviathanChestGUID))
+                            go->SetRespawnTime(go->GetRespawnDelay());
+
                         HandleGameObject(uiXT002DoorGUID, true);
+                    }
                     break;
                 case TYPE_IGNIS:
                 case TYPE_RAZORSCALE:
@@ -864,19 +871,6 @@ public:
             }
         }
 
-        void SetData64(uint32 type, uint64 data)
-        {
-            switch (type)
-            {
-                case DATA_LEFT_ARM:
-                    uiLeftArmGUID = data;
-                    break;
-                case DATA_RIGHT_ARM:
-                    uiRightArmGUID = data;
-                    break;
-            }
-        }
-
         uint64 GetData64(uint32 data)
         {
             switch (data)
@@ -887,8 +881,6 @@ public:
                 case DATA_RAZORSCALE_CONTROL:   return uiRazorscaleController;
                 case TYPE_XT002:                return uiXT002GUID;
                 case TYPE_KOLOGARN:             return uiKologarnGUID;
-                case DATA_LEFT_ARM:             return uiLeftArmGUID;
-                case DATA_RIGHT_ARM:            return uiRightArmGUID;
                 case TYPE_AURIAYA:              return uiAuriayaGUID;
                 // Mimiron
                 case TYPE_MIMIRON:              return uiMimironGUID;

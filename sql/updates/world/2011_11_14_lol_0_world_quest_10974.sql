@@ -5,8 +5,8 @@ UPDATE `creature_template` SET `npcflag` = `npcflag`|2 WHERE `entry`= '22919';
 
 -- Image of Commandant Ameer -Blade's Edge Mountains- Spawn
 INSERT IGNORE INTO `creature` (`id`, `map`, `spawnMask`, `phaseMask`, `modelid`,`equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`,
-`spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`,`DeathState`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`) VALUES
-('22919', '530', '1', '1', '0', '2256', '3866.6', '5978.59', '291.792', '3.97902', '300', '0', '0', '6986', '0', '0', '0', '0', '0', '0');
+`spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`) VALUES
+('22919', '530', '1', '1', '0', '2256', '3866.6', '5978.59', '291.792', '3.97902', '300', '0', '0', '6986', '0', '0', '0', '0', '0');
 
 -- Quest accept
 DELETE FROM `creature_questrelation` WHERE `id` IN (20482,22919);

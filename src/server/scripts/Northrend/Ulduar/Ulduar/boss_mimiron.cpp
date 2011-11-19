@@ -981,9 +981,7 @@ class boss_leviathan_mk_turret : public CreatureScript
                     if (playerList.empty())
                         return NULL;
 
-                    std::list<Player*>::const_iterator itr = playerList.begin();
-                    std::advance(itr, urand(0, playerList.size() - 1));
-                    return *itr;
+                    return SelectRandomContainerElement(playerList);
                 }
                 else
                     return NULL;
