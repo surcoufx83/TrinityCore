@@ -1,4 +1,5 @@
 DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` IN (17,13) AND `SourceEntry`=43381; -- had wrong condition target
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry`=43385;
 DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=18 AND `SourceEntry`=33621;
 INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry`, `ElseGroup`, `ConditionTypeOrReference`, `ConditionValue1`, `ConditionValue2`, `ConditionValue3`, `ErrorTextId`, `ScriptName`, `Comment`) VALUES
 (18, 0, 33621, 0, 24, 1, 24199, 0, 63, '', 'Plague Spray - Plagued Dragonflayer Handler'),
