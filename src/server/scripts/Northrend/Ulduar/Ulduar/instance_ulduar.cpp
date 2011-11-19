@@ -40,6 +40,7 @@ public:
         std::string m_strInstData;
 
         // Leviathan
+        uint64 leviathanChestGUID;
         uint64 uiLeviathanGUID;
         uint64 uiLeviathanGateGUID;
         std::list<uint64> uiLeviathanDoorGUIDList;
@@ -146,6 +147,7 @@ public:
         {
             SetBossNumber(MAX_ENCOUNTER);
 
+            leviathanChestGUID        = 0;
             uiIgnisGUID               = 0;
             uiRazorscaleGUID          = 0;
             uiRazorscaleController    = 0;
@@ -471,6 +473,10 @@ public:
         {
             switch (go->GetEntry())
             {
+                case GO_LEVIATHAN_CHEST_10:
+                case GO_LEVIATHAN_CHEST_25:
+                    leviathanChestGUID = go->GetGUID();
+                    break;
                 case GO_IRON_COUNCIL_ENTRANCE:
                     IronCouncilEntranceGUID = go->GetGUID();
                     break;
@@ -690,7 +696,12 @@ public:
                     }
 
                     if (state == DONE)
+                    {
+                        if (GameObject* go = instance->GetGameObject(leviathanChestGUID))
+                            go->SetRespawnTime(go->GetRespawnDelay());
+
                         HandleGameObject(uiXT002DoorGUID, true);
+                    }
                     break;
                 case TYPE_IGNIS:
                 case TYPE_RAZORSCALE:

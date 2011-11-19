@@ -9270,10 +9270,10 @@ ReputationRank Unit::GetReactionTo(Unit const* target) const
         return REP_FRIENDLY;
 
     // this is 0x8 in the 13580 client
-    if (HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PLAYER_CONTROLLED))
-    {
-        if (target->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PLAYER_CONTROLLED))
-        {
+    //if (HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PLAYER_CONTROLLED))
+    //{
+        //if (target->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PLAYER_CONTROLLED))
+        //{
             Player const* selfPlayerOwner = GetAffectingPlayer();
             Player const* targetPlayerOwner = target->GetAffectingPlayer();
 
@@ -9325,8 +9325,8 @@ ReputationRank Unit::GetReactionTo(Unit const* target) const
                     }
                 }
             }
-        }
-    }
+        //}
+    //}
     // do checks dependant only on our faction
     return GetFactionReactionTo(getFactionTemplateEntry(), target);
 }
