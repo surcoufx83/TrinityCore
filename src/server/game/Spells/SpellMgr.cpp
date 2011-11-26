@@ -3521,6 +3521,9 @@ void SpellMgr::LoadDbcDataCorrections()
             case 64596: // Algalon - Cosmic Smash
                 spellInfo->rangeIndex = 13;
                 break;
+            case 62168: // Algalon - Black Hole
+                spellInfo->AttributesEx3 |= SPELL_ATTR3_ONLY_TARGET_PLAYERS;
+                break;
             case 64444: // Mimiron - Magnetic Core
                 spellInfo->rangeIndex = 6; // 100yd
                 break;
