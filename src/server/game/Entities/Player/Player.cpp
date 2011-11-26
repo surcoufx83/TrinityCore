@@ -18427,7 +18427,7 @@ void Player::SaveToDB(bool create /*=false*/)
         stmt->setUInt16(index++, GetZoneId());
         stmt->setUInt32(index++, m_deathExpireTime);
 
-        ss.str().clear();
+        ss.clear();
         ss << m_taxi.SaveTaxiDestinationsToString();
         
         stmt->setString(index++, ss.str());
@@ -18452,12 +18452,12 @@ void Player::SaveToDB(bool create /*=false*/)
         stmt->setUInt8(index++, m_specsCount);
         stmt->setUInt8(index++, m_activeSpec);
 
-        ss.str().clear();
+        ss.clear();
         for (uint32 i = 0; i < PLAYER_EXPLORED_ZONES_SIZE; ++i)
             ss << GetUInt32Value(PLAYER_EXPLORED_ZONES_1 + i) << ' ';
         stmt->setString(index++, ss.str());
 
-        ss.str().clear();
+        ss.clear();
         // cache equipment...
         for (uint32 i = 0; i < EQUIPMENT_SLOT_END * 2; ++i)
             ss << GetUInt32Value(PLAYER_VISIBLE_ITEM_1_ENTRYID + i) << ' ';
@@ -18475,7 +18475,7 @@ void Player::SaveToDB(bool create /*=false*/)
         stmt->setString(index++, ss.str());
         stmt->setUInt32(index++, GetUInt32Value(PLAYER_AMMO_ID));
 
-        ss.str().clear();
+        ss.clear();
         for (uint32 i = 0; i < KNOWN_TITLES_SIZE*2; ++i)
             ss << GetUInt32Value(PLAYER__FIELD_KNOWN_TITLES + i);
 
@@ -18538,7 +18538,7 @@ void Player::SaveToDB(bool create /*=false*/)
         stmt->setUInt16(index++, GetZoneId());
         stmt->setUInt32(index++, m_deathExpireTime);
 
-        ss.str().clear();
+        ss.clear();
         ss << m_taxi.SaveTaxiDestinationsToString();
 
         stmt->setString(index++, ss.str());
@@ -18563,12 +18563,12 @@ void Player::SaveToDB(bool create /*=false*/)
         stmt->setUInt8(index++, m_specsCount);
         stmt->setUInt8(index++, m_activeSpec);
 
-        ss.str().clear();
+        ss.clear();
         for (uint32 i = 0; i < PLAYER_EXPLORED_ZONES_SIZE; ++i)
             ss << GetUInt32Value(PLAYER_EXPLORED_ZONES_1 + i) << ' ';
         stmt->setString(index++, ss.str());
 
-        ss.str().clear();
+        ss.clear();
         // cache equipment...
         for (uint32 i = 0; i < EQUIPMENT_SLOT_END * 2; ++i)
             ss << GetUInt32Value(PLAYER_VISIBLE_ITEM_1_ENTRYID + i) << ' ';
@@ -18586,7 +18586,7 @@ void Player::SaveToDB(bool create /*=false*/)
         stmt->setString(index++, ss.str());
         stmt->setUInt32(index++, GetUInt32Value(PLAYER_AMMO_ID));
 
-        ss.str().clear();
+        ss.clear();
         for (uint32 i = 0; i < KNOWN_TITLES_SIZE*2; ++i)
             ss << GetUInt32Value(PLAYER__FIELD_KNOWN_TITLES + i);
 
