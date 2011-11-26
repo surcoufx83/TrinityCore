@@ -18408,9 +18408,11 @@ void Player::SaveToDB(bool create /*=false*/)
         stmt->setFloat(index++, finiteAlways(GetPositionZ()));
         stmt->setFloat(index++, finiteAlways(GetOrientation()));
         
-        std::ostringstream ss;
-        ss << m_taxi;
-        stmt->setString(index++, ss.str());
+        {
+            std::ostringstream ss;
+            ss << m_taxi;
+            stmt->setString(index++, ss.str());
+        }
         stmt->setUInt8(index++, m_cinematic);
         stmt->setUInt32(index++, m_Played_time[PLAYED_TIME_TOTAL]);
         stmt->setUInt32(index++, m_Played_time[PLAYED_TIME_LEVEL]);
@@ -18427,10 +18429,12 @@ void Player::SaveToDB(bool create /*=false*/)
         stmt->setUInt16(index++, GetZoneId());
         stmt->setUInt32(index++, m_deathExpireTime);
 
-        ss.str("");
-        ss << m_taxi.SaveTaxiDestinationsToString();
-        
-        stmt->setString(index++, ss.str());
+        {
+            std::ostringstream ss;
+            ss << m_taxi.SaveTaxiDestinationsToString();
+            stmt->setString(index++, ss.str());
+        }
+
         stmt->setUInt32(index++, GetArenaPoints());
         stmt->setUInt32(index++, GetHonorPoints());
         stmt->setUInt32(index++, GetUInt32Value(PLAYER_FIELD_TODAY_CONTRIBUTION));
@@ -18452,34 +18456,41 @@ void Player::SaveToDB(bool create /*=false*/)
         stmt->setUInt8(index++, m_specsCount);
         stmt->setUInt8(index++, m_activeSpec);
 
-        ss.str("");
-        for (uint32 i = 0; i < PLAYER_EXPLORED_ZONES_SIZE; ++i)
-            ss << GetUInt32Value(PLAYER_EXPLORED_ZONES_1 + i) << ' ';
-        stmt->setString(index++, ss.str());
-
-        ss.str("");
-        // cache equipment...
-        for (uint32 i = 0; i < EQUIPMENT_SLOT_END * 2; ++i)
-            ss << GetUInt32Value(PLAYER_VISIBLE_ITEM_1_ENTRYID + i) << ' ';
-
-        // ...and bags for enum opcode
-        for (uint32 i = INVENTORY_SLOT_BAG_START; i < INVENTORY_SLOT_BAG_END; ++i)
         {
-            if (Item* item = GetItemByPos(INVENTORY_SLOT_BAG_0, i))
-                ss << item->GetEntry();
-            else
-                ss << '0';
-            ss << " 0 ";
+            std::ostringstream ss;
+            for (uint32 i = 0; i < PLAYER_EXPLORED_ZONES_SIZE; ++i)
+                ss << GetUInt32Value(PLAYER_EXPLORED_ZONES_1 + i) << ' ';
+            stmt->setString(index++, ss.str());
         }
 
-        stmt->setString(index++, ss.str());
+        {
+            std::ostringstream ss;
+            // cache equipment...
+            for (uint32 i = 0; i < EQUIPMENT_SLOT_END * 2; ++i)
+                ss << GetUInt32Value(PLAYER_VISIBLE_ITEM_1_ENTRYID + i) << ' ';
+
+            // ...and bags for enum opcode
+            for (uint32 i = INVENTORY_SLOT_BAG_START; i < INVENTORY_SLOT_BAG_END; ++i)
+            {
+                if (Item* item = GetItemByPos(INVENTORY_SLOT_BAG_0, i))
+                    ss << item->GetEntry();
+                else
+                    ss << '0';
+                ss << " 0 ";
+            }
+
+            stmt->setString(index++, ss.str());
+        }
         stmt->setUInt32(index++, GetUInt32Value(PLAYER_AMMO_ID));
 
-        ss.str("");
-        for (uint32 i = 0; i < KNOWN_TITLES_SIZE*2; ++i)
-            ss << GetUInt32Value(PLAYER__FIELD_KNOWN_TITLES + i);
+        {
+            std::ostringstream ss;
+            for (uint32 i = 0; i < KNOWN_TITLES_SIZE*2; ++i)
+                ss << GetUInt32Value(PLAYER__FIELD_KNOWN_TITLES + i);
 
-        stmt->setString(index++, ss.str());
+            stmt->setString(index++, ss.str());
+        }
+
         stmt->setUInt8(index++, GetByteValue(PLAYER_FIELD_BYTES, 2));
         stmt->setUInt32(index++, m_grantableLevels);
     }
@@ -18519,9 +18530,11 @@ void Player::SaveToDB(bool create /*=false*/)
             stmt->setFloat(index++, finiteAlways(GetTeleportDest().GetOrientation()));
         }
 
-        std::ostringstream ss;
-        ss << m_taxi;
-        stmt->setString(index++, ss.str());
+        {
+            std::ostringstream ss;
+            ss << m_taxi;
+            stmt->setString(index++, ss.str());
+        }
         stmt->setUInt8(index++, m_cinematic);
         stmt->setUInt32(index++, m_Played_time[PLAYED_TIME_TOTAL]);
         stmt->setUInt32(index++, m_Played_time[PLAYED_TIME_LEVEL]);
@@ -18538,10 +18551,12 @@ void Player::SaveToDB(bool create /*=false*/)
         stmt->setUInt16(index++, GetZoneId());
         stmt->setUInt32(index++, m_deathExpireTime);
 
-        ss.str("");
-        ss << m_taxi.SaveTaxiDestinationsToString();
+        {
+            std::ostringstream ss;
+            ss << m_taxi.SaveTaxiDestinationsToString();
 
-        stmt->setString(index++, ss.str());
+            stmt->setString(index++, ss.str());
+        }
         stmt->setUInt32(index++, GetArenaPoints());
         stmt->setUInt32(index++, GetHonorPoints());
         stmt->setUInt32(index++, GetUInt32Value(PLAYER_FIELD_TODAY_CONTRIBUTION));
@@ -18563,34 +18578,40 @@ void Player::SaveToDB(bool create /*=false*/)
         stmt->setUInt8(index++, m_specsCount);
         stmt->setUInt8(index++, m_activeSpec);
 
-        ss.str("");
-        for (uint32 i = 0; i < PLAYER_EXPLORED_ZONES_SIZE; ++i)
-            ss << GetUInt32Value(PLAYER_EXPLORED_ZONES_1 + i) << ' ';
-        stmt->setString(index++, ss.str());
-
-        ss.str("");
-        // cache equipment...
-        for (uint32 i = 0; i < EQUIPMENT_SLOT_END * 2; ++i)
-            ss << GetUInt32Value(PLAYER_VISIBLE_ITEM_1_ENTRYID + i) << ' ';
-
-        // ...and bags for enum opcode
-        for (uint32 i = INVENTORY_SLOT_BAG_START; i < INVENTORY_SLOT_BAG_END; ++i)
         {
-            if (Item* item = GetItemByPos(INVENTORY_SLOT_BAG_0, i))
-                ss << item->GetEntry();
-            else
-                ss << '0';
-            ss << " 0 ";
+            std::ostringstream ss;
+            for (uint32 i = 0; i < PLAYER_EXPLORED_ZONES_SIZE; ++i)
+                ss << GetUInt32Value(PLAYER_EXPLORED_ZONES_1 + i) << ' ';
+            stmt->setString(index++, ss.str());
+        }
+        {
+            std::ostringstream ss;
+            // cache equipment...
+            for (uint32 i = 0; i < EQUIPMENT_SLOT_END * 2; ++i)
+                ss << GetUInt32Value(PLAYER_VISIBLE_ITEM_1_ENTRYID + i) << ' ';
+
+            // ...and bags for enum opcode
+            for (uint32 i = INVENTORY_SLOT_BAG_START; i < INVENTORY_SLOT_BAG_END; ++i)
+            {
+                if (Item* item = GetItemByPos(INVENTORY_SLOT_BAG_0, i))
+                    ss << item->GetEntry();
+                else
+                    ss << '0';
+                ss << " 0 ";
+            }
+
+            stmt->setString(index++, ss.str());
+        }
+        stmt->setUInt32(index++, GetUInt32Value(PLAYER_AMMO_ID));
+       
+        {
+            std::ostringstream ss;
+            for (uint32 i = 0; i < KNOWN_TITLES_SIZE*2; ++i)
+                ss << GetUInt32Value(PLAYER__FIELD_KNOWN_TITLES + i);
+
+            stmt->setString(index++, ss.str());
         }
 
-        stmt->setString(index++, ss.str());
-        stmt->setUInt32(index++, GetUInt32Value(PLAYER_AMMO_ID));
-
-        ss.str("");
-        for (uint32 i = 0; i < KNOWN_TITLES_SIZE*2; ++i)
-            ss << GetUInt32Value(PLAYER__FIELD_KNOWN_TITLES + i);
-
-        stmt->setString(index++, ss.str());
         stmt->setUInt8(index++, GetByteValue(PLAYER_FIELD_BYTES, 2));
         stmt->setUInt32(index++, m_grantableLevels);
 
