@@ -18486,7 +18486,7 @@ void Player::SaveToDB(bool create /*=false*/)
         {
             std::ostringstream ss;
             for (uint32 i = 0; i < KNOWN_TITLES_SIZE*2; ++i)
-                ss << GetUInt32Value(PLAYER__FIELD_KNOWN_TITLES + i);
+                ss << GetUInt32Value(PLAYER__FIELD_KNOWN_TITLES + i) << ' ';
 
             stmt->setString(index++, ss.str());
         }
@@ -18607,7 +18607,7 @@ void Player::SaveToDB(bool create /*=false*/)
         {
             std::ostringstream ss;
             for (uint32 i = 0; i < KNOWN_TITLES_SIZE*2; ++i)
-                ss << GetUInt32Value(PLAYER__FIELD_KNOWN_TITLES + i);
+                ss << GetUInt32Value(PLAYER__FIELD_KNOWN_TITLES + i) << ' ';
 
             stmt->setString(index++, ss.str());
         }
