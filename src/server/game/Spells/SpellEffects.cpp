@@ -703,13 +703,13 @@ void Spell::EffectSchoolDMG(SpellEffIndex effIndex)
                         Item* item = m_caster->ToPlayer()->GetWeaponForAttack(RANGED_ATTACK);
                         if (item)
                         {
-                            float dmg_min = item->GetTemplate()->Damage->DamageMin;
-                            float dmg_max = item->GetTemplate()->Damage->DamageMax;
+                            float dmg_min = item->GetTemplate()->DamageMin;
+                            float dmg_max = item->GetTemplate()->DamageMax;
                             if (dmg_max == 0.0f && dmg_min > dmg_max)
                                 damage += int32(dmg_min);
                             else
                                 damage += irand(int32(dmg_min), int32(dmg_max));
-                            damage += int32(m_caster->ToPlayer()->GetAmmoDPS()*item->GetTemplate()->Delay*0.001f);
+                            damage += int32(item->GetTemplate()->Delay*0.001f);
                         }
                     }
                 }
@@ -942,6 +942,18 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                     if (unitTarget)
                         unitTarget->CastSpell(unitTarget, roll_chance_i(50) ? 39088 : 39091, true, NULL, NULL, m_caster->GetGUID());
                     break;
+                //case 29200:                                 // Purify Helboar Meat
+                //{
+                //    if (m_caster->GetTypeId() != TYPEID_PLAYER)
+                //        return;
+
+                //    spell_id = roll_chance_i(50)
+                //        ? 29277                             // Summon Purified Helboar Meat
+                //        : 29278;                            // Summon Toxic Helboar Meat
+
+                //    m_caster->CastSpell(m_caster, spell_id, true, NULL);
+                //    return;
+                //}
                 case 29858:                                 // Soulshatter
                     if (unitTarget && unitTarget->CanHaveThreatList()
                         && unitTarget->getThreatManager().getThreat(m_caster) > 0.0f)
@@ -963,12 +975,16 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                     return;
                 case 35745:                                 // Socrethar's Stone
                 {
-                    uint32 spell_id;
                     switch (m_caster->GetAreaId())
                     {
-                        case 3900: spell_id = 35743; break; // Socrethar Portal
-                        case 3742: spell_id = 35744; break; // Socrethar Portal
-                        default: return;
+                        case 3900:
+                            spell_id = 35743;
+                            break; // Socrethar Portal
+                        case 3742:
+                            spell_id = 35744;
+                            break; // Socrethar Portal
+                        default:
+                            return;
                     }
 
                     m_caster->CastSpell(m_caster, spell_id, true);
@@ -1444,7 +1460,7 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
             if (m_spellInfo->SpellFamilyFlags[0] & SPELLFAMILYFLAG_DK_DEATH_STRIKE)
             {
                 uint32 count = unitTarget->GetDiseasesByCaster(m_caster->GetGUID());
-                int32 bp = int32(count * m_caster->CountPctFromMaxHealth(int32(m_spellInfo->Effects[EFFECT_0].DamageMultiplier)));
+                bp = int32(count * m_caster->CountPctFromMaxHealth(int32(m_spellInfo->Effects[EFFECT_0].DamageMultiplier)));
                 // Improved Death Strike
                 if (AuraEffect const* aurEff = m_caster->GetAuraEffect(SPELL_AURA_ADD_PCT_MODIFIER, SPELLFAMILY_DEATHKNIGHT, 2751, 0))
                     AddPctN(bp, m_caster->CalculateSpellDamage(m_caster, aurEff->GetSpellInfo(), 2));
@@ -1456,12 +1472,12 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
             {
                 if (m_caster->IsFriendlyTo(unitTarget))
                 {
-                    int32 bp = int32(damage * 1.5f);
+                    bp = int32(damage * 1.5f);
                     m_caster->CastCustomSpell(unitTarget, 47633, &bp, NULL, NULL, true);
                 }
                 else
                 {
-                    int32 bp = damage;
+                    bp = damage;
                     m_caster->CastCustomSpell(unitTarget, 47632, &bp, NULL, NULL, true);
                 }
                 return;
@@ -6458,6 +6474,7 @@ void Spell::EffectSelfResurrect(SpellEffIndex effIndex)
     player->SetPower(POWER_MANA, mana);
     player->SetPower(POWER_RAGE, 0);
     player->SetPower(POWER_ENERGY, player->GetMaxPower(POWER_ENERGY));
+    player->SetPower(POWER_FOCUS, 0);
 
     player->SpawnCorpseBones();
 }
@@ -6625,13 +6642,13 @@ void Spell::EffectQuestClear(SpellEffIndex effIndex)
     // remove all quest entries for 'entry' from quest log
     for (uint8 slot = 0; slot < MAX_QUEST_LOG_SIZE; ++slot)
     {
-        uint32 quest = player->GetQuestSlotQuestId(slot);
-        if (quest == quest_id)
+        uint32 logQuest = player->GetQuestSlotQuestId(slot);
+        if (logQuest == quest_id)
         {
             player->SetQuestSlot(slot, 0);
 
-            // we ignore unequippable quest items in this case, its' still be equipped
-            player->TakeQuestSourceItem(quest, false);
+            // we ignore unequippable quest items in this case, it's still be equipped
+            player->TakeQuestSourceItem(logQuest, false);
         }
     }
 
@@ -7617,7 +7634,7 @@ void Spell::EffectCastButtons(SpellEffIndex effIndex)
         if (!(spellInfo->AttributesEx7 & SPELL_ATTR7_SUMMON_PLAYER_TOTEM))
             continue;
 
-        uint32 cost = spellInfo->CalcPowerCost(m_caster, spellInfo->GetSchoolMask());
+        int32 cost = spellInfo->CalcPowerCost(m_caster, spellInfo->GetSchoolMask());
         if (m_caster->GetPower(POWER_MANA) < cost)
             continue;
 

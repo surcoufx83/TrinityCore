@@ -563,10 +563,10 @@ int32 AuraEffect::CalculateAmount(Unit* caster)
                         amount += (int32)DoneActualBenefit;
 
                         // Arena - Dampening
-                        if (AuraEffect const* pAurEff = caster->GetAuraEffect(74410, 0))
-                            AddPctN(amount, pAurEff->GetAmount());
-                        // Battleground - Dampening
-                        else if (AuraEffect const* pAurEff = caster->GetAuraEffect(74411, 0))
+                        AuraEffect const* pAurEff = caster->GetAuraEffect(74410, 0);
+                        if (!pAurEff)
+                            pAurEff = caster->GetAuraEffect(74411, 0);  // Battleground - Dampening
+                        if (pAurEff)
                             AddPctN(amount, pAurEff->GetAmount());
 
                         return amount;
@@ -1583,15 +1583,15 @@ void AuraEffect::HandleShapeshiftBoosts(Unit* target, bool apply) const
                     // Nurturing Instinct
                     if (AuraEffect const* aurEff = target->GetAuraEffect(SPELL_AURA_MOD_SPELL_HEALING_OF_STAT_PERCENT, SPELLFAMILY_DRUID, 2254, 0))
                     {
-                        uint32 spellId = 0;
+                        uint32 spellId3 = 0;
                         switch (aurEff->GetId())
                         {
-                        case 33872:
-                            spellId = 47179;
-                            break;
-                        case 33873:
-                            spellId = 47180;
-                            break;
+                            case 33872:
+                                spellId3 = 47179;
+                                break;
+                            case 33873:
+                                spellId3 = 47180;
+                                break;
                         }
                         target->CastSpell(target, spellId, true, NULL, this);
                     }
@@ -2091,7 +2091,7 @@ void AuraEffect::HandleAuraModShapeshift(AuraApplication const* aurApp, uint8 mo
 
         if (PowerType != POWER_MANA)
         {
-            uint32 oldPower = target->GetPower(PowerType);
+            int32 oldPower = target->GetPower(PowerType);
             // reset power to default values only at power change
             if (target->getPowerType() != PowerType)
                 target->setPowerType(PowerType);
@@ -2103,7 +2103,7 @@ void AuraEffect::HandleAuraModShapeshift(AuraApplication const* aurApp, uint8 mo
                 case FORM_DIREBEAR:
                 {
                     // get furor proc chance
-                    uint32 FurorChance = 0;
+                    int32 FurorChance = 0;
                     if (AuraEffect const* dummy = target->GetDummyAuraEffect(SPELLFAMILY_DRUID, 238, 0))
                         FurorChance = std::max(dummy->GetAmount(), 0);
 
@@ -2111,18 +2111,18 @@ void AuraEffect::HandleAuraModShapeshift(AuraApplication const* aurApp, uint8 mo
                     {
                         case FORM_CAT:
                         {
-                            int32 basePoints = int32(std::min(oldPower, FurorChance));
+                            int32 basePoints = std::min<int32>(oldPower, FurorChance);
                             target->SetPower(POWER_ENERGY, 0);
                             target->CastCustomSpell(target, 17099, &basePoints, NULL, NULL, true, NULL, this);
                         }
                         break;
                         case FORM_BEAR:
                         case FORM_DIREBEAR:
-                        if (urand(0, 99) < FurorChance)
+                        if (irand(0, 99) < FurorChance)
                             target->CastSpell(target, 17057, true);
                         default:
                         {
-                            uint32 newEnergy = std::min(target->GetPower(POWER_ENERGY), FurorChance);
+                            int32 newEnergy = std::min(target->GetPower(POWER_ENERGY), FurorChance);
                             target->SetPower(POWER_ENERGY, newEnergy);
                         }
                         break;
@@ -2175,7 +2175,7 @@ void AuraEffect::HandleAuraModShapeshift(AuraApplication const* aurApp, uint8 mo
             case FORM_DEFENSIVESTANCE:
             case FORM_BERSERKERSTANCE:
             {
-                uint32 Rage_val = 0;
+                int32 Rage_val = 0;
                 // Defensive Tactics
                 if (form == FORM_DEFENSIVESTANCE)
                 {
@@ -2250,7 +2250,7 @@ void AuraEffect::HandleAuraModShapeshift(AuraApplication const* aurApp, uint8 mo
 
     if (target->GetTypeId() == TYPEID_PLAYER)
     {
-        SpellShapeshiftEntry const* shapeInfo = sSpellShapeshiftStore.LookupEntry(form);
+        SpellShapeshiftFormEntry const* shapeInfo = sSpellShapeshiftFormStore.LookupEntry(form);
         // Learn spells for shapeshift form - no need to send action bars or add spells to spellbook
         for (uint8 i = 0; i<MAX_SHAPESHIFT_SPELLS; ++i)
         {
@@ -4892,10 +4892,6 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
                             target->GetMotionMaster()->MoveFall(currentGroundLevel);
                     }
                     break;
-                case 46699:                                     // Requires No Ammo
-                    if (target->GetTypeId() == TYPEID_PLAYER)
-                        target->ToPlayer()->RemoveAmmo();      // not use ammo and not allow use
-                    break;
                 case 49028:
                     if (caster)
                         if (AuraEffect* aurEff = caster->GetAuraEffect(63330, 0)) // glyph of Dancing Rune Weapon
@@ -5030,8 +5026,8 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
                     // Living Bomb
                     if (m_spellInfo->SpellFamilyFlags[1] & 0x20000)
                     {
-                        AuraRemoveMode mode = aurApp->GetRemoveMode();
-                        if (caster && (mode == AURA_REMOVE_BY_ENEMY_SPELL || mode == AURA_REMOVE_BY_EXPIRE))
+                        AuraRemoveMode removeMode = aurApp->GetRemoveMode();
+                        if (caster && (removeMode == AURA_REMOVE_BY_ENEMY_SPELL || removeMode == AURA_REMOVE_BY_EXPIRE))
                             caster->CastSpell(target, GetAmount(), true);
                     }
                     break;
@@ -6308,13 +6304,15 @@ void AuraEffect::HandlePeriodicTriggerSpellAuraTick(Unit* target, Unit* caster) 
             case 65923:
             {
                 Unit* permafrostCaster = NULL;
-                if (Aura* permafrostAura = target->GetAura(66193))
-                    permafrostCaster = permafrostAura->GetCaster();
-                else if (Aura* permafrostAura = target->GetAura(67855))
-                    permafrostCaster = permafrostAura->GetCaster();
-                else if (Aura* permafrostAura = target->GetAura(67856))
-                    permafrostCaster = permafrostAura->GetCaster();
-                else if (Aura* permafrostAura = target->GetAura(67857))
+                Aura* permafrostAura = target->GetAura(66193);
+                if (!permafrostAura)
+                    permafrostAura = target->GetAura(67855);
+                if (!permafrostAura)
+                    permafrostAura = target->GetAura(67856);
+                if (!permafrostAura)
+                    permafrostAura = target->GetAura(67857);
+
+                if (permafrostAura)
                     permafrostCaster = permafrostAura->GetCaster();
 
                 if (permafrostCaster)
@@ -6769,15 +6767,15 @@ void AuraEffect::HandlePeriodicHealAurasTick(Unit* target, Unit* caster) const
     // damage caster for heal amount
     if (target != caster && GetSpellInfo()->AttributesEx2 & SPELL_ATTR2_HEALTH_FUNNEL)
     {
-        uint32 damage = GetSpellInfo()->Effects[EFFECT_0].CalcValue(); // damage is not affected by spell power
-        if ((int32)damage > gain)
-            damage = gain;
-        uint32 absorb = 0;
-        caster->DealDamageMods(caster, damage, &absorb);
-        caster->SendSpellNonMeleeDamageLog(caster, GetId(), damage, GetSpellInfo()->GetSchoolMask(), absorb, 0, false, 0, false);
+        uint32 funnelDamage = GetSpellInfo()->Effects[EFFECT_0].CalcValue(); // damage is not affected by spell power
+        if ((int32)funnelDamage > gain)
+            funnelDamage = gain;
+        uint32 funnelAbsorb = 0;
+        caster->DealDamageMods(caster, funnelDamage, &funnelAbsorb);
+        caster->SendSpellNonMeleeDamageLog(caster, GetId(), funnelDamage, GetSpellInfo()->GetSchoolMask(), funnelAbsorb, 0, false, 0, false);
 
         CleanDamage cleanDamage =  CleanDamage(0, 0, BASE_ATTACK, MELEE_HIT_NORMAL);
-        caster->DealDamage(caster, damage, &cleanDamage, NODAMAGE, GetSpellInfo()->GetSchoolMask(), GetSpellInfo(), true);
+        caster->DealDamage(caster, funnelDamage, &cleanDamage, NODAMAGE, GetSpellInfo()->GetSchoolMask(), GetSpellInfo(), true);
     }
 
     uint32 procAttacker = PROC_FLAG_DONE_PERIODIC;

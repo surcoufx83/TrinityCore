@@ -1008,7 +1008,7 @@ SpellThreatEntry const* SpellMgr::GetSpellThreatEntry(uint32 spellID) const
     else
     {
         uint32 firstSpell = GetFirstSpellInChain(spellID);
-        SpellThreatMap::const_iterator itr = mSpellThreatMap.find(firstSpell);
+        itr = mSpellThreatMap.find(firstSpell);
         if (itr != mSpellThreatMap.end())
             return &itr->second;
     }
@@ -2964,7 +2964,7 @@ void SpellMgr::LoadDbcDataCorrections()
 {
     uint32 oldMSTime = getMSTime();
 
-    SpellEntry* spellInfo = NULL;
+    /*SpellEntry* spellInfo = NULL;
     for (uint32 i = 0; i < sSpellStore.GetNumRows(); ++i)
     {
         spellInfo = (SpellEntry*)sSpellStore.LookupEntry(i);
@@ -3770,7 +3770,7 @@ void SpellMgr::LoadDbcDataCorrections()
     properties->Type = SUMMON_TYPE_TOTEM;
     properties = const_cast<SummonPropertiesEntry*>(sSummonPropertiesStore.LookupEntry(647)); // 52893
     properties->Type = SUMMON_TYPE_TOTEM;
-
+    */
     sLog->outString(">> Loading spell dbc data corrections  in %u ms", GetMSTimeDiffToNow(oldMSTime));
     sLog->outString();
 }
