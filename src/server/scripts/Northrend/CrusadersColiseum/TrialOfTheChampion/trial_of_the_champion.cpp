@@ -39,7 +39,7 @@ EndContentData */
 ## npc_announcer_toc5
 ######*/
 
-const Position SpawnPosition = {746.261f, 657.401f, 411.681f, 4.65f};
+Position const SpawnPosition = {746.261f, 657.401f, 411.681f, 4.65f};
 
 enum Yells
 {
@@ -66,12 +66,12 @@ enum IntroPhase
 
 enum Creatures
 {
-    CREATURE_TRALL                        = 34994,
-    CREATURE_GARROSH                      = 34995,
-    CREATURE_KING                         = 34990,
-    CREATURE_LADY                         = 34992,
-    CREATURE_HIGHLORD                     = 34996,
-    CREATURE_ANNOUNCER                    = 35004
+    CREATURE_TRALL        = 34994,
+    CREATURE_GARROSH      = 34995,
+    CREATURE_KING         = 34990,
+    CREATURE_LADY         = 34992,
+    CREATURE_HIGHLORD     = 34996,
+    CREATURE_ANNOUNCER    = 35004
 };
 
 class npc_anstart : public CreatureScript
@@ -367,36 +367,36 @@ public:
 
         void StartGrandChampionsAttack()
         {
-            Creature* pGrandChampion1 = Unit::GetCreature(*me, uiVehicle1GUID);
-            Creature* pGrandChampion2 = Unit::GetCreature(*me, uiVehicle2GUID);
-            Creature* pGrandChampion3 = Unit::GetCreature(*me, uiVehicle3GUID);
+            Creature* GrandChampion1 = Unit::GetCreature(*me, uiVehicle1GUID);
+            Creature* GrandChampion2 = Unit::GetCreature(*me, uiVehicle2GUID);
+            Creature* GrandChampion3 = Unit::GetCreature(*me, uiVehicle3GUID);
 
-            if (pGrandChampion1 && pGrandChampion2 && pGrandChampion3)
+            if (GrandChampion1 && GrandChampion2 && GrandChampion3)
             {
-                AggroAllPlayers(pGrandChampion1);
-                AggroAllPlayers(pGrandChampion2);
-                AggroAllPlayers(pGrandChampion3);
+                AggroAllPlayers(GrandChampion1);
+                AggroAllPlayers(GrandChampion2);
+                AggroAllPlayers(GrandChampion3);
             }
         }
 
-        void MovementInform(uint32 type, uint32 uiPointId)
+        void MovementInform(uint32 type, uint32 id)
         {
             if (type != POINT_MOTION_TYPE)
                 return;
 
-            if (uiPointId == 1)
+            if (id == 1)
             {
                 me->SetOrientation(ORIENTATION);
                 me->SendMovementFlagUpdate();
             }
         }
 
-        void DoSummonGrandChampion(uint32 uiBoss)
+        void DoSummonGrandChampion(uint32 bossId)
         {
             ++uiSummonTimes;
             uint32 VEHICLE_TO_SUMMON1 = 0;
             uint32 VEHICLE_TO_SUMMON2 = 0;
-            switch (uiBoss)
+            switch (bossId)
             {
                 case 0:
                     VEHICLE_TO_SUMMON1 = VEHICLE_MOKRA_SKILLCRUSHER_MOUNT;
@@ -439,7 +439,7 @@ public:
                             instance->SetData64(DATA_GRAND_CHAMPION_VEHICLE_1, uiVehicle1GUID);
                             instance->SetData64(DATA_GRAND_CHAMPION_1, uiGrandChampionBoss1);
                         }
-                        boss->AI()->SetData(1,0);
+                        boss->AI()->SetData(1, 0);
                         break;
                     }
                     case 2:
@@ -455,7 +455,7 @@ public:
                             instance->SetData64(DATA_GRAND_CHAMPION_VEHICLE_2, uiVehicle2GUID);
                             instance->SetData64(DATA_GRAND_CHAMPION_2, uiGrandChampionBoss2);
                         }
-                        boss->AI()->SetData(2,0);
+                        boss->AI()->SetData(2, 0);
                         break;
                     }
                     case 3:
@@ -471,7 +471,7 @@ public:
                             instance->SetData64(DATA_GRAND_CHAMPION_VEHICLE_3, uiVehicle3GUID);
                             instance->SetData64(DATA_GRAND_CHAMPION_3, uiGrandChampionBoss3);
                         }
-                        boss->AI()->SetData(3,0);
+                        boss->AI()->SetData(3, 0);
                         break;
                     }
                     default:
