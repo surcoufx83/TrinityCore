@@ -197,6 +197,9 @@ void Vehicle::ApplyAllImmunities()
         case 369:
             _me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_DECREASE_SPEED, true);
             break;
+        case 321: // Pilgrims Bounty: Chair
+            _me->SetControlled(true, UNIT_STAT_ROOT);
+            break;
         default:
             break;
     }
