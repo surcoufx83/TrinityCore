@@ -115,6 +115,32 @@ SET @CREA_HUNTER_PET = @CREATURE + 100;
 -- @CREATURE   -> Savaga Gladiator in SW
 -- @CREATURE+1 -> Savaga Gladiator in Org
 
+SET @PAGE_TEXT_PVPLETTER = 3700;
+SET @IT_PVPLETTER = 140100;
+-- Letter for the PvP Chars
+DELETE FROM `item_template` WHERE `entry` = @IT_PVPLETTER;
+INSERT INTO `item_template` (`entry`, `class`, `subclass`, `unk0`, `name`, `displayid`,
+`Quality`, `Flags`, `FlagsExtra`, `BuyCount`, `BuyPrice`, `SellPrice`, `InventoryType`, `AllowableClass`, `AllowableRace`, `ItemLevel`, `RequiredLevel`, `RequiredSkill`, `RequiredSkillRank`, `requiredspell`, `requiredhonorrank`, `RequiredCityRank`, `RequiredReputationFaction`, `RequiredReputationRank`, `maxcount`, `stackable`, `ContainerSlots`, `StatsCount`, `stat_type1`, `stat_value1`, `stat_type2`, `stat_value2`, `stat_type3`, `stat_value3`, `stat_type4`, `stat_value4`, `stat_type5`, `stat_value5`, `stat_type6`, `stat_value6`, `stat_type7`, `stat_value7`, `stat_type8`, `stat_value8`, `stat_type9`, `stat_value9`, `stat_type10`, `stat_value10`, `ScalingStatDistribution`, `ScalingStatValue`, `dmg_min1`, `dmg_max1`, `dmg_type1`, `dmg_min2`, `dmg_max2`, `dmg_type2`, `armor`, `holy_res`, `fire_res`, `nature_res`, `frost_res`, `shadow_res`, `arcane_res`, `delay`, `ammo_type`, `RangedModRange`, `spellid_1`, `spelltrigger_1`, `spellcharges_1`, `spellppmRate_1`, `spellcooldown_1`, `spellcategory_1`, `spellcategorycooldown_1`, `spellid_2`, `spelltrigger_2`, `spellcharges_2`, `spellppmRate_2`, `spellcooldown_2`, `spellcategory_2`, `spellcategorycooldown_2`, `spellid_3`, `spelltrigger_3`, `spellcharges_3`, `spellppmRate_3`, `spellcooldown_3`, `spellcategory_3`, `spellcategorycooldown_3`, `spellid_4`, `spelltrigger_4`, `spellcharges_4`, `spellppmRate_4`, `spellcooldown_4`, `spellcategory_4`, `spellcategorycooldown_4`, `spellid_5`, `spelltrigger_5`, `spellcharges_5`, `spellppmRate_5`, `spellcooldown_5`, `spellcategory_5`, `spellcategorycooldown_5`,
+`bonding`, `description`, `PageText`, `LanguageID`, `PageMaterial`, `startquest`, `lockid`, `Material`, `sheath`, `RandomProperty`, `RandomSuffix`, `block`, `itemset`, `MaxDurability`, `area`, `Map`, `BagFamily`, `TotemCategory`, `socketColor_1`, `socketContent_1`, `socketColor_2`, `socketContent_2`, `socketColor_3`, `socketContent_3`, `socketBonus`, `GemProperties`, `RequiredDisenchantSkill`, `ArmorDamageModifier`, `Duration`, `ItemLimitCategory`, `HolidayId`, `ScriptName`, `DisenchantID`, `FoodType`, `minMoneyLoot`, `maxMoneyLoot`, `WDBVerified`)
+VALUES(@IT_PVPLETTER,'9','0','-1','PvP Letter','5567',
+'1','0','0','1','0','0','0','-1','-1','1','0','0','0','0','0','0','0','0','1','1','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','-1','0','-1','0','0','0','0','-1','0','-1','0','0','0','0','-1','0','-1','0','0','0','0','-1','0','-1','0','0','0','0','-1','0','-1',
+'0','An recruitment letter for PvP.Chars.',@PAGE_TEXT_PVPLETTER,'1','0','0','0','-1','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','-1','0','0','0','0','','0','0','0','0','12340');
+DELETE FROM `locales_item` WHERE `entry` = @IT_PVPLETTER;
+INSERT INTO `locales_item` (`entry`, `name_loc1`, `name_loc2`, `name_loc3`, `name_loc4`, `name_loc5`, `name_loc6`, `name_loc7`, `name_loc8`,
+`description_loc1`, `description_loc2`, `description_loc3`, `description_loc4`, `description_loc5`, `description_loc6`, `description_loc7`, `description_loc8`)
+VALUES(@IT_PVPLETTER,'','','PvP Brief','','','','','',
+NULL,NULL,'Ein Anwerbungsbrief für die PvP.Chars.',NULL,NULL,NULL,NULL,NULL);
+DELETE FROM `page_text` WHERE `entry` = @PAGE_TEXT_PVPLETTER;
+INSERT INTO `page_text` (`entry`, `text`, `next_page`, `WDBVerified`)
+VALUES(@PAGE_TEXT_PVPLETTER,
+'\nThanks for your decision and welcome to the PvP.Chars\n\nYou show great braveness and we are pride you joined the PvP fighters.\n\nHorde: Move to Ragefire Chasm in Orgrimmar.\nAlliance: Visit the Stockades in Stormwind.\n\nThere you will find weapons and armor.\n\Yours sincerely,\n\n- The LoL-Team\n\n',
+'0','12340');
+DELETE FROM `locales_page_text` WHERE `entry` = @PAGE_TEXT_PVPLETTER;
+INSERT INTO `locales_page_text` (`entry`, `Text_loc1`, `Text_loc2`, `Text_loc3`, `Text_loc4`, `Text_loc5`, `Text_loc6`, `Text_loc7`, `Text_loc8`)
+VALUES(@PAGE_TEXT_PVPLETTER,NULL,NULL,
+'\nVielen Dank für Eure Entscheidung und herzlich Willkommen bei den PvP.Chars\n\nIhr beweist großen Mut und wir sind stolz einen neuen Kämpfer begrüßen zu dürfen.\n\nHorde: Begebt Euch in den Flammenschlund in Orgrimmar.\nAllianz: Begebt Euch in das Verlies in Sturmwind. \n\nDort erhaltet Ihr Waffen und Ausrüstung.\n\nHochachtungsvoll,\n\n- Das LoL-Team\n\n',
+NULL,NULL,NULL,NULL,NULL);
+
 -- Mit diesem Quest wird ein Character zu einem PvP.Char
 -- If a character does this quest it will become a PvP.Char
 DELETE FROM `quest_template` WHERE `id` = @QUEST_TEMPLATE;
@@ -144,7 +170,7 @@ INSERT INTO `quest_template` ( `id`,
 'Seid gegrüßt,$b$b\nwir suchen dringend Mitstreiter, die unseren Gegnern mal zeigen, was eine Harke ist.$b$bHier könnt Ihr sofort auf die Maximalstufe aufsteigen, aber Ihr dürft nur PvP spielen - sonst nichts.$b$bFalls Ihr dies wollt, so erledigt diese Quest und ich heiße Euch willkommen in der Welt des PvP - aber Vorsicht - NUR PvP.',
 'Seid Ihr sicher, dass Ihr NUR PvP spielen wollt?\n\nIhr könnt niemals eine Instanz betreten oder einem Raid beiwohnen!',
 'Nur wenn Ihr ganz sicher seid solltet Ihr es tun. Danach könnt Ihr niemals mehr PvE spielen - nur noch PvP in Arena oder BG.',
-'1791', '0',
+'0', '0',
 '0',
 '0', '4650',
 '1',
@@ -152,7 +178,7 @@ INSERT INTO `quest_template` ( `id`,
 '0', '1', 
 '0',
 '1',
-0, 0, -- 4, 41599, -- 4x Froststofftasche
+1, @IT_PVPLETTER, -- Welcome letter
 0, 0, -- 1, 44225, -- 1x Zügel des gepanzerten Braunbären
 0, 0  -- 1, 44226   -- 1x Zügel des gepanzerten Braunbären
 );
@@ -184,7 +210,7 @@ INSERT INTO `quest_template` ( `id`,
 'Seid gegrüßt,$b$b\nwir suchen dringend Mitstreiter, die unseren Gegnern mal zeigen, was eine Harke ist.$b$bHier könnt Ihr sofort auf die Maximalstufe aufsteigen, aber Ihr dürft nur PvP spielen - sonst nichts.$b$bFalls Ihr dies wollt, so erledigt diese Quest und ich heiße Euch willkommen in der Welt des PvP - aber Vorsicht - NUR PvP.',
 'Seid Ihr sicher, dass Ihr NUR PvP spielen wollt?\n\nIhr könnt niemals eine Instanz betreten oder einem Raid beiwohnen!',
 'Nur wenn Ihr ganz sicher seid solltet Ihr es tun. Danach könnt Ihr niemals mehr PvE spielen - nur noch PvP in Arena oder BG.',
-'1791', '0',
+'0', '0',
 '0',
 '0', '4650',
 '55',
@@ -192,7 +218,7 @@ INSERT INTO `quest_template` ( `id`,
 '0', '55', 
 '0',
 '1',
-0, 0, -- 4, 41599, -- 4x Froststofftasche
+1, @IT_PVPLETTER, -- Welcome letter
 0, 0, -- 1, 44225, -- 1x Zügel des gepanzerten Braunbären
 0, 0  -- 1, 44226   -- 1x Zügel des gepanzerten Braunbären
 );
@@ -2004,8 +2030,8 @@ VALUES(@CT_ENCHANTMENT_SCROLLS,'','','Verzauberkunst Rollen','','','','','',
 DELETE FROM npc_vendor WHERE entry = @CT_ENCHANTMENT_SCROLLS;
 INSERT INTO `npc_vendor` (entry, item, ExtendedCost, slot)
 VALUES
-(@CT_ENCHANTMENT_SCROLLS, '46098', '501', '0'), -- Scroll of Enchant Weapon - Blood Draining
-(@CT_ENCHANTMENT_SCROLLS, '44497', '501', '1'), -- Scroll of Enchant Weapon - Accuracy
+(@CT_ENCHANTMENT_SCROLLS, '46098', '2958', '0'), -- Scroll of Enchant Weapon - Blood Draining
+(@CT_ENCHANTMENT_SCROLLS, '44497', '2958', '1'), -- Scroll of Enchant Weapon - Accuracy
 (@CT_ENCHANTMENT_SCROLLS, '38973', '501', '2'), -- Scroll of Enchant Cloak - Spell Piercing
 (@CT_ENCHANTMENT_SCROLLS, '44457', '501', '3'), -- Scroll of Enchant Cloak - Major Agility
 (@CT_ENCHANTMENT_SCROLLS, '39001', '501', '4'), -- Scroll of Enchant Cloak - Mighty Armor
@@ -2032,22 +2058,22 @@ VALUES
 (@CT_ENCHANTMENT_SCROLLS, '44469', '501', '25'), -- Scroll of Enchant Boots - Greater Assault
 (@CT_ENCHANTMENT_SCROLLS, '38912', '501', '26'), -- Scroll of Enchant Chest - Exceptional Mana
 (@CT_ENCHANTMENT_SCROLLS, '39002', '501', '27'), -- Scroll of Enchant Chest - Greater Defense
-(@CT_ENCHANTMENT_SCROLLS, '44493', '501', '28'), -- Scroll of Enchant Weapon - Berserking
-(@CT_ENCHANTMENT_SCROLLS, '43987', '501', '29'), -- Scroll of Enchant Weapon - Black Magic
-(@CT_ENCHANTMENT_SCROLLS, '44467', '501', '30'), -- Scroll of Enchant Weapon - Mighty Spellpower
-(@CT_ENCHANTMENT_SCROLLS, '44466', '501', '31'), -- Scroll of Enchant Weapon - Superior Potency
-(@CT_ENCHANTMENT_SCROLLS, '38988', '501', '32'), -- Scroll of Enchant Weapon - Giant Slayer
-(@CT_ENCHANTMENT_SCROLLS, '38965', '501', '33'), -- Scroll of Enchant Weapon - Icebreaker
+(@CT_ENCHANTMENT_SCROLLS, '44493', '2958', '28'), -- Scroll of Enchant Weapon - Berserking
+(@CT_ENCHANTMENT_SCROLLS, '43987', '2958', '29'), -- Scroll of Enchant Weapon - Black Magic
+(@CT_ENCHANTMENT_SCROLLS, '44467', '2958', '30'), -- Scroll of Enchant Weapon - Mighty Spellpower
+(@CT_ENCHANTMENT_SCROLLS, '44466', '2958', '31'), -- Scroll of Enchant Weapon - Superior Potency
+(@CT_ENCHANTMENT_SCROLLS, '38988', '2958', '32'), -- Scroll of Enchant Weapon - Giant Slayer
+(@CT_ENCHANTMENT_SCROLLS, '38965', '2958', '33'), -- Scroll of Enchant Weapon - Icebreaker
 (@CT_ENCHANTMENT_SCROLLS, '38962', '501', '34'), -- Scroll of Enchant Chest - Greater Mana Restoration
-(@CT_ENCHANTMENT_SCROLLS, '38972', '501', '35'), -- Scroll of Enchant Weapon - Lifeward
-(@CT_ENCHANTMENT_SCROLLS, '38995', '501', '36'), -- Scroll of Enchant Weapon - Exceptional Agility
-(@CT_ENCHANTMENT_SCROLLS, '38963', '501', '37'), -- Scroll of Enchant Weapon - Exceptional Spirit
-(@CT_ENCHANTMENT_SCROLLS, '38948', '501', '38'), -- Scroll of Enchant Weapon - Executioner
-(@CT_ENCHANTMENT_SCROLLS, '38925', '501', '39'), -- Scroll of Enchant Weapon - Mongoose
-(@CT_ENCHANTMENT_SCROLLS, '38838', '501', '40'), -- Scroll of Enchant Weapon - Fiery Weapon
+(@CT_ENCHANTMENT_SCROLLS, '38972', '2958', '35'), -- Scroll of Enchant Weapon - Lifeward
+(@CT_ENCHANTMENT_SCROLLS, '38995', '2958', '36'), -- Scroll of Enchant Weapon - Exceptional Agility
+(@CT_ENCHANTMENT_SCROLLS, '38963', '2958', '37'), -- Scroll of Enchant Weapon - Exceptional Spirit
+(@CT_ENCHANTMENT_SCROLLS, '38948', '2958', '38'), -- Scroll of Enchant Weapon - Executioner
+(@CT_ENCHANTMENT_SCROLLS, '38925', '2958', '39'), -- Scroll of Enchant Weapon - Mongoose
+(@CT_ENCHANTMENT_SCROLLS, '38838', '2958', '40'), -- Scroll of Enchant Weapon - Fiery Weapon
 (@CT_ENCHANTMENT_SCROLLS, '45056', '501', '41'), -- Scroll of Enchant Staff - Greater Spellpower
-(@CT_ENCHANTMENT_SCROLLS, '44463', '501', '42'), -- Scroll of Enchant 2H Weapon - Massacre
-(@CT_ENCHANTMENT_SCROLLS, '38981', '501', '43'), -- Scroll of Enchant 2H Weapon - Scourgebane
+(@CT_ENCHANTMENT_SCROLLS, '44463', '2958', '42'), -- Scroll of Enchant 2H Weapon - Massacre
+(@CT_ENCHANTMENT_SCROLLS, '38981', '2958', '43'), -- Scroll of Enchant 2H Weapon - Scourgebane
 (@CT_ENCHANTMENT_SCROLLS, '44455', '501', '44'), -- Scroll of Enchant Shield - Greater Intellect
 (@CT_ENCHANTMENT_SCROLLS, '38945', '501', '45'), -- Scroll of Enchant Shield - Major Stamina
 (@CT_ENCHANTMENT_SCROLLS, '39005', '501', '46'), -- Scroll of Enchant Chest - Super Health
@@ -2056,9 +2082,9 @@ VALUES
 (@CT_ENCHANTMENT_SCROLLS, '39003', '501', '49'), -- Scroll of Enchant Cloak - Greater Speed
 (@CT_ENCHANTMENT_SCROLLS, '44470', '501', '50'), -- Scroll of Enchant Bracer - Superior Spellpower
 (@CT_ENCHANTMENT_SCROLLS, '44947', '501', '51'), -- Scroll of Enchant Bracer - Major Stamina
-(@CT_ENCHANTMENT_SCROLLS, '46026', '501', '52'), -- Scroll of Enchant Weapon - Blade Ward
+(@CT_ENCHANTMENT_SCROLLS, '46026', '2958', '52'), -- Scroll of Enchant Weapon - Blade Ward
 (@CT_ENCHANTMENT_SCROLLS, '38949', '501', '53'), -- Scroll of Enchant Shield - Resilience
-(@CT_ENCHANTMENT_SCROLLS, '38871', '501', '54'); -- Scroll of Enchant Weapon - Lifestealing
+(@CT_ENCHANTMENT_SCROLLS, '38871', '2958', '54'); -- Scroll of Enchant Weapon - Lifestealing
 --
 --
 -- Enchantment Scrolls // Verzauberkunst_ :: ENDE
@@ -2475,37 +2501,37 @@ VALUES(@CT_VENDOR_CONSUMABLES,'','','Verbrauchswaren','','','','','',
 DELETE FROM npc_vendor WHERE entry = @CT_VENDOR_CONSUMABLES;
 INSERT INTO `npc_vendor` (entry, item, ExtendedCost, slot)
 VALUES
-(@CT_VENDOR_CONSUMABLES, '43466', '501', '0'), -- Scroll of Strength VIII
-(@CT_VENDOR_CONSUMABLES, '43464', '501', '1'), -- Scroll of Agility VIII
-(@CT_VENDOR_CONSUMABLES, '37098', '501', '2'), -- Scroll of Spirit VIII
-(@CT_VENDOR_CONSUMABLES, '37094', '501', '3'), -- Scroll of Stamina VIII
-(@CT_VENDOR_CONSUMABLES, '37092', '501', '4'), -- Scroll of Intellect VIII
-(@CT_VENDOR_CONSUMABLES, '46377', '501', '5'), -- Flask of Endless Rage
-(@CT_VENDOR_CONSUMABLES, '46378', '501', '6'), -- Flask of Pure Mojo
-(@CT_VENDOR_CONSUMABLES, '46379', '501', '7'), -- Flask of Stoneblood
-(@CT_VENDOR_CONSUMABLES, '46376', '501', '8'), -- Flask of the Frost Wyrm
-(@CT_VENDOR_CONSUMABLES, '33208', '501', '9'), -- Flask of Chromatic Wonder
-(@CT_VENDOR_CONSUMABLES, '13511', '501', '10'), -- Flask of Distilled Wisdom
-(@CT_VENDOR_CONSUMABLES, '44325', '501', '11'), -- Elixir of Accuracy
-(@CT_VENDOR_CONSUMABLES, '44330', '501', '12'), -- Elixir of Armor Piercing
-(@CT_VENDOR_CONSUMABLES, '44327', '501', '13'), -- Elixir of Deadly Strikes
-(@CT_VENDOR_CONSUMABLES, '44329', '501', '14'), -- Elixir of Expertise
-(@CT_VENDOR_CONSUMABLES, '44331', '501', '15'), -- Elixir of Lightning Speed
-(@CT_VENDOR_CONSUMABLES, '39666', '501', '16'), -- Elixir of Mighty Agility
-(@CT_VENDOR_CONSUMABLES, '44328', '501', '17'), -- Elixir of Mighty Defense
-(@CT_VENDOR_CONSUMABLES, '40078', '501', '18'), -- Elixir of Mighty Fortitude
-(@CT_VENDOR_CONSUMABLES, '40109', '501', '19'), -- Elixir of Mighty Mageblood
-(@CT_VENDOR_CONSUMABLES, '40073', '501', '20'), -- Elixir of Mighty Strength
-(@CT_VENDOR_CONSUMABLES, '44332', '501', '21'), -- Elixir of Mighty Thoughts
-(@CT_VENDOR_CONSUMABLES, '40097', '501', '22'), -- Elixir of Protection
-(@CT_VENDOR_CONSUMABLES, '40072', '501', '23'), -- Elixir of Spirit
-(@CT_VENDOR_CONSUMABLES, '22831', '501', '24'), -- Elixir of Major Agility
-(@CT_VENDOR_CONSUMABLES, '32062', '501', '25'), -- Elixir of Major Fortitude
-(@CT_VENDOR_CONSUMABLES, '22824', '501', '26'), -- Elixir of Major Strength
-(@CT_VENDOR_CONSUMABLES, '8827', '501', '27'), -- Elixir of Water Walking
-(@CT_VENDOR_CONSUMABLES, '18294', '501', '28'), -- Elixir of Greater Water Breathing
-(@CT_VENDOR_CONSUMABLES, '41166', '501', '29'), -- Runic Healing Injector
-(@CT_VENDOR_CONSUMABLES, '42545', '501', '30'); -- Runic Mana Injector
+(@CT_VENDOR_CONSUMABLES, '43466', '2483',  '0'), -- Scroll of Strength VIII
+(@CT_VENDOR_CONSUMABLES, '43464', '2483',  '1'), -- Scroll of Agility VIII
+(@CT_VENDOR_CONSUMABLES, '37098', '2483',  '2'), -- Scroll of Spirit VIII
+(@CT_VENDOR_CONSUMABLES, '37094', '2483',  '3'), -- Scroll of Stamina VIII
+(@CT_VENDOR_CONSUMABLES, '37092', '2483',  '4'), -- Scroll of Intellect VIII
+(@CT_VENDOR_CONSUMABLES, '46377', '2426',  '5'), -- Flask of Endless Rage
+(@CT_VENDOR_CONSUMABLES, '46378', '2426',  '6'), -- Flask of Pure Mojo
+(@CT_VENDOR_CONSUMABLES, '46379', '2426',  '7'), -- Flask of Stoneblood
+(@CT_VENDOR_CONSUMABLES, '46376', '2426',  '8'), -- Flask of the Frost Wyrm
+(@CT_VENDOR_CONSUMABLES, '33208', '2426',  '9'), -- Flask of Chromatic Wonder
+(@CT_VENDOR_CONSUMABLES, '13511', '2426', '10'), -- Flask of Distilled Wisdom
+(@CT_VENDOR_CONSUMABLES, '44325', '2426', '11'), -- Elixir of Accuracy
+(@CT_VENDOR_CONSUMABLES, '44330', '2426', '12'), -- Elixir of Armor Piercing
+(@CT_VENDOR_CONSUMABLES, '44327', '2426', '13'), -- Elixir of Deadly Strikes
+(@CT_VENDOR_CONSUMABLES, '44329', '2426', '14'), -- Elixir of Expertise
+(@CT_VENDOR_CONSUMABLES, '44331', '2426', '15'), -- Elixir of Lightning Speed
+(@CT_VENDOR_CONSUMABLES, '39666', '2426', '16'), -- Elixir of Mighty Agility
+(@CT_VENDOR_CONSUMABLES, '44328', '2426', '17'), -- Elixir of Mighty Defense
+(@CT_VENDOR_CONSUMABLES, '40078', '2426', '18'), -- Elixir of Mighty Fortitude
+(@CT_VENDOR_CONSUMABLES, '40109', '2426', '19'), -- Elixir of Mighty Mageblood
+(@CT_VENDOR_CONSUMABLES, '40073', '2426', '20'), -- Elixir of Mighty Strength
+(@CT_VENDOR_CONSUMABLES, '44332', '2426', '21'), -- Elixir of Mighty Thoughts
+(@CT_VENDOR_CONSUMABLES, '40097', '2426', '22'), -- Elixir of Protection
+(@CT_VENDOR_CONSUMABLES, '40072', '2426', '23'), -- Elixir of Spirit
+(@CT_VENDOR_CONSUMABLES, '22831', '2426', '24'), -- Elixir of Major Agility
+(@CT_VENDOR_CONSUMABLES, '32062', '2426', '25'), -- Elixir of Major Fortitude
+(@CT_VENDOR_CONSUMABLES, '22824', '2426', '26'), -- Elixir of Major Strength
+(@CT_VENDOR_CONSUMABLES, '8827',  '2426', '27'), -- Elixir of Water Walking
+(@CT_VENDOR_CONSUMABLES, '18294', '2426', '28'), -- Elixir of Greater Water Breathing
+(@CT_VENDOR_CONSUMABLES, '41166', '2426', '29'), -- Runic Healing Injector
+(@CT_VENDOR_CONSUMABLES, '42545', '2426', '30'); -- Runic Mana Injector
 
 
 ----
