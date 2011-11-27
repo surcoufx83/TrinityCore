@@ -111,7 +111,7 @@ public:
             Enraged = false;
             EncounterTime = 0;
             DoScriptText(RAND(SAY_AGGRO_1, SAY_AGGRO_2), me);
-            events.ScheduleEvent(EVENT_HATEFUL, 1200);
+            events.ScheduleEvent(EVENT_HATEFUL, 1000);
             events.ScheduleEvent(EVENT_BERSERK, 360000);
             if (instance)
                 instance->DoStartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_MAKE_QUICK_WERK_OF_HIM_STARTING_EVENT);
@@ -205,7 +205,7 @@ public:
                         if(Unit* StrikeTarget = GetHatefullStrikeTarget())
                             DoCast(StrikeTarget, RAID_MODE(SPELL_HATEFUL_STRIKE,H_SPELL_HATEFUL_STRIKE), true);
 
-                        events.ScheduleEvent(EVENT_HATEFUL, 1200);
+                        events.ScheduleEvent(EVENT_HATEFUL, 1000);
                         break;
                     }
                     case EVENT_BERSERK:
@@ -214,7 +214,7 @@ public:
                         events.ScheduleEvent(EVENT_SLIME, 2000);
                         break;
                     case EVENT_SLIME:
-                        DoCast(me->getVictim(), SPELL_SLIME_BOLT);
+                        DoCast(me->getVictim(), SPELL_SLIME_BOLT, true);
                         events.ScheduleEvent(EVENT_SLIME, 2000);
                         break;
                 }

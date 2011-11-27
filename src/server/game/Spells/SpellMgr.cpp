@@ -1008,7 +1008,7 @@ SpellThreatEntry const* SpellMgr::GetSpellThreatEntry(uint32 spellID) const
     else
     {
         uint32 firstSpell = GetFirstSpellInChain(spellID);
-        SpellThreatMap::const_iterator itr = mSpellThreatMap.find(firstSpell);
+        itr = mSpellThreatMap.find(firstSpell);
         if (itr != mSpellThreatMap.end())
             return &itr->second;
     }
@@ -3520,6 +3520,9 @@ void SpellMgr::LoadDbcDataCorrections()
             case 62311: // Algalon - Cosmic Smash
             case 64596: // Algalon - Cosmic Smash
                 spellInfo->rangeIndex = 13;
+                break;
+            case 62168: // Algalon - Black Hole
+                spellInfo->AttributesEx3 |= SPELL_ATTR3_ONLY_TARGET_PLAYERS;
                 break;
             case 64444: // Mimiron - Magnetic Core
                 spellInfo->rangeIndex = 6; // 100yd

@@ -7,9 +7,6 @@ UPDATE creature_template SET ScriptName="npc_oculus_drakes" WHERE entry IN(27692
 UPDATE creature_template SET ScriptName="npc_arcane_beam" WHERE entry=28239;
 UPDATE creature_template SET AIName="", ScriptName ="npc_oculus_ringlord_sorceress" WHERE entry=27639;
 UPDATE creature_template SET AIName="", ScriptName ="npc_oculus_ringlord_conjurer" WHERE entry=27640;
-UPDATE creature_template SET AIName="", ScriptName ="npc_oculus_centrifuge_construct" WHERE entry=27641;
-
-UPDATE creature_template SET speed_walk=2.8 WHERE entry IN(27755, 27756, 27692);
 
 UPDATE creature_template SET mingold=7666, maxgold=12776 WHERE entry IN(27633, 27635, 27636, 27641, 30901, 30902, 30904, 30905, 30915, 30916);
 UPDATE creature_template SET mingold=40000, maxgold=60000, mechanic_immune_mask=646676351 WHERE entry IN(27447, 27654, 27655, 27656);

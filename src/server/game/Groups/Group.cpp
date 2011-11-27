@@ -485,6 +485,10 @@ bool Group::RemoveMember(uint64 guid, const RemoveMethod &method /*= GROUP_REMOV
             }
         }
 
+        // Reset master looter if necessary
+        if (GetLootMethod() == MASTER_LOOT && GetLooterGuid() == guid)
+            SetLooterGuid(GetLeaderGUID());
+
         SendUpdate();
 
         return true;

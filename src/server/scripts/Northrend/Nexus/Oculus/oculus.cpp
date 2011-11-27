@@ -55,216 +55,213 @@ enum Drakes
 
 class npc_oculus_drake : public CreatureScript
 {
-public:
-    npc_oculus_drake() : CreatureScript("npc_oculus_drake") { }
+    public:
+        npc_oculus_drake() : CreatureScript("npc_oculus_drake") { }
 
-    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
-    {
-        player->PlayerTalkClass->ClearMenus();
-        switch (creature->GetEntry())
+        bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action)
         {
-        case NPC_VERDISA: //Verdisa
-            switch (uiAction)
+            player->PlayerTalkClass->ClearMenus();
+            switch (creature->GetEntry())
             {
-            case GOSSIP_ACTION_INFO_DEF + 1:
-                if (!HAS_ESSENCE(player))
-                {
-                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_VERDISA1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_VERDISA2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-                    player->SEND_GOSSIP_MENU(GOSSIP_TEXTID_VERDISA1, creature->GetGUID());
-                }
-                else
-                {
-                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_VERDISA2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-                    player->SEND_GOSSIP_MENU(GOSSIP_TEXTID_VERDISA2, creature->GetGUID());
-                }
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 2:
-            {
-                ItemPosCountVec dest;
-                uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, ITEM_EMERALD_ESSENCE, 1);
-                if (msg == EQUIP_ERR_OK)
-                    player->StoreNewItem(dest, ITEM_EMERALD_ESSENCE, true);
-                player->CLOSE_GOSSIP_MENU();
-                break;
+                case NPC_VERDISA: //Verdisa
+                    switch (action)
+                    {
+                        case GOSSIP_ACTION_INFO_DEF + 1:
+                            if (!HAS_ESSENCE(player))
+                            {
+                                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_VERDISA1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_VERDISA2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                                player->SEND_GOSSIP_MENU(GOSSIP_TEXTID_VERDISA1, creature->GetGUID());
+                            }
+                            else
+                            {
+                                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_VERDISA2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                                player->SEND_GOSSIP_MENU(GOSSIP_TEXTID_VERDISA2, creature->GetGUID());
+                            }
+                            break;
+                        case GOSSIP_ACTION_INFO_DEF + 2:
+                        {
+                            ItemPosCountVec dest;
+                            uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, ITEM_EMERALD_ESSENCE, 1);
+                            if (msg == EQUIP_ERR_OK)
+                                player->StoreNewItem(dest, ITEM_EMERALD_ESSENCE, true);
+                            player->CLOSE_GOSSIP_MENU();
+                            break;
+                        }
+                        case GOSSIP_ACTION_INFO_DEF + 3:
+                            player->SEND_GOSSIP_MENU(GOSSIP_TEXTID_VERDISA3, creature->GetGUID());
+                            break;
+                    }
+                    break;
+                case NPC_BELGARISTRASZ: //Belgaristrasz
+                    switch (action)
+                    {
+                        case GOSSIP_ACTION_INFO_DEF + 1:
+                            if (!HAS_ESSENCE(player))
+                            {
+                                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BELGARISTRASZ1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BELGARISTRASZ2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                                player->SEND_GOSSIP_MENU(GOSSIP_TEXTID_BELGARISTRASZ1, creature->GetGUID());
+                            }
+                            else
+                            {
+                                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BELGARISTRASZ2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                                player->SEND_GOSSIP_MENU(GOSSIP_TEXTID_BELGARISTRASZ2, creature->GetGUID());
+                            }
+                            break;
+                        case GOSSIP_ACTION_INFO_DEF + 2:
+                        {
+                            ItemPosCountVec dest;
+                            uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, ITEM_RUBY_ESSENCE, 1);
+                            if (msg == EQUIP_ERR_OK)
+                                player->StoreNewItem(dest, ITEM_RUBY_ESSENCE, true);
+                            player->CLOSE_GOSSIP_MENU();
+                            break;
+                        }
+                        case GOSSIP_ACTION_INFO_DEF + 3:
+                            player->SEND_GOSSIP_MENU(GOSSIP_TEXTID_BELGARISTRASZ3, creature->GetGUID());
+                            break;
+                    }
+                    break;
+                case NPC_ETERNOS: //Eternos
+                    switch (action)
+                    {
+                        case GOSSIP_ACTION_INFO_DEF + 1:
+                            if (!HAS_ESSENCE(player))
+                            {
+                                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ETERNOS1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ETERNOS2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                                player->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ETERNOS1, creature->GetGUID());
+                            }
+                            else
+                            {
+                                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ETERNOS2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                                player->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ETERNOS2, creature->GetGUID());
+                            }
+                            break;
+                        case GOSSIP_ACTION_INFO_DEF + 2:
+                        {
+                            ItemPosCountVec dest;
+                            uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, ITEM_AMBER_ESSENCE, 1);
+                            if (msg == EQUIP_ERR_OK)
+                                player->StoreNewItem(dest, ITEM_AMBER_ESSENCE, true);
+                            player->CLOSE_GOSSIP_MENU();
+                            break;
+                        }
+                        case GOSSIP_ACTION_INFO_DEF + 3:
+                            player->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ETERNOS3, creature->GetGUID());
+                            break;
+                    }
+                    break;
             }
-            case GOSSIP_ACTION_INFO_DEF + 3:
-                player->SEND_GOSSIP_MENU(GOSSIP_TEXTID_VERDISA3, creature->GetGUID());
-                break;
-            }
-            break;
-        case NPC_BELGARISTRASZ: //Belgaristrasz
-            switch (uiAction)
-            {
-            case GOSSIP_ACTION_INFO_DEF + 1:
-                if (!HAS_ESSENCE(player))
-                {
-                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BELGARISTRASZ1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BELGARISTRASZ2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-                    player->SEND_GOSSIP_MENU(GOSSIP_TEXTID_BELGARISTRASZ1, creature->GetGUID());
-                }
-                else
-                {
-                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BELGARISTRASZ2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-                    player->SEND_GOSSIP_MENU(GOSSIP_TEXTID_BELGARISTRASZ2, creature->GetGUID());
-                }
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 2:
-            {
-                ItemPosCountVec dest;
-                uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, ITEM_RUBY_ESSENCE, 1);
-                if (msg == EQUIP_ERR_OK)
-                    player->StoreNewItem(dest, ITEM_RUBY_ESSENCE, true);
-                player->CLOSE_GOSSIP_MENU();
-                break;
-            }
-            case GOSSIP_ACTION_INFO_DEF + 3:
-                player->SEND_GOSSIP_MENU(GOSSIP_TEXTID_BELGARISTRASZ3, creature->GetGUID());
-                break;
-            }
-            break;
-        case NPC_ETERNOS: //Eternos
-            switch (uiAction)
-            {
-            case GOSSIP_ACTION_INFO_DEF + 1:
-                if (!HAS_ESSENCE(player))
-                {
-                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ETERNOS1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ETERNOS2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-                    player->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ETERNOS1, creature->GetGUID());
-                }
-                else
-                {
-                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ETERNOS2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-                    player->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ETERNOS2, creature->GetGUID());
-                }
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 2:
-            {
-                ItemPosCountVec dest;
-                uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, ITEM_AMBER_ESSENCE, 1);
-                if (msg == EQUIP_ERR_OK)
-                    player->StoreNewItem(dest, ITEM_AMBER_ESSENCE, true);
-                player->CLOSE_GOSSIP_MENU();
-                break;
-            }
-            case GOSSIP_ACTION_INFO_DEF + 3:
-                player->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ETERNOS3, creature->GetGUID());
-                break;
-            }
-            break;
+
+            return true;
         }
 
-        return true;
-    }
-
-    bool OnGossipHello(Player* player, Creature* creature)
-    {
-        if (creature->isQuestGiver())
-            player->PrepareQuestMenu(creature->GetGUID());
-
-        if (InstanceScript* instance = creature->GetInstanceScript())
+        bool OnGossipHello(Player* player, Creature* creature)
         {
-            if (instance->GetBossState(DATA_DRAKOS_EVENT) == DONE)
+            if (creature->isQuestGiver())
+                player->PrepareQuestMenu(creature->GetGUID());
+
+            if (InstanceScript* instance = creature->GetInstanceScript())
             {
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_DRAKES, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-                player->SEND_GOSSIP_MENU(GOSSIP_TEXTID_DRAKES, creature->GetGUID());
+                if (instance->GetBossState(DATA_DRAKOS_EVENT) == DONE)
+                {
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_DRAKES, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+                    player->SEND_GOSSIP_MENU(GOSSIP_TEXTID_DRAKES, creature->GetGUID());
+                }
             }
+
+            return true;
         }
-
-        return true;
-    }
-
 };
-
-
 
 class spell_emerald_drake_touch_the_nightmare : public SpellScriptLoader
 {
-public:
-    spell_emerald_drake_touch_the_nightmare() : SpellScriptLoader("spell_emerald_drake_touch_the_nightmare") { }
+    public:
+        spell_emerald_drake_touch_the_nightmare() : SpellScriptLoader("spell_emerald_drake_touch_the_nightmare") { }
 
-    class spell_emerald_drake_touch_the_nightmare_SpellScript : public SpellScript
-    {
-        PrepareSpellScript(spell_emerald_drake_touch_the_nightmare_SpellScript);
-
-        void OnHitEffect()
+        class spell_emerald_drake_touch_the_nightmare_SpellScript : public SpellScript
         {
-            if(GetCaster())
-                GetCaster()->DealDamage(GetCaster(), (GetCaster()->GetMaxHealth()*3/10)/2);
-        }
+            PrepareSpellScript(spell_emerald_drake_touch_the_nightmare_SpellScript);
 
-        void Register()
+            void OnHitEffect()
+            {
+                if (GetCaster())
+                    GetCaster()->DealDamage(GetCaster(), (GetCaster()->GetMaxHealth()*3/10)/2);
+            }
+
+            void Register()
+            {
+                OnHit += SpellHitFn(spell_emerald_drake_touch_the_nightmare_SpellScript::OnHitEffect);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
         {
-            OnHit += SpellHitFn(spell_emerald_drake_touch_the_nightmare_SpellScript::OnHitEffect);
+            return new spell_emerald_drake_touch_the_nightmare_SpellScript();
         }
-    };
-
-    SpellScript* GetSpellScript() const
-    {
-        return new spell_emerald_drake_touch_the_nightmare_SpellScript();
-    }
 };
 
 class spell_amber_drake_schock_lance : public SpellScriptLoader
 {
-public:
-    spell_amber_drake_schock_lance() : SpellScriptLoader("spell_amber_drake_schock_lance") { }
+    public:
+        spell_amber_drake_schock_lance() : SpellScriptLoader("spell_amber_drake_schock_lance") { }
 
-    class spell_amber_drake_schock_lance_SpellScript : public SpellScript
-    {
-        PrepareSpellScript(spell_amber_drake_schock_lance_SpellScript);
-
-        void RecalculateDamage()
+        class spell_amber_drake_schock_lance_SpellScript : public SpellScript
         {
-            if(Aura* aur = GetHitUnit()->GetAura(SPELL_SHOCK_CHARGE, GetHitUnit()->GetGUID()))
+            PrepareSpellScript(spell_amber_drake_schock_lance_SpellScript);
+
+            void RecalculateDamage()
             {
-                SetHitDamage(6525*aur->GetStackAmount());
-                aur->Remove();
+                if (Aura* aur = GetHitUnit()->GetAura(SPELL_SHOCK_CHARGE, GetHitUnit()->GetGUID()))
+                {
+                    SetHitDamage(6525*aur->GetStackAmount());
+                    aur->Remove();
+                }
             }
-        }
 
-        void Register()
+            void Register()
+            {
+                OnHit += SpellHitFn(spell_amber_drake_schock_lance_SpellScript::RecalculateDamage);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
         {
-            OnHit += SpellHitFn(spell_amber_drake_schock_lance_SpellScript::RecalculateDamage);
+            return new spell_amber_drake_schock_lance_SpellScript();
         }
-    };
-
-    SpellScript* GetSpellScript() const
-    {
-        return new spell_amber_drake_schock_lance_SpellScript();
-    }
 };
 
 class spell_amber_drake_time_stop : public SpellScriptLoader
 {
-public:
-    spell_amber_drake_time_stop() : SpellScriptLoader("spell_amber_drake_time_stop") { }
+    public:
+        spell_amber_drake_time_stop() : SpellScriptLoader("spell_amber_drake_time_stop") { }
 
-    class spell_amber_drake_time_stop_SpellScript : public SpellScript
-    {
-        PrepareSpellScript(spell_amber_drake_time_stop_SpellScript);
-
-        void OnHitEffect()
+        class spell_amber_drake_time_stop_SpellScript : public SpellScript
         {
-            if(GetHitUnit())
+            PrepareSpellScript(spell_amber_drake_time_stop_SpellScript);
+
+            void OnHitEffect()
             {
-                GetHitUnit()->SetAuraStack(SPELL_SHOCK_CHARGE, GetHitUnit(), 5);
-                if(GetCaster() && GetCaster()->HasAura(SPELL_SHOCK_CHARGE))
-                    GetCaster()->RemoveAura(SPELL_SHOCK_CHARGE);
+                if (GetHitUnit())
+                {
+                    GetHitUnit()->SetAuraStack(SPELL_SHOCK_CHARGE, GetHitUnit(), 5);
+                    if (GetCaster() && GetCaster()->HasAura(SPELL_SHOCK_CHARGE))
+                        GetCaster()->RemoveAura(SPELL_SHOCK_CHARGE);
+                }
             }
-        }
 
-        void Register()
+            void Register()
+            {
+                OnHit += SpellHitFn(spell_amber_drake_time_stop_SpellScript::OnHitEffect);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
         {
-            OnHit += SpellHitFn(spell_amber_drake_time_stop_SpellScript::OnHitEffect);
+            return new spell_amber_drake_time_stop_SpellScript();
         }
-    };
-
-    SpellScript* GetSpellScript() const
-    {
-        return new spell_amber_drake_time_stop_SpellScript();
-    }
 };
 
 class spell_amber_drake_temporal_rift : public SpellScriptLoader
@@ -281,16 +278,16 @@ class spell_amber_drake_temporal_rift : public SpellScriptLoader
 
             void OnApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
             {
-                if(GetTarget())
+                if (GetTarget())
                     TargetHealth = GetTarget()->GetHealth();
                 damage = 0;
             }
 
             void HandlePeriodicTick(AuraEffect const* /*aurEff*/)
             {
-                if(damage = damage + (TargetHealth - GetTarget()->GetHealth()))
+                if (damage = damage + (TargetHealth - GetTarget()->GetHealth()))
                 {
-                    for( ; damage >= 15000; damage=damage-15000)
+                    for ( ; damage >= 15000; damage=damage-15000)
                         GetTarget()->AddAura(SPELL_SHOCK_CHARGE, GetTarget());
                     TargetHealth = GetTarget()->GetHealth();
                 }
@@ -311,148 +308,115 @@ class spell_amber_drake_temporal_rift : public SpellScriptLoader
 
 class npc_oculus_drakes : public CreatureScript
 {
-public:
-    npc_oculus_drakes() : CreatureScript("npc_oculus_drakes") { }
+    public:
+        npc_oculus_drakes() : CreatureScript("npc_oculus_drakes") { }
 
-    struct npc_oculus_drakesAI : public ScriptedAI
-    {
-        npc_oculus_drakesAI(Creature *c) : ScriptedAI(c) {}
-
-        uint32 DespawnTimer;
-
-        void Reset()
+        struct npc_oculus_drakesAI : public ScriptedAI
         {
-            DespawnTimer = 20000;
-            me->SetSpeed(MOVE_FLIGHT, (float)2.8);
-        }
-        void UpdateAI(uint32 const diff)
-        {
-            if (DespawnTimer <= diff)
-                me->DisappearAndDie();
-            else DespawnTimer -= diff;
-        }
-    };
+            npc_oculus_drakesAI(Creature* c) : ScriptedAI(c) {}
 
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return new npc_oculus_drakesAI(creature);
-    }
+            uint32 DespawnTimer;
+
+            void Reset()
+            {
+                DespawnTimer = 20000;
+            }
+
+            void UpdateAI(uint32 const diff)
+            {
+                if (DespawnTimer <= diff)
+                    me->DisappearAndDie();
+                else DespawnTimer -= diff;
+            }
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new npc_oculus_drakesAI(creature);
+        }
 };
 
 class npc_oculus_ringlord_conjurer : public CreatureScript
 {
-public:
-    npc_oculus_ringlord_conjurer() : CreatureScript("npc_oculus_ringlord_conjurer") { }
+    public:
+        npc_oculus_ringlord_conjurer() : CreatureScript("npc_oculus_ringlord_conjurer") { }
 
-    struct npc_oculus_ringlord_conjurerAI : public ScriptedAI
-    {
-        npc_oculus_ringlord_conjurerAI(Creature *c) : ScriptedAI(c) {}
-
-        void DamageTaken(Unit* pAttacker, uint32& )
-        {	
-            if(pAttacker->IsVehicle())
-                pAttacker->DealDamage(pAttacker, pAttacker->GetHealth());
-        }
-
-        void EnterCombat(Unit* )
+        struct npc_oculus_ringlord_conjurerAI : public ScriptedAI
         {
-            if(me->GetMap()->IsHeroic())
-                me->AddAura(59276, me);
-            else
-                me->AddAura(50717, me);
+            npc_oculus_ringlord_conjurerAI(Creature* c) : ScriptedAI(c) {}
+
+            void EnterCombat(Unit* /*who*/)
+            {
+                me->AddAura(DUNGEON_MODE(50717, 59276), me);
+            }
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new npc_oculus_ringlord_conjurerAI(creature);
         }
-
-    };
-
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return new npc_oculus_ringlord_conjurerAI(creature);
-    }
 };
 
 class npc_oculus_ringlord_sorceress : public CreatureScript
 {
-public:
-    npc_oculus_ringlord_sorceress() : CreatureScript("npc_oculus_ringlord_sorceress") { }
+    public:
+        npc_oculus_ringlord_sorceress() : CreatureScript("npc_oculus_ringlord_sorceress") { }
 
-    struct npc_oculus_ringlord_sorceressAI : public ScriptedAI
-    {
-        npc_oculus_ringlord_sorceressAI(Creature *c) : ScriptedAI(c) {}
-
-        uint32 BlizzardTimer, FlameStrikeTimer;
-
-        void DamageTaken(Unit* pAttacker, uint32& )
-        {	
-            if(pAttacker->IsVehicle())
-                pAttacker->DealDamage(pAttacker, pAttacker->GetHealth());
-        }
-
-        void Reset()
+        struct npc_oculus_ringlord_sorceressAI : public ScriptedAI
         {
-            BlizzardTimer = 6000;
-            FlameStrikeTimer = 3000;
-        }
+            npc_oculus_ringlord_sorceressAI(Creature* c) : ScriptedAI(c) {}
 
-        void UpdateAI(const uint32 diff)
+            void Reset()
+            {
+                _blizzardTimer = 6000;
+                _flameStrikeTimer = 3000;
+            }
+
+            void UpdateAI(uint32 const diff)
+            {
+                if (!UpdateVictim())
+                    return;
+
+                if (_blizzardTimer <= diff)
+                {
+                    if (!me->IsNonMeleeSpellCasted(false))
+                    {
+                        if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 30, true))
+                            DoCast(target, DUNGEON_MODE(50715, 59278));
+                        _blizzardTimer = urand(12000, 17000);
+                    }
+                    else
+                        _blizzardTimer = urand(5000, 10000);
+                }
+                else
+                    _blizzardTimer -= diff;
+
+                if (_flameStrikeTimer <= diff)
+                {
+                    if (!me->IsNonMeleeSpellCasted(false))
+                    {
+                        if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 30, true))
+                            DoCast(target, DUNGEON_MODE(16102, 61402));
+                        _flameStrikeTimer = urand(6000, 13000);
+                    }
+                    else
+                        _flameStrikeTimer = urand(4000, 8000);
+                }
+                else
+                    _flameStrikeTimer -= diff;
+
+                DoMeleeAttackIfReady();
+            }
+
+        private:
+            uint32 _blizzardTimer;
+            uint32 _flameStrikeTimer;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
         {
-            if(BlizzardTimer <= diff)
-            {
-                if(!me->IsNonMeleeSpellCasted(false))
-                {
-                    if(me->GetMap()->IsHeroic())
-                        DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 30, true), 59278);
-                    else
-                        DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 30, true), 50715);
-                    BlizzardTimer = urand(12000, 17000);
-                }
-                else BlizzardTimer = urand(5000,10000);
-            }
-            else BlizzardTimer -= diff;
-
-            if(FlameStrikeTimer <= diff)
-            {
-                if(!me->IsNonMeleeSpellCasted(false))
-                {
-                    if(me->GetMap()->IsHeroic())
-                        DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 30, true), 61402);
-                    else
-                        DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 30, true), 16102);
-                    FlameStrikeTimer = urand(6000, 13000);
-                }
-                else FlameStrikeTimer = urand(4000, 8000);
-            }
-            else FlameStrikeTimer -= diff;
-            DoMeleeAttackIfReady();
+            return new npc_oculus_ringlord_sorceressAI(creature);
         }
-
-    };
-
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return new npc_oculus_ringlord_sorceressAI(creature);
-    }
-};
-
-class npc_oculus_centrifuge_construct : public CreatureScript
-{
-public:
-    npc_oculus_centrifuge_construct() : CreatureScript("npc_oculus_centrifuge_construct") { }
-
-    struct npc_oculus_centrifuge_constructAI : public ScriptedAI
-    {
-        npc_oculus_centrifuge_constructAI(Creature *c) : ScriptedAI(c) {}
-
-        void DamageTaken(Unit* pAttacker, uint32& )
-        {	
-            if(pAttacker->IsVehicle())
-                pAttacker->DealDamage(pAttacker, pAttacker->GetHealth());
-        }
-    };
-
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return new npc_oculus_centrifuge_constructAI(creature);
-    }
 };
 
 void AddSC_oculus()
@@ -465,5 +429,4 @@ void AddSC_oculus()
     new npc_oculus_drakes();
     new npc_oculus_ringlord_conjurer();
     new npc_oculus_ringlord_sorceress();
-    new npc_oculus_centrifuge_construct();
 }
