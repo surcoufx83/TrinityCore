@@ -117,24 +117,24 @@ SET @CREA_HUNTER_PET = @CREATURE + 100;
 
 -- Mit diesem Quest wird ein Character zu einem PvP.Char
 -- If a character does this quest it will become a PvP.Char
-DELETE FROM `quest_template` WHERE `entry` = @QUEST_TEMPLATE;
-INSERT INTO `quest_template` ( `entry`,
+DELETE FROM `quest_template` WHERE `id` = @QUEST_TEMPLATE;
+INSERT INTO `quest_template` ( `id`,
  `Title`, `OfferRewardText`,
- `MinLevel`, `ZoneOrSort`, `ReqItemId1`,
+ `MinLevel`, `ZoneOrSort`, `RequiredItemId1`,
  `Type`, `Method`, 
  `Details`,
  `EndText`, `Objectives`,
  `RequiredRaces`, `PrevQuestId`,
- `QuestFlags`,
- `RewSpell`, `RewMoneyMaxLevel`,
- `QuestLevel`,
+ `Flags`,
+ `RewardSpell`, `RewardMoneyMaxLevel`,
+ `Level`,
  `SpecialFlags`,
- `RewXPId`, `MaxLevel`,
- `SkillOrClassMask`,
- `CompleteEmote`,
- `RewItemCount1`, `RewItemId1`,
- `RewItemCount2`, `RewItemId2`,
- `RewItemCount3`, `RewItemId3`
+ `RewardXPId`, `MaxLevel`,
+ `RequiredSkillId`,
+ `EmoteOnComplete`,
+ `RewardItemCount1`, `RewardItemId1`,
+ `RewardItemCount2`, `RewardItemId2`,
+ `RewardItemCount3`, `RewardItemId3`
  )
  VALUES
  ( @QUEST_TEMPLATE,
@@ -157,24 +157,24 @@ INSERT INTO `quest_template` ( `entry`,
 0, 0  -- 1, 44226   -- 1x Zügel des gepanzerten Braunbären
 );
 -- Quest for Death-Knights
-DELETE FROM `quest_template` WHERE `entry` = @QUEST_TEMPLATE+1;
-INSERT INTO `quest_template` ( `entry`,
+DELETE FROM `quest_template` WHERE `id` = @QUEST_TEMPLATE+1;
+INSERT INTO `quest_template` ( `id`,
  `Title`, `OfferRewardText`,
- `MinLevel`, `ZoneOrSort`, `ReqItemId1`,
+ `MinLevel`, `ZoneOrSort`, `RequiredItemId1`,
  `Type`, `Method`, 
  `Details`,
  `EndText`, `Objectives`,
  `RequiredRaces`, `PrevQuestId`,
- `QuestFlags`,
- `RewSpell`, `RewMoneyMaxLevel`,
- `QuestLevel`,
+ `Flags`,
+ `RewardSpell`, `RewardMoneyMaxLevel`,
+ `Level`,
  `SpecialFlags`,
- `RewXPId`, `MaxLevel`,
- `SkillOrClassMask`,
- `CompleteEmote`,
- `RewItemCount1`, `RewItemId1`,
- `RewItemCount2`, `RewItemId2`,
- `RewItemCount3`, `RewItemId3`
+ `RewardXPId`, `MaxLevel`,
+ `RequiredSkillId`,
+ `EmoteOnComplete`,
+ `RewardItemCount1`, `RewardItemId1`,
+ `RewardItemCount2`, `RewardItemId2`,
+ `RewardItemCount3`, `RewardItemId3`
  )
  VALUES
  ( @QUEST_TEMPLATE+1,
