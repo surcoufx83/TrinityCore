@@ -154,6 +154,13 @@ private:
         // itemcode
         else if(item_id > 0)
         {
+        	//Premium VIP-Hemd Preparation
+        	if(item_id == 200029)
+        	{
+        		if(!DeleteItem(player, 200000, 1) && !DeleteItem(player, 200005, 1))
+        			return false;
+        	}
+
             if(!AddItem(_Creature, player, item_id, quantity))
                 return false;
         }
@@ -191,6 +198,8 @@ private:
         {
             if(item_id == 200000 || item_id == 200005)
                 _Creature->MonsterWhisper("Viel Spass mit dem Item!", player->GetGUID());
+            else if(item_id == 200029)
+            	_Creature->MonsterWhisper("Viel Spass mit deinem neuem VIP-Hemd Premium!", player->GetGUID());
             else
                 _Creature->MonsterWhisper("Danke, dass du dem Server mit deiner Spende unterstuetzt und viel Spass mit dem Item!", player->GetGUID());
         }
@@ -225,6 +234,22 @@ private:
 
         return false;
     }
+
+    bool DeleteItem(Player* player, uint32 item, uint32 quantity) {
+		if (player->HasItemCount(item, quantity, true)) {
+			uint8 pbag;
+			uint8 pslot;
+
+			pbag = player->GetItemByEntry(item)->GetBagSlot();
+			pslot = player->GetItemByEntry(item)->GetSlot();
+
+			player->RemoveItem(pbag, pslot, true);
+
+			return true;
+		}
+
+		return false;
+	}
 };
 
 void AddSC_lol_codebox()

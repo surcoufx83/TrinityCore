@@ -492,7 +492,8 @@ inline void KillRewarder::_RewardHonor(Player* player)
 inline void KillRewarder::_RewardXP(Player* player, float rate)
 {
     uint32 xp(_xp);
-    bool boostItem = false;
+    bool boostItem        = false;
+    bool boostItemPremium = false;
     if (_group)
     {
         // 4.2.1. If player is in group, adjust XP:
@@ -525,6 +526,13 @@ inline void KillRewarder::_RewardXP(Player* player, float rate)
         boostItem = player->HasItemOrGemWithIdEquipped(sWorld->getIntConfig(CONFIG_XP_BOOST_ITEMID), 1);
     }
 
+    if (
+    		member->isAlive() &&
+            member->IsAtGroupRewardDistance(_victim) &&
+            member->IsAtGroupRewardDistance(player) &&
+            member->HasItemOrGemWithIdEquipped(sWorld->getIntConfig(CONFIG_XP_BOOST_PREMIUM_ITEMID), 1))
+    	boostItemPremium = true;
+
     if (xp)
     {
         // 4.2.2. Apply auras modifying rewarded XP (SPELL_AURA_MOD_XP_PCT).
@@ -533,17 +541,40 @@ inline void KillRewarder::_RewardXP(Player* player, float rate)
             AddPctN(xp, (*i)->GetAmount());
 
         // calculate the xp boost
-        if (boostItem && player->getLevel() <= sWorld->getIntConfig(CONFIG_XP_BOOST_MAXLEVEL))
-            if (_group)
-                xp = (uint32)(xp * sWorld->getRate(RATE_XP_BOOST_GROUP));
-            else
-                xp = (uint32)(xp * sWorld->getRate(RATE_XP_BOOST_SOLO));
+        if (player->getLevel() <= sWorld->getIntConfig(CONFIG_XP_BOOST_MAXLEVEL))
+        {
+        	if (boostItem)
+        	{
+        		if (_group)
+        			xp = (uint32)(xp * sWorld->getRate(RATE_XP_BOOST_GROUP));
+        		else
+        			xp = (uint32)(xp * sWorld->getRate(RATE_XP_BOOST_SOLO));
+        	}
+
+        	if (boostItemPremium)
+        		xp = (uint32)(xp * sWorld->getRate(RATE_XP_BOOST_PREMIUM_SOLO));
+        }
 
         // 4.2.3. Give XP to player.
         player->GiveXP(xp, _victim, _groupRate);
         if (Pet* pet = player->GetPet())
+        {
             // 4.2.4. If player has pet, reward pet with XP (100% for single player, 50% for group case).
-            pet->GivePetXP(_group ? xp / 2 : xp);
+        	if (player->getLevel() <= sWorld->getIntConfig(CONFIG_XP_BOOST_MAXLEVEL))
+        	{
+        		if (boostItem)
+        		{
+        			if (_group)
+        				xp = (uint32)(xp / sWorld->getRate(RATE_XP_BOOST_GROUP));
+        			else
+        				xp = (uint32)(xp / sWorld->getRate(RATE_XP_BOOST_SOLO));
+        		}
+
+        		if (boostItemPremium)
+        			xp = (uint32)(xp / sWorld->getRate(RATE_XP_BOOST_PREMIUM_SOLO));
+        	}
+        	pet->GivePetXP(_group ? xp / 2 : xp);
+        }
     }
 }
 
