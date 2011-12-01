@@ -515,7 +515,8 @@ inline void KillRewarder::_RewardXP(Player* player, float rate)
                         member->isAlive() &&
                         member->IsAtGroupRewardDistance(_victim) &&
                         member->IsAtGroupRewardDistance(player) &&
-                        member->HasItemOrGemWithIdEquipped(sWorld->getIntConfig(CONFIG_XP_BOOST_ITEMID), 1))
+                        (member->HasItemOrGemWithIdEquipped(sWorld->getIntConfig(CONFIG_XP_BOOST_ITEMID), 1) ||
+                        member->HasItemOrGemWithIdEquipped(sWorld->getIntConfig(CONFIG_XP_BOOST_PREMIUM_ITEMID), 1)))
                     {
                         boostItem = true;
                         break;
@@ -526,10 +527,7 @@ inline void KillRewarder::_RewardXP(Player* player, float rate)
         boostItem = player->HasItemOrGemWithIdEquipped(sWorld->getIntConfig(CONFIG_XP_BOOST_ITEMID), 1);
     }
 
-    if (
-    		player->isAlive() &&
-            player->IsAtGroupRewardDistance(_victim) &&
-            player->HasItemOrGemWithIdEquipped(sWorld->getIntConfig(CONFIG_XP_BOOST_PREMIUM_ITEMID), 1))
+    if (player->HasItemOrGemWithIdEquipped(sWorld->getIntConfig(CONFIG_XP_BOOST_PREMIUM_ITEMID), 1))
     	boostItemPremium = true;
 
     if (xp)
