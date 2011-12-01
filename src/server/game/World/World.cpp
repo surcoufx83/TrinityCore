@@ -418,13 +418,14 @@ void World::LoadConfigSettings(bool reload)
     m_int_configs[CONFIG_ENABLE_SINFO_LOGIN] = ConfigMgr::GetIntDefault("Server.LoginInfo", 0);
 
     // XP.Boost
-    rate_values[RATE_XP_BOOST_SOLO]          = ConfigMgr::GetFloatDefault("XP.Boost.Solo", 1.0f);
-    rate_values[RATE_XP_BOOST_GROUP]         = ConfigMgr::GetFloatDefault("XP.Boost.Group", 1.0f);
-    m_int_configs[CONFIG_XP_BOOST_ITEMID]    = ConfigMgr::GetIntDefault("XP.Boost.ItemId", 0);
-    rate_values[RATE_XP_BOOST_SOLO]          = ConfigMgr::GetFloatDefault("XP.Boost.Premium.Solo", 1.0f);
-    rate_values[RATE_XP_BOOST_GROUP]         = ConfigMgr::GetFloatDefault("XP.Boost.Premium.Group", 1.0f);
-    m_int_configs[CONFIG_XP_BOOST_ITEMID]    = ConfigMgr::GetIntDefault("XP.Boost.Premium.ItemId", 0);
-    m_int_configs[CONFIG_XP_BOOST_MAXLEVEL]  = ConfigMgr::GetIntDefault("XP.Boost.MaxLevel", 0);
+    rate_values[RATE_XP_BOOST_SOLO]               = ConfigMgr::GetFloatDefault("XP.Boost.Solo", 1.0f);
+    rate_values[RATE_XP_BOOST_GROUP]              = ConfigMgr::GetFloatDefault("XP.Boost.Group", 1.0f);
+    m_int_configs[CONFIG_XP_BOOST_ITEMID]         = ConfigMgr::GetIntDefault("XP.Boost.ItemId", 0);
+    rate_values[RATE_XP_BOOST_PREMIUM_SOLO]       = ConfigMgr::GetFloatDefault("XP.Boost.Premium.Solo", 1.0f);
+    rate_values[RATE_XP_BOOST_PREMIUM_GROUP]      = ConfigMgr::GetFloatDefault("XP.Boost.Premium.Group", 1.0f);
+    rate_values[RATE_REP_BOOST_PREMIUM_SOLO]      = ConfigMgr::GetFloatDefault("REP.Boost.Premium.Solo", 1.0f);
+    m_int_configs[CONFIG_XP_BOOST_PREMIUM_ITEMID] = ConfigMgr::GetIntDefault("XP.Boost.Premium.ItemId", 0);
+    m_int_configs[CONFIG_XP_BOOST_MAXLEVEL]       = ConfigMgr::GetIntDefault("XP.Boost.MaxLevel", 0);
 
     ///- Read all rates from the config file
     rate_values[RATE_HEALTH]      = ConfigMgr::GetFloatDefault("Rate.Health", 1);

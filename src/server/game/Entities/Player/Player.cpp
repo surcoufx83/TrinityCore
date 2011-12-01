@@ -579,6 +579,14 @@ inline void KillRewarder::_RewardReputation(Player* player, float rate)
 {
     // 4.3. Give reputation (player must not be on BG).
     // Even dead players and corpses are rewarded.
+	bool boostItemPremium = false;
+
+	if (player->HasItemOrGemWithIdEquipped(sWorld->getIntConfig(CONFIG_XP_BOOST_PREMIUM_ITEMID), 1))
+	    	boostItemPremium = true;
+
+	if (boostItemPremium)
+		rate = (float)(rate * sWorld->getRate(RATE_REP_BOOST_PREMIUM_SOLO));
+
     player->RewardReputation(_victim, rate);
 }
 
