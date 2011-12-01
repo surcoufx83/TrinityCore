@@ -527,10 +527,9 @@ inline void KillRewarder::_RewardXP(Player* player, float rate)
     }
 
     if (
-    		member->isAlive() &&
-            member->IsAtGroupRewardDistance(_victim) &&
-            member->IsAtGroupRewardDistance(player) &&
-            member->HasItemOrGemWithIdEquipped(sWorld->getIntConfig(CONFIG_XP_BOOST_PREMIUM_ITEMID), 1))
+    		player->isAlive() &&
+            player->IsAtGroupRewardDistance(_victim) &&
+            player->HasItemOrGemWithIdEquipped(sWorld->getIntConfig(CONFIG_XP_BOOST_PREMIUM_ITEMID), 1))
     	boostItemPremium = true;
 
     if (xp)
