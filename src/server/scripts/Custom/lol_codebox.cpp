@@ -250,7 +250,7 @@ private:
 			pbag = player->GetItemByEntry(item)->GetBagSlot();
 			pslot = player->GetItemByEntry(item)->GetSlot();
 
-			player->RemoveItem(pbag, pslot, true);
+			player->DestroyItem(pbag, pslot, true);
 
 			return true;
 		}
