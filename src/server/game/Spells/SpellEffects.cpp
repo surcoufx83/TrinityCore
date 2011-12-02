@@ -5986,6 +5986,10 @@ void Spell::EffectSummonPlayer(SpellEffIndex /*effIndex*/)
     if (unitTarget->HasAura(23445))
         return;
 
+    // (temporary) prevent cancel existing request due to a new request, leaving the new one invalid
+    if (unitTarget->ToPlayer()->HasActiveSummonRequest())
+        return;
+
     float x, y, z;
     m_caster->GetClosePoint(x, y, z, unitTarget->GetObjectSize());
 
