@@ -157,7 +157,7 @@ private:
         	//Premium VIP-Hemd Preparation
         	if(item_id == 200029)
         	{
-        		if(!player->HasItemOrGemWithIdEquipped(200000, 1) && !player->HasItemOrGemWithIdEquipped(200005, 1))
+        		if(!player->HasItemCount(200000, 1, true) && !player->HasItemCount(200005, 1, true))
         		{
         			_Creature->MonsterWhisper("Du kannst keinen Premium Code Einloesen, wenn du kein normales VIP-Hemd hast!", player->GetGUID());
         			sLog->outError("CodeBox: Player %u request correct code (%s) but player doesn't have the normal VIP-Shirt.", player->GetGUID());
