@@ -528,7 +528,10 @@ inline void KillRewarder::_RewardXP(Player* player, float rate)
     }
 
     if (player->HasItemOrGemWithIdEquipped(sWorld->getIntConfig(CONFIG_XP_BOOST_PREMIUM_ITEMID), 1))
+    {
     	boostItemPremium = true;
+    	boostItem        = false;
+    }
 
     if (xp)
     {
