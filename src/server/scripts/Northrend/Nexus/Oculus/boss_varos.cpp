@@ -30,12 +30,12 @@ enum Says
 enum Spells
 {
     SPELL_ENERGIZE_CORES_VISUAL       = 62136,
-    SPELL_ENERGIZE_CORES              = 50785, //Damage 5938 to 6562, effec2 Triggers 54069, effect3 Triggers 56251
+    SPELL_ENERGIZE_CORES              = 50785, // Damage 5938 to 6562, effec2 Triggers 54069, effect3 Triggers 56251
     SPELL_ENERGIZE_CORES_H            = 59372,
-    SPELL_CALL_AZURE_RING_CAPTAIN     = 51002, //Effect Send Event (12229)
-    /*SPELL_CALL_AZURE_RING_CAPTAIN_2 = 51006, //Effect Send Event (10665)
-    SPELL_CALL_AZURE_RING_CAPTAIN_3   = 51007, //Effect Send Event (18454)
-    SPELL_CALL_AZURE_RING_CAPTAIN_4   = 51008, //Effect Send Event (18455)*/
+    SPELL_CALL_AZURE_RING_CAPTAIN     = 51002, // Effect Send Event (12229)
+    /*SPELL_CALL_AZURE_RING_CAPTAIN_2 = 51006, // Effect Send Event (10665)
+    SPELL_CALL_AZURE_RING_CAPTAIN_3   = 51007, // Effect Send Event (18454)
+    SPELL_CALL_AZURE_RING_CAPTAIN_4   = 51008, // Effect Send Event (18455)*/
     SPELL_CALL_AMPLIFY_MAGIC          = 51054,
     SPELL_CALL_AMPLIFY_MAGIC_H        = 59371,
 
@@ -203,8 +203,8 @@ class npc_azure_ring_captain : public CreatureScript
                 if (Unit* target = ObjectAccessor::GetUnit(*me, targetGUID))
                 // DoCast(target, SPELL_ICE_BEAM);
                 {
-                    Creature* summoned = target->SummonCreature(28239, *target, TEMPSUMMON_TIMED_DESPAWN, 10000);
-                    DoCast(summoned, SPELL_ARCANE_BEAM_VISUAL);
+                    if (Creature* summoned = target->SummonCreature(28239, *target, TEMPSUMMON_TIMED_DESPAWN, 10000))
+                        DoCast(summoned, SPELL_ARCANE_BEAM_VISUAL);
                 }
             }
 

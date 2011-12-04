@@ -53,7 +53,7 @@ enum Yells
     SAY_KILL_3                                    = -1578021
 };
 
-enum eCreature
+enum UromCreature
 {
     NPC_PHANTASMAL_CLOUDSCRAPER                   = 27645,
     NPC_PHANTASMAL_MAMMOTH                        = 27642,
@@ -228,7 +228,6 @@ class boss_urom : public CreatureScript
                 if (!me->IsNonMeleeSpellCasted(false) && !UpdateVictim())
                     return;
 
-                //! TODO: TEST
                 if (!instance || instance->GetData(DATA_UROM_PLATFORM) < 2)
                     return;
 

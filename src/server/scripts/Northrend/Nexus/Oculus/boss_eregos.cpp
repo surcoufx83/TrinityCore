@@ -74,7 +74,6 @@ enum Actions
 
 enum RubyDrake
 {
-    NPC_RUBY_DRAKE_VEHICLE       = 27756,
     SPELL_RIDE_RUBY_DRAKE_QUE    = 49463, // Apply Aura: Periodic Trigger, Interval: 3 seconds ---> 49464
     SPELL_RUBY_DRAKE_SADDLE      = 49464, // Allows you to ride on the back of an Amber Drake. ---> Dummy
     SPELL_RUBY_SEARING_WRATH     = 50232, // (60 yds) - Instant - Breathes a stream of fire at an enemy dragon, dealing 6800 to 9200 Fire damage and then jumping to additional dragons within 30 yards. Each jump increases the damage by 50%. Affects up to 5 total targets
@@ -90,7 +89,6 @@ enum RubyDrake
 
 enum AmberDrake
 {
-    NPC_AMBER_DRAKE_VEHICLE      = 27755,
     SPELL_RIDE_AMBER_DRAKE_QUE   = 49459, // Apply Aura: Periodic Trigger, Interval: 3 seconds ---> 49460
     SPELL_AMBER_DRAKE_SADDLE     = 49460, // Allows you to ride on the back of an Amber Drake. ---> Dummy
     SPELL_AMBER_SHOCK_LANCE      = 49840, // (60 yds) - Instant - Deals 4822 to 5602 Arcane damage and detonates all Shock Charges on an enemy dragon. Damage is increased by 6525 for each detonated.
@@ -106,7 +104,6 @@ enum AmberDrake
 
 enum EmeraldDrake
 {
-    NPC_EMERALD_DRAKE_VEHICLE         = 27692,
     SPELL_RIDE_EMERALD_DRAKE_QUE      = 49427, // Apply Aura: Periodic Trigger, Interval: 3 seconds ---> 49346
     SPELL_EMERALD_DRAKE_SADDLE        = 49346, // Allows you to ride on the back of an Amber Drake. ---> Dummy
     SPELL_EMERALD_LEECHING_POISON     = 50328, // (60 yds) - Instant - Poisons the enemy dragon, leeching 1300 to the caster every 2 sec. for 12 sec. Stacks up to 3 times.
@@ -159,7 +156,7 @@ class boss_eregos : public CreatureScript
                 Talk(SAY_AGGRO);
             }
 
-            void DoAction(const int32 action)
+            void DoAction(int32 const action)
             {
                 if (action != ACTION_SET_NORMAL_EVENTS)
                     return;
