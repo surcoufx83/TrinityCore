@@ -6,7 +6,7 @@ UPDATE `creature_template` SET `unit_flags`=0x00008040 WHERE `entry` IN (26737,3
 UPDATE `creature` SET `unit_flags`=0,`dynamicflags`=`dynamicflags`&~32 WHERE `id` IN (26734,30516,26735,30517,26736,30518,26737,30519,26746,30520,26761,30521);
 UPDATE `creature_template` SET `dynamicflags`=`dynamicflags`&~32 WHERE `entry` IN (26734,30516,26735,30517,26736,30518,26737,30519,26746,30520,26761,30521);
 -- remove Feign Death Aura
-UPDATE `creature_addon` SET `auras`='' WHERE `entry` IN (26734,30516,26735,30517,26736,30518,26737,30519,26746,30520,26761,30521);
+UPDATE `creature_addon` SET `auras`='' WHERE `guid` BETWEEN 126481 AND 126598;
 -- improve Azure Skyrazor position
 UPDATE `creature` SET 
 `position_z`=-10,
