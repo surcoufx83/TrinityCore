@@ -431,7 +431,8 @@ void Spell::EffectSchoolDMG(SpellEffIndex effIndex)
                     }
                     case 50341: // Touch the Nightmare
                     {
-                        damage = unitTarget->CountPctFromMaxHealth(30);
+                        if (effIndex == EFFECT_2)
+                            damage = unitTarget->CountPctFromMaxHealth(30);
                         break;
                     }
                     case 20625: // Ritual of Doom Sacrifice
