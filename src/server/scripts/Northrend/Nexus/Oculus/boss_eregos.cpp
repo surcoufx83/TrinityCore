@@ -47,7 +47,11 @@ enum Spells
     SPELL_PLANAR_SHIFT              = 51162,
     SPELL_SUMMON_LEY_WHELP          = 51175,
     SPELL_SUMMON_PLANAR_ANOMALIES   = 57963,
-    SPELL_PLANAR_BLAST              = 57976
+    SPELL_PLANAR_BLAST              = 57976,
+
+    SPELL_RUBY_DRAKE_SADDLE         = 49464,
+    SPELL_EMERALD_DRAKE_SADDLE      = 49346,
+    SPELL_AMBER_DRAKE_SADDLE        = 49460
 };
 
 enum Npcs
@@ -62,54 +66,16 @@ enum Phases
     PHASE_SECOND_PLANAR   = 3
 };
 
+enum AchievementData
+{
+    DATA_RUBY_VOID = 1,
+    DATA_EMERALD_VOID,
+    DATA_AMBER_VOID
+};
+
 enum Actions
 {
     ACTION_SET_NORMAL_EVENTS = 1
-};
-
-/*Ruby Drake,
-(npc 27756) (item 37860)
-(summoned by spell Ruby Essence = 37860 ---> Call Amber Drake == 49462 ---> Summon 27756)
-*/
-
-enum RubyDrake
-{
-    SPELL_RIDE_RUBY_DRAKE_QUE    = 49463, // Apply Aura: Periodic Trigger, Interval: 3 seconds ---> 49464
-    SPELL_RUBY_DRAKE_SADDLE      = 49464, // Allows you to ride on the back of an Amber Drake. ---> Dummy
-    SPELL_RUBY_SEARING_WRATH     = 50232, // (60 yds) - Instant - Breathes a stream of fire at an enemy dragon, dealing 6800 to 9200 Fire damage and then jumping to additional dragons within 30 yards. Each jump increases the damage by 50%. Affects up to 5 total targets
-    SPELL_RUBY_EVASIVE_AURA      = 50248, // Instant - Allows the Ruby Drake to generate Evasive Charges when hit by hostile attacks and spells.
-    SPELL_RUBY_EVASIVE_MANEUVERS = 50240, // Instant - 5 sec. cooldown - Allows your drake to dodge all incoming attacks and spells. Requires Evasive Charges to use. Each attack or spell dodged while this ability is active burns one Evasive Charge. Lasts 30 sec. or until all charges are exhausted.
-    SPELL_RUBY_MARTYR            = 50253  // Instant - 10 sec. cooldown - Redirect all harmful spells cast at friendly drakes to yourself for 10 sec.
-};
-
-/*Amber Drake,
-(npc 27755) (item 37859)
-(summoned by spell Amber Essence = 37859 ---> Call Amber Drake == 49461 ---> Summon 27755)
-*/
-
-enum AmberDrake
-{
-    SPELL_RIDE_AMBER_DRAKE_QUE   = 49459, // Apply Aura: Periodic Trigger, Interval: 3 seconds ---> 49460
-    SPELL_AMBER_DRAKE_SADDLE     = 49460, // Allows you to ride on the back of an Amber Drake. ---> Dummy
-    SPELL_AMBER_SHOCK_LANCE      = 49840, // (60 yds) - Instant - Deals 4822 to 5602 Arcane damage and detonates all Shock Charges on an enemy dragon. Damage is increased by 6525 for each detonated.
-    // SPELL_AMBER_STOP_TIME // Instant - 1 min cooldown - Halts the passage of time, freezing all enemy dragons in place for 10 sec. This attack applies 5 Shock Charges to each affected target.
-    // you do not have access to until you kill the Mage-Lord Urom.
-    SPELL_AMBER_TEMPORAL_RIFT    = 49592 // (60 yds) - Channeled - Channels a temporal rift on an enemy dragon for 10 sec. While trapped in the rift, all damage done to the target is increased by 100%. In addition, for every 15, 000 damage done to a target affected by Temporal Rift, 1 Shock Charge is generated.
-};
-
-/*Emerald Drake,
-(npc 27692) (item 37815),
-(summoned by spell Emerald Essence = 37815 ---> Call Emerald Drake == 49345 ---> Summon 27692)
-*/
-
-enum EmeraldDrake
-{
-    SPELL_RIDE_EMERALD_DRAKE_QUE      = 49427, // Apply Aura: Periodic Trigger, Interval: 3 seconds ---> 49346
-    SPELL_EMERALD_DRAKE_SADDLE        = 49346, // Allows you to ride on the back of an Amber Drake. ---> Dummy
-    SPELL_EMERALD_LEECHING_POISON     = 50328, // (60 yds) - Instant - Poisons the enemy dragon, leeching 1300 to the caster every 2 sec. for 12 sec. Stacks up to 3 times.
-    SPELL_EMERALD_TOUCH_THE_NIGHTMARE = 50341, // (60 yds) - Instant - Consumes 30% of the caster's max health to inflict 25, 000 nature damage to an enemy dragon and reduce the damage it deals by 25% for 30 sec.
-    // you do not have access to until you kill the Mage-Lord Urom
-    SPELL_EMERALD_DREAM_FUNNEL        = 50344  // (60 yds) - Channeled - Transfers 5% of the caster's max health to a friendly drake every second for 10 seconds as long as the caster channels.
 };
 
 class boss_eregos : public CreatureScript
@@ -125,9 +91,9 @@ class boss_eregos : public CreatureScript
             {
                 _Reset();
 
-                //EmeraldVoid = true;
-                //RubyVoid = true;
-                //AmberVoid = true;
+                _rubyVoid = true;
+                _emeraldVoid = true;
+                _amberVoid = true;
 
                 _phase = PHASE_NORMAL;
                 DoAction(ACTION_SET_NORMAL_EVENTS);
@@ -138,22 +104,50 @@ class boss_eregos : public CreatureScript
                 DoScriptText(RAND(SAY_KILL_1, SAY_KILL_2, SAY_KILL_3), me);
             }
 
+            void CheckVoids()
+            {
+                Map* map = me->GetMap();
+                if (map && map->IsDungeon())
+                {
+                    Map::PlayerList const& Players = map->GetPlayers();
+                    for (Map::PlayerList::const_iterator itr = Players.begin(); itr != Players.end(); ++itr)
+                    {
+                        if (Player* player = itr->getSource())
+                        {
+                            if (player->isGameMaster())
+                                continue;
+
+                            if (player->HasAura(SPELL_RUBY_DRAKE_SADDLE))
+                                _rubyVoid = false;
+                            if (player->HasAura(SPELL_EMERALD_DRAKE_SADDLE))
+                                _emeraldVoid = false;
+                            if (player->HasAura(SPELL_AMBER_DRAKE_SADDLE))
+                                _amberVoid = false;
+                        }
+                    }
+                }
+            }
+
             void EnterCombat(Unit* /*who*/)
             {
-                /* TODO: MOVE TO SCRIPT
-                if(Creature* RubyDrake = me->FindNearestCreature(27756, 200, true))
-                    if(RubyDrake->HasAura(49464))
-                        RubyVoid = false;
-                if(Creature* AmberDrake = me->FindNearestCreature(27755, 200, true))
-                    if(AmberDrake->HasAura(49460))
-                        AmberVoid = false;
-                if(Creature* EmeraldDrake = me->FindNearestCreature(27692, 200, true))
-                    if(EmeraldDrake->HasAura(49346))
-                        EmeraldVoid = false;
-                        */
-
+                CheckVoids();
                 _EnterCombat();
                 Talk(SAY_AGGRO);
+            }
+
+            uint32 GetData(uint32 type)
+            {
+                switch (type)
+                {
+                    case DATA_RUBY_VOID:
+                        return _rubyVoid ? 1 : 0;
+                    case DATA_EMERALD_VOID:
+                        return _emeraldVoid ? 1 : 0;
+                    case DATA_AMBER_VOID:
+                        return _amberVoid ? 1 : 0;
+                }
+
+                return 0;
             }
 
             void DoAction(int32 const action)
@@ -263,24 +257,15 @@ class boss_eregos : public CreatureScript
 
             void JustDied(Unit* /*killer*/)
             {
-                /*
-                if(EmeraldVoid == true)
-                    instance->DoCompleteAchievement(2045);
-                if(RubyVoid == true)
-                    instance->DoCompleteAchievement(2044);
-                if(AmberVoid == true)
-                    instance->DoCompleteAchievement(2046);
-                    */
-
                 Talk(SAY_DEATH);
                 _JustDied();
             }
 
         private:
             uint8 _phase;
-            //bool EmeraldVoid;
-            //bool RubyVoid;
-            //bool AmberVoid;
+            bool _rubyVoid;
+            bool _emeraldVoid;
+            bool _amberVoid;
         };
 
         CreatureAI* GetAI(Creature* creature) const
@@ -317,8 +302,53 @@ class spell_eregos_planar_shift : public SpellScriptLoader
         }
 };
 
+class achievement_ruby_void : public AchievementCriteriaScript
+{
+    public:
+        achievement_ruby_void() : AchievementCriteriaScript("achievement_ruby_void") { }
+
+        bool OnCheck(Player* /*source*/, Unit* target)
+        {
+            if (target && target->IsAIEnabled)
+                return target->GetAI()->GetData(DATA_RUBY_VOID);
+
+            return false;
+        }
+};
+
+class achievement_emerald_void : public AchievementCriteriaScript
+{
+    public:
+        achievement_emerald_void() : AchievementCriteriaScript("achievement_emerald_void") { }
+
+        bool OnCheck(Player* /*source*/, Unit* target)
+        {
+            if (target && target->IsAIEnabled)
+                return target->GetAI()->GetData(DATA_EMERALD_VOID);
+
+            return false;
+        }
+};
+
+class achievement_amber_void : public AchievementCriteriaScript
+{
+    public:
+        achievement_amber_void() : AchievementCriteriaScript("achievement_amber_void") { }
+
+        bool OnCheck(Player* /*source*/, Unit* target)
+        {
+            if (target && target->IsAIEnabled)
+                return target->GetAI()->GetData(DATA_AMBER_VOID);
+
+            return false;
+        }
+};
+
 void AddSC_boss_eregos()
 {
     new boss_eregos();
     new spell_eregos_planar_shift();
+    new achievement_ruby_void();
+    new achievement_emerald_void();
+    new achievement_amber_void();
 }

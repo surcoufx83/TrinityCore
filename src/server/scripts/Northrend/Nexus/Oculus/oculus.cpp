@@ -213,7 +213,7 @@ class npc_oculus_mount : public CreatureScript
 
                         Unit* summoner = me->ToTempSummon()->GetSummoner();
 
-                        if (summoner && summoner->isAlive() && summoner->GetDistance(me) < 30.0f)
+                        if (summoner && summoner->isAlive() && summoner->GetDistance(me) < 30.0f && !summoner->isInCombat())
                         {
                             summoner->CastSpell(me, spellId, true);
                         }

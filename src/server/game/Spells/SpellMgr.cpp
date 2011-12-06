@@ -2997,10 +2997,6 @@ void SpellMgr::LoadDbcDataCorrections()
             case 30657: // Quake
                 spellInfo->EffectTriggerSpell[0] = 30571;
                 break;
-            case 30541: // Blaze (needs conditions entry)
-                spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_TARGET_ENEMY;
-                spellInfo->EffectImplicitTargetB[0] = 0;
-                break;
             case 31447: // Mark of Kaz'rogal (needs target selection script)
             case 31298: // Sleep (needs target selection script)
             case 51904: // Summon Ghouls On Scarlet Crusade (this should use conditions table, script for this spell needs to be fixed)
