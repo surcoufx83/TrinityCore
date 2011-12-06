@@ -7933,24 +7933,8 @@ bool Unit::HandleAuraProc(Unit* victim, uint32 damage, Aura* triggeredByAura, Sp
                 case 50240:
                 {
                     RemoveAuraFromStack(50241);
-                    if (!HasAura(50241))
-                        RemoveAura(50240);
                     *handled = true;
-                    break;
-                }
-                // Evasive Aura
-                case 50248:
-                {
-                    if(Aura* aur_old = GetAura(50240))
-                    {
-                        CastSpell(this, 50241, true);
-                        Aura* aur_new = AddAura(50240, this);
-                        aur_new->SetDuration(aur_old->GetDuration());
-                    }
-                    else
-                        CastSpell(this, 50241, true);
-                    *handled = true;
-                    break;
+                    return !HasAura(50241); // drop in case of non-existing 50241
                 }
                 // Nevermelting Ice Crystal
                 case 71564:
@@ -8725,6 +8709,13 @@ bool Unit::HandleProcTriggerSpell(Unit* victim, uint32 damage, AuraEffect* trigg
                 return false;
             break;
         }
+        // Evasive Aura
+        case 50248:
+        {
+            if (HasAura(50240))
+                return false;
+            break;
+        }
         // Deflection
         case 52420:
         {
@@ -8732,7 +8723,6 @@ bool Unit::HandleProcTriggerSpell(Unit* victim, uint32 damage, AuraEffect* trigg
                 return false;
             break;
         }
-
         // Cheat Death
         case 28845:
         {

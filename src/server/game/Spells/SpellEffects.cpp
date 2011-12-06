@@ -429,6 +429,11 @@ void Spell::EffectSchoolDMG(SpellEffIndex effIndex)
                         damage = unitTarget->CountPctFromMaxHealth(50);
                         break;
                     }
+                    case 50341: // Touch the Nightmare
+                    {
+                        damage = unitTarget->CountPctFromMaxHealth(30);
+                        break;
+                    }
                     case 20625: // Ritual of Doom Sacrifice
                     case 29142: // Eyesore Blaster
                     case 35139: // Throw Boom's Doom
