@@ -295,7 +295,7 @@ class spell_varos_centrifuge_shield : public SpellScriptLoader
             {
                 if (Unit* caster = GetCaster())
                 {
-                    caster->ToCreature()->SetReactState(REACT_AGGRESSIVE);
+                    caster->ToCreature()->SetReactState(REACT_DEFENSIVE);
                     caster->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_15|UNIT_FLAG_PASSIVE|UNIT_FLAG_OOC_NOT_ATTACKABLE|UNIT_FLAG_UNK_6);
                 }
             }

@@ -238,14 +238,14 @@ class npc_oculus_mount : public CreatureScript
         }
 };
 
-class spell_amber_drake_schock_lance : public SpellScriptLoader
+class spell_amber_drake_shock_lance : public SpellScriptLoader
 {
     public:
-        spell_amber_drake_schock_lance() : SpellScriptLoader("spell_amber_drake_schock_lance") { }
+        spell_amber_drake_shock_lance() : SpellScriptLoader("spell_amber_drake_shock_lance") { }
 
-        class spell_amber_drake_schock_lance_SpellScript : public SpellScript
+        class spell_amber_drake_shock_lance_SpellScript : public SpellScript
         {
-            PrepareSpellScript(spell_amber_drake_schock_lance_SpellScript);
+            PrepareSpellScript(spell_amber_drake_shock_lance_SpellScript);
 
             void RecalculateDamage()
             {
@@ -258,13 +258,13 @@ class spell_amber_drake_schock_lance : public SpellScriptLoader
 
             void Register()
             {
-                OnHit += SpellHitFn(spell_amber_drake_schock_lance_SpellScript::RecalculateDamage);
+                OnHit += SpellHitFn(spell_amber_drake_shock_lance_SpellScript::RecalculateDamage);
             }
         };
 
         SpellScript* GetSpellScript() const
         {
-            return new spell_amber_drake_schock_lance_SpellScript();
+            return new spell_amber_drake_shock_lance_SpellScript();
         }
 };
 
@@ -369,7 +369,7 @@ void AddSC_oculus()
 {
     new npc_oculus_drake();
     new npc_oculus_mount();
-    new spell_amber_drake_schock_lance();
+    new spell_amber_drake_shock_lance();
     new spell_amber_drake_stop_time();
     new spell_amber_drake_temporal_rift();
 }
