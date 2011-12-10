@@ -5075,18 +5075,6 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
                         }
                     }
                     break;
-                case SPELLFAMILY_ROGUE:
-                    switch (GetId())
-                    {
-                        case 59628: // Tricks of the Trade
-                            caster->SetReducedThreatPercent(0, 0);
-                            break;
-                        case 57934: // Tricks of the Trade
-                            if (aurApp->GetRemoveMode() != AURA_REMOVE_BY_DEFAULT)
-                                caster->SetReducedThreatPercent(0, 0);
-                            break;
-                    }
-                    break;
                 case SPELLFAMILY_HUNTER:
                     switch (GetId())
                     {
