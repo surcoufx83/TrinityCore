@@ -153,8 +153,8 @@ class boss_eregos : public CreatureScript
 
                 events.ScheduleEvent(EVENT_ARCANE_BARRAGE, urand(3, 10) * IN_MILLISECONDS, 0, PHASE_NORMAL);
                 events.ScheduleEvent(EVENT_ARCANE_VOLLEY, urand(10, 25) * IN_MILLISECONDS, 0, PHASE_NORMAL);
-                events.ScheduleEvent(EVENT_ENRAGED_ASSAULT, urand(35, 50) * IN_MILLISECONDS, 0, PHASE_NORMAL);
-                events.ScheduleEvent(EVENT_SUMMON_LEY_WHELP, urand(15, 30) * IN_MILLISECONDS, 0, PHASE_NORMAL);
+                events.ScheduleEvent(EVENT_ENRAGED_ASSAULT, urand(30, 45) * IN_MILLISECONDS, 0, PHASE_NORMAL);
+                events.ScheduleEvent(EVENT_SUMMON_LEY_WHELP, urand(15, 20) * IN_MILLISECONDS, 0, PHASE_NORMAL);
             }
 
             void DamageTaken(Unit* /*attacker*/, uint32& /*damage*/)
@@ -207,7 +207,7 @@ class boss_eregos : public CreatureScript
                         case EVENT_SUMMON_LEY_WHELP:
                             for (uint8 i = 0; i < 3; ++i)
                                 DoCast(SPELL_SUMMON_LEY_WHELP);
-                            events.ScheduleEvent(EVENT_SUMMON_LEY_WHELP, urand(15, 30) * IN_MILLISECONDS, 0, PHASE_NORMAL);
+                            events.ScheduleEvent(EVENT_SUMMON_LEY_WHELP, 15*IN_MILLISECONDS, 0, PHASE_NORMAL);
                             break;
                     }
                 }
@@ -245,6 +245,7 @@ class npc_planar_anomaly : public CreatureScript
             {
                 me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
                 me->SetDisplayId(11686);
+                me->SetFlying(true);
 
                 DoCast(me, SPELL_PLANAR_ANOMALY_AGGRO, true);
                 DoCast(me, SPELL_PLANAR_DISTORTION, true);
@@ -364,6 +365,57 @@ class achievement_amber_void : public AchievementCriteriaScript
         }
 };
 
+class achievement_experienced_drake_rider_amber : public AchievementCriteriaScript
+{
+    public:
+        achievement_experienced_drake_rider_amber() : AchievementCriteriaScript("achievement_experienced_drake_rider_amber") { }
+
+        bool OnCheck(Player* source, Unit* /*target*/)
+        {
+            if (Creature* vehicle = source->GetVehicleCreatureBase())
+            {
+                if (vehicle->GetEntry() == NPC_AMBER_DRAKE)
+                    return true;
+            }
+
+            return false;
+        }
+};
+
+class achievement_experienced_drake_rider_emerald : public AchievementCriteriaScript
+{
+    public:
+        achievement_experienced_drake_rider_emerald() : AchievementCriteriaScript("achievement_experienced_drake_rider_emerald") { }
+
+        bool OnCheck(Player* source, Unit* /*target*/)
+        {
+            if (Creature* vehicle = source->GetVehicleCreatureBase())
+            {
+                if (vehicle->GetEntry() == NPC_EMERALD_DRAKE)
+                    return true;
+            }
+
+            return false;
+        }
+};
+
+class achievement_experienced_drake_rider_ruby : public AchievementCriteriaScript
+{
+    public:
+        achievement_experienced_drake_rider_ruby() : AchievementCriteriaScript("achievement_experienced_drake_rider_ruby") { }
+
+        bool OnCheck(Player* source, Unit* /*target*/)
+        {
+            if (Creature* vehicle = source->GetVehicleCreatureBase())
+            {
+                if (vehicle->GetEntry() == NPC_RUBY_DRAKE)
+                    return true;
+            }
+
+            return false;
+        }
+};
+
 void AddSC_boss_eregos()
 {
     new boss_eregos();
@@ -372,4 +424,7 @@ void AddSC_boss_eregos()
     new achievement_ruby_void();
     new achievement_emerald_void();
     new achievement_amber_void();
+    new achievement_experienced_drake_rider_amber();
+    new achievement_experienced_drake_rider_emerald();
+    new achievement_experienced_drake_rider_ruby();
 }
