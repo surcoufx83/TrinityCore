@@ -3048,6 +3048,11 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_TARGET_ANY;
                 spellInfo->EffectImplicitTargetA[2] = TARGET_UNIT_TARGET_ANY;
                 break;
+            case 66667: // Gear Scaling
+                spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_TARGET_ANY;
+                spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_TARGET_ANY;
+                spellInfo->EffectImplicitTargetA[2] = TARGET_UNIT_TARGET_ANY;
+                break;
             case 8494: // Mana Shield (rank 2)
                 // because of bug in dbc
                 spellInfo->procChance = 0;
