@@ -252,6 +252,11 @@ class npc_planar_anomaly : public CreatureScript
                 blastTimer = 15000;
             }
 
+            void Reset()
+            {
+                DoZoneInCombat(me, 200.0f);
+            }
+
             void UpdateAI(uint32 const diff)
             {
                 if (!UpdateVictim())
