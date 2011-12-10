@@ -176,6 +176,7 @@ class npc_oculus_mount : public CreatureScript
         {
             npc_oculus_mountAI(Creature* c) : NullCreatureAI(c)
             {
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 _enterTimer = 1500;
                 _entered = false;
             }
@@ -215,6 +216,7 @@ class npc_oculus_mount : public CreatureScript
 
                         if (summoner && summoner->isAlive() && summoner->GetDistance(me) < 30.0f && !summoner->isInCombat())
                         {
+                            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                             summoner->CastSpell(me, spellId, true);
                         }
                         else
@@ -233,89 +235,6 @@ class npc_oculus_mount : public CreatureScript
         CreatureAI* GetAI(Creature* creature) const
         {
             return new npc_oculus_mountAI(creature);
-        }
-};
-
-class npc_oculus_ringlord_conjurer : public CreatureScript
-{
-    public:
-        npc_oculus_ringlord_conjurer() : CreatureScript("npc_oculus_ringlord_conjurer") { }
-
-        struct npc_oculus_ringlord_conjurerAI : public ScriptedAI
-        {
-            npc_oculus_ringlord_conjurerAI(Creature* c) : ScriptedAI(c) { }
-
-            void EnterCombat(Unit* /*who*/)
-            {
-                me->AddAura(DUNGEON_MODE(50717, 59276), me);
-            }
-        };
-
-        CreatureAI* GetAI(Creature* creature) const
-        {
-            return new npc_oculus_ringlord_conjurerAI(creature);
-        }
-};
-
-class npc_oculus_ringlord_sorceress : public CreatureScript
-{
-    public:
-        npc_oculus_ringlord_sorceress() : CreatureScript("npc_oculus_ringlord_sorceress") { }
-
-        struct npc_oculus_ringlord_sorceressAI : public ScriptedAI
-        {
-            npc_oculus_ringlord_sorceressAI(Creature* c) : ScriptedAI(c) { }
-
-            void Reset()
-            {
-                _blizzardTimer = 6000;
-                _flameStrikeTimer = 3000;
-            }
-
-            void UpdateAI(uint32 const diff)
-            {
-                if (!UpdateVictim())
-                    return;
-
-                if (_blizzardTimer <= diff)
-                {
-                    if (!me->IsNonMeleeSpellCasted(false))
-                    {
-                        if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 30, true))
-                            DoCast(target, DUNGEON_MODE(50715, 59278));
-                        _blizzardTimer = urand(12000, 17000);
-                    }
-                    else
-                        _blizzardTimer = urand(5000, 10000);
-                }
-                else
-                    _blizzardTimer -= diff;
-
-                if (_flameStrikeTimer <= diff)
-                {
-                    if (!me->IsNonMeleeSpellCasted(false))
-                    {
-                        if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 30, true))
-                            DoCast(target, DUNGEON_MODE(16102, 61402));
-                        _flameStrikeTimer = urand(6000, 13000);
-                    }
-                    else
-                        _flameStrikeTimer = urand(4000, 8000);
-                }
-                else
-                    _flameStrikeTimer -= diff;
-
-                DoMeleeAttackIfReady();
-            }
-
-        private:
-            uint32 _blizzardTimer;
-            uint32 _flameStrikeTimer;
-        };
-
-        CreatureAI* GetAI(Creature* creature) const
-        {
-            return new npc_oculus_ringlord_sorceressAI(creature);
         }
 };
 
@@ -450,8 +369,6 @@ void AddSC_oculus()
 {
     new npc_oculus_drake();
     new npc_oculus_mount();
-    new npc_oculus_ringlord_conjurer();
-    new npc_oculus_ringlord_sorceress();
     new spell_amber_drake_schock_lance();
     new spell_amber_drake_stop_time();
     new spell_amber_drake_temporal_rift();

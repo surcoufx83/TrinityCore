@@ -32,6 +32,7 @@ enum Spells
     SPELL_EMPOWERED_ARCANE_EXPLOSION              = 51110,
     SPELL_EMPOWERED_ARCANE_EXPLOSION_H            = 59377,
     SPELL_FROSTBOMB                               = 51103, //Urom throws a bomb, hitting its target with the highest aggro which inflict directly 650 frost damage and drops a frost zone on the ground. This zone deals 650 frost damage per second and reduce the movement speed by 35%. Lasts 1 minute.
+    SPELL_FROST_BUFFET                            = 58025,
     SPELL_SUMMON_MENAGERIE                        = 50476, //Summons an assortment of creatures and teleports the caster to safety.
     SPELL_SUMMON_MENAGERIE_2                      = 50495,
     SPELL_SUMMON_MENAGERIE_3                      = 50496,
@@ -236,6 +237,8 @@ class boss_urom : public CreatureScript
                     me->InterruptNonMeleeSpells(false);
                     if (frostBombTimer <= 8000)
                         frostBombTimer += 8000;
+                    if (timeBombTimer <= 2500)
+                        timeBombTimer += 2500;
                     DoScriptText(SAY_TELEPORT, me);
                     me->GetMotionMaster()->MoveIdle();
                     DoCast(SPELL_TELEPORT);
@@ -265,9 +268,10 @@ class boss_urom : public CreatureScript
                         Position pos;
                         me->getVictim()->GetPosition(&pos);
 
+                        me->RemoveUnitMovementFlag(MOVEMENTFLAG_CAN_FLY);
                         me->NearTeleportTo(pos.GetPositionX(), pos.GetPositionY(), pos.GetPositionZ(), pos.GetOrientation());
                         me->GetMotionMaster()->MoveChase(me->getVictim(), 0, 0);
-                        me->SetUnitMovementFlags(MOVEMENTFLAG_WALKING);
+                        //me->SetUnitMovementFlags(MOVEMENTFLAG_WALKING);
 
                         canCast = false;
                         canGoBack = false;
@@ -282,7 +286,7 @@ class boss_urom : public CreatureScript
                     if (frostBombTimer <= diff)
                     {
                         DoCastVictim(SPELL_FROSTBOMB);
-                        frostBombTimer = urand(5000, 8000);
+                        frostBombTimer = urand(7000, 15000);
                     }
                     else
                         frostBombTimer -= diff;
@@ -337,6 +341,15 @@ class boss_urom : public CreatureScript
                     default:
                         break;
                 }
+            }
+
+            void DamageDealt(Unit* victim, uint32& /*damage*/, DamageEffectType damageType)
+            {
+                if (!IsHeroic())
+                    return;
+
+                if (damageType == DOT)
+                    DoCast(victim, SPELL_FROST_BUFFET, true);
             }
 
             private:

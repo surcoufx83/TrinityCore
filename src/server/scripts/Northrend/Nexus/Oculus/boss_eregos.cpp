@@ -46,17 +46,13 @@ enum Spells
     SPELL_PLANAR_ANOMALIES          = 57959,
     SPELL_PLANAR_SHIFT              = 51162,
     SPELL_SUMMON_LEY_WHELP          = 51175,
-    SPELL_SUMMON_PLANAR_ANOMALIES   = 57963,
+    SPELL_PLANAR_ANOMALY_AGGRO      = 57971,
     SPELL_PLANAR_BLAST              = 57976,
+    SPELL_PLANAR_DISTORTION         = 59379,
 
     SPELL_RUBY_DRAKE_SADDLE         = 49464,
     SPELL_EMERALD_DRAKE_SADDLE      = 49346,
     SPELL_AMBER_DRAKE_SADDLE        = 49460
-};
-
-enum Npcs
-{
-    NPC_PLANAR_ANOMALY    = 30879
 };
 
 enum Phases
@@ -161,29 +157,6 @@ class boss_eregos : public CreatureScript
                 events.ScheduleEvent(EVENT_SUMMON_LEY_WHELP, urand(15, 30) * IN_MILLISECONDS, 0, PHASE_NORMAL);
             }
 
-            void JustSummoned(Creature* summon)
-            {
-                BossAI::JustSummoned(summon);
-
-                if (summon->GetEntry() != NPC_PLANAR_ANOMALY)
-                    return;
-
-                /* //! TODO: TEST
-                summon->CombatStop(true);
-                summon->SetReactState(REACT_PASSIVE);
-                summon->GetMotionMaster()->MoveRandom(100.0f);
-                */
-            }
-
-            void SummonedCreatureDespawn(Creature* summon)
-            {
-                if (summon->GetEntry() != NPC_PLANAR_ANOMALY)
-                    return;
-
-                //! TODO: TEST
-                summon->CastSpell(summon, SPELL_PLANAR_BLAST, true);
-            }
-
             void DamageTaken(Unit* /*attacker*/, uint32& /*damage*/)
             {
                 if (!IsHeroic())
@@ -195,24 +168,11 @@ class boss_eregos : public CreatureScript
                     events.Reset();
                     _phase = (me->GetHealthPct() < 60.0f && me->GetHealthPct() > 20.0f) ? PHASE_FIRST_PLANAR : PHASE_SECOND_PLANAR;
 
-                    DoCast(SPELL_PLANAR_SHIFT);
-
                     // not sure about the amount, and if we should despawn previous spawns (dragon trashs)
                     summons.DespawnAll();
 
-                    //! TODO: TEST
-                    for (uint8 i = 0; i < 6; ++i)
-                    {
-                        Creature* summoned = me->SummonCreature(NPC_PLANAR_ANOMALY, *me, TEMPSUMMON_TIMED_DESPAWN, 15000);
-                        Unit* target = summoned->AI()->SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
-                        if (target && target->GetVehicleBase())
-                        {
-                            summoned->CombatStart(target->GetVehicleBase(), true);
-                            summoned->AddThreat(target->GetVehicleBase(), 50000.0f);
-                        }
-                        summoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
-                        summoned->SetDisplayId(11686);
-                    }
+                    DoCast(me, SPELL_PLANAR_ANOMALIES, true);
+                    DoCast(me, SPELL_PLANAR_SHIFT, true);
                 }
             }
 
@@ -271,6 +231,61 @@ class boss_eregos : public CreatureScript
         CreatureAI* GetAI(Creature* creature) const
         {
             return new boss_eregosAI(creature);
+        }
+};
+
+class npc_planar_anomaly : public CreatureScript
+{
+    public:
+        npc_planar_anomaly() : CreatureScript("npc_planar_anomaly") { }
+
+        struct npc_planar_anomalyAI : public ScriptedAI
+        {
+            npc_planar_anomalyAI(Creature* creature) : ScriptedAI(creature)
+            {
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
+                me->SetDisplayId(11686);
+
+                DoCast(me, SPELL_PLANAR_ANOMALY_AGGRO, true);
+                DoCast(me, SPELL_PLANAR_DISTORTION, true);
+                chaseTimer = 1000;
+                blastTimer = 15000;
+            }
+
+            void UpdateAI(uint32 const diff)
+            {
+                if (!UpdateVictim())
+                    return;
+
+                if (chaseTimer <= diff)
+                {
+                     if (me->ToTempSummon())
+                        if (Unit* summoner = me->ToTempSummon()->GetSummoner())
+                            me->GetMotionMaster()->MoveChase(summoner);
+
+                    chaseTimer = 20000;
+                }
+                else
+                    chaseTimer -= diff;
+
+                if (blastTimer <= diff)
+                {
+                    DoCast(SPELL_PLANAR_BLAST);
+                    me->RemoveAllAuras();
+                    blastTimer = 10000;
+                }
+                else
+                    blastTimer -= diff;
+            }
+
+        private:
+            uint32 chaseTimer;
+            uint32 blastTimer;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new npc_planar_anomalyAI(creature);
         }
 };
 
@@ -347,6 +362,7 @@ class achievement_amber_void : public AchievementCriteriaScript
 void AddSC_boss_eregos()
 {
     new boss_eregos();
+    new npc_planar_anomaly();
     new spell_eregos_planar_shift();
     new achievement_ruby_void();
     new achievement_emerald_void();

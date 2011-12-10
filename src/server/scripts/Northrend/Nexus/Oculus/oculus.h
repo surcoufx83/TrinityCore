@@ -46,7 +46,9 @@ enum Creatures
     NPC_CENTRIFUGE_CONSTRUCT    = 27641,
     NPC_EMERALD_DRAKE           = 27692,
     NPC_AMBER_DRAKE             = 27755,
-    NPC_RUBY_DRAKE              = 27756
+    NPC_RUBY_DRAKE              = 27756,
+
+    NPC_CENTRIFUGE_CORE         = 28183
 };
 
 enum GameObjects
