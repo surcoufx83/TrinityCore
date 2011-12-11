@@ -160,16 +160,25 @@ private:
         		if(!player->HasItemCount(200000, 1, true) && !player->HasItemCount(200005, 1, true))
         		{
         			_Creature->MonsterWhisper("Du kannst keinen Premium Code Einloesen, wenn du kein normales VIP-Hemd hast!", player->GetGUID());
-        			sLog->outError("CodeBox: Player %u request correct code (%s) but player doesn't have the normal VIP-Shirt.", player->GetGUID());
+        			sLog->outError("CodeBox: Player %u request correct code (%s) but player doesn't have the normal VIP-Shirt.", player->GetGUID(), sCode);
         			return false;
         		}
 
         		if(!DeleteItem(player, 200000, 1) && !DeleteItem(player, 200005, 1))
+        		{
+        			_Creature->MonsterWhisper("Es gab einen Fehler beim Loeschen des alten VIP-Hemdes, bitte versuche es spaeter noch einmal!", player->GetGUID());
+        			sLog->outError("CodeBox: Player %u request correct code (%s) but some error occured on deleting the normal VIP-Shirt.", player->GetGUID(), sCode);
+        			return false;
+        		}
+
+        		if(!AddItem(_Creature, player, item_id, quantity))
         			return false;
         	}
-
-            if(!AddItem(_Creature, player, item_id, quantity))
-                return false;
+        	else
+        	{
+        		if(!AddItem(_Creature, player, item_id, quantity))
+        			return false;
+        	}
         }
         // itemcode for randomitem
         else if(item_id < 0)
