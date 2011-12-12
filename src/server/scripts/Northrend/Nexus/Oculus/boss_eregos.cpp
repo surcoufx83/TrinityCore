@@ -249,7 +249,7 @@ class npc_planar_anomaly : public CreatureScript
 
                 DoCast(me, SPELL_PLANAR_ANOMALY_AGGRO, true);
                 DoCast(me, SPELL_PLANAR_DISTORTION, true);
-                chaseTimer = 1000;
+                chaseTimer = 500;
                 blastTimer = 15000;
             }
 
@@ -267,7 +267,7 @@ class npc_planar_anomaly : public CreatureScript
                 {
                      if (me->ToTempSummon())
                         if (Unit* summoner = me->ToTempSummon()->GetSummoner())
-                            me->GetMotionMaster()->MoveChase(summoner);
+                            me->GetMotionMaster()->MoveFollow(summoner, 0.0f, 0.0f);
 
                     chaseTimer = 20000;
                 }
