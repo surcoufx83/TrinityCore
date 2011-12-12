@@ -48,7 +48,8 @@ enum Creatures
     NPC_AMBER_DRAKE             = 27755,
     NPC_RUBY_DRAKE              = 27756,
 
-    NPC_CENTRIFUGE_CORE         = 28183
+    NPC_CENTRIFUGE_CORE         = 28183,
+    NPC_IMAGE_OF_BELGARISTRASZ  = 28012
 };
 
 enum GameObjects
