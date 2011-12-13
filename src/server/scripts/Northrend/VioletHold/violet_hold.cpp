@@ -40,6 +40,15 @@ enum PortalCreatures
     CREATURE_AZURE_STALKER            = 32191
 };
 
+enum DefenseSpells
+{
+    SPELL_ARCANE_LIGHTNING            = 57912,
+    SPELL_ARCANE_LIGHTNING_VISUAL     = 57930,
+    SPELL_ARCANE_LIGHTNING_KILL       = 58152,
+    SPELL_ARCANE_LIGHTNING_VISUAL_2   = 60038,
+    SPELL_SPAWN_EFFECT                = 57886
+};
+
 enum AzureInvaderSpells
 {
     SPELL_CLEAVE                = 15496,
@@ -216,25 +225,30 @@ const float SaboteurFinalPos1[3][3] =
     {1891.165161f, 762.969421f, 47.666920f},
     {1893.168091f, 740.919189f, 47.666920f}
 };
+
 const float SaboteurFinalPos2[3][3] =
 {
     {1882.242676f, 834.818726f, 38.646786f},
     {1879.220825f, 842.224854f, 43.333641f},
     {1873.842896f, 863.892456f, 43.333641f}
 };
+
 const float SaboteurFinalPos3[2][3] =
 {
     {1904.298340f, 792.400391f, 38.646782f},
     {1935.716919f, 758.437073f, 30.627895f}
 };
+
 const float SaboteurFinalPos4[3] =
 {
     1855.006104f, 760.641724f, 38.655266f
 };
+
 const float SaboteurFinalPos5[3] =
 {
     1906.667358f, 841.705566f, 38.637894f
 };
+
 const float SaboteurFinalPos6[5][3] =
 {
     {1911.437012f, 821.289246f, 38.684128f},
@@ -328,24 +342,24 @@ public:
             {
                 for (std::list<Creature*>::const_iterator itr = GuardList.begin(); itr != GuardList.end(); ++itr)
                 {
-                    if (Creature* pGuard = *itr)
+                    if (Creature* Guard = *itr)
                     {
-                        pGuard->DisappearAndDie();
-                        pGuard->Respawn();
-                        pGuard->SetVisible(true);
-                        pGuard->SetReactState(REACT_AGGRESSIVE);
+                        Guard->DisappearAndDie();
+                        Guard->Respawn();
+                        Guard->SetVisible(true);
+                        Guard->SetReactState(REACT_AGGRESSIVE);
                     }
                 }
             }
         }
 
-        void UpdateAI(const uint32 uiDiff)
+        void UpdateAI(uint32 const diff)
         {
-            ScriptedAI::UpdateAI(uiDiff);
+            ScriptedAI::UpdateAI(diff);
 
             if (uiPhase)
             {
-                if (uiTimer <= uiDiff)
+                if (uiTimer <= diff)
                 {
                     switch (uiPhase)
                     {
@@ -361,10 +375,10 @@ public:
                             if (!GuardList.empty())
                                 for (std::list<Creature*>::const_iterator itr = GuardList.begin(); itr != GuardList.end(); ++itr)
                                 {
-                                    if (Creature* pGuard = *itr)
+                                    if (Creature* Guard = *itr)
                                     {
-                                        pGuard->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
-                                        pGuard->GetMotionMaster()->MovePoint(0, MovePosition);
+                                        Guard->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
+                                        Guard->GetMotionMaster()->MovePoint(0, MovePosition);
                                     }
                                 }
                             uiTimer = 6000;
@@ -378,10 +392,10 @@ public:
                             if (!GuardList.empty())
                                 for (std::list<Creature*>::const_iterator itr = GuardList.begin(); itr != GuardList.end(); ++itr)
                                 {
-                                    if (Creature* pGuard = *itr)
+                                    if (Creature* Guard = *itr)
                                     {
-                                        pGuard->SetVisible(false);
-                                        pGuard->SetReactState(REACT_PASSIVE);
+                                        Guard->SetVisible(false);
+                                        Guard->SetReactState(REACT_PASSIVE);
                                     }
                                 }
                             uiTimer = 2000;
@@ -402,7 +416,7 @@ public:
                             break;
                     }
                 }
-                else uiTimer -= uiDiff;
+                else uiTimer -= diff;
             }
 
             if (!UpdateVictim())
@@ -426,9 +440,9 @@ public:
 
     struct mob_azure_saboteurAI : public npc_escortAI
     {
-        mob_azure_saboteurAI(Creature* c):npc_escortAI(c)
+        mob_azure_saboteurAI(Creature* c) : npc_escortAI(c)
         {
-            instance           = c->GetInstanceScript();
+            instance = c->GetInstanceScript();
             bHasGotMovingPoints = false;
             uiBoss = 0;
             Reset();
@@ -481,7 +495,7 @@ public:
             }
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             if (instance && instance->GetData(DATA_MAIN_EVENT_PHASE) != IN_PROGRESS)
                 me->CastStop();
@@ -532,9 +546,9 @@ public:
         {
             me->CastSpell(me, SABOTEUR_SHIELD_DISRUPTION, false);
             me->DisappearAndDie();
-            Creature* pSaboPort = Unit::GetCreature((*me), instance->GetData64(DATA_SABOTEUR_PORTAL));
-            if (pSaboPort)
-                pSaboPort->DisappearAndDie();
+            Creature* SaboPort = Unit::GetCreature((*me), instance->GetData64(DATA_SABOTEUR_PORTAL));
+            if (SaboPort)
+                SaboPort->DisappearAndDie();
             instance->SetData(DATA_START_BOSS_ENCOUNTER, 1);
         }
     };
@@ -578,9 +592,9 @@ public:
 
         void MoveInLineOfSight(Unit* /*who*/) {}
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
-            if (!instance) //Massive usage of instance, global check
+            if (!instance) // Massive usage of instance, global check
                 return;
 
             if (instance->GetData(DATA_REMOVE_NPC) == 1)
@@ -590,7 +604,7 @@ public:
             }
 
             uint8 uiWaveCount = instance->GetData(DATA_WAVE_COUNT);
-            if ((uiWaveCount == 6) || (uiWaveCount == 12)) //Don't spawn mobs on boss encounters
+            if ((uiWaveCount == 6) || (uiWaveCount == 12)) // Don't spawn mobs on boss encounters
                 return;
 
             switch (uiTypeOfMobsPortal)
@@ -638,8 +652,8 @@ public:
                         {
                             bPortalGuardianOrKeeperOrEliteSpawn = true;
                             uint32 entry = RAND(CREATURE_PORTAL_GUARDIAN, CREATURE_PORTAL_KEEPER);
-                            if (Creature* pPortalKeeper = DoSummon(entry, me, 2.0f, 0, TEMPSUMMON_DEAD_DESPAWN))
-                                me->CastSpell(pPortalKeeper, SPELL_PORTAL_CHANNEL, false);
+                            if (Creature* PortalKeeper = DoSummon(entry, me, 2.0f, 0, TEMPSUMMON_DEAD_DESPAWN))
+                                me->CastSpell(PortalKeeper, SPELL_PORTAL_CHANNEL, false);
                         }
                         uiSpawnTimer = SPAWN_TIME;
                     } else uiSpawnTimer -= diff;
@@ -662,33 +676,33 @@ public:
         void JustSummoned(Creature* summoned)
         {
             listOfMobs.Summon(summoned);
-            if (summoned)
-                instance->SetData64(DATA_ADD_TRASH_MOB, summoned->GetGUID());
         }
 
         void SummonedMobDied(Creature* summoned)
         {
             listOfMobs.Despawn(summoned);
-            if (summoned)
-                instance->SetData64(DATA_DEL_TRASH_MOB, summoned->GetGUID());
         }
     };
-
 };
 
 struct violet_hold_trashAI : public npc_escortAI
 {
-    violet_hold_trashAI(Creature* c):npc_escortAI(c)
+    violet_hold_trashAI(Creature* c) : npc_escortAI(c)
     {
         instance = c->GetInstanceScript();
+
         bHasGotMovingPoints = false;
+        isAtDoor = false;
+
         if (instance)
             portalLocationID = instance->GetData(DATA_PORTAL_LOCATION);
+
         Reset();
     }
 
     public:
         InstanceScript* instance;
+        bool isAtDoor;
         bool bHasGotMovingPoints;
         uint32 portalLocationID;
         uint32 secondPortalRouteID;
@@ -724,7 +738,7 @@ struct violet_hold_trashAI : public npc_escortAI
         }
     }
 
-    void UpdateAI(const uint32)
+    void UpdateAI(uint32 const /*diff*/)
     {
         if (instance && instance->GetData(DATA_MAIN_EVENT_PHASE) != IN_PROGRESS)
             me->CastStop();
@@ -732,7 +746,7 @@ struct violet_hold_trashAI : public npc_escortAI
         if (!bHasGotMovingPoints)
         {
             bHasGotMovingPoints = true;
-                switch (portalLocationID)
+            switch (portalLocationID)
             {
                 case 0:
                     for (int i=0;i<6;i++)
@@ -785,14 +799,17 @@ struct violet_hold_trashAI : public npc_escortAI
     {
         if (Creature* portal = Unit::GetCreature((*me), instance->GetData64(DATA_TELEPORTATION_PORTAL)))
             CAST_AI(npc_teleportation_portal_vh::npc_teleportation_portalAI, portal->AI())->SummonedMobDied(me);
-        if (instance)
+
+        if (instance && isAtDoor)
             instance->SetData(DATA_NPC_PRESENCE_AT_DOOR_REMOVE, 1);
     }
 
     void CreatureStartAttackDoor()
     {
         //me->SetReactState(REACT_PASSIVE);
+        isAtDoor = true;
         DoCast(SPELL_DESTROY_DOOR_SEAL);
+
         if (instance)
             instance->SetData(DATA_NPC_PRESENCE_AT_DOOR_ADD, 1);
     }
@@ -829,7 +846,7 @@ public:
             uiSunderArmorTimer = 4000;
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             violet_hold_trashAI::UpdateAI(diff);
             npc_escortAI::UpdateAI(diff);
@@ -907,7 +924,7 @@ public:
             uiFrostboltTimer = 4000;
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             violet_hold_trashAI::UpdateAI(diff);
             npc_escortAI::UpdateAI(diff);
@@ -981,7 +998,7 @@ public:
             uiSpellLockTimer = 5000;
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             violet_hold_trashAI::UpdateAI(diff);
             npc_escortAI::UpdateAI(diff);
@@ -1041,7 +1058,7 @@ public:
             uiMagicReflectionTimer = 8000;
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             violet_hold_trashAI::UpdateAI(diff);
             npc_escortAI::UpdateAI(diff);
@@ -1094,7 +1111,7 @@ public:
             TacticalBlinkCasted =false;
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             violet_hold_trashAI::UpdateAI(diff);
             npc_escortAI::UpdateAI(diff);
@@ -1106,20 +1123,18 @@ public:
             {
                 if (uiTacticalBlinkTimer <= diff)
                 {
-                    Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 40, true);
-                    if (target)
+                    if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 40, true))
                         DoCast(target, SPELL_TACTICAL_BLINK);
                         uiTacticalBlinkTimer = 6000;
                     TacticalBlinkCasted = true;
                 } else uiTacticalBlinkTimer -= diff;
             }
-
             else
             {
                 if (uiBackstabTimer <= diff)
                 {
-                    Unit* target = SelectTarget(SELECT_TARGET_NEAREST, 0, 10, true);
-                    DoCast(target, SPELL_BACKSTAB);
+                    if (Unit* target = SelectTarget(SELECT_TARGET_NEAREST, 0, 10, true))
+                        DoCast(target, SPELL_BACKSTAB);
                     TacticalBlinkCasted = false;
                     uiBackstabTimer =1300;
                 } else uiBackstabTimer -= diff;
@@ -1156,7 +1171,7 @@ public:
             uiConeOfColdTimer = 4000;
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             violet_hold_trashAI::UpdateAI(diff);
             npc_escortAI::UpdateAI(diff);
@@ -1177,7 +1192,7 @@ public:
                 if (uiSlowTimer <= diff)
                 {
                     Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
-                        if (target)
+                    if (target)
                         DoCast(target, SPELL_SLOW);
                     uiSlowTimer = 5000;
                 } else uiSlowTimer -= diff;
@@ -1195,7 +1210,7 @@ public:
 
                 if (uiConeOfColdTimer <= diff)
                 {
-                   DoCast(DUNGEON_MODE(SPELL_CONE_OF_COLD, H_SPELL_CONE_OF_COLD));
+                    DoCast(DUNGEON_MODE(SPELL_CONE_OF_COLD, H_SPELL_CONE_OF_COLD));
                     uiConeOfColdTimer = 5000;
                 } else uiConeOfColdTimer -= diff;
             }
@@ -1236,7 +1251,7 @@ public:
             uiWhirlwindTimer = 8000;
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             violet_hold_trashAI::UpdateAI(diff);
             npc_escortAI::UpdateAI(diff);
@@ -1290,7 +1305,7 @@ public:
             uiManaDetonationTimer = 5000;
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 const diff)
         {
             violet_hold_trashAI::UpdateAI(diff);
             npc_escortAI::UpdateAI(diff);
@@ -1316,7 +1331,80 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+};
 
+class npc_defense_system : public CreatureScript
+{
+    public:
+        npc_defense_system() : CreatureScript("npc_defense_system") { }
+
+        struct npc_defense_systemAI : public Scripted_NoMovementAI
+        {
+            npc_defense_systemAI(Creature* c) : Scripted_NoMovementAI(c)
+            {
+                me->SetDisplayId(me->GetCreatureInfo()->Modelid2);
+            }
+
+            void Reset()
+            {
+                active = false;
+                wipe = false;
+                visualTimer = 2000;
+                actionTimer = 4000;
+                me->SetVisible(false);
+            }
+
+            void DoAction(int32 const param)
+            {
+                switch (param)
+                {
+                    case 1:
+                        // TODO: Add crystal activation - SELECT * FROM gameobject_template WHERE entry IN (193611,193615);
+                        break;
+                    case 2: // Wipe
+                        wipe = true;
+                        break;
+                }
+
+                DoCast(me, SPELL_SPAWN_EFFECT, true);
+                me->SetVisible(true);
+                active = true;
+            }
+
+            void UpdateAI(uint32 const diff)
+            {
+                if (!active)
+                    return;
+
+                if (visualTimer <= diff)
+                {
+                    DoCast(wipe ? SPELL_ARCANE_LIGHTNING_VISUAL_2 : SPELL_ARCANE_LIGHTNING_VISUAL);
+                    visualTimer = 10000;
+                }
+                else
+                    visualTimer -= diff;
+
+                if (actionTimer <= diff)
+                {
+                    DoCast(wipe ? SPELL_ARCANE_LIGHTNING_KILL : SPELL_ARCANE_LIGHTNING);
+                    actionTimer = 10000;
+                    Reset();
+                }
+                else
+                    actionTimer -= diff;
+            }
+
+        private:
+            bool active;
+            bool wipe;
+            uint32 visualTimer;
+            uint32 actionTimer;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new npc_defense_systemAI (creature);
+        }
 };
 
 void AddSC_violet_hold()
@@ -1332,4 +1420,5 @@ void AddSC_violet_hold()
     new mob_azure_raider();
     new mob_azure_stalker();
     new mob_azure_saboteur();
+    new npc_defense_system();
 }
