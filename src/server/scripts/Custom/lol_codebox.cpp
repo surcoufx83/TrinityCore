@@ -123,7 +123,7 @@ private:
         
         if(charguid && player->GetGUID() != charguid)
         {
-            sLog->outError("CodeBox: Player %u request correct code (%s) but guid doesn't match. CodeGUID: ", player->GetGUID(), charguid);
+            sLog->outError("CodeBox: Player %u request correct code (%s) but guid doesn't match. CharGUID: %u", player->GetGUID(), sCode, charguid);
             _Creature->MonsterWhisper("Leider kannst du diesen Code nicht mit diesem Charakter Einloesen!", player->GetGUID());
             return false;
         }
