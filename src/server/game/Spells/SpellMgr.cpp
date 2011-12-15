@@ -3053,6 +3053,12 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_TARGET_ANY;
                 spellInfo->EffectImplicitTargetA[2] = TARGET_UNIT_TARGET_ANY;
                 break;
+            case 55814: // Eck Spit
+                spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_TARGET_ENEMY;
+                spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_TARGET_ENEMY;
+                spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_CONE_ENEMY_24;
+                spellInfo->EffectImplicitTargetB[1] = TARGET_UNIT_CONE_ENEMY_24;
+                break;
             case 8494: // Mana Shield (rank 2)
                 // because of bug in dbc
                 spellInfo->procChance = 0;

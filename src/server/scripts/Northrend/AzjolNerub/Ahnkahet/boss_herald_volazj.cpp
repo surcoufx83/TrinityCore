@@ -178,9 +178,7 @@ public:
         {
             me->RemoveAllAuras();
             me->SetControlled(false, UNIT_STAT_STUNNED);
-            _EnterEvadeMode();
-            me->GetMotionMaster()->MoveTargetedHome();
-            Reset();
+            ScriptedAI::EnterEvadeMode();
         }
 
         void EnterCombat(Unit* /*who*/)
