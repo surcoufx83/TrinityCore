@@ -3213,17 +3213,7 @@ void SpellMgr::LoadDbcDataCorrections()
             case 51852: // The Eye of Acherus (no spawn in phase 2 in db)
                 spellInfo->EffectMiscValue[0] |= 1;
                 break;
-            case 51001: // Tribunal of Ages - Dark Matter
-                spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_TARGET_ENEMY;
-                spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_TARGET_ENEMY;
-                spellInfo->EffectImplicitTargetB[0] = 0;
-                spellInfo->EffectImplicitTargetB[1] = 0;
-                break;
             case 51136: // Tribunal of Ages - Searing Gaze
-                spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_TARGET_ENEMY;
-                spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_TARGET_ENEMY;
-                spellInfo->EffectImplicitTargetB[0] = 0;
-                spellInfo->EffectImplicitTargetB[1] = 0;
                 spellInfo->Effect[1] = 0;
                 break;
             case 54680: // Monstrous Bite - Rank 1 (Devilsaur)
