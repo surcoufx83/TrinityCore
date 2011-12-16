@@ -2032,58 +2032,58 @@ INSERT INTO `npc_vendor` (entry, item, ExtendedCost, slot)
 VALUES
 (@CT_ENCHANTMENT_SCROLLS, '46098', '2958', '0'), -- Scroll of Enchant Weapon - Blood Draining
 (@CT_ENCHANTMENT_SCROLLS, '44497', '2958', '1'), -- Scroll of Enchant Weapon - Accuracy
-(@CT_ENCHANTMENT_SCROLLS, '38973', '501', '2'), -- Scroll of Enchant Cloak - Spell Piercing
-(@CT_ENCHANTMENT_SCROLLS, '44457', '501', '3'), -- Scroll of Enchant Cloak - Major Agility
-(@CT_ENCHANTMENT_SCROLLS, '39001', '501', '4'), -- Scroll of Enchant Cloak - Mighty Armor
-(@CT_ENCHANTMENT_SCROLLS, '38978', '501', '5'), -- Scroll of Enchant Cloak - Titanweave
-(@CT_ENCHANTMENT_SCROLLS, '39004', '501', '6'), -- Scroll of Enchant Cloak - Wisdom
-(@CT_ENCHANTMENT_SCROLLS, '38993', '501', '7'), -- Scroll of Enchant Cloak - Shadow Armor
-(@CT_ENCHANTMENT_SCROLLS, '38979', '501', '8'), -- Scroll of Enchant Gloves - Exceptional Spellpower
-(@CT_ENCHANTMENT_SCROLLS, '38951', '501', '9'), -- Scroll of Enchant Gloves - Expertise
-(@CT_ENCHANTMENT_SCROLLS, '38953', '501', '10'), -- Scroll of Enchant Gloves - Precision
-(@CT_ENCHANTMENT_SCROLLS, '38967', '501', '11'), -- Scroll of Enchant Gloves - Major Agility
-(@CT_ENCHANTMENT_SCROLLS, '44458', '501', '12'), -- Scroll of Enchant Gloves - Crusher
-(@CT_ENCHANTMENT_SCROLLS, '38990', '501', '13'), -- Scroll of Enchant Gloves - Armsman
-(@CT_ENCHANTMENT_SCROLLS, '38968', '501', '14'), -- Scroll of Enchant Bracers - Exceptional Intellect
-(@CT_ENCHANTMENT_SCROLLS, '38987', '501', '15'), -- Scroll of Enchant Bracers - Greater Stats
-(@CT_ENCHANTMENT_SCROLLS, '38980', '501', '16'), -- Scroll of Enchant Bracers - Major Spirit
-(@CT_ENCHANTMENT_SCROLLS, '44815', '501', '17'), -- Scroll of Enchant Bracers - Greater Assault
-(@CT_ENCHANTMENT_SCROLLS, '38966', '501', '18'), -- Scroll of Enchant Boots - Greater Fortitude
-(@CT_ENCHANTMENT_SCROLLS, '38986', '501', '19'), -- Scroll of Enchant Boots - Icewalker
-(@CT_ENCHANTMENT_SCROLLS, '38974', '501', '20'), -- Scroll of Enchant Boots - Greater Vitality
-(@CT_ENCHANTMENT_SCROLLS, '38961', '501', '21'), -- Scroll of Enchant Boots - Greater Spirit
-(@CT_ENCHANTMENT_SCROLLS, '38976', '501', '22'), -- Scroll of Enchant Boots - Superior Agility
-(@CT_ENCHANTMENT_SCROLLS, '38954', '501', '23'), -- Scroll of Enchant Shield - Defense
-(@CT_ENCHANTMENT_SCROLLS, '39006', '501', '24'), -- Scroll of Enchant Boots - Tuskarr's Vitality
-(@CT_ENCHANTMENT_SCROLLS, '44469', '501', '25'), -- Scroll of Enchant Boots - Greater Assault
-(@CT_ENCHANTMENT_SCROLLS, '38912', '501', '26'), -- Scroll of Enchant Chest - Exceptional Mana
-(@CT_ENCHANTMENT_SCROLLS, '39002', '501', '27'), -- Scroll of Enchant Chest - Greater Defense
+(@CT_ENCHANTMENT_SCROLLS, '38973',   '95', '2'), -- Scroll of Enchant Cloak - Spell Piercing
+(@CT_ENCHANTMENT_SCROLLS, '44457',   '95', '3'), -- Scroll of Enchant Cloak - Major Agility
+(@CT_ENCHANTMENT_SCROLLS, '39001',   '95', '4'), -- Scroll of Enchant Cloak - Mighty Armor
+(@CT_ENCHANTMENT_SCROLLS, '38978',   '95', '5'), -- Scroll of Enchant Cloak - Titanweave
+(@CT_ENCHANTMENT_SCROLLS, '39004',   '95', '6'), -- Scroll of Enchant Cloak - Wisdom
+(@CT_ENCHANTMENT_SCROLLS, '38993',   '95', '7'), -- Scroll of Enchant Cloak - Shadow Armor
+(@CT_ENCHANTMENT_SCROLLS, '38979',   '95', '8'), -- Scroll of Enchant Gloves - Exceptional Spellpower
+(@CT_ENCHANTMENT_SCROLLS, '38951',   '95', '9'), -- Scroll of Enchant Gloves - Expertise
+(@CT_ENCHANTMENT_SCROLLS, '38953',   '95', '10'), -- Scroll of Enchant Gloves - Precision
+(@CT_ENCHANTMENT_SCROLLS, '38967',   '95', '11'), -- Scroll of Enchant Gloves - Major Agility
+(@CT_ENCHANTMENT_SCROLLS, '44458',   '95', '12'), -- Scroll of Enchant Gloves - Crusher
+(@CT_ENCHANTMENT_SCROLLS, '38990',   '95', '13'), -- Scroll of Enchant Gloves - Armsman
+(@CT_ENCHANTMENT_SCROLLS, '38968',   '95', '14'), -- Scroll of Enchant Bracers - Exceptional Intellect
+(@CT_ENCHANTMENT_SCROLLS, '38987',   '95', '15'), -- Scroll of Enchant Bracers - Greater Stats
+(@CT_ENCHANTMENT_SCROLLS, '38980',   '95', '16'), -- Scroll of Enchant Bracers - Major Spirit
+(@CT_ENCHANTMENT_SCROLLS, '44815',   '95', '17'), -- Scroll of Enchant Bracers - Greater Assault
+(@CT_ENCHANTMENT_SCROLLS, '38966',   '95', '18'), -- Scroll of Enchant Boots - Greater Fortitude
+(@CT_ENCHANTMENT_SCROLLS, '38986',   '95', '19'), -- Scroll of Enchant Boots - Icewalker
+(@CT_ENCHANTMENT_SCROLLS, '38974',   '95', '20'), -- Scroll of Enchant Boots - Greater Vitality
+(@CT_ENCHANTMENT_SCROLLS, '38961',   '95', '21'), -- Scroll of Enchant Boots - Greater Spirit
+(@CT_ENCHANTMENT_SCROLLS, '38976',   '95', '22'), -- Scroll of Enchant Boots - Superior Agility
+(@CT_ENCHANTMENT_SCROLLS, '38954',   '95', '23'), -- Scroll of Enchant Shield - Defense
+(@CT_ENCHANTMENT_SCROLLS, '39006',   '95', '24'), -- Scroll of Enchant Boots - Tuskarr's Vitality
+(@CT_ENCHANTMENT_SCROLLS, '44469',   '95', '25'), -- Scroll of Enchant Boots - Greater Assault
+(@CT_ENCHANTMENT_SCROLLS, '38912',   '95', '26'), -- Scroll of Enchant Chest - Exceptional Mana
+(@CT_ENCHANTMENT_SCROLLS, '39002',   '95', '27'), -- Scroll of Enchant Chest - Greater Defense
 (@CT_ENCHANTMENT_SCROLLS, '44493', '2958', '28'), -- Scroll of Enchant Weapon - Berserking
 (@CT_ENCHANTMENT_SCROLLS, '43987', '2958', '29'), -- Scroll of Enchant Weapon - Black Magic
 (@CT_ENCHANTMENT_SCROLLS, '44467', '2958', '30'), -- Scroll of Enchant Weapon - Mighty Spellpower
 (@CT_ENCHANTMENT_SCROLLS, '44466', '2958', '31'), -- Scroll of Enchant Weapon - Superior Potency
 (@CT_ENCHANTMENT_SCROLLS, '38988', '2958', '32'), -- Scroll of Enchant Weapon - Giant Slayer
 (@CT_ENCHANTMENT_SCROLLS, '38965', '2958', '33'), -- Scroll of Enchant Weapon - Icebreaker
-(@CT_ENCHANTMENT_SCROLLS, '38962', '501', '34'), -- Scroll of Enchant Chest - Greater Mana Restoration
+(@CT_ENCHANTMENT_SCROLLS, '38962',   '95', '34'), -- Scroll of Enchant Chest - Greater Mana Restoration
 (@CT_ENCHANTMENT_SCROLLS, '38972', '2958', '35'), -- Scroll of Enchant Weapon - Lifeward
 (@CT_ENCHANTMENT_SCROLLS, '38995', '2958', '36'), -- Scroll of Enchant Weapon - Exceptional Agility
 (@CT_ENCHANTMENT_SCROLLS, '38963', '2958', '37'), -- Scroll of Enchant Weapon - Exceptional Spirit
 (@CT_ENCHANTMENT_SCROLLS, '38948', '2958', '38'), -- Scroll of Enchant Weapon - Executioner
 (@CT_ENCHANTMENT_SCROLLS, '38925', '2958', '39'), -- Scroll of Enchant Weapon - Mongoose
 (@CT_ENCHANTMENT_SCROLLS, '38838', '2958', '40'), -- Scroll of Enchant Weapon - Fiery Weapon
-(@CT_ENCHANTMENT_SCROLLS, '45056', '501', '41'), -- Scroll of Enchant Staff - Greater Spellpower
+(@CT_ENCHANTMENT_SCROLLS, '45056',   '95', '41'), -- Scroll of Enchant Staff - Greater Spellpower
 (@CT_ENCHANTMENT_SCROLLS, '44463', '2958', '42'), -- Scroll of Enchant 2H Weapon - Massacre
 (@CT_ENCHANTMENT_SCROLLS, '38981', '2958', '43'), -- Scroll of Enchant 2H Weapon - Scourgebane
-(@CT_ENCHANTMENT_SCROLLS, '44455', '501', '44'), -- Scroll of Enchant Shield - Greater Intellect
-(@CT_ENCHANTMENT_SCROLLS, '38945', '501', '45'), -- Scroll of Enchant Shield - Major Stamina
-(@CT_ENCHANTMENT_SCROLLS, '39005', '501', '46'), -- Scroll of Enchant Chest - Super Health
-(@CT_ENCHANTMENT_SCROLLS, '38975', '501', '47'), -- Scroll of Enchant Chest - Exceptional Resilience
-(@CT_ENCHANTMENT_SCROLLS, '44465', '501', '48'), -- Scroll of Enchant Chest - Powerful Stats
-(@CT_ENCHANTMENT_SCROLLS, '39003', '501', '49'), -- Scroll of Enchant Cloak - Greater Speed
-(@CT_ENCHANTMENT_SCROLLS, '44470', '501', '50'), -- Scroll of Enchant Bracer - Superior Spellpower
-(@CT_ENCHANTMENT_SCROLLS, '44947', '501', '51'), -- Scroll of Enchant Bracer - Major Stamina
+(@CT_ENCHANTMENT_SCROLLS, '44455',   '95', '44'), -- Scroll of Enchant Shield - Greater Intellect
+(@CT_ENCHANTMENT_SCROLLS, '38945',   '95', '45'), -- Scroll of Enchant Shield - Major Stamina
+(@CT_ENCHANTMENT_SCROLLS, '39005',   '95', '46'), -- Scroll of Enchant Chest - Super Health
+(@CT_ENCHANTMENT_SCROLLS, '38975',   '95', '47'), -- Scroll of Enchant Chest - Exceptional Resilience
+(@CT_ENCHANTMENT_SCROLLS, '44465',   '95', '48'), -- Scroll of Enchant Chest - Powerful Stats
+(@CT_ENCHANTMENT_SCROLLS, '39003',   '95', '49'), -- Scroll of Enchant Cloak - Greater Speed
+(@CT_ENCHANTMENT_SCROLLS, '44470',   '95', '50'), -- Scroll of Enchant Bracer - Superior Spellpower
+(@CT_ENCHANTMENT_SCROLLS, '44947',   '95', '51'), -- Scroll of Enchant Bracer - Major Stamina
 (@CT_ENCHANTMENT_SCROLLS, '46026', '2958', '52'), -- Scroll of Enchant Weapon - Blade Ward
-(@CT_ENCHANTMENT_SCROLLS, '38949', '501', '53'), -- Scroll of Enchant Shield - Resilience
+(@CT_ENCHANTMENT_SCROLLS, '38949',   '95', '53'), -- Scroll of Enchant Shield - Resilience
 (@CT_ENCHANTMENT_SCROLLS, '38871', '2958', '54'); -- Scroll of Enchant Weapon - Lifestealing
 --
 --
@@ -2111,34 +2111,35 @@ INSERT INTO `locales_creature` (`entry`, `name_loc1`, `name_loc2`, `name_loc3`, 
  `subname_loc5`, `subname_loc6`, `subname_loc7`, `subname_loc8`)
 VALUES(@CT_ENCHANTMENT_HEADSHOULDER,'','','Kopf, Schulter, Hose Verzauberungen','','','','','',
  NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+-- thanks to FlavaSava and Nature12 for helping with the items and prices
 DELETE FROM npc_vendor WHERE entry = @CT_ENCHANTMENT_HEADSHOULDER;
 INSERT INTO `npc_vendor` (entry, item, ExtendedCost, slot)
 VALUES
-(@CT_ENCHANTMENT_HEADSHOULDER, '41602', '501', '0'), -- Brilliant Spellthread
-(@CT_ENCHANTMENT_HEADSHOULDER, '44877', '501', '1'), -- Arcanum of Burning Mysteries
-(@CT_ENCHANTMENT_HEADSHOULDER, '44876', '501', '2'), -- Arcanum of Blissful Mending
-(@CT_ENCHANTMENT_HEADSHOULDER, '44878', '501', '3'), -- Arcanum of the Stalwart Protector
-(@CT_ENCHANTMENT_HEADSHOULDER, '44879', '501', '4'), -- Arcanum of Torment
-(@CT_ENCHANTMENT_HEADSHOULDER, '44075', '501', '5'), -- Arcanum of Dominance
-(@CT_ENCHANTMENT_HEADSHOULDER, '44069', '501', '6'), -- Arcanum of Triumph
-(@CT_ENCHANTMENT_HEADSHOULDER, '44957', '501', '7'), -- Greater Inscription of the Gladiator
-(@CT_ENCHANTMENT_HEADSHOULDER, '44873', '501', '8'), -- Greater Inscription of the Pinnacle
-(@CT_ENCHANTMENT_HEADSHOULDER, '44874', '501', '9'), -- Greater Inscription of the Storm
-(@CT_ENCHANTMENT_HEADSHOULDER, '44872', '501', '10'), -- Greater Inscription of the Crag
-(@CT_ENCHANTMENT_HEADSHOULDER, '44871', '501', '11'), -- Greater Inscription of the Axe
-(@CT_ENCHANTMENT_HEADSHOULDER, '41604', '501', '12'), -- Sapphire Spellthread
-(@CT_ENCHANTMENT_HEADSHOULDER, '38373', '501', '13'), -- Frosthide Leg Armor
-(@CT_ENCHANTMENT_HEADSHOULDER, '38374', '501', '14'), -- Icescale Leg Armor
-(@CT_ENCHANTMENT_HEADSHOULDER, '41611', '501', '15'), -- Eternal Belt Buckle
-(@CT_ENCHANTMENT_HEADSHOULDER, '41167', '501', '16'), -- Heartseeker Scope
-(@CT_ENCHANTMENT_HEADSHOULDER, '23765', '501', '17'), -- Khorium Scope
-(@CT_ENCHANTMENT_HEADSHOULDER, '41146', '501', '18'), -- Sun Scope
-(@CT_ENCHANTMENT_HEADSHOULDER, '44068', '501', '19'), -- Inscription of Dominance
-(@CT_ENCHANTMENT_HEADSHOULDER, '44067', '501', '20'), -- Inscription of Triumph
-(@CT_ENCHANTMENT_HEADSHOULDER, '41976', '501', '21'), -- Titanium Weapon Chain
-(@CT_ENCHANTMENT_HEADSHOULDER, '44936', '501', '22'), -- Titanium Plating
-(@CT_ENCHANTMENT_HEADSHOULDER, '44963', '501', '23'), -- Earthen Leg Armor
-(@CT_ENCHANTMENT_HEADSHOULDER, '42500', '501', '24'); -- Titanium Shield Spike
+(@CT_ENCHANTMENT_HEADSHOULDER, '41602',  '95',  '0'), -- Brilliant Spellthread
+(@CT_ENCHANTMENT_HEADSHOULDER, '44877', '386',  '1'), -- Arcanum of Burning Mysteries
+(@CT_ENCHANTMENT_HEADSHOULDER, '44876', '386',  '2'), -- Arcanum of Blissful Mending
+(@CT_ENCHANTMENT_HEADSHOULDER, '44878', '386',  '3'), -- Arcanum of the Stalwart Protector
+(@CT_ENCHANTMENT_HEADSHOULDER, '44879', '386',  '4'), -- Arcanum of Torment
+(@CT_ENCHANTMENT_HEADSHOULDER, '44075', '386',  '5'), -- Arcanum of Dominance
+(@CT_ENCHANTMENT_HEADSHOULDER, '44069', '386',  '6'), -- Arcanum of Triumph
+(@CT_ENCHANTMENT_HEADSHOULDER, '44957',  '95',  '7'), -- Greater Inscription of the Gladiator
+(@CT_ENCHANTMENT_HEADSHOULDER, '44873',  '95',  '8'), -- Greater Inscription of the Pinnacle
+(@CT_ENCHANTMENT_HEADSHOULDER, '44874',  '95',  '9'), -- Greater Inscription of the Storm
+(@CT_ENCHANTMENT_HEADSHOULDER, '44872',  '95', '10'), -- Greater Inscription of the Crag
+(@CT_ENCHANTMENT_HEADSHOULDER, '44871',  '95', '11'), -- Greater Inscription of the Axe
+(@CT_ENCHANTMENT_HEADSHOULDER, '41604',  '95', '12'), -- Sapphire Spellthread
+(@CT_ENCHANTMENT_HEADSHOULDER, '38373',  '95', '13'), -- Frosthide Leg Armor
+(@CT_ENCHANTMENT_HEADSHOULDER, '38374',  '95', '14'), -- Icescale Leg Armor
+(@CT_ENCHANTMENT_HEADSHOULDER, '41611',  '95', '15'), -- Eternal Belt Buckle
+(@CT_ENCHANTMENT_HEADSHOULDER, '41167',  '95', '16'), -- Heartseeker Scope
+(@CT_ENCHANTMENT_HEADSHOULDER, '23765',  '95', '17'), -- Khorium Scope
+(@CT_ENCHANTMENT_HEADSHOULDER, '41146',  '95', '18'), -- Sun Scope
+(@CT_ENCHANTMENT_HEADSHOULDER, '44068',  '95', '19'), -- Inscription of Dominance
+(@CT_ENCHANTMENT_HEADSHOULDER, '44067',  '95', '20'), -- Inscription of Triumph
+(@CT_ENCHANTMENT_HEADSHOULDER, '41976',  '95', '21'), -- Titanium Weapon Chain
+(@CT_ENCHANTMENT_HEADSHOULDER, '44936',  '95', '22'), -- Titanium Plating
+(@CT_ENCHANTMENT_HEADSHOULDER, '44963',  '95', '23'), -- Earthen Leg Armor
+(@CT_ENCHANTMENT_HEADSHOULDER, '42500',  '95', '24'); -- Titanium Shield Spike
 --
 -- Head and Shoulder Enchantment // Kopf- und Schulter Verzauberungen :: ENDE
 --
