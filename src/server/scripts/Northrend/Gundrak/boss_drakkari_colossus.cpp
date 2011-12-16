@@ -148,9 +148,7 @@ class boss_drakkari_colossus : public CreatureScript
             void EnterEvadeMode()
             {
                 me->ClearUnitState(UNIT_STAT_STUNNED | UNIT_STAT_ROOT);
-                _EnterEvadeMode();
-                me->GetMotionMaster()->MoveTargetedHome();
-                Reset();
+                ScriptedAI::EnterEvadeMode();
             }
 
             uint32 GetData(uint32 data)

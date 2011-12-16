@@ -1,72 +1,151 @@
--- instance oculus
-UPDATE creature_template SET unit_flags=0 WHERE entry=30879;
-UPDATE gameobject_template SET AIName="SmartGameObjectAI" WHERE entry=188715;
-UPDATE creature_template SET AIName="SmartAI" WHERE entry IN(27636, 27633, 27635, 27638, 28276, 27642, 27644, 27645, 27647, 27648, 27650, 27651, 27653, 28239);
+-- INSTANCE: The Oculus
+-- first remove unneeded stuff from recent commits
+UPDATE `gameobject_template` SET `AIName`='' WHERE `entry` IN (188715,189985);
+DELETE FROM `smart_scripts` WHERE `entryorguid` IN (188715,189985);
+DELETE FROM `spell_script_names` WHERE `ScriptName`='spell_emerald_drake_touch_the_nightmare';
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry` IN (49346,49460,49464);
+UPDATE `creature_template` SET `AIName`='',`ScriptName`='' WHERE `entry`=28239;
+DELETE FROM `creature` WHERE `id`=28183;
+DELETE FROM `creature_addon` WHERE `guid` BETWEEN 100227 AND 100234;
+-- end remove
 
-UPDATE creature_template SET ScriptName="npc_oculus_drakes" WHERE entry IN(27692, 27755, 27756);
-UPDATE creature_template SET ScriptName="npc_arcane_beam" WHERE entry=28239;
-UPDATE creature_template SET AIName="", ScriptName ="npc_oculus_ringlord_sorceress" WHERE entry=27639;
-UPDATE creature_template SET AIName="", ScriptName ="npc_oculus_ringlord_conjurer" WHERE entry=27640;
+UPDATE `creature_template` SET `unit_flags`=0 WHERE `entry`=30879;
+UPDATE `creature_template` SET `IconName`='',`ScriptName`='npc_oculus_mount' WHERE `entry` IN (27692,27755,27756);
+UPDATE `creature_template` SET `InhabitType`=5,`ScriptName`='npc_planar_anomaly' WHERE `entry`=30879;
+UPDATE `creature_template_addon` SET `auras`='50325' WHERE `entry` IN (27692,27755);
+UPDATE `creature_template_addon` SET `auras`='50248 50325' WHERE `entry`=27756;
+UPDATE `creature_template` SET `spell2`=50240,`spell3`=50253,`spell4`=0 WHERE `entry`=27756;
 
-UPDATE creature_template SET mingold=7666, maxgold=12776 WHERE entry IN(27633, 27635, 27636, 27641, 30901, 30902, 30904, 30905, 30915, 30916);
-UPDATE creature_template SET mingold=40000, maxgold=60000, mechanic_immune_mask=646676351 WHERE entry IN(27447, 27654, 27655, 27656);
-UPDATE creature_template SET mingold=120000, maxgold=180000, mechanic_immune_mask=646676351 WHERE entry IN(31558, 31559, 31560, 31561);
+UPDATE `creature_template` SET `mingold`=7666,`maxgold`=12776 WHERE `entry` IN(27633,27635,27636,27641, 30901,30902,30904,30905,30915,30916);
+UPDATE `creature_template` SET `mingold`=40000,`maxgold`=60000,`mechanic_immune_mask`=646676351 WHERE `entry` IN(27447,27654,27655,27656);
+UPDATE `creature_template` SET `mingold`=120000,`maxgold`=180000,`mechanic_immune_mask`=646676351 WHERE `entry` IN(31558,31559,31560,31561);
 
-DELETE FROM spell_script_names WHERE spell_id IN(50341, 49838, 49840, 50240, 49592);
-INSERT INTO spell_script_names VALUES
-(50341, "spell_emerald_drake_touch_the_nightmare"),
-(49840, "spell_amber_drake_schock_lance"),
-(49838, "spell_amber_drake_time_stop"),
-(50240, "spell_ruby_drake_evasive_maneuvers"),
-(49592, "spell_amber_drake_temporal_rift");
+DELETE FROM `spell_script_names` WHERE `spell_id` IN(49838,49840,50240,49592);
+INSERT INTO `spell_script_names` VALUES
+(49840,'spell_amber_drake_shock_lance'),
+(49838,'spell_amber_drake_stop_time'),
+(50240,'spell_ruby_drake_evasive_maneuvers'),
+(49592,'spell_amber_drake_temporal_rift');
 
-DELETE FROM spell_proc_event WHERE entry=50240;
-INSERT INTO spell_proc_event VALUES
-(50240, 0, 0, 0, 0, 0, 0, 0x0000004, 0, 100, 0);
+DELETE FROM `spell_proc_event` WHERE `entry`=50240;
+INSERT INTO `spell_proc_event` (`entry`,`procEx`,`CustomChance`)VALUES
+(50240,4,100);
 
-DELETE FROM smart_scripts WHERE entryorguid IN (27636, 27633, 27635, 27638, 27639, 27640, 28276, 27642, 27644, 27645, 27647, 27648,27650, 27651, 27653, 188715);
-INSERT INTO smart_scripts VALUES
--- trash
-(27636, 0, 0, 0, 0, 0, 100, 0x02, 2000, 4000, 2000, 4000, 11, 50705, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Ley-Whelp - Arcane Bolt normal"),
-(27636, 0, 1, 0, 0, 0, 100, 0x04, 2000, 4000, 2000, 4000, 11, 59210, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Ley-Whelp - Arcane Bolt heroic"),
-(27633, 0, 0, 0, 0, 0, 100, 0, 3000, 5000, 6000, 8000, 11, 50573, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Azure Inquisitor - Arcane Cleave"),
-(27633, 0, 1, 0, 0, 0, 100, 0, 9000, 10000, 15000, 20000, 11, 50690, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Azure Inquisitor - immobilizing field"),
-(27633, 0, 2, 0, 9, 0, 100, 0x02, 5, 30, 3000, 5000, 11, 51454, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Azure Inquisitor - Throw normal"),
-(27633, 0, 3, 0, 9, 0, 100, 0x04, 5, 30, 3000, 5000, 11, 59209, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Azure Inquisitor - Throw heroic"),
-(27635, 0, 0, 0, 0, 0, 100, 0x02, 3000, 5000, 7000, 10000, 11, 50702, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Azure Spellbinder - Arcane Volley normal"),
-(27635, 0, 1, 0, 0, 0, 100, 0x04, 3000, 5000, 7000, 10000, 11, 59212, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Azure Spellbinder - Arcane Volley heroic"),
-(27635, 0, 2, 0, 0, 0, 100, 0x02, 7000, 9000, 15000, 20000, 11, 50566, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, "Azure Spellbinder - Mind Warp normal"),
-(27635, 0, 3, 0, 0, 0, 100, 0x04, 7000, 9000, 15000, 20000, 11, 38047, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, "Azure Spellbinder - Mind Warp heroic"),
-(27635, 0, 4, 0, 0, 0, 100, 0, 10000, 13000, 20000, 25000, 11, 50572, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, "Azure Spellbinder - Power Sap"),
-(27638, 0, 0, 0, 0, 0, 100, 0x02, 3000, 6000, 14000, 18000, 11, 49549, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Azure Ring Guardian - Ice Beam normal"),
-(27638, 0, 1, 0, 0, 0, 100, 0x04, 3000, 6000, 14000, 18000, 11, 59211, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Azure Ring Guardian - Ice Beam heroic"),
-(28276, 0, 0, 0, 0, 0, 100, 0x02, 2000, 4000, 4000, 7000, 11, 62249, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Ley-Whelp - Arcane Bolt normal"),
-(28276, 0, 1, 0, 0, 0, 100, 0x04, 2000, 4000, 4000, 7000, 11, 62250, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Ley-Whelp - Arcane Bolt heroic"),
+DELETE FROM `creature_addon` WHERE `guid` IN (101924,101933,101922,101974,102064,101967);
+INSERT INTO `creature_addon` (`guid`,`auras`) VALUES
+(101924,'50088'),
+(101933,'50088'),
+(101922,'50088'),
+(101974,'50088'),
+(102064,'50088'),
+(101967,'50088');
 
--- Mage-Lord adds
-(27642, 0, 0, 0, 9, 0, 100, 0, 8, 25, 6000, 8000, 11, 32323, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Phantasmal Mammoth - Charge"),
-(27642, 0, 1, 0, 0, 0, 100, 0, 4000, 6000, 10000, 12000, 11, 51253, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Phantasmal Mammoth - Trample"),
-(27644, 0, 0, 0, 0, 0, 100, 0x02, 3000, 6000, 12000, 14000, 11, 50728, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Phantasmal Wolf - Furious Howl normal"),
-(27644, 0, 1, 0, 0, 0, 100, 0x04, 3000, 6000, 12000, 14000, 11, 59274, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Phantasmal Wolf - Furious Howl heroic"),
-(27644, 0, 2, 0, 0, 0, 100, 0x02, 5000, 8000, 14000, 17000, 11, 50729, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Phantasmal Wolf - Carnivorous Bite normal"),
-(27644, 0, 3, 0, 0, 0, 100, 0x04, 5000, 8000, 14000, 17000, 11, 59269, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Phantasmal Wolf - Carnivorous Bite normal"),
-(27645, 0, 0, 0, 0, 0, 100, 0x02, 6000, 8000, 8000, 10000, 11, 59220, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Phantasmal Cloudscraper - Chain Lightning normal"),
-(27645, 0, 1, 0, 0, 0, 100, 0x04, 6000, 8000, 8000, 10000, 11, 15588, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Phantasmal Cloudscraper - Chain Lightning heroic"),
-(27645, 0, 2, 0, 0, 0, 100, 0x02, 2000, 4000, 10000, 12000, 11, 15588, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Phantasmal Cloudscraper - Thunderclap normal"),
-(27645, 0, 3, 0, 0, 0, 100, 0x04, 2000, 4000, 10000, 12000, 11, 59217, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Phantasmal Cloudscraper - Thunderclap heroic"),
-(27647, 0, 0, 0, 0, 0, 100, 0, 2000, 5000, 7000, 9000, 11, 50731, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Phantasmal Ogre - Mace Smash"),
-(27647, 0, 1, 0, 0, 0, 100, 0, 8000, 12000, 25000, 35000, 11, 50730, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Phantasmal Ogre - Bloodlust"),
-(27648, 0, 0, 0, 0, 0, 100, 0x02, 3000, 5000, 12000, 14000, 11, 50732, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Phantasmal Naga - Water Tomb normal"),
-(27648, 0, 1, 0, 0, 0, 100, 0x04, 3000, 5000, 12000, 14000, 11, 59261, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Phantasmal Naga - Water Tomb heroic"),
-(27650, 0, 0, 0, 0, 0, 100, 0x02, 1000, 3000, 15000, 2000, 75, 25020, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, "Phantasmal Air - Lightning Shield normal"),
-(27650, 0, 1, 0, 0, 0, 100, 0x04, 1000, 3000, 15000, 2000, 75, 20545, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, "Phantasmal Air - Lightning Shield heroic"),
-(27651, 0, 0, 0, 0, 0, 100, 0x02, 3000, 5000, 5000, 8000, 11, 50744, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Phantasmal Fire - Blaze normal"),
-(27651, 0, 1, 0, 0, 0, 100, 0x04, 3000, 5000, 5000, 8000, 11, 59225, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Phantasmal Fire - Blaze heroic"),
-(27653, 0, 0, 0, 0, 0, 100, 0x02, 5000, 8000, 7000, 9000, 11, 37924, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Phantasmal Water - Water Bolt Volley normal"),
-(27653, 0, 1, 0, 0, 0, 100, 0x04, 5000, 8000, 7000, 9000, 11, 59266, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, "Phantasmal Water - Water Bolt Volley heroic"),
+-- SAI
+UPDATE `creature_template` SET `AIName`='SmartAI',`ScriptName`='' WHERE `entry` IN (27636,27633,27635,27638,27641,27640,27639,28276,27642,27644,27645,27650,27651,27653,27647,27648);
+DELETE FROM `creature_ai_scripts` WHERE `creature_id` IN (27636,27633,27635,27638,27641,27640,27639,28276,27642,27644,27645,27650,27651,27653,27647,27648);
+DELETE FROM `smart_scripts` WHERE `entryorguid` IN (27636,27633,27635,27638,27641,27640,27639,28276,27642,27644,27645,27650,27651,27653,27647,27648);
+INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type`,`event_phase_mask`,`event_chance`,`event_flags`,`event_param1`,`event_param2`,`event_param3`,`event_param4`,`action_type`,`action_param1`,`action_param2`,`action_param3`,`action_param4`,`action_param5`,`action_param6`,`target_type`,`target_param1`,`target_param2`,`target_param3`,`target_x`,`target_y`,`target_z`,`target_o`,`comment`) VALUES
+(27636,0,0,0,0,0,100,2,2000,4000,2000,4000,11,50705,0,0,0,0,0,2,0,0,0,0,0,0,0,'Azure Ley-Whelp - IC - cast Arcane Bolt'),
+(27636,0,1,0,0,0,100,4,2000,4000,2000,4000,11,59210,0,0,0,0,0,2,0,0,0,0,0,0,0,'Azure Ley-Whelp - IC - cast Arcane Bolt H'),
 
--- misc
-(188715, 1, 0, 0, 64, 0, 100, 0, 0, 0, 0, 0, 62, 571, 0, 0, 0, 0, 0, 7, 0, 0, 0, 3872.2, 6984.4, 108.2, 0, "Teleport on Orb use");
+(27633,0,0,0,0,0,100,0,3000,5000,6000,8000,11,50573,0,0,0,0,0,2,0,0,0,0,0,0,0,'Azure Inquisitor - IC - cast Arcane Cleave'),
+(27633,0,1,0,0,0,100,0,9000,10000,15000,20000,11,50690,0,0,0,0,0,5,0,0,0,0,0,0,0,'Azure Inquisitor - IC - cast Immobilizing Field'),
+(27633,0,2,0,9,0,100,2,5,30,3000,5000,11,51454,0,0,0,0,0,6,0,0,0,0,0,0,0,'Azure Inquisitor - IC - cast Throw'),
+(27633,0,3,0,9,0,100,4,5,30,3000,5000,11,59209,0,0,0,0,0,6,0,0,0,0,0,0,0,'Azure Inquisitor - IC - cast Throw H'),
+
+(27635,0,0,0,0,0,100,2,3000,5000,7000,10000,11,50702,0,0,0,0,0,1,0,0,0,0,0,0,0,'Azure Spellbinder - IC - cast Arcane Volley '),
+(27635,0,1,0,0,0,100,4,3000,5000,7000,10000,11,59212,0,0,0,0,0,1,0,0,0,0,0,0,0,'Azure Spellbinder - IC - cast Arcane Volley H'),
+(27635,0,2,0,0,0,100,2,7000,9000,15000,20000,11,50566,0,0,0,0,0,5,0,0,0,0,0,0,0,'Azure Spellbinder - IC - cast Mind Warp'),
+(27635,0,3,0,0,0,100,4,7000,9000,15000,20000,11,38047,0,0,0,0,0,5,0,0,0,0,0,0,0,'Azure Spellbinder - IC - cast Mind Warp H'),
+(27635,0,4,0,0,0,100,0,10000,13000,20000,25000,11,50572,0,0,0,0,0,5,0,0,0,0,0,0,0,'Azure Spellbinder - IC - cast Power Sap'),
+
+(27638,0,0,0,0,0,100,2,0,5000,5000,7000,11,49549,0,0,0,0,0,2,0,0,0,0,0,0,0,'Azure Ring Guardian - IC - cast Ice Beam'),
+(27638,0,1,0,0,0,100,4,0,5000,5000,7000,11,59211,0,0,0,0,0,2,0,0,0,0,0,0,0,'Azure Ring Guardian - IC - cast Ice Beam H'),
+
+(27641,0,0,0,25,0,100,0,0,0,0,0,75,69844,0,0,0,0,0,1,0,0,0,0,0,0,0,'Centrifuge Construct - On Reset - add Aura: Vertex Color Bright Red'),
+(27641,0,1,0,4,0,100,0,0,0,0,0,28,69844,0,0,0,0,0,1,0,0,0,0,0,0,0,'Centrifuge Construct - On Aggro - remove Aura: Vertex Color Bright Red'),
+
+(27640,0,0,0,23,0,100,2,50717,0,0,0,11,50717,0,0,0,0,0,1,0,0,0,0,0,0,0,'Ring-Lord Conjurer - On missing Aura: Charged Skin - cast Charged Skin'),
+(27640,0,1,0,23,0,100,4,59276,0,0,0,11,59276,0,0,0,0,0,1,0,0,0,0,0,0,0,'Ring-Lord Conjurer - On missing Aura: Charged Skin H - cast Charged Skin H'),
+-- may implement beam to misc Centrifuge Construct
+
+(27639,0,0,0,0,0,100,2,3000,5000,8000,10000,11,50715,0,0,0,0,0,5,0,0,0,0,0,0,0,'Ring-Lord Sorceress - IC - cast Blizzard'),
+(27639,0,1,0,0,0,100,4,3000,5000,8000,10000,11,59278,0,0,0,0,0,5,0,0,0,0,0,0,0,'Ring-Lord Sorceress - IC - cast Blizzard H'),
+(27639,0,2,0,0,0,100,2,2000,4000,6000,8000,11,16102,0,0,0,0,0,5,0,0,0,0,0,0,0,'Ring-Lord Sorceress - IC - cast Flamestrike'),
+(27639,0,3,0,0,0,100,4,2000,4000,6000,8000,11,61402,0,0,0,0,0,5,0,0,0,0,0,0,0,'Ring-Lord Sorceress - IC - cast Flamestrike H'),
+-- may implement beam to misc Centrifuge Construct
+
+(28276,0,0,0,0,0,100,2,2000,4000,2000,4000,11,50705,0,0,0,0,0,2,0,0,0,0,0,0,0,'Greater Ley-Whelp - IC - cast Arcane Bolt'),
+(28276,0,1,0,0,0,100,4,2000,4000,2000,4000,11,59210,0,0,0,0,0,2,0,0,0,0,0,0,0,'Greater Ley-Whelp - IC - cast Arcane Bolt H'),
+
+-- Mage-Lord Urom Adds
+(27642,0,0,0,9,0,100,0,8,25,6000,8000,11,32323,0,0,0,0,0,6,0,0,0,0,0,0,0,'Phantasmal Mammoth - IC - cast Charge'),
+(27642,0,1,0,0,0,100,0,4000,6000,10000,12000,11,51253,0,0,0,0,0,1,0,0,0,0,0,0,0,'Phantasmal Mammoth - IC - cast Trample'),
+
+(27644,0,0,0,0,0,100,2,3000,6000,12000,14000,11,50728,0,0,0,0,0,1,0,0,0,0,0,0,0,'Phantasmal Wolf - IC - cast Furious Howl'),
+(27644,0,1,0,0,0,100,4,3000,6000,12000,14000,11,59274,0,0,0,0,0,1,0,0,0,0,0,0,0,'Phantasmal Wolf - IC - cast Furious Howl H'),
+(27644,0,2,0,0,0,100,2,5000,8000,14000,17000,11,50729,0,0,0,0,0,2,0,0,0,0,0,0,0,'Phantasmal Wolf - IC - cast Carnivorous Bite'),
+(27644,0,3,0,0,0,100,4,5000,8000,14000,17000,11,59269,0,0,0,0,0,2,0,0,0,0,0,0,0,'Phantasmal Wolf - IC - cast Carnivorous Bite H'),
+
+(27645,0,0,0,0,0,100,2,6000,8000,8000,10000,11,59220,0,0,0,0,0,5,0,0,0,0,0,0,0,'Phantasmal Cloudscraper - IC - cast Chain Lightning'),
+(27645,0,1,0,0,0,100,4,6000,8000,8000,10000,11,15588,0,0,0,0,0,5,0,0,0,0,0,0,0,'Phantasmal Cloudscraper - IC - cast Chain Lightning H'),
+(27645,0,2,0,0,0,100,2,2000,4000,10000,12000,11,15588,0,0,0,0,0,1,0,0,0,0,0,0,0,'Phantasmal Cloudscraper - IC - cast Thunderclap'),
+(27645,0,3,0,0,0,100,4,2000,4000,10000,12000,11,59217,0,0,0,0,0,1,0,0,0,0,0,0,0,'Phantasmal Cloudscraper - IC - cast Thunderclap H'),
+
+(27650,0,0,0,23,0,100,2,25020,0,0,0,11,25020,0,0,0,0,0,1,0,0,0,0,0,0,0,'Phantasmal Air - On missing Aura: Lightning Shield - cast Lightning Shield'),
+(27650,0,1,0,23,0,100,4,20545,0,0,0,11,20545,0,0,0,0,0,1,0,0,0,0,0,0,0,'Phantasmal Air - On missing Aura: Lightning Shield H - cast Lightning Shield H'),
+
+(27651,0,0,0,0,0,100,2,3000,5000,5000,8000,11,50744,0,0,0,0,0,5,0,0,0,0,0,0,0,'Phantasmal Fire - IC - cast Blaze'),
+(27651,0,1,0,0,0,100,4,3000,5000,5000,8000,11,59225,0,0,0,0,0,5,0,0,0,0,0,0,0,'Phantasmal Fire - IC - cast Blaze H'),
+
+(27653,0,0,0,0,0,100,2,3000,5000,4000,6000,11,37924,0,0,0,0,0,1,0,0,0,0,0,0,0,'Phantasmal Water - IC - cast Water Bolt Volley'),
+(27653,0,1,0,0,0,100,4,3000,5000,4000,6000,11,59266,0,0,0,0,0,1,0,0,0,0,0,0,0,'Phantasmal Water - IC - cast Water Bolt Volley H'),
+
+(27647,0,0,0,0,0,100,0,2000,5000,7000,9000,11,50731,0,0,0,0,0,5,0,0,0,0,0,0,0,'Phantasmal Ogre - IC - cast Mace Smash'),
+(27647,0,1,0,4,0,100,0,0,0,0,0,11,50730,0,0,0,0,0,1,0,0,0,0,0,0,0,'Phantasmal Ogre - On Aggro - cast Bloodlust'),
+
+(27648,0,0,0,0,0,100,2,3000,5000,8000,10000,11,50732,0,0,0,0,0,5,0,0,0,0,0,0,0,'Phantasmal Naga - IC - cast Water Tomb'),
+(27648,0,1,0,0,0,100,4,3000,5000,8000,10000,11,59261,0,0,0,0,0,5,0,0,0,0,0,0,0,'Phantasmal Naga - IC - cast Water Tomb H'),
+(27648,0,2,0,0,0,100,0,4000,6000,6000,8000,11,49711,0,0,0,0,0,5,0,0,0,0,0,0,0,'Phantasmal Naga - IC - cast Hooked Net');
+
+-- skinnloot
+UPDATE `creature_template` SET `skinloot`=70210 WHERE `entry` IN (27636,27633,27635,27638,28276, 30902,30901,30904,30903,30991);
+UPDATE `creature_template` SET `skinloot`=29730,`type_flags`=`type_flags`|32768 WHERE `entry` IN (27641, 30905);
+UPDATE `creature_template` SET `skinloot`=70211 WHERE `entry` IN (27642,27644,27645, 30909,30914,30907);
+
+-- Conditions
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=17 AND `SourceEntry` IN (50232,50328,50341,49840,49592);
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry` IN (61407,62136,54069,56251,51024,50087);
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ElseGroup`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`) VALUES
+-- Searing Wrath
+(17,50232,1,19,27638,0),
+(17,50232,2,19,27656,0),
+(17,50232,3,19,28276,0),
+-- Leeching Poison
+(17,50328,1,19,27638,0),
+(17,50328,2,19,27656,0),
+(17,50328,3,19,28276,0),
+-- Touch the Nightmare
+(17,50341,1,19,27638,0),
+(17,50341,2,19,27656,0),
+(17,50341,3,19,28276,0),
+-- Shock Lance
+(17,49840,1,19,27638,0),
+(17,49840,2,19,27656,0),
+(17,49840,3,19,28276,0),
+-- Temporal Rift
+(17,49592,1,19,27638,0),
+(17,49592,2,19,27656,0),
+(17,49592,3,19,28276,0),
+
+(13,61407,0,18,1,28183),
+(13,62136,0,18,1,28183),
+(13,54069,0,18,1,28183),
+(13,56251,0,18,1,28183),
+(13,51024,0,18,1,28239),
+
+(13,50087,0,18,1,27641);
+
 
 DELETE FROM creature_loot_template WHERE entry IN(30901, 30902, 30904, 30905, 30906, 30907, 30908, 30909, 30910, 30911, 30912, 30913, 30914, 30915, 30916);
 INSERT INTO creature_loot_template VALUES

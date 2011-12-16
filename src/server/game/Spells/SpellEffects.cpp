@@ -429,6 +429,12 @@ void Spell::EffectSchoolDMG(SpellEffIndex effIndex)
                         damage = unitTarget->CountPctFromMaxHealth(50);
                         break;
                     }
+                    case 50341: // Touch the Nightmare
+                    {
+                        if (effIndex == EFFECT_2)
+                            damage = unitTarget->CountPctFromMaxHealth(30);
+                        break;
+                    }
                     case 20625: // Ritual of Doom Sacrifice
                     case 29142: // Eyesore Blaster
                     case 35139: // Throw Boom's Doom
@@ -2599,7 +2605,7 @@ void Spell::EffectPersistentAA(SpellEffIndex effIndex)
         if (!caster->IsInWorld())
             return;
         DynamicObject* dynObj = new DynamicObject();
-        if (!dynObj->Create(sObjectMgr->GenerateLowGuid(HIGHGUID_DYNAMICOBJECT), caster, m_spellInfo->Id, *m_targets.GetDst(), radius, false, DYNAMIC_OBJECT_AREA_SPELL))
+        if (!dynObj->CreateDynamicObject(sObjectMgr->GenerateLowGuid(HIGHGUID_DYNAMICOBJECT), caster, m_spellInfo->Id, *m_targets.GetDst(), radius, false, DYNAMIC_OBJECT_AREA_SPELL))
         {
             delete dynObj;
             return;
@@ -2608,8 +2614,6 @@ void Spell::EffectPersistentAA(SpellEffIndex effIndex)
         // Mimiron's Inferno - prevent visual problems if players temporary get out of sight
         if (m_spellInfo->Id == 62910)
             dynObj->setActive(true);
-
-        dynObj->GetMap()->AddToMap(dynObj);
 
         if (Aura* aura = Aura::TryCreate(m_spellInfo, MAX_EFFECT_MASK, dynObj, caster, &m_spellValue->EffectBasePoints[0]))
         {
@@ -3462,16 +3466,13 @@ void Spell::EffectAddFarsight(SpellEffIndex effIndex)
         return;
 
     DynamicObject* dynObj = new DynamicObject();
-    if (!dynObj->Create(sObjectMgr->GenerateLowGuid(HIGHGUID_DYNAMICOBJECT), m_caster, m_spellInfo->Id, *m_targets.GetDst(), radius, true, DYNAMIC_OBJECT_FARSIGHT_FOCUS))
+    if (!dynObj->CreateDynamicObject(sObjectMgr->GenerateLowGuid(HIGHGUID_DYNAMICOBJECT), m_caster, m_spellInfo->Id, *m_targets.GetDst(), radius, true, DYNAMIC_OBJECT_FARSIGHT_FOCUS))
     {
         delete dynObj;
         return;
     }
 
     dynObj->SetDuration(duration);
-
-    dynObj->setActive(true);    //must before add to map to be put in world container
-    dynObj->GetMap()->AddToMap(dynObj); //grid will also be loaded
     dynObj->SetCasterViewpoint();
 }
 
@@ -5984,6 +5985,10 @@ void Spell::EffectSummonPlayer(SpellEffIndex /*effIndex*/)
 
     // Evil Twin (ignore player summon, but hide this for summoner)
     if (unitTarget->HasAura(23445))
+        return;
+
+    // (temporary) prevent cancel existing request due to a new request, leaving the new one invalid
+    if (unitTarget->ToPlayer()->HasActiveSummonRequest())
         return;
 
     float x, y, z;

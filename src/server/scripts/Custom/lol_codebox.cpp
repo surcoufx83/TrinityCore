@@ -123,7 +123,7 @@ private:
         
         if(charguid && player->GetGUID() != charguid)
         {
-            sLog->outError("CodeBox: Player %u request correct code (%s) but guid doesn't match. CodeGUID: ", player->GetGUID(), charguid);
+            sLog->outError("CodeBox: Player %u request correct code (%s) but guid doesn't match. CharGUID: %u", player->GetGUID(), sCode, charguid);
             _Creature->MonsterWhisper("Leider kannst du diesen Code nicht mit diesem Charakter Einloesen!", player->GetGUID());
             return false;
         }
@@ -154,8 +154,33 @@ private:
         // itemcode
         else if(item_id > 0)
         {
-            if(!AddItem(_Creature, player, item_id, quantity))
-                return false;
+            //Premium VIP-Hemd Preparation
+            if(item_id == 200029)
+            {
+                if(!player->HasItemCount(200000, 1, true) && !player->HasItemCount(200005, 1, true))
+                {
+                    _Creature->MonsterWhisper("Du kannst keinen Premium Code Einloesen, wenn du kein normales VIP-Hemd hast!", player->GetGUID());
+                    sLog->outError("CodeBox: Player %u request correct code (%s) but player doesn't have the normal VIP-Shirt.", player->GetGUID(), sCode);
+                    return false;
+                }
+
+                if(!AddItem(_Creature, player, item_id, quantity))
+                    return false;
+                else
+                {
+                    if(!DeleteItem(player, 200000, 1, item_id) && !DeleteItem(player, 200005, 1, item_id))
+                    {
+                        _Creature->MonsterWhisper("Es gab einen Fehler beim Loeschen des alten VIP-Hemdes, bitte versuche es spaeter noch einmal!", player->GetGUID());
+                        sLog->outError("CodeBox: Player %u request correct code (%s) but some error occured on deleting the normal VIP-Shirt.", player->GetGUID(), sCode);
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                if(!AddItem(_Creature, player, item_id, quantity))
+                    return false;
+            }
         }
         // itemcode for randomitem
         else if(item_id < 0)
@@ -191,6 +216,8 @@ private:
         {
             if(item_id == 200000 || item_id == 200005)
                 _Creature->MonsterWhisper("Viel Spass mit dem Item!", player->GetGUID());
+            else if(item_id == 200029)
+            	_Creature->MonsterWhisper("Viel Spass mit deinem neuem VIP-Hemd Premium!", player->GetGUID());
             else
                 _Creature->MonsterWhisper("Danke, dass du dem Server mit deiner Spende unterstuetzt und viel Spass mit dem Item!", player->GetGUID());
         }
@@ -222,6 +249,35 @@ private:
 
         else
            creature->MonsterWhisper("Bei dem Verarbeiten deines Codes ist ein Interner Fehler aufgetreten. Bitte melde diesen mit genauer Zeit in einem Ticket!", player->GetGUID());
+
+        return false;
+    }
+
+    bool DeleteItem(Player* player, uint32 item, uint32 quantity, uint32 added = 0) {
+        if (player->HasItemCount(item, quantity, true)) {
+            uint8 pbag;
+            uint8 pslot;
+
+            pbag = player->GetItemByEntry(item)->GetBagSlot();
+            pslot = player->GetItemByEntry(item)->GetSlot();
+
+            if (pbag && pslot)
+                player->DestroyItem(pbag, pslot, true);
+
+            return true;
+        }
+
+        if (added > 0)
+        {
+            uint8 apbag;
+            uint8 apslot;
+
+            apbag = player->GetItemByEntry(added)->GetBagSlot();
+            apslot = player->GetItemByEntry(added)->GetSlot();
+
+            if (apbag && apslot)
+                player->DestroyItem(apbag, apslot, true);
+        }
 
         return false;
     }

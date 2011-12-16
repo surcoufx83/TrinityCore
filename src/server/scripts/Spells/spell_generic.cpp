@@ -26,6 +26,7 @@
 #include "SpellAuraEffects.h"
 #include "SkillDiscovery.h"
 #include "GridNotifiers.h"
+#include "Vehicle.h"
 
 class spell_gen_absorb0_hitlimit1 : public SpellScriptLoader
 {
@@ -1821,6 +1822,236 @@ class spell_gen_turkey_tracker : public SpellScriptLoader
         }
 };
 
+class spell_gen_feast_on : public SpellScriptLoader
+{
+    public:
+        spell_gen_feast_on() : SpellScriptLoader("spell_gen_feast_on") { }
+
+        class spell_gen_feast_on_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_gen_feast_on_SpellScript);
+
+            void HandleDummy(SpellEffIndex /*effIndex*/)
+            {
+                Unit* caster = GetCaster();
+
+                if (caster->IsVehicle())
+                    if (Unit* player = caster->GetVehicleKit()->GetPassenger(0))
+                        caster->CastSpell(player, GetSpellInfo()->Effects[EFFECT_0].CalcValue(), true, NULL, NULL, player->GetGUID());
+            }
+
+            void Register()
+            {
+                OnEffectHitTarget += SpellEffectFn(spell_gen_feast_on_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_gen_feast_on_SpellScript();
+        }
+};
+
+class spell_gen_pilgrims_bounty_well_fed : public SpellScriptLoader
+{
+    public:
+        spell_gen_pilgrims_bounty_well_fed() : SpellScriptLoader("spell_gen_pilgrims_bounty_well_fed") { }
+
+        class spell_gen_pilgrims_bounty_well_fed_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_gen_pilgrims_bounty_well_fed_SpellScript)
+
+            bool Load()
+            {
+                switch (GetSpellInfo()->Id)
+                {
+                    case 61807: _spellId1 = 65414; _spellId2 = 66291; break; // Turkey
+                    case 61804: _spellId1 = 65412; _spellId2 = 66295; break; // Cranberries
+                    case 61806: _spellId1 = 65416; _spellId2 = 66293; break; // Stuffing
+                    case 61808: _spellId1 = 65410; _spellId2 = 66292; break; // Potatoes
+                    case 61805: _spellId1 = 65415; _spellId2 = 66294; break; // Pie
+                    default:    _spellId1 = 0;     _spellId2 = 0;     break;
+                }
+
+                if (!sSpellMgr->GetSpellInfo(_spellId1))
+                    return false;
+                if (!sSpellMgr->GetSpellInfo(_spellId2))
+                    return false;
+                if (!sSpellMgr->GetSpellInfo(61849)) // The Spirit of Sharing
+                    return false;
+
+                return true;
+            }
+
+            void HandleScript(SpellEffIndex /*effIndex*/)
+            {
+                Player* target = GetHitPlayer();
+                if (!target)
+                    return;
+
+                if (Aura const* aura = target->GetAura(GetSpellInfo()->Id))
+                    if (aura->GetStackAmount() == 5)
+                    {
+                        target->CastSpell(target, _spellId1, true);
+                        target->CastSpell(target, _spellId2, true);
+                        target->RemoveAurasDueToSpell(GetSpellInfo()->Id); // Should be 'helper' Auras
+                    }
+
+                for (uint32 i = 66291; i < 66296; ++i)
+                    if (!target->HasAura(i))
+                        return;
+
+                target->CastSpell(target, 61849, true); // The Spirit of Sharing
+
+                for (uint32 i = 66291; i < 66296; ++i)
+                    target->RemoveAurasDueToSpell(i);
+            }
+
+            void Register()
+            {
+                OnEffectHitTarget += SpellEffectFn(spell_gen_pilgrims_bounty_well_fed_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_APPLY_AURA);
+            }
+
+        private:
+            uint32 _spellId1;
+            uint32 _spellId2;
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_gen_pilgrims_bounty_well_fed_SpellScript();
+        }
+};
+
+class spell_gen_pass_the_food : public SpellScriptLoader
+{
+    public:
+        spell_gen_pass_the_food() : SpellScriptLoader("spell_gen_pass_the_food") { }
+
+        class spell_gen_pass_the_food_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_gen_pass_the_food_SpellScript)
+
+            bool Load()
+            {
+                switch (GetSpellInfo()->Id)
+                {
+                    case 66250: _spellId1 = 61928; _spellId2 = 61822; _spellId3 = 66373; break; // Turkey
+                    case 66261: _spellId1 = 61925; _spellId2 = 61821; _spellId3 = 66372; break; // Cranberries
+                    case 66259: _spellId1 = 61927; _spellId2 = 61823; _spellId3 = 66375; break; // Stuffing
+                    case 66262: _spellId1 = 61929; _spellId2 = 61824; _spellId3 = 66376; break; // Potatoes
+                    case 66260: _spellId1 = 61926; _spellId2 = 61825; _spellId3 = 66374; break; // Pie
+                    default:    _spellId1 = 0;     _spellId2 = 0;     _spellId3 = 0;     break;
+                }
+
+                if (!sSpellMgr->GetSpellInfo(_spellId1))
+                    return false;
+                if (!sSpellMgr->GetSpellInfo(_spellId2))
+                    return false;
+                if (!sSpellMgr->GetSpellInfo(_spellId3))
+                    return false;
+
+                return true;
+            }
+
+            void HandleDummy(SpellEffIndex /*effIndex*/)
+            {
+                Player* target = GetHitPlayer();
+                if (!target)
+                    return;
+
+                Unit* caster = GetCaster();
+
+                if (caster->IsVehicle())
+                {
+                    Unit* player = caster->GetVehicleKit()->GetPassenger(0);
+                    Vehicle* vehicle = target->GetVehicle();
+
+                    if (!player || player == target || !vehicle || vehicle->GetVehicleInfo()->m_ID != 321)
+                        return;
+
+                    player->CastSpell(target, roll_chance_i(20) ? _spellId1 : _spellId2, true);
+                    player->CastSpell(target, _spellId3, true);
+                }
+            }
+
+            void Register()
+            {
+                OnEffectHitTarget += SpellEffectFn(spell_gen_pass_the_food_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+            }
+
+        private:
+            uint32 _spellId1;
+            uint32 _spellId2;
+            uint32 _spellId3;
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_gen_pass_the_food_SpellScript();
+        }
+};
+
+enum DamageReductionAura
+{
+    SPELL_BLESSING_OF_SANCTUARY         = 20911,
+    SPELL_GREATER_BLESSING_OF_SANCTUARY = 25899,
+    SPELL_RENEWED_HOPE                  = 63944,
+    SPELL_VIGILANCE                     = 50720,
+    SPELL_DAMAGE_REDUCTION_AURA         = 68066,
+};
+
+class spell_gen_damage_reduction_aura : public SpellScriptLoader
+{
+public:
+    spell_gen_damage_reduction_aura() : SpellScriptLoader("spell_gen_damage_reduction_aura") { }
+
+    class spell_gen_damage_reduction_AuraScript : public AuraScript
+    {
+        PrepareAuraScript(spell_gen_damage_reduction_AuraScript);
+
+        bool Validate(SpellInfo const* /*SpellEntry*/)
+        {
+            if (!sSpellMgr->GetSpellInfo(SPELL_DAMAGE_REDUCTION_AURA))
+                return false;
+            return true;
+        }
+
+        void OnApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
+        {
+            Unit* target = GetTarget();
+            target->CastSpell(target, SPELL_DAMAGE_REDUCTION_AURA, true);
+        }
+
+        void OnRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
+        {
+            Unit* target = GetTarget();
+            if (!target->HasAura(SPELL_DAMAGE_REDUCTION_AURA))
+                return;
+
+            if (target->HasAura(SPELL_BLESSING_OF_SANCTUARY) ||
+                target->HasAura(SPELL_GREATER_BLESSING_OF_SANCTUARY) ||
+                target->HasAura(SPELL_RENEWED_HOPE) ||
+                target->HasAura(SPELL_VIGILANCE))
+                    return;
+
+            target->RemoveAurasDueToSpell(SPELL_DAMAGE_REDUCTION_AURA);
+        }
+
+        void Register()
+        {
+            OnEffectApply += AuraEffectApplyFn(spell_gen_damage_reduction_AuraScript::OnApply, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
+            OnEffectRemove += AuraEffectRemoveFn(spell_gen_damage_reduction_AuraScript::OnRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
+        }
+
+    };
+
+    AuraScript* GetAuraScript() const
+    {
+        return new spell_gen_damage_reduction_AuraScript();
+    }
+};
+
 void AddSC_generic_spell_scripts()
 {
     new spell_gen_absorb0_hitlimit1();
@@ -1859,4 +2090,8 @@ void AddSC_generic_spell_scripts()
     new spell_gen_bone_gryphon_frost_breath();
     new spell_gen_oracle_wolvar_reputation();
     new spell_gen_turkey_tracker();
+    new spell_gen_feast_on();
+    new spell_gen_pilgrims_bounty_well_fed();
+    new spell_gen_pass_the_food();
+    new spell_gen_damage_reduction_aura();
 }

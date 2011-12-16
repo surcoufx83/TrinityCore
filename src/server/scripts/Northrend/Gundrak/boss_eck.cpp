@@ -25,207 +25,179 @@ enum Spells
     SPELL_ECK_SPIT                                = 55814, //Eck spits toxic bile at enemies in a cone in front of him, inflicting 2970 Nature damage and draining 220 mana every 1 sec for 3 sec.
     SPELL_ECK_SPRING                              = 55815, //Eck leaps at a distant target.  --> Drops aggro and charges a random player. Tank can simply taunt him back.
 
-    //ruins dweller spells
+    // ruins dweller spells
     SPELL_REGURGITATE                             = 55643,
     SPELL_SPRING                                  = 55652
 };
 
-//static Position EckSpawnPoint = { 1643.877930, 936.278015, 107.204948, 0.668432 };
-
 class boss_eck : public CreatureScript
 {
-public:
-    boss_eck() : CreatureScript("boss_eck") { }
+    public:
+        boss_eck() : CreatureScript("boss_eck") { }
 
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return new boss_eckAI (creature);
-    }
-
-    struct boss_eckAI : public ScriptedAI
-    {
-        boss_eckAI(Creature* c) : ScriptedAI(c)
+        struct boss_eckAI : public ScriptedAI
         {
-            pInstance = c->GetInstanceScript();
-        }
-
-        uint32 uiBerserkTimer;
-        uint32 uiBiteTimer;
-        uint32 uiSpitTimer;
-        uint32 uiSpringTimer;
-
-        bool bBerserk;
-
-        InstanceScript* pInstance;
-
-        void Reset()
-        {
-            uiBerserkTimer = urand(60*IN_MILLISECONDS, 90*IN_MILLISECONDS); //60-90 secs according to wowwiki
-            uiBiteTimer = 5*IN_MILLISECONDS;
-            uiSpitTimer = 7*IN_MILLISECONDS;
-            uiSpringTimer = 12*IN_MILLISECONDS;
-
-            bBerserk = false;
-
-            if (pInstance)
-                pInstance->SetData(DATA_ECK_THE_FEROCIOUS_EVENT, NOT_STARTED);
-        }
-
-        void EnterCombat(Unit* /*who*/)
-        {
-            if (pInstance)
-                pInstance->SetData(DATA_ECK_THE_FEROCIOUS_EVENT, IN_PROGRESS);
-        }
-
-        void EckResetThread(Unit* pVictim)
-        {
-            std::list<HostileReference*>& threatlist = me->getThreatManager().getThreatList();
-
-            for (std::list<HostileReference*>::iterator itr = threatlist.begin(); itr != threatlist.end(); ++itr)
+            boss_eckAI(Creature* c) : ScriptedAI(c)
             {
-                Unit* pUnit = Unit::GetUnit((*me), (*itr)->getUnitGuid());
+                instance = c->GetInstanceScript();
+            }
 
-                if (pUnit && DoGetThreat(pUnit))
+            void Reset()
+            {
+                _berserkTimer = 90*IN_MILLISECONDS;
+                _biteTimer = 5*IN_MILLISECONDS;
+                _spitTimer = 7*IN_MILLISECONDS;
+                _springTimer = 12*IN_MILLISECONDS;
+                _berserk = false;
+
+                if (instance)
+                    instance->SetData(DATA_ECK_THE_FEROCIOUS_EVENT, NOT_STARTED);
+            }
+
+            void EnterCombat(Unit* /*who*/)
+            {
+                if (instance)
+                    instance->SetData(DATA_ECK_THE_FEROCIOUS_EVENT, IN_PROGRESS);
+            }
+
+            void UpdateAI(uint32 const diff)
+            {
+                if (!UpdateVictim())
+                    return;
+
+                if (!_berserk)
                 {
-                    DoModifyThreatPercent(pUnit, -100);
-                    me->AddThreat(pUnit, 0.1f);
+                    if (_berserkTimer <= diff)
+                    {
+                        DoCast(me, SPELL_ECK_BERSERK, true);
+                        _berserk = true;
+                    }
+                    else
+                        _berserkTimer -= diff;
                 }
-            }
 
-            //needed?
-            if (pVictim && pVictim->isAlive())
-            {
-                AttackStart(pVictim);
-                me->AddThreat(pVictim, 10.0f);
-            }
-        }
+                if (me->HasUnitState(UNIT_STAT_CASTING))
+                    return;
 
-        void UpdateAI(const uint32 diff)
-        {
-            //Return since we have no target
-            if (!UpdateVictim())
-                return;
-
-            if (uiBiteTimer <= diff)
-            {
-                DoCast(me->getVictim(), SPELL_ECK_BITE);
-                uiBiteTimer = urand(8*IN_MILLISECONDS, 12*IN_MILLISECONDS);
-            } else uiBiteTimer -= diff;
-
-            if (uiSpitTimer <= diff)
-            {
-                DoCast(me->getVictim(), SPELL_ECK_SPIT);
-                uiSpitTimer = urand(11*IN_MILLISECONDS,20*IN_MILLISECONDS);
-            } else uiSpitTimer -= diff;
-
-            if (uiSpringTimer <= diff)
-            {
-                Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1);
-                if (target && target->GetTypeId() == TYPEID_PLAYER)
+                if (_biteTimer <= diff)
                 {
-                    if (me->GetExactDist(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ()) < 35)
+                    DoCastVictim(SPELL_ECK_BITE);
+                    _biteTimer = urand(8, 12) *IN_MILLISECONDS;
+                }
+                else
+                    _biteTimer -= diff;
+
+                if (_spitTimer <= diff)
+                {
+                    DoCast(SPELL_ECK_SPIT);
+                    _spitTimer = urand(11, 20) *IN_MILLISECONDS;
+                }
+                else
+                    _spitTimer -= diff;
+
+                if (_springTimer <= diff)
+                {
+                    if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1, 35.0f, true))
                     {
                         DoCast(target, SPELL_ECK_SPRING);
-                        EckResetThread(target); //test
-
-                        uiSpringTimer = urand(9*IN_MILLISECONDS, 15*IN_MILLISECONDS);
+                        _springTimer = urand(9, 15) *IN_MILLISECONDS;
+                        DoResetThreat();
+                        DoZoneInCombat();
+                        me->AddThreat(target, 1000);
                     }
                 }
-            } else uiSpringTimer -= diff;
+                else
+                    _springTimer -= diff;
 
-            if (!bBerserk)
-            {
-                if (uiBerserkTimer <= diff)
-                {
-                    me->InterruptNonMeleeSpells(true);
-                    DoCast(me, SPELL_ECK_BERSERK);
-                    bBerserk = true;
-                }
-                else uiBerserkTimer -= diff;
+                DoMeleeAttackIfReady();
             }
 
-            DoMeleeAttackIfReady();
-        }
+            void JustDied(Unit* /*killer*/)
+            {
+                if (instance)
+                    instance->SetData(DATA_ECK_THE_FEROCIOUS_EVENT, DONE);
+            }
 
-        void JustDied(Unit* /*killer*/)
+        private:
+            InstanceScript* instance;
+            uint32 _berserkTimer;
+            uint32 _biteTimer;
+            uint32 _spitTimer;
+            uint32 _springTimer;
+            bool _berserk;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
         {
-            if (pInstance)
-                pInstance->SetData(DATA_ECK_THE_FEROCIOUS_EVENT, DONE);
+            return new boss_eckAI(creature);
         }
-    };
-
 };
 
 class npc_ruins_dweller : public CreatureScript
 {
-public:
-    npc_ruins_dweller() : CreatureScript("npc_ruins_dweller") { }
+    public:
+        npc_ruins_dweller() : CreatureScript("npc_ruins_dweller") { }
 
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return new npc_ruins_dwellerAI (creature);
-    }
-
-    struct npc_ruins_dwellerAI : public ScriptedAI
-    {
-        npc_ruins_dwellerAI(Creature* c) : ScriptedAI(c)
+        struct npc_ruins_dwellerAI : public ScriptedAI
         {
-            pInstance = c->GetInstanceScript();
-        }
-
-        uint32 uiSpringTimer;
-        uint32 uiRegurgitateTimer;
-
-        InstanceScript* pInstance;
-
-        void Reset()
-        {
-            uiRegurgitateTimer = urand(3*IN_MILLISECONDS, 6*IN_MILLISECONDS);
-            uiSpringTimer = urand(7*IN_MILLISECONDS, 10*IN_MILLISECONDS);
-        }
-
-        void EnterCombat(Unit* /*who*/) {}
-
-        void UpdateAI(const uint32 diff)
-        {
-            if (!UpdateVictim())
-                return;
-
-            if (uiRegurgitateTimer <= diff)
+            npc_ruins_dwellerAI(Creature* c) : ScriptedAI(c)
             {
-                DoCast(me->getVictim(), SPELL_REGURGITATE);
-                uiRegurgitateTimer = urand(7*IN_MILLISECONDS, 18*IN_MILLISECONDS);
-            } else uiRegurgitateTimer -= diff;
+                instance = c->GetInstanceScript();
+            }
 
-            if (uiSpringTimer <= diff)
+            void Reset()
             {
-                Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1);
-                if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER)
-                    if ((me->GetExactDist(pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ()) > 5) && (me->GetExactDist(pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ()) < 30))
-                    {
-                        DoCast(pTarget, SPELL_SPRING);
-                        uiSpringTimer = urand(12*IN_MILLISECONDS, 20*IN_MILLISECONDS);
+                _regurgitateTimer = urand(3, 6) *IN_MILLISECONDS;
+                _springTimer = urand(7, 10) *IN_MILLISECONDS;
+            }
 
-                        DoResetThreat();
-                        AttackStart(pTarget);
-                        me->AddThreat(pTarget, 1.0f);
-                    }
-            } else uiSpringTimer -= diff;
+            void JustDied(Unit* /*who*/)
+            {
+                if (instance)
+                    instance->SetData(DATA_RUIN_DWELLER_DIED, 1);
+            }
 
-            DoMeleeAttackIfReady();
-        }
+            void UpdateAI(uint32 const diff)
+            {
+                if (!UpdateVictim())
+                    return;
 
-        void JustDied(Unit* /*who*/)
+                if (_regurgitateTimer <= diff)
+                {
+                    DoCastVictim(SPELL_REGURGITATE);
+                    _regurgitateTimer = urand(7, 18) *IN_MILLISECONDS;
+                }
+                else
+                    _regurgitateTimer -= diff;
+
+                if (_springTimer <= diff)
+                {
+                    if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1, 30.0f, true))
+                        if (me->GetDistance(target) > 5.0f)
+                        {
+                            DoCast(target, SPELL_SPRING);
+                            _springTimer = urand(12, 20) *IN_MILLISECONDS;
+                            DoResetThreat();
+                            DoZoneInCombat();
+                            me->AddThreat(target, 1000);
+                        }
+                }
+                else
+                    _springTimer -= diff;
+
+                DoMeleeAttackIfReady();
+            }
+
+        private:
+            InstanceScript* instance;
+            uint32 _springTimer;
+            uint32 _regurgitateTimer;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
         {
-          /*  if (pInstance)
-            {
-                pInstance->SetData64(DATA_RUIN_DWELLER_DIED, me->GetGUID());
-                if (pInstance->GetData(DATA_ALIVE_RUIN_DWELLERS) == 0)
-                    me->SummonCreature(CREATURE_ECK, EckSpawnPoint, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 300*IN_MILLISECONDS);
-            } */
+            return new npc_ruins_dwellerAI(creature);
         }
-    };
-
 };
 
 void AddSC_boss_eck()

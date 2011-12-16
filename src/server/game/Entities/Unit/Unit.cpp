@@ -1522,44 +1522,36 @@ uint32 Unit::CalcArmorReducedDamage(Unit* victim, const uint32 damage, SpellInfo
             armor = floor(AddPctN(armor, -(*j)->GetAmount()));
     }
 
+    // Apply Player CR_ARMOR_PENETRATION rating and buffs from stances\specializations etc.
     if (GetTypeId() == TYPEID_PLAYER)
     {
-        AuraEffectList const& ArPenAuras = GetAuraEffectsByType(SPELL_AURA_MOD_ARMOR_PENETRATION_PCT);
-        for (AuraEffectList::const_iterator itr = ArPenAuras.begin(); itr != ArPenAuras.end(); ++itr)
+        float bonusPct = 0;
+        AuraEffectList const& ResIgnoreAuras = GetAuraEffectsByType(SPELL_AURA_MOD_ARMOR_PENETRATION_PCT);
+        for (AuraEffectList::const_iterator itr = ResIgnoreAuras.begin(); itr != ResIgnoreAuras.end(); ++itr)
         {
-            // item neutral spell
             if ((*itr)->GetSpellInfo()->EquippedItemClass == -1)
             {
-                armor = floor(AddPctN(armor, -(*itr)->GetAmount()));
-                continue;
+                if (!spellInfo || (*itr)->IsAffectedOnSpell(spellInfo) || (*itr)->GetMiscValue() & spellInfo->GetSchoolMask())
+                    bonusPct += (*itr)->GetAmount();
+                else if (!(*itr)->GetMiscValue() && !(*itr)->HasSpellClassMask())
+                    bonusPct += (*itr)->GetAmount();
             }
-
-            // item dependent spell - check current weapons
-            for (int i = 0; i < MAX_ATTACK; ++i)
+            else
             {
-                Item* weapon = ToPlayer()->GetWeaponForAttack(WeaponAttackType(i), true);
-
-                if (weapon && weapon->IsFitToSpellRequirements((*itr)->GetSpellInfo()))
-                {
-                    armor = floor(AddPctN(armor, -(*itr)->GetAmount()));
-                    break;
-                }
+               if (ToPlayer() && ToPlayer()->HasItemFitToSpellRequirements((*itr)->GetSpellInfo()))
+                    bonusPct += (*itr)->GetAmount();
             }
         }
-    }
 
-    // Apply Player CR_ARMOR_PENETRATION rating
-    if (GetTypeId() == TYPEID_PLAYER)
-    {
         float maxArmorPen = 0;
-        if (getLevel() < 60)
+        if (victim->getLevel() < 60)
             maxArmorPen = float(400 + 85 * victim->getLevel());
         else
             maxArmorPen = 400 + 85 * victim->getLevel() + 4.5f * 85 * (victim->getLevel() - 59);
         // Cap armor penetration to this number
         maxArmorPen = std::min((armor + maxArmorPen) / 3, armor);
         // Figure out how much armor do we ignore
-        float armorPen = CalculatePctF(maxArmorPen, ToPlayer()->GetRatingBonusValue(CR_ARMOR_PENETRATION));
+        float armorPen = CalculatePctF(maxArmorPen, bonusPct + ToPlayer()->GetRatingBonusValue(CR_ARMOR_PENETRATION));
         // Got the value, apply it
         armor -= std::min(armorPen, maxArmorPen);
     }
@@ -6064,6 +6056,16 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
                     triggered_spell_id = 37378;
                     break;
                 }
+                // Glyph of Succubus
+                case 56250:
+                {
+                    if (!target)
+                        return false;
+                    target->RemoveAurasByType(SPELL_AURA_PERIODIC_DAMAGE, 0, target->GetAura(32409)); // SW:D shall not be removed.
+                    target->RemoveAurasByType(SPELL_AURA_PERIODIC_DAMAGE_PERCENT);
+                    target->RemoveAurasByType(SPELL_AURA_PERIODIC_LEECH);
+                    return true;
+                }
             }
             break;
         }
@@ -7941,24 +7943,8 @@ bool Unit::HandleAuraProc(Unit* victim, uint32 damage, Aura* triggeredByAura, Sp
                 case 50240:
                 {
                     RemoveAuraFromStack(50241);
-                    if (!HasAura(50241))
-                        RemoveAura(50240);
                     *handled = true;
-                    break;
-                }
-                // Evasive Aura
-                case 50248:
-                {
-                    if(Aura* aur_old = GetAura(50240))
-                    {
-                        CastSpell(this, 50241, true);
-                        Aura* aur_new = AddAura(50240, this);
-                        aur_new->SetDuration(aur_old->GetDuration());
-                    }
-                    else
-                        CastSpell(this, 50241, true);
-                    *handled = true;
-                    break;
+                    return !HasAura(50241); // drop in case of non-existing 50241
                 }
                 // Nevermelting Ice Crystal
                 case 71564:
@@ -8733,6 +8719,13 @@ bool Unit::HandleProcTriggerSpell(Unit* victim, uint32 damage, AuraEffect* trigg
                 return false;
             break;
         }
+        // Evasive Aura
+        case 50248:
+        {
+            if (HasAura(50240))
+                return false;
+            break;
+        }
         // Deflection
         case 52420:
         {
@@ -8740,7 +8733,6 @@ bool Unit::HandleProcTriggerSpell(Unit* victim, uint32 damage, AuraEffect* trigg
                 return false;
             break;
         }
-
         // Cheat Death
         case 28845:
         {
@@ -10148,7 +10140,7 @@ Unit* Unit::SelectMagnetTarget(Unit* victim, SpellInfo const* spellInfo)
 
         Unit::AuraEffectList const& magnetAuras = victim->GetAuraEffectsByType(SPELL_AURA_SPELL_MAGNET);
         for (Unit::AuraEffectList::const_iterator itr = magnetAuras.begin(); itr != magnetAuras.end(); ++itr)
-            if (Unit* magnet = (*itr)->GetBase()->GetUnitOwner())
+            if (Unit* magnet = (*itr)->GetBase()->GetCaster())
                 if (magnet->isAlive() && IsWithinLOSInMap(magnet))
                 {
                     (*itr)->GetBase()->DropCharge(AURA_REMOVE_BY_EXPIRE);
@@ -11030,12 +11022,6 @@ bool Unit::isSpellCrit(Unit* victim, SpellInfo const* spellProto, SpellSchoolMas
                             if (victim->HasAura(6788))
                                 crit_chance+=(*i)->GetAmount();
                             break;
-                        case   21: // Test of Faith
-                        case 6935:
-                        case 6918:
-                            if (victim->HealthBelowPct(50))
-                                crit_chance+=(*i)->GetAmount();
-                            break;
                         default:
                             break;
                     }
@@ -11259,11 +11245,6 @@ uint32 Unit::SpellHealingBonus(Unit* victim, SpellInfo const* spellProto, uint32
             case 4953:
             case 3736: // Hateful Totem of the Third Wind / Increased Lesser Healing Wave / LK Arena (4/5/6) Totem of the Third Wind / Savage Totem of the Third Wind
                 DoneTotal += (*i)->GetAmount();
-                break;
-            case 7997: // Renewed Hope
-            case 7998:
-                if (victim->HasAura(6788))
-                    AddPctN(DoneTotalMod, (*i)->GetAmount());
                 break;
             case   21: // Test of Faith
             case 6935:
@@ -11893,23 +11874,6 @@ void Unit::MeleeDamageBonus(Unit* victim, uint32 *pdamage, WeaponAttackType attT
                     float mod = victim->ToPlayer()->GetRatingBonusValue(CR_CRIT_TAKEN_MELEE) * (-8.0f);
                     AddPctF(TakenTotalMod, std::max(mod, float((*i)->GetAmount())));
                 }
-                break;
-            // Blessing of Sanctuary
-            // Greater Blessing of Sanctuary
-            case 19:
-            case 1804:
-            {
-                if ((*i)->GetSpellInfo()->SpellFamilyName != SPELLFAMILY_PALADIN)
-                    continue;
-
-                if ((*i)->GetMiscValue() & (spellProto ? spellProto->GetSchoolMask() : 0))
-                    AddPctN(TakenTotalMod, (*i)->GetAmount());
-                break;
-            }
-            // Ebon Plague
-            case 1933:
-                if ((*i)->GetMiscValue() & (spellProto ? spellProto->GetSchoolMask() : 0))
-                    AddPctN(TakenTotalMod, (*i)->GetAmount());
                 break;
         }
     }

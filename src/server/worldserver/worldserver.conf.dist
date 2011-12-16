@@ -2850,3 +2850,26 @@ Warden.Kick = 1
 Warden.BanDay = 3
 
 ###################################################################################################
+
+# Every player who has the specific item gets more experience points
+# XP.Boost.Solo          - Multiplier for solo gaming
+# XP.Boost.Group         - Multiplier for group gaming
+# XP.Boost.Premium.Solo  - Multiplier for solo gaming
+# XP.Boost.Premium.Group - Multiplier for group gaming ! Placeholder currently not used !
+#                  Then every group member gets the XP boost.
+# XP.Boost.Item          - If the player has this item (ID) then the experience
+#                          is boosted.
+# REP.Boost.Premium.Solo - Multipiler for Solo Reputation gaining
+# XP.Boost.Premium.Item  - If the player has this item (ID) then the experience
+#                          is boosted.
+# XP.Boost.MaxLevel - Maximum level for XP.Boost
+#                     Higher levels have no boost effect.
+XP.Boost.Solo            = 1
+XP.Boost.Group           = 3
+XP.Boost.Premium.Solo    = 6
+XP.Boost.Premium.Group   = 3
+REP.Boost.Premium.Solo   = 2
+XP.Boost.ItemId          = 200000
+XP.Boost.Premium.ItemId  = 200029
+XP.Boost.MaxLevel        = 80
+

@@ -539,9 +539,6 @@ class boss_flame_leviathan : public CreatureScript
                     }
                 }
 
-                if (action && action <= 4) // Tower destruction
-                    --ActiveTowersCount;
-
                 switch (action)
                 {
                     case ACTION_ACTIVATE_HARD_MODE:
@@ -552,16 +549,32 @@ class boss_flame_leviathan : public CreatureScript
                         towerOfFrost = true;
                         break;
                     case ACTION_TOWER_OF_STORM_DESTROYED:
-                        towerOfStorms = false;
+                        if (towerOfStorms)
+                        {
+                            towerOfStorms = false;
+                            --ActiveTowersCount;
+                        }
                         break;
                     case ACTION_TOWER_OF_FROST_DESTROYED:
-                        towerOfFrost = false;
+                        if (towerOfFrost)
+                        {
+                            towerOfFrost = false;
+                            --ActiveTowersCount;
+                        }
                         break;
                     case ACTION_TOWER_OF_FLAMES_DESTROYED:
-                        towerOfFlames = false;
+                        if (towerOfFlames)
+                        {
+                            towerOfFlames = false;
+                            --ActiveTowersCount;
+                        }
                         break;
                     case ACTION_TOWER_OF_LIFE_DESTROYED:
-                        towerOfLife = false;
+                        if (towerOfLife)
+                        {
+                            towerOfLife = false;
+                            --ActiveTowersCount;
+                        }
                         break;
                     default:
                         break;
@@ -1288,6 +1301,12 @@ class npc_leviathan_player_vehicle : public CreatureScript
             {
                 if (!unit->ToPlayer() || seat != 0)
                     return;
+
+                // Workaround to apply vehicle scaling on entering/leaving main seats only
+                if (apply)
+                    unit->CastSpell(me, 65266, true);
+                else
+                    me->RemoveAurasDueToSpell(65266);
 
                 if (Creature* leviathan = ObjectAccessor::GetCreature(*me, _instance ? _instance->GetData64(TYPE_LEVIATHAN) : 0))
                 {

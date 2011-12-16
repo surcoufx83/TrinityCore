@@ -35,7 +35,7 @@ enum Data64
     DATA_EREGOS
 };
 
-enum Bosses
+enum Creatures
 {
     NPC_DRAKOS                  = 27654,
     NPC_VAROS                   = 27447,
@@ -44,6 +44,12 @@ enum Bosses
 
     NPC_AZURE_RING_GUARDIAN     = 28236,
     NPC_CENTRIFUGE_CONSTRUCT    = 27641,
+    NPC_EMERALD_DRAKE           = 27692,
+    NPC_AMBER_DRAKE             = 27755,
+    NPC_RUBY_DRAKE              = 27756,
+
+    NPC_CENTRIFUGE_CORE         = 28183,
+    NPC_IMAGE_OF_BELGARISTRASZ  = 28012
 };
 
 enum GameObjects

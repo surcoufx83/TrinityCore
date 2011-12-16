@@ -63,7 +63,7 @@ class npc_oculus_drake : public CreatureScript
             player->PlayerTalkClass->ClearMenus();
             switch (creature->GetEntry())
             {
-                case NPC_VERDISA: //Verdisa
+                case NPC_VERDISA:
                     switch (action)
                     {
                         case GOSSIP_ACTION_INFO_DEF + 1:
@@ -81,10 +81,7 @@ class npc_oculus_drake : public CreatureScript
                             break;
                         case GOSSIP_ACTION_INFO_DEF + 2:
                         {
-                            ItemPosCountVec dest;
-                            uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, ITEM_EMERALD_ESSENCE, 1);
-                            if (msg == EQUIP_ERR_OK)
-                                player->StoreNewItem(dest, ITEM_EMERALD_ESSENCE, true);
+                            player->AddItem(ITEM_EMERALD_ESSENCE, 1);
                             player->CLOSE_GOSSIP_MENU();
                             break;
                         }
@@ -93,7 +90,7 @@ class npc_oculus_drake : public CreatureScript
                             break;
                     }
                     break;
-                case NPC_BELGARISTRASZ: //Belgaristrasz
+                case NPC_BELGARISTRASZ:
                     switch (action)
                     {
                         case GOSSIP_ACTION_INFO_DEF + 1:
@@ -111,10 +108,7 @@ class npc_oculus_drake : public CreatureScript
                             break;
                         case GOSSIP_ACTION_INFO_DEF + 2:
                         {
-                            ItemPosCountVec dest;
-                            uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, ITEM_RUBY_ESSENCE, 1);
-                            if (msg == EQUIP_ERR_OK)
-                                player->StoreNewItem(dest, ITEM_RUBY_ESSENCE, true);
+                            player->AddItem(ITEM_RUBY_ESSENCE, 1);
                             player->CLOSE_GOSSIP_MENU();
                             break;
                         }
@@ -123,7 +117,7 @@ class npc_oculus_drake : public CreatureScript
                             break;
                     }
                     break;
-                case NPC_ETERNOS: //Eternos
+                case NPC_ETERNOS:
                     switch (action)
                     {
                         case GOSSIP_ACTION_INFO_DEF + 1:
@@ -141,10 +135,7 @@ class npc_oculus_drake : public CreatureScript
                             break;
                         case GOSSIP_ACTION_INFO_DEF + 2:
                         {
-                            ItemPosCountVec dest;
-                            uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, ITEM_AMBER_ESSENCE, 1);
-                            if (msg == EQUIP_ERR_OK)
-                                player->StoreNewItem(dest, ITEM_AMBER_ESSENCE, true);
+                            player->AddItem(ITEM_AMBER_ESSENCE, 1);
                             player->CLOSE_GOSSIP_MENU();
                             break;
                         }
@@ -176,91 +167,158 @@ class npc_oculus_drake : public CreatureScript
         }
 };
 
-class spell_emerald_drake_touch_the_nightmare : public SpellScriptLoader
+class npc_oculus_mount : public CreatureScript
 {
     public:
-        spell_emerald_drake_touch_the_nightmare() : SpellScriptLoader("spell_emerald_drake_touch_the_nightmare") { }
+        npc_oculus_mount() : CreatureScript("npc_oculus_mount") { }
 
-        class spell_emerald_drake_touch_the_nightmare_SpellScript : public SpellScript
+        struct npc_oculus_mountAI : public NullCreatureAI
         {
-            PrepareSpellScript(spell_emerald_drake_touch_the_nightmare_SpellScript);
-
-            void OnHitEffect()
+            npc_oculus_mountAI(Creature* c) : NullCreatureAI(c)
             {
-                if (GetCaster())
-                    GetCaster()->DealDamage(GetCaster(), (GetCaster()->GetMaxHealth()*3/10)/2);
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                _enterTimer = 1500;
+                _entered = false;
             }
 
-            void Register()
+            void PassengerBoarded(Unit* /*unit*/, int8 /*seat*/, bool apply)
             {
-                OnHit += SpellHitFn(spell_emerald_drake_touch_the_nightmare_SpellScript::OnHitEffect);
+                if (!apply)
+                    me->DespawnOrUnsummon(1500);
             }
+
+            void UpdateAI(uint32 const diff)
+            {
+                if (!_entered)
+                {
+                    if (_enterTimer <= diff)
+                    {
+                        uint32 spellId = 0;
+                        _entered = true;
+
+                        switch (me->GetEntry())
+                        {
+                            case NPC_EMERALD_DRAKE:
+                                spellId = 49346;
+                                break;
+                            case NPC_AMBER_DRAKE:
+                                spellId = 49460;
+                                break;
+                            case NPC_RUBY_DRAKE:
+                                spellId = 49464;
+                                break;
+                        }
+
+                        if (!me->ToTempSummon())
+                            return;
+
+                        Unit* summoner = me->ToTempSummon()->GetSummoner();
+
+                        if (summoner && summoner->isAlive() && summoner->GetDistance(me) < 30.0f && !summoner->isInCombat())
+                        {
+                            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                            summoner->CastSpell(me, spellId, true);
+                        }
+                        else
+                            me->DespawnOrUnsummon();
+                    }
+                    else
+                        _enterTimer -= diff;
+                }
+            }
+
+        private:
+            bool _entered;
+            uint32 _enterTimer;
         };
 
-        SpellScript* GetSpellScript() const
+        CreatureAI* GetAI(Creature* creature) const
         {
-            return new spell_emerald_drake_touch_the_nightmare_SpellScript();
+            return new npc_oculus_mountAI(creature);
         }
 };
 
-class spell_amber_drake_schock_lance : public SpellScriptLoader
+class spell_amber_drake_shock_lance : public SpellScriptLoader
 {
     public:
-        spell_amber_drake_schock_lance() : SpellScriptLoader("spell_amber_drake_schock_lance") { }
+        spell_amber_drake_shock_lance() : SpellScriptLoader("spell_amber_drake_shock_lance") { }
 
-        class spell_amber_drake_schock_lance_SpellScript : public SpellScript
+        class spell_amber_drake_shock_lance_SpellScript : public SpellScript
         {
-            PrepareSpellScript(spell_amber_drake_schock_lance_SpellScript);
+            PrepareSpellScript(spell_amber_drake_shock_lance_SpellScript);
 
             void RecalculateDamage()
             {
-                if (Aura* aur = GetHitUnit()->GetAura(SPELL_SHOCK_CHARGE, GetHitUnit()->GetGUID()))
+                if (Aura* charge = GetHitUnit()->GetAura(SPELL_SHOCK_CHARGE))
                 {
-                    SetHitDamage(6525*aur->GetStackAmount());
-                    aur->Remove();
+                    SetHitDamage(6525 * charge->GetStackAmount() + GetHitDamage());
+                    charge->Remove();
                 }
             }
 
             void Register()
             {
-                OnHit += SpellHitFn(spell_amber_drake_schock_lance_SpellScript::RecalculateDamage);
+                OnHit += SpellHitFn(spell_amber_drake_shock_lance_SpellScript::RecalculateDamage);
             }
         };
 
         SpellScript* GetSpellScript() const
         {
-            return new spell_amber_drake_schock_lance_SpellScript();
+            return new spell_amber_drake_shock_lance_SpellScript();
         }
 };
 
-class spell_amber_drake_time_stop : public SpellScriptLoader
+class IsNoValidDrake
 {
     public:
-        spell_amber_drake_time_stop() : SpellScriptLoader("spell_amber_drake_time_stop") { }
-
-        class spell_amber_drake_time_stop_SpellScript : public SpellScript
+        bool operator() (Unit* unit)
         {
-            PrepareSpellScript(spell_amber_drake_time_stop_SpellScript);
+            if (unit->ToCreature())
+            {
+                switch (unit->ToCreature()->GetEntry())
+                {
+                    case 27638: // Azure Ring Guardian
+                    case 27656: // Ley-Guardian Eregos
+                    case 28276: // Greater Ley-Whelp
+                        return false;
+                    default:
+                        break;
+                }
+            }
+            return true;
+        }
+};
 
-            void OnHitEffect()
+class spell_amber_drake_stop_time : public SpellScriptLoader
+{
+    public:
+        spell_amber_drake_stop_time() : SpellScriptLoader("spell_amber_drake_stop_time") { }
+
+        class spell_amber_drake_stop_time_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_amber_drake_stop_time_SpellScript);
+
+            void FilterTargets(std::list<Unit*>& unitList)
+            {
+                unitList.remove_if(IsNoValidDrake());
+            }
+
+            void HandleStun(SpellEffIndex /*effIndex*/)
             {
                 if (GetHitUnit())
-                {
-                    GetHitUnit()->SetAuraStack(SPELL_SHOCK_CHARGE, GetHitUnit(), 5);
-                    if (GetCaster() && GetCaster()->HasAura(SPELL_SHOCK_CHARGE))
-                        GetCaster()->RemoveAura(SPELL_SHOCK_CHARGE);
-                }
+                    GetHitUnit()->CastCustomSpell(SPELL_SHOCK_CHARGE, SPELLVALUE_AURA_STACK, 5, GetHitUnit(), true);
             }
 
             void Register()
             {
-                OnHit += SpellHitFn(spell_amber_drake_time_stop_SpellScript::OnHitEffect);
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_amber_drake_stop_time_SpellScript::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+                OnEffectHitTarget += SpellEffectFn(spell_amber_drake_stop_time_SpellScript::HandleStun, EFFECT_0, SPELL_EFFECT_APPLY_AURA);
             }
         };
 
         SpellScript* GetSpellScript() const
         {
-            return new spell_amber_drake_time_stop_SpellScript();
+            return new spell_amber_drake_stop_time_SpellScript();
         }
 };
 
@@ -273,24 +331,22 @@ class spell_amber_drake_temporal_rift : public SpellScriptLoader
         {
             PrepareAuraScript(spell_amber_drake_temporal_rift_AuraScript);
 
-            uint32 TargetHealth;
-            uint32 damage;
-
             void OnApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
             {
                 if (GetTarget())
-                    TargetHealth = GetTarget()->GetHealth();
-                damage = 0;
+                    _targetHealth = GetTarget()->GetHealth();
+
+                _damage = 0;
             }
 
             void HandlePeriodicTick(AuraEffect const* /*aurEff*/)
             {
-                if (damage = damage + (TargetHealth - GetTarget()->GetHealth()))
-                {
-                    for ( ; damage >= 15000; damage=damage-15000)
-                        GetTarget()->AddAura(SPELL_SHOCK_CHARGE, GetTarget());
-                    TargetHealth = GetTarget()->GetHealth();
-                }
+                _damage += _targetHealth - GetTarget()->GetHealth();
+
+                for (; _damage >= 15000; _damage -= 15000)
+                    GetTarget()->CastSpell(GetTarget(), SPELL_SHOCK_CHARGE, true);
+
+                _targetHealth = GetTarget()->GetHealth();
             }
 
             void Register()
@@ -298,6 +354,9 @@ class spell_amber_drake_temporal_rift : public SpellScriptLoader
                 OnEffectApply += AuraEffectApplyFn(spell_amber_drake_temporal_rift_AuraScript::OnApply, EFFECT_2, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
                 OnEffectPeriodic += AuraEffectPeriodicFn(spell_amber_drake_temporal_rift_AuraScript::HandlePeriodicTick, EFFECT_1, SPELL_AURA_PERIODIC_DUMMY);
             }
+
+            uint32 _targetHealth;
+            uint32 _damage;
         };
 
         AuraScript* GetAuraScript() const
@@ -306,127 +365,11 @@ class spell_amber_drake_temporal_rift : public SpellScriptLoader
         }
 };
 
-class npc_oculus_drakes : public CreatureScript
-{
-    public:
-        npc_oculus_drakes() : CreatureScript("npc_oculus_drakes") { }
-
-        struct npc_oculus_drakesAI : public ScriptedAI
-        {
-            npc_oculus_drakesAI(Creature* c) : ScriptedAI(c) {}
-
-            uint32 DespawnTimer;
-
-            void Reset()
-            {
-                DespawnTimer = 20000;
-            }
-
-            void UpdateAI(uint32 const diff)
-            {
-                if (DespawnTimer <= diff)
-                    me->DisappearAndDie();
-                else DespawnTimer -= diff;
-            }
-        };
-
-        CreatureAI* GetAI(Creature* creature) const
-        {
-            return new npc_oculus_drakesAI(creature);
-        }
-};
-
-class npc_oculus_ringlord_conjurer : public CreatureScript
-{
-    public:
-        npc_oculus_ringlord_conjurer() : CreatureScript("npc_oculus_ringlord_conjurer") { }
-
-        struct npc_oculus_ringlord_conjurerAI : public ScriptedAI
-        {
-            npc_oculus_ringlord_conjurerAI(Creature* c) : ScriptedAI(c) {}
-
-            void EnterCombat(Unit* /*who*/)
-            {
-                me->AddAura(DUNGEON_MODE(50717, 59276), me);
-            }
-        };
-
-        CreatureAI* GetAI(Creature* creature) const
-        {
-            return new npc_oculus_ringlord_conjurerAI(creature);
-        }
-};
-
-class npc_oculus_ringlord_sorceress : public CreatureScript
-{
-    public:
-        npc_oculus_ringlord_sorceress() : CreatureScript("npc_oculus_ringlord_sorceress") { }
-
-        struct npc_oculus_ringlord_sorceressAI : public ScriptedAI
-        {
-            npc_oculus_ringlord_sorceressAI(Creature* c) : ScriptedAI(c) {}
-
-            void Reset()
-            {
-                _blizzardTimer = 6000;
-                _flameStrikeTimer = 3000;
-            }
-
-            void UpdateAI(uint32 const diff)
-            {
-                if (!UpdateVictim())
-                    return;
-
-                if (_blizzardTimer <= diff)
-                {
-                    if (!me->IsNonMeleeSpellCasted(false))
-                    {
-                        if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 30, true))
-                            DoCast(target, DUNGEON_MODE(50715, 59278));
-                        _blizzardTimer = urand(12000, 17000);
-                    }
-                    else
-                        _blizzardTimer = urand(5000, 10000);
-                }
-                else
-                    _blizzardTimer -= diff;
-
-                if (_flameStrikeTimer <= diff)
-                {
-                    if (!me->IsNonMeleeSpellCasted(false))
-                    {
-                        if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 30, true))
-                            DoCast(target, DUNGEON_MODE(16102, 61402));
-                        _flameStrikeTimer = urand(6000, 13000);
-                    }
-                    else
-                        _flameStrikeTimer = urand(4000, 8000);
-                }
-                else
-                    _flameStrikeTimer -= diff;
-
-                DoMeleeAttackIfReady();
-            }
-
-        private:
-            uint32 _blizzardTimer;
-            uint32 _flameStrikeTimer;
-        };
-
-        CreatureAI* GetAI(Creature* creature) const
-        {
-            return new npc_oculus_ringlord_sorceressAI(creature);
-        }
-};
-
 void AddSC_oculus()
 {
     new npc_oculus_drake();
-    new spell_emerald_drake_touch_the_nightmare();
-    new spell_amber_drake_schock_lance();
-    new spell_amber_drake_time_stop();
+    new npc_oculus_mount();
+    new spell_amber_drake_shock_lance();
+    new spell_amber_drake_stop_time();
     new spell_amber_drake_temporal_rift();
-    new npc_oculus_drakes();
-    new npc_oculus_ringlord_conjurer();
-    new npc_oculus_ringlord_sorceress();
 }

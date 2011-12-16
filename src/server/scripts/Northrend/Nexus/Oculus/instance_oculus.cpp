@@ -110,9 +110,13 @@ public:
                     break;
                 case NPC_UROM:
                     uromGUID = creature->GetGUID();
+                    if (GetBossState(DATA_VAROS_EVENT) != DONE)
+                        creature->setFaction(35);
                     break;
                 case NPC_EREGOS:
                     eregosGUID = creature->GetGUID();
+                    if (GetBossState(DATA_UROM_EVENT) != DONE)
+                        creature->setFaction(35);
                     break;
                 case NPC_CENTRIFUGE_CONSTRUCT:
                     if (creature->isAlive())
@@ -158,7 +162,16 @@ public:
                     break;
                 case DATA_VAROS_EVENT:
                     if (state == DONE)
+                    {
                         DoUpdateWorldState(WORLD_STATE_CENTRIFUGE_CONSTRUCT_SHOW, 0);
+                        if (Creature* urom = instance->GetCreature(uromGUID))
+                            urom->RestoreFaction();
+                    }
+                    break;
+                case DATA_UROM_EVENT:
+                    if (state == DONE)
+                        if (Creature* eregos = instance->GetCreature(eregosGUID))
+                            eregos->RestoreFaction();
                     break;
                 case DATA_EREGOS_EVENT:
                     if (state == DONE)

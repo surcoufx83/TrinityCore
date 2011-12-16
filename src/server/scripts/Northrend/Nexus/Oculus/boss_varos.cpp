@@ -30,18 +30,19 @@ enum Says
 enum Spells
 {
     SPELL_ENERGIZE_CORES_VISUAL       = 62136,
-    SPELL_ENERGIZE_CORES              = 50785, //Damage 5938 to 6562, effec2 Triggers 54069, effect3 Triggers 56251
+    SPELL_ENERGIZE_CORES              = 50785, // Damage 5938 to 6562, effec2 Triggers 54069, effect3 Triggers 56251
     SPELL_ENERGIZE_CORES_H            = 59372,
-    SPELL_CALL_AZURE_RING_CAPTAIN     = 51002, //Effect Send Event (12229)
-    /*SPELL_CALL_AZURE_RING_CAPTAIN_2 = 51006, //Effect Send Event (10665)
-    SPELL_CALL_AZURE_RING_CAPTAIN_3   = 51007, //Effect Send Event (18454)
-    SPELL_CALL_AZURE_RING_CAPTAIN_4   = 51008, //Effect Send Event (18455)*/
+    SPELL_CALL_AZURE_RING_CAPTAIN     = 51002, // Effect Send Event (12229)
+    /*SPELL_CALL_AZURE_RING_CAPTAIN_2 = 51006, // Effect Send Event (10665)
+    SPELL_CALL_AZURE_RING_CAPTAIN_3   = 51007, // Effect Send Event (18454)
+    SPELL_CALL_AZURE_RING_CAPTAIN_4   = 51008, // Effect Send Event (18455)*/
     SPELL_CALL_AMPLIFY_MAGIC          = 51054,
     SPELL_CALL_AMPLIFY_MAGIC_H        = 59371,
 
     SPELL_ARCANE_BEAM_PERIODIC        = 51019,
     SPELL_SUMMON_ARCANE_BEAM          = 51017,
-    SPELL_ARCANE_BEAM_VISUAL          = 51024
+    SPELL_ARCANE_BEAM_VISUAL          = 51024,
+    SPELL_CENTRIFUGE_CORE_PASSIVE     = 50798
 };
 
 enum Events
@@ -50,6 +51,18 @@ enum Events
     EVENT_CALL_AZURE,
     EVENT_AMPLIFY_MAGIC,
     EVENT_ENERGIZE_CORES_VISUAL
+};
+
+static Position corePositions[]=
+{
+    {1305.189f, 1029.883f, 438.942f, 0.0f},
+    {1276.570f, 1026.267f, 438.942f, 0.0f},
+    {1245.383f, 1050.026f, 438.942f, 0.0f},
+    {1241.266f, 1080.340f, 438.942f, 0.0f},
+    {1264.629f, 1110.341f, 438.942f, 0.0f},
+    {1295.459f, 1114.321f, 438.942f, 0.0f},
+    {1325.323f, 1091.365f, 438.942f, 0.0f},
+    {1329.289f, 1060.288f, 438.942f, 0.0f},
 };
 
 class boss_varos : public CreatureScript
@@ -74,19 +87,43 @@ class boss_varos : public CreatureScript
                 // not sure if this is handled by a timer or hp percentage
                 events.ScheduleEvent(EVENT_CALL_AZURE, urand(15, 30) * IN_MILLISECONDS);
 
-                firstCoreEnergize = false;
-                coreEnergizeOrientation = 0.0f;
+                energizedCore = 0; // clockwise?
             }
 
             void EnterCombat(Unit* /*who*/)
             {
                 _EnterCombat();
                 Talk(SAY_AGGRO);
+                SpawnCores();
             }
 
-            float GetCoreEnergizeOrientation()
+            void JustSummoned(Creature* summon)
             {
-                return coreEnergizeOrientation;
+                summons.Summon(summon);
+            }
+
+            float GetCoreEnergizeOrientation(bool first)
+            {
+                uint8 mod = first ? energizedCore : energizedCore + 3;
+                if (mod >= 8)
+                    mod -= 8;
+
+                float angle = me->GetAngle(corePositions[mod].GetPositionX(), corePositions[mod].GetPositionY());
+                angle += first ? 0.2f : -0.2f;
+                angle = MapManager::NormalizeOrientation(angle);
+
+                return angle;
+            }
+
+            void SpawnCores()
+            {
+                for (uint8 i = 0; i < 8; ++i)
+                    if (Creature* core = me->SummonCreature(NPC_CENTRIFUGE_CORE, corePositions[i]))
+                    {
+                        core->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PASSIVE);
+                        core->SetDisplayId(core->GetCreatureInfo()->Modelid2);
+                        core->AddAura(SPELL_CENTRIFUGE_CORE_PASSIVE, core);
+                    }
             }
 
             void UpdateAI(uint32 const diff)
@@ -106,17 +143,11 @@ class boss_varos : public CreatureScript
                     {
                         case EVENT_ENERGIZE_CORES:
                             DoCast(me, DUNGEON_MODE(SPELL_ENERGIZE_CORES, SPELL_ENERGIZE_CORES_H));
-                            events.CancelEvent(EVENT_ENERGIZE_CORES);
                             break;
                         case EVENT_ENERGIZE_CORES_VISUAL:
-                            if (!firstCoreEnergize)
-                            {
-                                coreEnergizeOrientation = me->GetOrientation();
-                                firstCoreEnergize = true;
-                            }
-                            else
-                                coreEnergizeOrientation = MapManager::NormalizeOrientation(coreEnergizeOrientation - 2.0f);
-
+                            energizedCore += 2;
+                            if (energizedCore >= 8)
+                                energizedCore -= 8;
                             DoCast(me, SPELL_ENERGIZE_CORES_VISUAL);
                             events.ScheduleEvent(EVENT_ENERGIZE_CORES_VISUAL, 5000);
                             events.ScheduleEvent(EVENT_ENERGIZE_CORES, 4000);
@@ -141,11 +172,11 @@ class boss_varos : public CreatureScript
             {
                 Talk(SAY_DEATH);
                 _JustDied();
+                me->SummonCreature(NPC_IMAGE_OF_BELGARISTRASZ, *me, TEMPSUMMON_TIMED_DESPAWN, 3*MINUTE*IN_MILLISECONDS);
             }
 
         private:
-            bool firstCoreEnergize;
-            float coreEnergizeOrientation;
+            uint8 energizedCore;
         };
 
         CreatureAI* GetAI(Creature* creature) const
@@ -174,17 +205,6 @@ class npc_azure_ring_captain : public CreatureScript
                 me->SetReactState(REACT_AGGRESSIVE);
             }
 
-            /*
-            void SpellHitTarget(Unit* target, SpellInfo const* spell)
-            {
-                if (spell->Id == SPELL_ICE_BEAM)
-                {
-                    target->CastSpell(target, SPELL_SUMMON_ARCANE_BEAM, true);
-                    me->DespawnOrUnsummon();
-                }
-            }
-            */
-
             void UpdateAI(uint32 const /*diff*/)
             {
                 if (!UpdateVictim())
@@ -201,10 +221,12 @@ class npc_azure_ring_captain : public CreatureScript
                 me->GetMotionMaster()->MoveIdle();
 
                 if (Unit* target = ObjectAccessor::GetUnit(*me, targetGUID))
-                // DoCast(target, SPELL_ICE_BEAM);
                 {
-                    Creature* summoned = target->SummonCreature(28239, *target, TEMPSUMMON_TIMED_DESPAWN, 10000);
-                    DoCast(summoned, SPELL_ARCANE_BEAM_VISUAL);
+                    if (Creature* summoned = target->SummonCreature(28239, *target, TEMPSUMMON_TIMED_DESPAWN, 10000))
+                    {
+                        summoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED);
+                        DoCast(summoned, SPELL_ARCANE_BEAM_VISUAL);
+                    }
                 }
             }
 
@@ -219,6 +241,7 @@ class npc_azure_ring_captain : public CreatureScript
                             {
                                 if (Unit* victim = varos->AI()->SelectTarget(SELECT_TARGET_RANDOM, 0))
                                 {
+                                    me->DespawnOrUnsummon(20*IN_MILLISECONDS);
                                     me->SetReactState(REACT_PASSIVE);
                                     me->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
                                     me->GetMotionMaster()->MovePoint(ACTION_CALL_DRAGON_EVENT, victim->GetPositionX(), victim->GetPositionY(), victim->GetPositionZ() + 20.0f);
@@ -273,7 +296,7 @@ class spell_varos_centrifuge_shield : public SpellScriptLoader
             {
                 if (Unit* caster = GetCaster())
                 {
-                    caster->ToCreature()->SetReactState(REACT_AGGRESSIVE);
+                    caster->ToCreature()->SetReactState(REACT_DEFENSIVE);
                     caster->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_15|UNIT_FLAG_PASSIVE|UNIT_FLAG_OOC_NOT_ATTACKABLE|UNIT_FLAG_UNK_6);
                 }
             }
@@ -309,21 +332,26 @@ class spell_varos_energize_core_area_enemy : public SpellScriptLoader
                 if (varos->GetEntry() != NPC_VAROS)
                     return;
 
-                float orientation = CAST_AI(boss_varos::boss_varosAI, varos->AI())->GetCoreEnergizeOrientation();
+                float lborder = CAST_AI(boss_varos::boss_varosAI, varos->AI())->GetCoreEnergizeOrientation(true);
+                float rborder = CAST_AI(boss_varos::boss_varosAI, varos->AI())->GetCoreEnergizeOrientation(false);
+                std::list<Unit*> tempList;
 
-                for (std::list<Unit*>::iterator itr = targetList.begin(); itr != targetList.end();)
+                for (std::list<Unit*>::iterator itr = targetList.begin(); itr != targetList.end(); ++itr)
                 {
-                    Position pos;
-                    (*itr)->GetPosition(&pos);
-
                     float angle = varos->GetAngle((*itr)->GetPositionX(), (*itr)->GetPositionY());
-                    float diff = fabs(orientation - angle);
 
-                    if (diff > 1.0f)
-                        itr = targetList.erase(itr);
-                    else
-                        ++itr;
+                    if (lborder < rborder)
+                    {
+                        if (angle >= lborder && angle <= rborder)
+                            continue;
+                    }
+                    else if (angle >= lborder || angle <= rborder)
+                        continue;
+
+                    tempList.push_back(*itr);
                 }
+
+                targetList = tempList;
             }
 
             void Register()
@@ -356,21 +384,26 @@ class spell_varos_energize_core_area_entry : public SpellScriptLoader
                 if (varos->GetEntry() != NPC_VAROS)
                     return;
 
-                float orientation = CAST_AI(boss_varos::boss_varosAI, varos->AI())->GetCoreEnergizeOrientation();
+                float lborder = CAST_AI(boss_varos::boss_varosAI, varos->AI())->GetCoreEnergizeOrientation(true);
+                float rborder = CAST_AI(boss_varos::boss_varosAI, varos->AI())->GetCoreEnergizeOrientation(false);
+                std::list<Unit*> tempList;
 
-                for (std::list<Unit*>::iterator itr = targetList.begin(); itr != targetList.end();)
+                for (std::list<Unit*>::iterator itr = targetList.begin(); itr != targetList.end(); ++itr)
                 {
-                    Position pos;
-                    (*itr)->GetPosition(&pos);
-
                     float angle = varos->GetAngle((*itr)->GetPositionX(), (*itr)->GetPositionY());
-                    float diff = fabs(orientation - angle);
 
-                    if (diff > 1.0f)
-                        itr = targetList.erase(itr);
-                    else
-                        ++itr;
+                    if (lborder < rborder)
+                    {
+                        if (angle >= lborder && angle <= rborder)
+                            continue;
+                    }
+                    else if (angle >= lborder || angle <= rborder)
+                        continue;
+
+                    tempList.push_back(*itr);
                 }
+
+                targetList = tempList;
             }
 
             void Register()
@@ -385,35 +418,6 @@ class spell_varos_energize_core_area_entry : public SpellScriptLoader
         }
 };
 
-// TODO: needed??
-/*
-class npc_arcane_beam : public CreatureScript
-{
-    public:
-        npc_arcane_beam() : CreatureScript("npc_arcane_beam") { }
-
-        struct npc_arcane_beamAI : public ScriptedAI
-        {
-            npc_arcane_beamAI(Creature* creature) : ScriptedAI(creature) {}
-
-            void Reset()
-            {
-                Unit* target;
-                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED);
-                me->AddAura(51019, me);
-                me->SetDisplayId(11686);
-                if(target = me->SelectNearestTarget(30))
-                    me->AddThreat(target, (float)50000);
-            }
-        };
-
-        CreatureAI* GetAI(Creature* creature) const
-        {
-            return new npc_arcane_beamAI (creature);
-        }
-};
-*/
-
 void AddSC_boss_varos()
 {
     new boss_varos();
@@ -421,5 +425,4 @@ void AddSC_boss_varos()
     new spell_varos_centrifuge_shield();
     new spell_varos_energize_core_area_enemy();
     new spell_varos_energize_core_area_entry();
-    //new npc_arcane_beam();
 }

@@ -493,7 +493,8 @@ inline void KillRewarder::_RewardHonor(Player* player)
 inline void KillRewarder::_RewardXP(Player* player, float rate)
 {
     uint32 xp(_xp);
-    bool boostItem = false;
+    bool boostItem        = false;
+    bool boostItemPremium = false;
     if (_group)
     {
         // 4.2.1. If player is in group, adjust XP:
@@ -515,7 +516,8 @@ inline void KillRewarder::_RewardXP(Player* player, float rate)
                         member->isAlive() &&
                         member->IsAtGroupRewardDistance(_victim) &&
                         member->IsAtGroupRewardDistance(player) &&
-                        member->HasItemOrGemWithIdEquipped(sWorld->getIntConfig(CONFIG_XP_BOOST_ITEMID), 1))
+                        (member->HasItemOrGemWithIdEquipped(sWorld->getIntConfig(CONFIG_XP_BOOST_ITEMID), 1) ||
+                        member->HasItemOrGemWithIdEquipped(sWorld->getIntConfig(CONFIG_XP_BOOST_PREMIUM_ITEMID), 1)))
                     {
                         boostItem = true;
                         break;
@@ -526,6 +528,12 @@ inline void KillRewarder::_RewardXP(Player* player, float rate)
         boostItem = player->HasItemOrGemWithIdEquipped(sWorld->getIntConfig(CONFIG_XP_BOOST_ITEMID), 1);
     }
 
+    if (player->HasItemOrGemWithIdEquipped(sWorld->getIntConfig(CONFIG_XP_BOOST_PREMIUM_ITEMID), 1))
+    {
+    	boostItemPremium = true;
+    	boostItem        = false;
+    }
+
     if (xp)
     {
         // 4.2.2. Apply auras modifying rewarded XP (SPELL_AURA_MOD_XP_PCT).
@@ -534,17 +542,40 @@ inline void KillRewarder::_RewardXP(Player* player, float rate)
             AddPctN(xp, (*i)->GetAmount());
 
         // calculate the xp boost
-        if (boostItem && player->getLevel() <= sWorld->getIntConfig(CONFIG_XP_BOOST_MAXLEVEL))
-            if (_group)
-                xp = (uint32)(xp * sWorld->getRate(RATE_XP_BOOST_GROUP));
-            else
-                xp = (uint32)(xp * sWorld->getRate(RATE_XP_BOOST_SOLO));
+        if (player->getLevel() <= sWorld->getIntConfig(CONFIG_XP_BOOST_MAXLEVEL))
+        {
+        	if (boostItem)
+        	{
+        		if (_group)
+        			xp = (uint32)(xp * sWorld->getRate(RATE_XP_BOOST_GROUP));
+        		else
+        			xp = (uint32)(xp * sWorld->getRate(RATE_XP_BOOST_SOLO));
+        	}
+
+        	if (boostItemPremium)
+        		xp = (uint32)(xp * sWorld->getRate(RATE_XP_BOOST_PREMIUM_SOLO));
+        }
 
         // 4.2.3. Give XP to player.
         player->GiveXP(xp, _victim, _groupRate);
         if (Pet* pet = player->GetPet())
+        {
             // 4.2.4. If player has pet, reward pet with XP (100% for single player, 50% for group case).
-            pet->GivePetXP(_group ? xp / 2 : xp);
+        	if (player->getLevel() <= sWorld->getIntConfig(CONFIG_XP_BOOST_MAXLEVEL))
+        	{
+        		if (boostItem)
+        		{
+        			if (_group)
+        				xp = (uint32)(xp / sWorld->getRate(RATE_XP_BOOST_GROUP));
+        			else
+        				xp = (uint32)(xp / sWorld->getRate(RATE_XP_BOOST_SOLO));
+        		}
+
+        		if (boostItemPremium)
+        			xp = (uint32)(xp / sWorld->getRate(RATE_XP_BOOST_PREMIUM_SOLO));
+        	}
+        	pet->GivePetXP(_group ? xp / 2 : xp);
+        }
     }
 }
 
@@ -552,6 +583,14 @@ inline void KillRewarder::_RewardReputation(Player* player, float rate)
 {
     // 4.3. Give reputation (player must not be on BG).
     // Even dead players and corpses are rewarded.
+	bool boostItemPremium = false;
+
+	if (player->HasItemOrGemWithIdEquipped(sWorld->getIntConfig(CONFIG_XP_BOOST_PREMIUM_ITEMID), 1))
+	    	boostItemPremium = true;
+
+	if (boostItemPremium)
+		rate = (float)(rate * sWorld->getRate(RATE_REP_BOOST_PREMIUM_SOLO));
+
     player->RewardReputation(_victim, rate);
 }
 
@@ -5216,6 +5255,8 @@ void Player::ResurrectPlayer(float restore_percent, bool applySickness)
     if (GetSession()->IsARecruiter() || (GetSession()->GetRecruiterId() != 0))
         SetFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_REFER_A_FRIEND);
 
+    setDeathState(ALIVE);
+
     SetMovement(MOVE_LAND_WALK);
     SetMovement(MOVE_UNROOT);
 
@@ -5244,8 +5285,6 @@ void Player::ResurrectPlayer(float restore_percent, bool applySickness)
 
     // update visibility
     UpdateObjectVisibility();
-
-    setDeathState(ALIVE);
 
     if (!applySickness)
         return;
@@ -15026,10 +15065,10 @@ void Player::RewardQuest(Quest const* quest, uint32 reward, Object* questGiver, 
 
     for (uint8 i = 0; i < QUEST_SOURCE_ITEM_IDS_COUNT; ++i)
     {
-        if (quest->RequiredSourceItemid[i])
+        if (quest->RequiredSourceItemId[i])
         {
-            uint32 count = quest->RequiredSourceItemId[i];
-            DestroyItemCount(quest->RequiredSourceItemid[i], count ? count : 9999, true);
+            uint32 count = quest->RequiredSourceItemCount[i];
+            DestroyItemCount(quest->RequiredSourceItemId[i], count ? count : 9999, true);
         }
     }
 
@@ -15226,9 +15265,9 @@ void Player::FailQuest(uint32 questId)
                 // Destroy items recieved on starting the quest.
                 DestroyItemCount(quest->RequiredItemId[i], quest->RequiredItemCount[i], true, true);
         for (uint8 i = 0; i < QUEST_SOURCE_ITEM_IDS_COUNT; ++i)
-            if (quest->RequiredSourceItemid[i] > 0 && quest->RequiredSourceItemId[i] > 0)
+            if (quest->RequiredSourceItemId[i] > 0 && quest->RequiredSourceItemCount[i] > 0)
                 // Destroy items recieved during the quest.
-                DestroyItemCount(quest->RequiredSourceItemid[i], quest->RequiredSourceItemId[i], true, true);
+                DestroyItemCount(quest->RequiredSourceItemId[i], quest->RequiredSourceItemCount[i], true, true);
     }
 }
 
@@ -16285,7 +16324,7 @@ bool Player::HasQuestForItem(uint32 itemid) const
             for (uint8 j = 0; j < QUEST_SOURCE_ITEM_IDS_COUNT; ++j)
             {
                 // examined item is a source item
-                if (qinfo->RequiredSourceItemid[j] == itemid)
+                if (qinfo->RequiredSourceItemId[j] == itemid)
                 {
                     ItemTemplate const* pProto = sObjectMgr->GetItemTemplate(itemid);
 
@@ -16294,9 +16333,9 @@ bool Player::HasQuestForItem(uint32 itemid) const
                         return true;
 
                     // allows custom amount drop when not 0
-                    if (qinfo->RequiredSourceItemId[j])
+                    if (qinfo->RequiredSourceItemCount[j])
                     {
-                        if (GetItemCount(itemid, true) < qinfo->RequiredSourceItemId[j])
+                        if (GetItemCount(itemid, true) < qinfo->RequiredSourceItemCount[j])
                             return true;
                     } else if (GetItemCount(itemid, true) < pProto->GetMaxStackSize())
                         return true;
@@ -18479,13 +18518,13 @@ void Player::SaveToDB(bool create /*=false*/)
         stmt->setUInt32(index++, GetUInt32Value(PLAYER_BYTES_2));
         stmt->setUInt32(index++, GetUInt32Value(PLAYER_FLAGS));
         stmt->setUInt16(index++, (uint16)GetMapId());
-        stmt->setUInt32(index++ , (uint32)GetInstanceId());
+        stmt->setUInt32(index++, (uint32)GetInstanceId());
         stmt->setUInt8(index++, (uint8(GetDungeonDifficulty()) | uint8(GetRaidDifficulty()) << 4));
         stmt->setFloat(index++, finiteAlways(GetPositionX()));
         stmt->setFloat(index++, finiteAlways(GetPositionY()));
         stmt->setFloat(index++, finiteAlways(GetPositionZ()));
         stmt->setFloat(index++, finiteAlways(GetOrientation()));
-        
+
         {
             std::ostringstream ss;
             ss << m_taxi;
@@ -22777,11 +22816,8 @@ uint32 Player::GetBaseWeaponSkillValue (WeaponAttackType attType) const
 void Player::ResurectUsingRequestData()
 {
     /// Teleport before resurrecting by player, otherwise the player might get attacked from creatures near his corpse
-    if (IS_PLAYER_GUID(m_resurrectGUID))
-        TeleportTo(m_resurrectMap, m_resurrectX, m_resurrectY, m_resurrectZ, GetOrientation());
+    TeleportTo(m_resurrectMap, m_resurrectX, m_resurrectY, m_resurrectZ, GetOrientation());
 
-    //we cannot resurrect player when we triggered far teleport
-    //player will be resurrected upon teleportation
     if (IsBeingTeleported())
     {
         ScheduleDelayedOperation(DELAYED_RESURRECT_PLAYER);

@@ -1242,7 +1242,7 @@ bool Creature::CreateFromProto(uint32 guidlow, uint32 Entry, uint32 vehId, uint3
     return true;
 }
 
-bool Creature::LoadFromDB(uint32 guid, Map* map)
+bool Creature::LoadCreatureFromDB(uint32 guid, Map* map, bool addToMap)
 {
     CreatureData const* data = sObjectMgr->GetCreatureData(guid);
 
@@ -1311,6 +1311,8 @@ bool Creature::LoadFromDB(uint32 guid, Map* map)
 
     m_creatureData = data;
 
+    if (addToMap && !GetMap()->AddToMap(this))
+        return false;
     return true;
 }
 
@@ -1537,11 +1539,11 @@ void Creature::setDeathState(DeathState s)
         SetUInt32Value(UNIT_NPC_FLAGS, cinfo->npcflag);
         ClearUnitState(uint32(UNIT_STAT_ALL_STATE));
         SetMeleeDamageSchool(SpellSchools(cinfo->dmgschool));
+        Unit::setDeathState(ALIVE);
         LoadCreaturesAddon(true);
         Motion_Initialize();
         if (GetCreatureData() && GetPhaseMask() != GetCreatureData()->phaseMask)
             SetPhaseMask(GetCreatureData()->phaseMask, false);
-        Unit::setDeathState(ALIVE);
     }
 }
 
