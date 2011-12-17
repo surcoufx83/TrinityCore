@@ -172,7 +172,7 @@ class boss_varos : public CreatureScript
             {
                 Talk(SAY_DEATH);
                 _JustDied();
-                me->SummonCreature(NPC_IMAGE_OF_BELGARISTRASZ, *me, TEMPSUMMON_TIMED_DESPAWN, 3*MINUTE*IN_MILLISECONDS);
+                DoCast(me, SPELL_DEATH_SPELL, true);
             }
 
         private:

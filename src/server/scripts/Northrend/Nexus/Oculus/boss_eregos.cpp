@@ -365,57 +365,6 @@ class achievement_amber_void : public AchievementCriteriaScript
         }
 };
 
-class achievement_experienced_drake_rider_amber : public AchievementCriteriaScript
-{
-    public:
-        achievement_experienced_drake_rider_amber() : AchievementCriteriaScript("achievement_experienced_drake_rider_amber") { }
-
-        bool OnCheck(Player* source, Unit* /*target*/)
-        {
-            if (Creature* vehicle = source->GetVehicleCreatureBase())
-            {
-                if (vehicle->GetEntry() == NPC_AMBER_DRAKE)
-                    return true;
-            }
-
-            return false;
-        }
-};
-
-class achievement_experienced_drake_rider_emerald : public AchievementCriteriaScript
-{
-    public:
-        achievement_experienced_drake_rider_emerald() : AchievementCriteriaScript("achievement_experienced_drake_rider_emerald") { }
-
-        bool OnCheck(Player* source, Unit* /*target*/)
-        {
-            if (Creature* vehicle = source->GetVehicleCreatureBase())
-            {
-                if (vehicle->GetEntry() == NPC_EMERALD_DRAKE)
-                    return true;
-            }
-
-            return false;
-        }
-};
-
-class achievement_experienced_drake_rider_ruby : public AchievementCriteriaScript
-{
-    public:
-        achievement_experienced_drake_rider_ruby() : AchievementCriteriaScript("achievement_experienced_drake_rider_ruby") { }
-
-        bool OnCheck(Player* source, Unit* /*target*/)
-        {
-            if (Creature* vehicle = source->GetVehicleCreatureBase())
-            {
-                if (vehicle->GetEntry() == NPC_RUBY_DRAKE)
-                    return true;
-            }
-
-            return false;
-        }
-};
-
 void AddSC_boss_eregos()
 {
     new boss_eregos();
@@ -424,7 +373,4 @@ void AddSC_boss_eregos()
     new achievement_ruby_void();
     new achievement_emerald_void();
     new achievement_amber_void();
-    new achievement_experienced_drake_rider_amber();
-    new achievement_experienced_drake_rider_emerald();
-    new achievement_experienced_drake_rider_ruby();
 }
