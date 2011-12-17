@@ -1593,7 +1593,7 @@ void AuraEffect::HandleShapeshiftBoosts(Unit* target, bool apply) const
                                 spellId3 = 47180;
                                 break;
                         }
-                        target->CastSpell(target, spellId, true, NULL, this);
+                        target->CastSpell(target, spellId3, true, NULL, this);
                     }
                     // Master Shapeshifter - Cat
                     if (AuraEffect const* aurEff = target->GetDummyAuraEffect(SPELLFAMILY_GENERIC, 2851, 0))
@@ -4942,6 +4942,11 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
                     if (Aura* newAura = target->AddAura(71564, target))
                         newAura->SetStackAmount(newAura->GetSpellInfo()->StackAmount);
                     break;
+                case 59628: // Tricks of the Trade  
+                    if (!caster->GetMisdirectionTarget())
+                        break;
+                    target->SetReducedThreatPercent(100,caster->GetMisdirectionTarget()->GetGUID());
+                    break;
             }
         }
         // AT REMOVE
@@ -5072,18 +5077,6 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
                         }
                     }
                     break;
-                case SPELLFAMILY_ROGUE:
-                    switch (GetId())
-                    {
-                        case 59628: // Tricks of the Trade
-                            caster->SetReducedThreatPercent(0, 0);
-                            break;
-                        case 57934: // Tricks of the Trade
-                            if (aurApp->GetRemoveMode() != AURA_REMOVE_BY_DEFAULT)
-                                caster->SetReducedThreatPercent(0, 0);
-                            break;
-                    }
-                    break;
                 case SPELLFAMILY_HUNTER:
                     switch (GetId())
                     {
@@ -5101,6 +5094,20 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
                     if (GetId() == 61777)
                         target->CastSpell(target, GetAmount(), true);
                     break;
+                case SPELLFAMILY_ROGUE:
+                    //  Tricks of the trade
+                    switch(GetId())
+                    {
+                        case 59628: //Tricks of the trade buff on rogue (6sec duration)
+                            target->SetReducedThreatPercent(0,0);
+                            break;
+                        case 57934: //Tricks of the trade buff on rogue (30sec duration)
+                            if (aurApp->GetRemoveMode() == AURA_REMOVE_BY_EXPIRE || !caster->GetMisdirectionTarget())
+                                target->SetReducedThreatPercent(0,0);
+                            else
+                                target->SetReducedThreatPercent(0,caster->GetMisdirectionTarget()->GetGUID());
+                            break;       
+                    }
                 default:
                     break;
             }

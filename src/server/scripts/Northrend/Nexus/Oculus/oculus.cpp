@@ -53,6 +53,12 @@ enum Drakes
     SPELL_MARTYR                                  = 50253
 };
 
+enum Says
+{
+    SAY_VAROS          = 0,
+    SAY_UROM           = 1
+};
+
 class npc_oculus_drake : public CreatureScript
 {
     public:
@@ -365,10 +371,41 @@ class spell_amber_drake_temporal_rift : public SpellScriptLoader
         }
 };
 
+class npc_image_belgaristrasz : public CreatureScript
+{
+public:
+    npc_image_belgaristrasz() : CreatureScript("npc_image_belgaristrasz") { }
+
+    struct npc_image_belgaristraszAI : public ScriptedAI
+    {
+        npc_image_belgaristraszAI(Creature* creature) : ScriptedAI(creature) {}
+
+        void IsSummonedBy(Unit* summoner)
+        {
+            if (summoner->GetEntry() == NPC_VAROS)
+            {
+               Talk(SAY_VAROS);
+               me->DespawnOrUnsummon(60000);
+            }
+            if (summoner->GetEntry() == NPC_UROM)
+            {
+               Talk(SAY_UROM);
+               me->DespawnOrUnsummon(60000);
+            }
+        }            
+    };
+
+    CreatureAI* GetAI(Creature* creature) const
+    {
+        return new npc_image_belgaristraszAI(creature);
+    }
+};
+
 void AddSC_oculus()
 {
     new npc_oculus_drake();
     new npc_oculus_mount();
+    new npc_image_belgaristrasz();
     new spell_amber_drake_shock_lance();
     new spell_amber_drake_stop_time();
     new spell_amber_drake_temporal_rift();

@@ -753,12 +753,14 @@ public:
                                 if (Creature* cityMan = GetClosestCreatureWithEntry(malganis, NPC_CITY_MAN, 100.0f))
                                 {
                                     cityMan->UpdateEntry(NPC_ZOMBIE, 0);
-                                    cityMan->SetReactState(REACT_AGGRESSIVE);
+                                    cityMan->AIM_Initialize();
+                                    cityMan->Motion_Initialize();
                                 }
                                 else if (Creature* cityMan2 = GetClosestCreatureWithEntry(malganis, NPC_CITY_MAN2, 100.0f))
                                 {
                                     cityMan2->UpdateEntry(NPC_ZOMBIE, 0);
-                                    cityMan2->SetReactState(REACT_AGGRESSIVE);
+                                    cityMan2->AIM_Initialize();
+                                    cityMan2->Motion_Initialize();
                                 }
                                 else // There's no one else to transform
                                     uiStep++;
