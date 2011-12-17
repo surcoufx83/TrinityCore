@@ -2009,7 +2009,7 @@ void AchievementMgr::CompletedAchievement(AchievementEntry const* achievement)
     //if (m_player->GetSession()->GetSecurity() > SEC_PLAYER)
     //    return;
 
-    if (achievement->flags & ACHIEVEMENT_FLAG_COUNTER || HasAchieved(achievement))
+    if (achievement->flags & ACHIEVEMENT_FLAG_COUNTER || HasAchieved(achievement->ID))
         return;
 
     // I know this is already checked in Complete Criterium ... but CompleteAchievement cann also be called by InstanceScript::DoCompleteAchievments and is needet for some RealmFirsts
