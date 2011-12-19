@@ -107,13 +107,13 @@ static Position IronforgeGuard[] =
 
 enum eMagni
 {
-    SPELL_AVATAR			= 19135,
-    SPELL_KNOCK_AWAY		= 20686,
-    SPELL_STORM_BOLT		= 20685,
-    SPELL_CHARGE			= 20508,	
-    SPELL_LAY_ON_HANDS		= 633,  // may the wrong spell - but works fine in this case 
+    SPELL_AVATAR            = 19135,
+    SPELL_KNOCK_AWAY        = 20686,
+    SPELL_STORM_BOLT        = 20685,
+    SPELL_CHARGE            = 20508,	
+    SPELL_LAY_ON_HANDS      = 633,  // may the wrong spell - but works fine in this case 
 
-    ENTRY_IRONFORGE_GUARD	= 5595,
+    ENTRY_IRONFORGE_GUARD   = 5595,
 
     SAY_AGGRO               = 1
 };
