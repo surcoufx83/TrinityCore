@@ -42,6 +42,7 @@ enum Creatures
     NPC_UROM                    = 27655,
     NPC_EREGOS                  = 27656,
 
+    NPC_AZURE_RING_GUARDIAN     = 28236,
     NPC_CENTRIFUGE_CONSTRUCT    = 27641,
     NPC_EMERALD_DRAKE           = 27692,
     NPC_AMBER_DRAKE             = 27755,
