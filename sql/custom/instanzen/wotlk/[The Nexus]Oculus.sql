@@ -32,18 +32,15 @@ INSERT INTO `spell_proc_event` (`entry`,`procEx`,`CustomChance`)VALUES
 (50240,4,100);
 
 DELETE FROM `creature_addon` WHERE `guid` IN (101924,101933,101922,101974,102064,101967);
-INSERT INTO `creature_addon` (`guid`,`auras`) VALUES
-(101924,'50088'),
-(101933,'50088'),
-(101922,'50088'),
-(101974,'50088'),
-(102064,'50088'),
-(101967,'50088');
+DELETE FROM `creature_template_addon` WHERE `entry` IN (27641,30905);
+INSERT INTO `creature_template_addon` (`entry`,`auras`) VALUES
+(27641,'50088'),
+(30905,'50088');
 
 -- SAI
-UPDATE `creature_template` SET `AIName`='SmartAI',`ScriptName`='' WHERE `entry` IN (27636,27633,27635,27638,27641,27640,27639,28276,27642,27644,27645,27650,27651,27653,27647,27648);
+UPDATE `creature_template` SET `AIName`='SmartAI',`ScriptName`='' WHERE `entry` IN (27636,27633,27635,27638,27640,27639,28276,27642,27644,27645,27650,27651,27653,27647,27648);
 DELETE FROM `creature_ai_scripts` WHERE `creature_id` IN (27636,27633,27635,27638,27641,27640,27639,28276,27642,27644,27645,27650,27651,27653,27647,27648);
-DELETE FROM `smart_scripts` WHERE `entryorguid` IN (27636,27633,27635,27638,27641,27640,27639,28276,27642,27644,27645,27650,27651,27653,27647,27648);
+DELETE FROM `smart_scripts` WHERE `entryorguid` IN (27636,27633,27635,27638,27640,27639,28276,27642,27644,27645,27650,27651,27653,27647,27648);
 INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type`,`event_phase_mask`,`event_chance`,`event_flags`,`event_param1`,`event_param2`,`event_param3`,`event_param4`,`action_type`,`action_param1`,`action_param2`,`action_param3`,`action_param4`,`action_param5`,`action_param6`,`target_type`,`target_param1`,`target_param2`,`target_param3`,`target_x`,`target_y`,`target_z`,`target_o`,`comment`) VALUES
 (27636,0,0,0,0,0,100,2,2000,4000,2000,4000,11,50705,0,0,0,0,0,2,0,0,0,0,0,0,0,'Azure Ley-Whelp - IC - cast Arcane Bolt'),
 (27636,0,1,0,0,0,100,4,2000,4000,2000,4000,11,59210,0,0,0,0,0,2,0,0,0,0,0,0,0,'Azure Ley-Whelp - IC - cast Arcane Bolt H'),
@@ -53,26 +50,23 @@ INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type
 (27633,0,2,0,9,0,100,2,5,30,3000,5000,11,51454,0,0,0,0,0,6,0,0,0,0,0,0,0,'Azure Inquisitor - IC - cast Throw'),
 (27633,0,3,0,9,0,100,4,5,30,3000,5000,11,59209,0,0,0,0,0,6,0,0,0,0,0,0,0,'Azure Inquisitor - IC - cast Throw H'),
 
-(27635,0,0,0,0,0,100,2,3000,5000,7000,10000,11,50702,0,0,0,0,0,1,0,0,0,0,0,0,0,'Azure Spellbinder - IC - cast Arcane Volley '),
-(27635,0,1,0,0,0,100,4,3000,5000,7000,10000,11,59212,0,0,0,0,0,1,0,0,0,0,0,0,0,'Azure Spellbinder - IC - cast Arcane Volley H'),
+(27635,0,0,0,0,0,100,2,3000,5000,12000,14000,11,50702,0,0,0,0,0,1,0,0,0,0,0,0,0,'Azure Spellbinder - IC - cast Arcane Volley '),
+(27635,0,1,0,0,0,100,4,3000,5000,12000,14000,11,59212,0,0,0,0,0,1,0,0,0,0,0,0,0,'Azure Spellbinder - IC - cast Arcane Volley H'),
 (27635,0,2,0,0,0,100,2,7000,9000,15000,20000,11,50566,0,0,0,0,0,5,0,0,0,0,0,0,0,'Azure Spellbinder - IC - cast Mind Warp'),
 (27635,0,3,0,0,0,100,4,7000,9000,15000,20000,11,38047,0,0,0,0,0,5,0,0,0,0,0,0,0,'Azure Spellbinder - IC - cast Mind Warp H'),
 (27635,0,4,0,0,0,100,0,10000,13000,20000,25000,11,50572,0,0,0,0,0,5,0,0,0,0,0,0,0,'Azure Spellbinder - IC - cast Power Sap'),
 
-(27638,0,0,0,0,0,100,2,0,5000,5000,7000,11,49549,0,0,0,0,0,2,0,0,0,0,0,0,0,'Azure Ring Guardian - IC - cast Ice Beam'),
-(27638,0,1,0,0,0,100,4,0,5000,5000,7000,11,59211,0,0,0,0,0,2,0,0,0,0,0,0,0,'Azure Ring Guardian - IC - cast Ice Beam H'),
-
-(27641,0,0,0,25,0,100,0,0,0,0,0,75,69844,0,0,0,0,0,1,0,0,0,0,0,0,0,'Centrifuge Construct - On Reset - add Aura: Vertex Color Bright Red'),
-(27641,0,1,0,4,0,100,0,0,0,0,0,28,69844,0,0,0,0,0,1,0,0,0,0,0,0,0,'Centrifuge Construct - On Aggro - remove Aura: Vertex Color Bright Red'),
+(27638,0,0,0,0,0,100,2,0,5000,6000,8000,11,49549,0,0,0,0,0,2,0,0,0,0,0,0,0,'Azure Ring Guardian - IC - cast Ice Beam'),
+(27638,0,1,0,0,0,100,4,0,5000,6000,8000,11,59211,0,0,0,0,0,2,0,0,0,0,0,0,0,'Azure Ring Guardian - IC - cast Ice Beam H'),
 
 (27640,0,0,0,23,0,100,2,50717,0,0,0,11,50717,0,0,0,0,0,1,0,0,0,0,0,0,0,'Ring-Lord Conjurer - On missing Aura: Charged Skin - cast Charged Skin'),
 (27640,0,1,0,23,0,100,4,59276,0,0,0,11,59276,0,0,0,0,0,1,0,0,0,0,0,0,0,'Ring-Lord Conjurer - On missing Aura: Charged Skin H - cast Charged Skin H'),
 -- may implement beam to misc Centrifuge Construct
 
-(27639,0,0,0,0,0,100,2,3000,5000,8000,10000,11,50715,0,0,0,0,0,5,0,0,0,0,0,0,0,'Ring-Lord Sorceress - IC - cast Blizzard'),
-(27639,0,1,0,0,0,100,4,3000,5000,8000,10000,11,59278,0,0,0,0,0,5,0,0,0,0,0,0,0,'Ring-Lord Sorceress - IC - cast Blizzard H'),
-(27639,0,2,0,0,0,100,2,2000,4000,6000,8000,11,16102,0,0,0,0,0,5,0,0,0,0,0,0,0,'Ring-Lord Sorceress - IC - cast Flamestrike'),
-(27639,0,3,0,0,0,100,4,2000,4000,6000,8000,11,61402,0,0,0,0,0,5,0,0,0,0,0,0,0,'Ring-Lord Sorceress - IC - cast Flamestrike H'),
+(27639,0,0,0,0,0,100,2,5000,7000,12000,14000,11,50715,0,0,0,0,0,5,0,0,0,0,0,0,0,'Ring-Lord Sorceress - IC - cast Blizzard'),
+(27639,0,1,0,0,0,100,4,5000,7000,12000,14000,11,59278,0,0,0,0,0,5,0,0,0,0,0,0,0,'Ring-Lord Sorceress - IC - cast Blizzard H'),
+(27639,0,2,0,0,0,100,2,2000,4000,8000,10000,11,16102,0,0,0,0,0,5,0,0,0,0,0,0,0,'Ring-Lord Sorceress - IC - cast Flamestrike'),
+(27639,0,3,0,0,0,100,4,2000,4000,8000,10000,11,61402,0,0,0,0,0,5,0,0,0,0,0,0,0,'Ring-Lord Sorceress - IC - cast Flamestrike H'),
 -- may implement beam to misc Centrifuge Construct
 
 (28276,0,0,0,0,0,100,2,2000,4000,2000,4000,11,50705,0,0,0,0,0,2,0,0,0,0,0,0,0,'Greater Ley-Whelp - IC - cast Arcane Bolt'),
@@ -87,19 +81,19 @@ INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type
 (27644,0,2,0,0,0,100,2,5000,8000,14000,17000,11,50729,0,0,0,0,0,2,0,0,0,0,0,0,0,'Phantasmal Wolf - IC - cast Carnivorous Bite'),
 (27644,0,3,0,0,0,100,4,5000,8000,14000,17000,11,59269,0,0,0,0,0,2,0,0,0,0,0,0,0,'Phantasmal Wolf - IC - cast Carnivorous Bite H'),
 
-(27645,0,0,0,0,0,100,2,6000,8000,8000,10000,11,59220,0,0,0,0,0,5,0,0,0,0,0,0,0,'Phantasmal Cloudscraper - IC - cast Chain Lightning'),
-(27645,0,1,0,0,0,100,4,6000,8000,8000,10000,11,15588,0,0,0,0,0,5,0,0,0,0,0,0,0,'Phantasmal Cloudscraper - IC - cast Chain Lightning H'),
-(27645,0,2,0,0,0,100,2,2000,4000,10000,12000,11,15588,0,0,0,0,0,1,0,0,0,0,0,0,0,'Phantasmal Cloudscraper - IC - cast Thunderclap'),
-(27645,0,3,0,0,0,100,4,2000,4000,10000,12000,11,59217,0,0,0,0,0,1,0,0,0,0,0,0,0,'Phantasmal Cloudscraper - IC - cast Thunderclap H'),
+(27645,0,0,0,0,0,100,2,6000,8000,10000,12000,11,59220,0,0,0,0,0,5,0,0,0,0,0,0,0,'Phantasmal Cloudscraper - IC - cast Chain Lightning'),
+(27645,0,1,0,0,0,100,4,6000,8000,10000,12000,11,15588,0,0,0,0,0,5,0,0,0,0,0,0,0,'Phantasmal Cloudscraper - IC - cast Chain Lightning H'),
+(27645,0,2,0,0,0,100,2,2000,4000,12000,14000,11,15588,0,0,0,0,0,1,0,0,0,0,0,0,0,'Phantasmal Cloudscraper - IC - cast Thunderclap'),
+(27645,0,3,0,0,0,100,4,2000,4000,12000,14000,11,59217,0,0,0,0,0,1,0,0,0,0,0,0,0,'Phantasmal Cloudscraper - IC - cast Thunderclap H'),
 
-(27650,0,0,0,23,0,100,2,25020,0,0,0,11,25020,0,0,0,0,0,1,0,0,0,0,0,0,0,'Phantasmal Air - On missing Aura: Lightning Shield - cast Lightning Shield'),
-(27650,0,1,0,23,0,100,4,20545,0,0,0,11,20545,0,0,0,0,0,1,0,0,0,0,0,0,0,'Phantasmal Air - On missing Aura: Lightning Shield H - cast Lightning Shield H'),
+(27650,0,0,0,4,0,100,2,0,0,0,0,11,25020,0,0,0,0,0,1,0,0,0,0,0,0,0,'Phantasmal Air - On Aggro - cast Lightning Shield'),
+(27650,0,1,0,4,0,100,4,0,0,0,0,11,20545,0,0,0,0,0,1,0,0,0,0,0,0,0,'Phantasmal Air - On Aggro - cast Lightning Shield H'),
 
 (27651,0,0,0,0,0,100,2,3000,5000,5000,8000,11,50744,0,0,0,0,0,5,0,0,0,0,0,0,0,'Phantasmal Fire - IC - cast Blaze'),
 (27651,0,1,0,0,0,100,4,3000,5000,5000,8000,11,59225,0,0,0,0,0,5,0,0,0,0,0,0,0,'Phantasmal Fire - IC - cast Blaze H'),
 
-(27653,0,0,0,0,0,100,2,3000,5000,4000,6000,11,37924,0,0,0,0,0,1,0,0,0,0,0,0,0,'Phantasmal Water - IC - cast Water Bolt Volley'),
-(27653,0,1,0,0,0,100,4,3000,5000,4000,6000,11,59266,0,0,0,0,0,1,0,0,0,0,0,0,0,'Phantasmal Water - IC - cast Water Bolt Volley H'),
+(27653,0,0,0,0,0,100,2,3000,5000,7000,9000,11,37924,0,0,0,0,0,1,0,0,0,0,0,0,0,'Phantasmal Water - IC - cast Water Bolt Volley'),
+(27653,0,1,0,0,0,100,4,3000,5000,7000,9000,11,59266,0,0,0,0,0,1,0,0,0,0,0,0,0,'Phantasmal Water - IC - cast Water Bolt Volley H'),
 
 (27647,0,0,0,0,0,100,0,2000,5000,7000,9000,11,50731,0,0,0,0,0,5,0,0,0,0,0,0,0,'Phantasmal Ogre - IC - cast Mace Smash'),
 (27647,0,1,0,4,0,100,0,0,0,0,0,11,50730,0,0,0,0,0,1,0,0,0,0,0,0,0,'Phantasmal Ogre - On Aggro - cast Bloodlust'),
@@ -145,7 +139,6 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ElseGroup`,`C
 (13,51024,0,18,1,28239),
 
 (13,50087,0,18,1,27641);
-
 
 DELETE FROM creature_loot_template WHERE entry IN(30901, 30902, 30904, 30905, 30906, 30907, 30908, 30909, 30910, 30911, 30912, 30913, 30914, 30915, 30916);
 INSERT INTO creature_loot_template VALUES
@@ -275,30 +268,53 @@ INSERT INTO creature_loot_template VALUES
 (30909, 37365, 1, 1, 0, 1, 1),
 (30909, 37364, 1, 1, 0, 1, 1);
 
-DELETE FROM script_texts WHERE Entry IN(-1578005,-1578006, -1578007, -1578008, -1578009, -1578010, -1578011, -1578012, -1578013, -1578014, -1578015, -1578016, -1578017, -1578018, -1578019, -1578020, -1578021, -1578022, -1578023, -1578024);
-INSERT INTO script_texts VALUES
-(27654, -1578005, "The prisoners shall not go free. The word of Malygos is law!", "", "", "", "", "", "", "", "", 0, 1, 0, 0, ""),
-(27654, -1578006, "A fitting punishment!", "", "", "", "", "", "", "", "", 0, 1, 0, 0, ""),
-(27654, -1578007, "Sentence: executed!", "", "", "", "", "", "", "", "", 0, 1, 0, 0, ""),
-(27654, -1578008, "Another casualty of war!", "", "", "", "", "", "", "", "", 0, 1, 0, 0, ""),
-(27654, -1578009, "The war... goes on.", "", "", "", "", "", "", "", "", 0, 1, 0, 0, ""),
-(27654, -1578010, "Intruders, your victory will be short-lived. I am Commander Varos Cloudstrider. My drakes control the skies and protect this conduit. I will see to it personally that the Oculus does not fall into your hands!", "", "", "", "", "", "", "", "", 0, 1, 0, 0, ""),
-(27654, -1578011, "It is too late to run!", "", "", "", "", "", "", "", "", 0, 1, 0, 0, ""),
-(27654, -1578012, "Gather 'round...", "", "", "", "", "", "", "", "", 0, 1, 0, 0, ""),
-(27654, -1578013, "None shall escape!", "", "", "", "", "", "", "", "", 0, 1, 0, 0, ""),
-(27654, -1578014, "I condemn you to death!", "", "", "", "", "", "", "", "", 0, 1, 0, 0, ""),
-(27654, -1578015, "Tremble, worms!", "", "", "", "", "", "", "", "", 0, 1, 0, 0, ""),
-(27654, -1578016, "I will crush you!", "", "", "", "", "", "", "", "", 0, 1, 0, 0, ""),
-(27654, -1578017, "Can you fly?", "", "", "", "", "", "", "", "", 0, 1, 0, 0, ""),
-(27655, -1578018, "Everything I've done... has been for Azeroth...", "", "", "", "", "", "", "", "", 0, 1, 0, 0, ""),
-(27655, -1578019, "If only you understood!", "", "", "", "", "", "", "", "", 0, 1, 0, 0, ""),
-(27655, -1578020, "Now do you see? Do you?!", "", "", "", "", "", "", "", "", 0, 1, 0, 0, ""),
-(27655, -1578021, "Unfortunate, but necessary.", "", "", "", "", "", "", "", "", 0, 1, 0, 0, ""),
-(27656, -1578022, "It's a long way down...", "", "", "", "", "", "", "", "", 0, 1, 0, 0, ""),
-(27656, -1578023, "Back to the earth with you!", "", "", "", "", "", "", "", "", 0, 1, 0, 0, ""),
-(27656, -1578024, "Enjoy the fall!", "", "", "", "", "", "", "", "", 0, 1, 0, 0, "");
+DELETE FROM `script_texts` WHERE `entry` BETWEEN  -1578024 AND -1578005 OR (`npc_entry` IN (27654,27447,27655,27656));
+DELETE FROM `creature_text` WHERE `entry` IN (27654,27447,27655,27656);
+INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`probability`,`emote`,`duration`,`sound`,`comment`) VALUES
+-- Drakos
+(27654,1,0,'The prisoners shall not go free. The word of Malygos is law!',14,0,0,5,0,13594,'Drakos the Interrogator - Aggro'),
+(27654,2,0,'A fitting punishment!',14,0,0,5,0,13602,'Drakos the Interrogator - Kill 1'),
+(27654,2,1,'Sentence: executed!',14,0,0,5,0,13603,'Drakos the Interrogator - Kill 2'),
+(27654,2,2,'Another casualty of war!',14,0,0,5,0,13604,'Drakos the Interrogator - Kill 3'),
+(27654,3,0,'It is too late to run!',14,0,0,5,0,13598,'Drakos the Interrogator - Pull 1'),
+(27654,3,1,'Gather ''round...',14,0,0,5,0,13599,'Drakos the Interrogator - Pull 2'),
+(27654,3,2,'None shall escape!',14,0,0,5,0,13600,'Drakos the Interrogator - Pull 3'),
+(27654,3,3,'I condemn you to death!',14,0,0,5,0,13601,'Drakos the Interrogator - Pull 4'),
+(27654,4,0,'Tremble, worms!',14,0,0,5,0,13595,'Drakos the Interrogator - Stomp 1'),
+(27654,4,1,'I will crush you!',14,0,0,5,0,13596,'Drakos the Interrogator - Stomp 2'),
+(27654,4,2,'Can you fly?',14,0,0,5,0,13597,'Drakos the Interrogator - Stomp 3'),
+(27654,5,0,'The war... goes on.',14,0,0,5,0,13605,'Drakos the Interrogator - Death'),
+-- Varos
+(27447,1,0,'There will be no mercy!',14,0,0,5,0,13649,'Varos Cloudstrider - Aggro'),
+(27447,2,0,'They are... too strong! Underestimated their... fortitude.',14,0,0,5,0,13655,'Varos Cloudstrider - Death'),
+(27447,3,0,'Blast them! Destroy them!',14,0,0,5,0,13650,'Varos Cloudstrider - Air Strike 1'),
+(27447,3,1,'Take no prisoners! Attack!',14,0,0,5,0,13651,'Varos Cloudstrider - Air Strike 2'),
+(27447,3,2,'Strike now! Obliterate them!',14,0,0,5,0,13652,'Varos Cloudstrider - Air Strike 3'),
+(27447,4,0,'You have been warned!',14,0,0,5,0,13653,'Varos Cloudstrider - Kill 1'),
+(27447,4,1,'The Oculus is ours!',14,0,0,5,0,13654,'Varos Cloudstrider - Kill 2'),
+(27447,5,0,'Intruders, your victory will be short-lived. I am Commander Varos Cloudstrider. My drakes control the skies and protect this conduit. I will see to it personnaly that the Oculus does not fall into your hands!',14,0,0,5,0,13648,'Varos Cloudstrider - Spawn'),
+-- Urom
+(27655,1,0,'Poor blind fools!',14,0,0,5,0,13638,'Mage-Lord Urom - Aggro'),
+(27655,2,0,'What do we have here... those would defy the Spell-Weaver? Those without foresight or understanding. How could I make you see? Malygos is saving the world from itself! Bah! You are hardly worth my time!',14,0,0,5,0,13635,'Mage-Lord Urom - Summon 1'),
+(27655,3,0,'Clearly my pets failed. Perhaps another demonstration is in order.',14,0,0,5,0,13636,'Mage-Lord Urom - Summon 2'),
+(27655,4,0,'Still you fight. Still you cling to misguided principles. If you survive, you''ll find me in the center ring.',14,0,0,5,0,13637,'Mage-Lord Urom - Summon 3'),
+(27655,5,0,'If only you understood!',14,0,0,5,0,13641,'Mage-Lord Urom - Kill 1'),
+(27655,5,1,'Now do you see? Do you?!',14,0,0,5,0,13642,'Mage-Lord Urom - Kill 2'),
+(27655,5,2,'Unfortunate, but necessary.',14,0,0,5,0,13643,'Mage-Lord Urom - Kill 3'),
+(27655,6,0,'A taste... just a small taste... of the Spell-Weaver''s power!',14,0,0,5,0,13639,'Mage-Lord Urom - Explotion 1'),
+(27655,6,1,'So much unstable energy... but worth the risk to destroy you!',14,0,0,5,0,13640,'Mage-Lord Urom - Explotion 2'),
+(27655,7,0,'Everything I''ve done... has been for Azeroth...',14,0,0,5,0,13644,'Mage-Lord Urom - Death'),
+-- Eregos
+(27656,1,0,'You brash interlopers are out of your element! I will ground you!',14,0,0,5,0,13623,'Ley-Guardian Eregos - Aggro'),
+(27656,2,0,'Simpletons! You cannot comprehend the forces you have set in motion. The ley line conduit will not be disrupted! Your defeat shall be absolute!',14,0,0,5,0,13622,'Ley-Guardian Eregos - Spawn'),
+(27656,3,0,'Such insolence... such arrogance... must be PUNISHED!',14,0,0,5,0,13624,'Ley-Guardian Eregos - Frenzy'),
+(27656,4,0,'It''s a long way down...',14,0,0,5,0,13628,'Ley-Guardian Eregos - Kill 1'),
+(27656,4,1,'Back to the earth with you!',14,0,0,5,0,13629,'Ley-Guardian Eregos - Kill 2'),
+(27656,4,2,'Enjoy the fall!',14,0,0,5,0,13630,'Ley-Guardian Eregos - Kill 3'),
+(27656,5,0,'Savor this small victory, foolish little creatures. You and your dragon allies have won this battle. But we will win... the Nexus War.',14,0,0,5,0,13631,'Ley-Guardian Eregos - Death'),
+(27656,6,0,'Anomalies form as Ley-Guardian Eregos shifts into the Astral Plane!',41,0,0,0,0,0,'Ley-Guardian Eregos - Astral');
 
-DELETE FROM creature_onkill_reputation WHERE creature_id IN(30902, 30901, 30904, 30915, 30916, 30905, 30903, 31558, 31559, 31560, 31561);
+DELETE FROM creature_onkill_reputation WHERE creature_id IN (30902, 30901, 30904, 30915, 30916, 30905, 30903, 31558, 31559, 31560, 31561);
 INSERT INTO creature_onkill_reputation VALUES
 (30902, 1037, 1052, 7, 0, 2, 7, 0, 2, 1),
 (30901, 1037, 1052, 7, 0, 15, 7, 0, 15, 1),
