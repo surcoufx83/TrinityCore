@@ -460,7 +460,7 @@ public:
             player->CLOSE_GOSSIP_MENU();
             if(player->IsMounted())
             {
-                player->Unmount();
+                player->Dismount();
                 player->RemoveAurasByType(SPELL_AURA_MOUNTED);
             }
             player->CastSpell(player,SPELL_DRAGONMAW_ILLUSION,false);

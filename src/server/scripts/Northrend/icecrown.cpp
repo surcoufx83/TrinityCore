@@ -2418,7 +2418,7 @@ public:
                 uiDamage = 0;
                 mountDuel = false;
                 me->SetHealth(50000);
-                me->Unmount();
+                me->Dismount();
                 me->GetMotionMaster()->MoveIdle();
                 me->RemoveAurasDueToSpell(SPELL_DEFEND_AURA_PERIODIC);
                 me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);

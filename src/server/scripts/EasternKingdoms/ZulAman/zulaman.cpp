@@ -1253,7 +1253,7 @@ public:
                     mounted = false;
                     me->InterruptNonMeleeSpells(false);
                     me->CastSpell(me,SPELL_AWB_DISMOUNT,false);
-                    me->Unmount();
+                    me->Dismount();
                 }
             }
 
