@@ -405,6 +405,8 @@ public:
             DespawnBoatGhosts(m_uiActivedCreatureGUID);
             DespawnBoatGhosts(m_uiOrbGUID);
 
+            summons.DespawnAll();
+
             if (pInstance)
             {
                 if (IsHeroic() && m_bAchievement)

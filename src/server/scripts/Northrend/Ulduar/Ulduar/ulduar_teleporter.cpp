@@ -91,6 +91,7 @@ public:
 
     bool OnGossipHello(Player *pPlayer, GameObject *pGO)
     {
+        pPlayer->Dismount();
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Expedition Base Camp", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + BASE_CAMP);
         if (InstanceScript* pInstance = pGO->GetInstanceScript())
         {

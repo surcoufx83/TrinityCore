@@ -32,15 +32,17 @@ INSERT INTO `spell_proc_event` (`entry`,`procEx`,`CustomChance`)VALUES
 (50240,4,100);
 
 DELETE FROM `creature_addon` WHERE `guid` IN (101924,101933,101922,101974,102064,101967);
-DELETE FROM `creature_template_addon` WHERE `entry` IN (27641,30905);
+DELETE FROM `creature_template_addon` WHERE `entry` IN (27641,30905,28153,30917);
 INSERT INTO `creature_template_addon` (`entry`,`auras`) VALUES
 (27641,'50088'),
-(30905,'50088');
+(30905,'50088'),
+(28153,'44604'),
+(30917,'44604');
 
 -- SAI
-UPDATE `creature_template` SET `AIName`='SmartAI',`ScriptName`='' WHERE `entry` IN (27636,27633,27635,27638,27640,27639,28276,27642,27644,27645,27650,27651,27653,27647,27648);
-DELETE FROM `creature_ai_scripts` WHERE `creature_id` IN (27636,27633,27635,27638,27641,27640,27639,28276,27642,27644,27645,27650,27651,27653,27647,27648);
-DELETE FROM `smart_scripts` WHERE `entryorguid` IN (27636,27633,27635,27638,27640,27639,28276,27642,27644,27645,27650,27651,27653,27647,27648);
+UPDATE `creature_template` SET `AIName`='SmartAI',`ScriptName`='' WHERE `entry` IN (27636,27633,27635,27638,27640,28153,27639,28276,27642,27644,27645,27650,27651,27653,27647,27648);
+DELETE FROM `creature_ai_scripts` WHERE `creature_id` IN (27636,27633,27635,27638,27641,27640,28153,27639,28276,27642,27644,27645,27650,27651,27653,27647,27648);
+DELETE FROM `smart_scripts` WHERE `entryorguid` IN (27636,27633,27635,27638,27640,28153,27639,28276,27642,27644,27645,27650,27651,27653,27647,27648);
 INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type`,`event_phase_mask`,`event_chance`,`event_flags`,`event_param1`,`event_param2`,`event_param3`,`event_param4`,`action_type`,`action_param1`,`action_param2`,`action_param3`,`action_param4`,`action_param5`,`action_param6`,`target_type`,`target_param1`,`target_param2`,`target_param3`,`target_x`,`target_y`,`target_z`,`target_o`,`comment`) VALUES
 (27636,0,0,0,0,0,100,2,2000,4000,2000,4000,11,50705,0,0,0,0,0,2,0,0,0,0,0,0,0,'Azure Ley-Whelp - IC - cast Arcane Bolt'),
 (27636,0,1,0,0,0,100,4,2000,4000,2000,4000,11,59210,0,0,0,0,0,2,0,0,0,0,0,0,0,'Azure Ley-Whelp - IC - cast Arcane Bolt H'),
@@ -61,10 +63,14 @@ INSERT INTO `smart_scripts` (`entryorguid`,`source_type`,`id`,`link`,`event_type
 
 (27640,0,0,0,23,0,100,2,50717,0,0,0,11,50717,0,0,0,0,0,1,0,0,0,0,0,0,0,'Ring-Lord Conjurer - On missing Aura: Charged Skin - cast Charged Skin'),
 (27640,0,1,0,23,0,100,4,59276,0,0,0,11,59276,0,0,0,0,0,1,0,0,0,0,0,0,0,'Ring-Lord Conjurer - On missing Aura: Charged Skin H - cast Charged Skin H'),
+(27640,0,2,0,0,0,100,0,4000,6000,13000,15000,11,50719,0,0,0,0,0,1,0,0,0,0,0,0,0,'Ring-Lord Conjurer - IC - cast Conjure Snowflake'),
 -- may implement beam to misc Centrifuge Construct
 
-(27639,0,0,0,0,0,100,2,5000,7000,12000,14000,11,50715,0,0,0,0,0,5,0,0,0,0,0,0,0,'Ring-Lord Sorceress - IC - cast Blizzard'),
-(27639,0,1,0,0,0,100,4,5000,7000,12000,14000,11,59278,0,0,0,0,0,5,0,0,0,0,0,0,0,'Ring-Lord Sorceress - IC - cast Blizzard H'),
+(28153,0,0,0,0,0,100,2,0,0,0,0,11,50721,0,0,0,0,0,5,0,0,0,0,0,0,0,'Snowflake - IC - cast Frostbolt'),
+(28153,0,1,0,0,0,100,4,0,0,0,0,11,59280,0,0,0,0,0,5,0,0,0,0,0,0,0,'Snowflake - IC - cast Frostbolt H'),
+
+(27639,0,0,0,0,0,100,2,5000,7000,20000,25000,11,50715,0,0,0,0,0,5,0,0,0,0,0,0,0,'Ring-Lord Sorceress - IC - cast Blizzard'),
+(27639,0,1,0,0,0,100,4,5000,7000,20000,25000,11,59278,0,0,0,0,0,5,0,0,0,0,0,0,0,'Ring-Lord Sorceress - IC - cast Blizzard H'),
 (27639,0,2,0,0,0,100,2,2000,4000,8000,10000,11,16102,0,0,0,0,0,5,0,0,0,0,0,0,0,'Ring-Lord Sorceress - IC - cast Flamestrike'),
 (27639,0,3,0,0,0,100,4,2000,4000,8000,10000,11,61402,0,0,0,0,0,5,0,0,0,0,0,0,0,'Ring-Lord Sorceress - IC - cast Flamestrike H'),
 -- may implement beam to misc Centrifuge Construct
