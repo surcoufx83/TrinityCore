@@ -76,7 +76,9 @@ enum Spells
     SPELL_BLACK_KNIGHT_RES  = 67693,
 
     SPELL_LEAP              = 67749,
-    SPELL_LEAP_H            = 67880
+    SPELL_LEAP_H            = 67880,
+
+    SPELL_KILL_CREDIT       = 68663
 };
 
 enum Models
@@ -391,6 +393,7 @@ public:
 
         void JustDied(Unit* /*killer*/)
         {
+            DoCast(me, SPELL_KILL_CREDIT);
             DoScriptText(SAY_DEATH_3, me);
 
             if (GameObject* go = GameObject::GetGameObject(*me, instance->GetData64(DATA_MAIN_GATE1)))

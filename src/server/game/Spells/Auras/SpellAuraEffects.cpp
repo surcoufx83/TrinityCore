@@ -2956,7 +2956,7 @@ void AuraEffect::HandleAuraMounted(AuraApplication const* aurApp, uint8 mode, bo
     }
     else
     {
-        target->Unmount();
+        target->Dismount();
         //some mounts like Headless Horseman's Mount or broom stick are skill based spell
         // need to remove ALL arura related to mounts, this will stop client crash with broom stick
         // and never endless flying after using Headless Horseman's Mount
@@ -4943,9 +4943,8 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
                         newAura->SetStackAmount(newAura->GetSpellInfo()->StackAmount);
                     break;
                 case 59628: // Tricks of the Trade  
-                    if (!caster->GetMisdirectionTarget())
-                        break;
-                    target->SetReducedThreatPercent(100,caster->GetMisdirectionTarget()->GetGUID());
+                    if (caster && caster->GetMisdirectionTarget())
+                        target->SetReducedThreatPercent(100, caster->GetMisdirectionTarget()->GetGUID());
                     break;
             }
         }
@@ -5356,7 +5355,7 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
             if (!(mode & AURA_EFFECT_HANDLE_REAL))
                 break;
             // Sentry Totem
-            if (GetId() == 6495 && caster->GetTypeId() == TYPEID_PLAYER)
+            if (GetId() == 6495 && caster && caster->GetTypeId() == TYPEID_PLAYER)
             {
                 if (apply)
                 {

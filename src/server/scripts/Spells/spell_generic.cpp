@@ -26,7 +26,9 @@
 #include "SpellAuraEffects.h"
 #include "SkillDiscovery.h"
 #include "GridNotifiers.h"
+#include "Group.h"
 #include "Vehicle.h"
+#include "LFGMgr.h"
 
 class spell_gen_absorb0_hitlimit1 : public SpellScriptLoader
 {
@@ -288,13 +290,13 @@ class spell_gen_pet_summoned : public SpellScriptLoader
                 if (caster->GetTypeId() != TYPEID_PLAYER)
                     return;
 
-                Player* plr = caster->ToPlayer();
-                if (plr->GetLastPetNumber())
+                Player* player = caster->ToPlayer();
+                if (player->GetLastPetNumber())
                 {
-                    PetType newPetType = (plr->getClass() == CLASS_HUNTER) ? HUNTER_PET : SUMMON_PET;
-                    if (Pet* newPet = new Pet(plr, newPetType))
+                    PetType newPetType = (player->getClass() == CLASS_HUNTER) ? HUNTER_PET : SUMMON_PET;
+                    if (Pet* newPet = new Pet(player, newPetType))
                     {
-                        if (newPet->LoadPetFromDB(plr, 0, plr->GetLastPetNumber(), true))
+                        if (newPet->LoadPetFromDB(player, 0, player->GetLastPetNumber(), true))
                         {
                             // revive the pet if it is dead
                             if (newPet->getDeathState() == DEAD)
@@ -745,7 +747,7 @@ class spell_gen_divine_storm_cd_reset : public SpellScriptLoader
 
             void HandleScript(SpellEffIndex /*effIndex*/)
             {
-                if (Player *caster = GetCaster()->ToPlayer())
+                if (Player* caster = GetCaster()->ToPlayer())
                     if (caster->HasSpellCooldown(SPELL_DIVINE_STORM))
                         caster->RemoveSpellCooldown(SPELL_DIVINE_STORM, true);
             }
@@ -995,9 +997,9 @@ class spell_generic_clone_weapon : public SpellScriptLoader
                     case SPELL_COPY_WEAPON_2:
                     case SPELL_COPY_WEAPON_3:
                     {
-                        if (Player* plrCaster = caster->ToPlayer())
+                        if (Player* player = caster->ToPlayer())
                         {
-                            if (Item* mainItem = plrCaster->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_MAINHAND))
+                            if (Item* mainItem = player->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_MAINHAND))
                                 target->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID, mainItem->GetEntry());
                         }
                         else
@@ -1007,9 +1009,9 @@ class spell_generic_clone_weapon : public SpellScriptLoader
                     case SPELL_COPY_OFFHAND:
                     case SPELL_COPY_OFFHAND_2:
                     {
-                        if (Player* plrCaster = caster->ToPlayer())
+                        if (Player* player = caster->ToPlayer())
                         {
-                            if (Item* offItem = plrCaster->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_OFFHAND))
+                            if (Item* offItem = player->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_OFFHAND))
                                 target->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 1, offItem->GetEntry());
                         }
                         else
@@ -1018,9 +1020,9 @@ class spell_generic_clone_weapon : public SpellScriptLoader
                     }
                     case SPELL_COPY_RANGED:
                     {
-                        if (Player* plrCaster = caster->ToPlayer())
+                        if (Player* player = caster->ToPlayer())
                         {
-                            if (Item* rangedItem = plrCaster->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_RANGED))
+                            if (Item* rangedItem = player->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_RANGED))
                                 target->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 2, rangedItem->GetEntry());
                         }
                         else
@@ -2052,6 +2054,53 @@ public:
     }
 };
 
+class spell_gen_luck_of_the_draw : public SpellScriptLoader
+{
+    public:
+        spell_gen_luck_of_the_draw() : SpellScriptLoader("spell_gen_luck_of_the_draw") { }
+
+        class spell_gen_luck_of_the_draw_AuraScript : public AuraScript
+        {
+            PrepareAuraScript(spell_gen_luck_of_the_draw_AuraScript);
+
+            // cheap hax to make it have update calls
+            void CalcPeriodic(AuraEffect const* /*effect*/, bool& isPeriodic, int32& amplitude)
+            {
+                isPeriodic = true;
+                amplitude = 5 * IN_MILLISECONDS;
+            }
+
+            void Update(AuraEffect* /*effect*/)
+            {
+                if (GetUnitOwner()->GetTypeId() != TYPEID_PLAYER)
+                    return;
+
+                LFGDungeonEntry const* randomDungeon = sLFGDungeonStore.LookupEntry(*(sLFGMgr->GetSelectedDungeons(GetUnitOwner()->GetGUID()).begin()));
+                Group* group = GetUnitOwner()->ToPlayer()->GetGroup();
+                Map const* map = GetUnitOwner()->GetMap();
+                if (group && group->isLFGGroup())
+                    if (uint32 dungeonId = sLFGMgr->GetDungeon(group->GetGUID(), true))
+                        if (LFGDungeonEntry const* dungeon = sLFGDungeonStore.LookupEntry(dungeonId))
+                            if (dungeon->map == map->GetId() && dungeon->difficulty == map->GetDifficulty())
+                                if (randomDungeon && randomDungeon->type == LFG_TYPE_RANDOM)
+                                    return; // in correct dungeon
+
+                Remove(AURA_REMOVE_BY_DEFAULT);
+            }
+
+            void Register()
+            {
+                DoEffectCalcPeriodic += AuraEffectCalcPeriodicFn(spell_gen_luck_of_the_draw_AuraScript::CalcPeriodic, EFFECT_0, SPELL_AURA_MOD_DAMAGE_PERCENT_DONE);
+                OnEffectUpdatePeriodic += AuraEffectUpdatePeriodicFn(spell_gen_luck_of_the_draw_AuraScript::Update, EFFECT_0, SPELL_AURA_MOD_DAMAGE_PERCENT_DONE);
+            }
+        };
+
+        AuraScript* GetAuraScript() const
+        {
+            return new spell_gen_luck_of_the_draw_AuraScript();
+        }
+};
+
 void AddSC_generic_spell_scripts()
 {
     new spell_gen_absorb0_hitlimit1();
@@ -2094,4 +2143,5 @@ void AddSC_generic_spell_scripts()
     new spell_gen_pilgrims_bounty_well_fed();
     new spell_gen_pass_the_food();
     new spell_gen_damage_reduction_aura();
+    new spell_gen_luck_of_the_draw();
 }
