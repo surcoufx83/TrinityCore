@@ -1643,6 +1643,9 @@ class npc_winter_reveler : public CreatureScript
 
             void ReceiveEmote(Player* player, uint32 emote)
             {
+                if (me->HasUnitState(UNIT_STAT_CASTING))
+                    return;
+
                 if (player->HasAura(SPELL_MISTLETOE_DEBUFF))
                     return;
 
