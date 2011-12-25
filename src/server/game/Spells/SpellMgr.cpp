@@ -3292,6 +3292,8 @@ void SpellMgr::LoadDbcDataCorrections()
             case 27892: // To Anchor 1
             case 27928: // To Anchor 1
             case 27935: // To Anchor 1
+            case 53509: // Pound
+            case 59432: // Pound
                 spellInfo->rangeIndex = 13;
                 break;
             // target allys instead of enemies, target A is src_caster, spells with effect like that have ally target
