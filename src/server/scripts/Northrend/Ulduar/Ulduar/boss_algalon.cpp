@@ -100,7 +100,13 @@ enum Events
     EVENT_QUANTUMSTRIKE,
     EVENT_COLLAPSINGSTAR,
     EVENT_LIVINGCONSTELLATION,
-    EVENT_DARKMATTER
+    EVENT_DARKMATTER,
+    EVENT_GEARCHECK
+};
+
+enum Data
+{
+    DATA_HERALD_OF_THE_TITANS = 1
 };
 
 static Position miscLocations[]=
@@ -160,6 +166,7 @@ class boss_algalon : public CreatureScript
                 _constellationCount = 0;
                 _wipeRaid = false;
                 _firstStars = true;
+                _heraldOfTheTitans = true;
 
                 DoCast(me, SPELL_DUAL_WIELD, true);
                 me->SetAttackTime(OFF_ATTACK, 1100);
@@ -189,10 +196,13 @@ class boss_algalon : public CreatureScript
                 events.ScheduleEvent(EVENT_BERSERK, 6*MINUTE*IN_MILLISECONDS);
                 events.ScheduleEvent(EVENT_BIGBANG, 90*IN_MILLISECONDS);
                 events.ScheduleEvent(EVENT_PHASEPUNCH, 15*IN_MILLISECONDS);
-                events.ScheduleEvent(EVENT_QUANTUMSTRIKE, urand(4*IN_MILLISECONDS, 14*IN_MILLISECONDS));
+                events.ScheduleEvent(EVENT_QUANTUMSTRIKE, urand(4, 14) *IN_MILLISECONDS);
                 events.ScheduleEvent(EVENT_COSMICSMASH, 25*IN_MILLISECONDS);
                 events.ScheduleEvent(EVENT_COLLAPSINGSTAR, 15*IN_MILLISECONDS);
                 events.ScheduleEvent(EVENT_LIVINGCONSTELLATION, 50*IN_MILLISECONDS);
+
+                if (!Is25ManRaid())
+                    events.ScheduleEvent(EVENT_GEARCHECK, urand(5, 10) *IN_MILLISECONDS);
             }
 
             void FinishEncounter()
@@ -201,6 +211,46 @@ class boss_algalon : public CreatureScript
                 {
                     instance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, SPELL_BOSS_FINISHED);
                     instance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, me->GetEntry(), 1);
+                }
+            }
+
+            void CheckItems()
+            {
+                Map* map = me->GetMap();
+                if (map && map->IsDungeon())
+                {
+                    Map::PlayerList const& Players = map->GetPlayers();
+                    for (Map::PlayerList::const_iterator itr = Players.begin(); itr != Players.end(); ++itr)
+                        if (Player* player = itr->getSource())
+                        {
+                            if (player->isGameMaster() || !player->isAlive())
+                                continue;
+
+                            for (int i = EQUIPMENT_SLOT_START; i < EQUIPMENT_SLOT_END; ++i)
+                            {
+                                // don't check tabard or shirt
+                                if (i == EQUIPMENT_SLOT_TABARD || i == EQUIPMENT_SLOT_BODY)
+                                    continue;
+
+                                uint32 maxLevel;
+                                switch (i)
+                                {
+                                    case EQUIPMENT_SLOT_MAINHAND:
+                                    case EQUIPMENT_SLOT_OFFHAND:
+                                    case EQUIPMENT_SLOT_RANGED:
+                                        maxLevel = 232;
+                                        break;
+                                    default:
+                                        maxLevel = 226;
+                                        break;
+                                }
+
+                                if (Item* item = player->GetItemByPos(INVENTORY_SLOT_BAG_0, i))
+                                    if (item->GetTemplate())
+                                        if (item->GetTemplate()->ItemLevel > maxLevel)
+                                            _heraldOfTheTitans = false;
+                            }
+                        }
                 }
             }
 
@@ -225,6 +275,14 @@ class boss_algalon : public CreatureScript
 
                 _JustDied();
                 me->DisappearAndDie();
+            }
+
+            uint32 GetData(uint32 type)
+            {
+                if (type == DATA_HERALD_OF_THE_TITANS)
+                    return _heraldOfTheTitans ? 1 : 0;
+
+                return 0;
             }
 
             void JustSummoned(Creature* summon)
@@ -468,7 +526,7 @@ class boss_algalon : public CreatureScript
                             break;
                         case EVENT_QUANTUMSTRIKE:
                             DoCastVictim(RAID_MODE<uint32>(SPELL_QUANTUM_STRIKE_10, SPELL_QUANTUM_STRIKE_25));
-                            events.ScheduleEvent(EVENT_QUANTUMSTRIKE, urand(4*IN_MILLISECONDS, 10*IN_MILLISECONDS));
+                            events.ScheduleEvent(EVENT_QUANTUMSTRIKE, urand(4, 10) *IN_MILLISECONDS);
                             break;
                         case EVENT_COSMICSMASH:
                             DoScriptText(EMOTE_SMASH, me);
@@ -505,6 +563,11 @@ class boss_algalon : public CreatureScript
                             DoCast(SPELL_ASCEND);
                             events.ScheduleEvent(EVENT_ASCEND, 10*IN_MILLISECONDS);
                             break;
+                        case EVENT_GEARCHECK:
+                            CheckItems();
+                            if (_heraldOfTheTitans)
+                                events.ScheduleEvent(EVENT_GEARCHECK, urand(20, 30) *IN_MILLISECONDS);
+                            break;
                         default:
                             break;
                     }
@@ -520,6 +583,7 @@ class boss_algalon : public CreatureScript
             uint8 _phase;
             uint8 _step;
             uint32 _stepTimer;
+            bool _heraldOfTheTitans;
             bool _firstStars;
             bool _firstTime;
             bool _wipeRaid;
@@ -924,6 +988,25 @@ class spell_algalon_phased : public SpellScriptLoader
         }
 };
 
+class achievement_herald_of_the_titans : public AchievementCriteriaScript
+{
+    public:
+        achievement_herald_of_the_titans() : AchievementCriteriaScript("achievement_herald_of_the_titans") { }
+
+        bool OnCheck(Player* source, Unit* /*target*/)
+        {
+            if (!source)
+                return false;
+
+            if (InstanceScript* instance = source->GetInstanceScript())
+                if (Creature* algalon = ObjectAccessor::GetCreature(*source, instance->GetData64(TYPE_ALGALON)))
+                    if (algalon->AI()->GetData(DATA_HERALD_OF_THE_TITANS))
+                        return true;
+
+            return false;
+        }
+};
+
 void AddSC_boss_algalon()
 {
     new boss_algalon();
@@ -938,4 +1021,5 @@ void AddSC_boss_algalon()
     new spell_cosmic_smash_missile_target();
     new spell_remove_player_from_phase();
     new spell_algalon_phased();
+    new achievement_herald_of_the_titans();
 }

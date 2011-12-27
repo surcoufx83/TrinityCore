@@ -1136,15 +1136,17 @@ class achievement_cant_do_that_while_stunned : public AchievementCriteriaScript
         {
         }
 
-        bool OnCheck(Player* player, Unit* /*target*/)
+        bool OnCheck(Player* /*player*/, Unit* target)
         {
-            if (!player)
+            if (!target)
                 return false;
 
-            if (InstanceScript* instance = player->GetInstanceScript())
-                if (Creature* brundir = ObjectAccessor::GetCreature(*player, instance->GetData64(DATA_BRUNDIR)))
-                    if (brundir->AI()->GetData(DATA_CANT_DO_THAT))
-                        return true;
+            if (Creature* boss = target->ToCreature())
+                if (boss->AI()->GetData(DATA_I_CHOOSE_YOU))
+                    if (InstanceScript* instance = boss->GetInstanceScript())
+                        if (Creature* brundir = ObjectAccessor::GetCreature(*boss, instance->GetData64(DATA_BRUNDIR)))
+                            if (brundir->AI()->GetData(DATA_CANT_DO_THAT))
+                                return true;
  
             return false;
         }
