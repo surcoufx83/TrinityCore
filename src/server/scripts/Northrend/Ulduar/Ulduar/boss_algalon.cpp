@@ -219,6 +219,10 @@ class boss_algalon : public CreatureScript
             {
                 // used for despawn
                 // should do some roleplay
+
+                if (_phase == 3)
+                    return;
+
                 _JustDied();
                 me->DisappearAndDie();
             }

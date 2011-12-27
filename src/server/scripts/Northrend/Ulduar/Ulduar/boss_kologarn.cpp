@@ -214,6 +214,7 @@ class boss_kologarn : public CreatureScript
                 {
                     _armDied = true;
                     who->CastSpell(me, SPELL_ARM_DEAD_DAMAGE, true);
+                    me->LowerPlayerDamageReq(RAID_MODE<uint32>(543855, 2300925));
 
                     if (Creature* rubbleStalker = who->FindNearestCreature(NPC_RUBBLE_STALKER, 70.0f))
                     {
