@@ -30,6 +30,7 @@ npc_daranelle
 npc_overseer_nuaar
 npc_saikkal_the_elder
 go_legion_obelisk
+go_thunderspike
 EndContentData */
 
 #include "ScriptPCH.h"
@@ -642,9 +643,32 @@ public:
         }
     };
 };
+
 /*######
-## AddSC
+## go_thunderspike
 ######*/
+
+enum TheThunderspike
+{
+    NPC_GOR_GRIMGUT     = 21319,
+    QUEST_THUNDERSPIKE  = 10526,
+};
+
+class go_thunderspike : public GameObjectScript
+{
+    public:
+        go_thunderspike() : GameObjectScript("go_thunderspike") { }
+
+        bool OnGossipHello(Player* player, GameObject* go)
+        {
+            if (player->GetQuestStatus(QUEST_THUNDERSPIKE) == QUEST_STATUS_INCOMPLETE && !go->FindNearestCreature(NPC_GOR_GRIMGUT, 25.0f, true))
+                if (Creature* gorGrimgut = go->SummonCreature(NPC_GOR_GRIMGUT, -2413.4f, 6914.48f, 25.01f, 3.67f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 300000))
+                    gorGrimgut->AI()->AttackStart(player);
+
+            return true;
+        }
+};
+
 
 void AddSC_blades_edge_mountains()
 {
@@ -657,6 +681,7 @@ void AddSC_blades_edge_mountains()
     new npc_bloodmaul_brutebane();
     new npc_ogre_brute();
     new mob_aether_ray();
+    new go_thunderspike();
     new mob_wrangled_aether_ray();
     /*
         UPDATE creature_template SET scriptname = 'mob_aether_ray' WHERE entry = 22181;

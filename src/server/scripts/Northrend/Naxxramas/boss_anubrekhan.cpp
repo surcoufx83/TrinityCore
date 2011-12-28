@@ -114,7 +114,7 @@ public:
         {
             _EnterCombat();
             DoScriptText(SAY_AGGRO, me);
-            events.ScheduleEvent(EVENT_IMPALE, 10000 + rand()%10000);
+            events.ScheduleEvent(EVENT_IMPALE, urand(10000, 20000));
             events.ScheduleEvent(EVENT_LOCUST, urand(80000,120000));
             events.ScheduleEvent(EVENT_BERSERK, 600000);
 

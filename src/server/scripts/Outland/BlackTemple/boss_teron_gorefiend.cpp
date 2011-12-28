@@ -329,7 +329,7 @@ public:
             if(pInstance)
                 pInstance->SetData(DATA_TERONGOREFIENDEVENT, NOT_STARTED);
 
-            IncinerateTimer = 20000 + rand()%11000;
+            IncinerateTimer = urand(20000, 31000);
             SummonDoomBlossomTimer = 12000;
             EnrageTimer = 600000;
             CrushingShadowsTimer = 22000;
@@ -720,7 +720,6 @@ public:
                 case 0: DoScriptText(SAY_SPELL1, me); break;
                 case 1: DoScriptText(SAY_SPELL2, me); break;
                 }
-                RandomYellTimer = 50000 + rand()%51 * 1000;
             }else RandomYellTimer -= diff;
 
             if(!me->HasAura(SPELL_BERSERK, 0))

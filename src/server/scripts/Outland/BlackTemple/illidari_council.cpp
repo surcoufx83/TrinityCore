@@ -702,8 +702,8 @@ public:
 
         void Reset()
         {
-            BlizzardTimer = 30000 + rand()%20 * 1000;
-            FlamestrikeTimer = 30000 + rand()%20 * 1000;
+            BlizzardTimer = urand(30, 91) * 1000;
+            FlamestrikeTimer = urand(30, 91) * 1000;
             ArcaneBoltTimer = 500;
             DampenMagicTimer = 200;
             ArcaneExplosionTimer = 14000;

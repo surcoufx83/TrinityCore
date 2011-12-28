@@ -125,7 +125,7 @@ public:
             FatalAttractionExplodeTimer = 70000;
             ShriekTimer = 20000;
             SaberTimer = 5000;
-            RandomYellTimer = 70000 + rand()%41 * 1000;
+            RandomYellTimer = urand(70, 111) * 1000;
             EnrageTimer = 600000;
 
             pulse_Timer = 10000;
@@ -430,7 +430,6 @@ public:
                 case 1: DoScriptText(SAY_TAUNT2, me); break;
                 case 2: DoScriptText(SAY_TAUNT3, me); break;
                 }
-                RandomYellTimer = 60000 + rand()%91 * 1000;
             }else RandomYellTimer -= diff;
 
             DoMeleeAttackIfReady();

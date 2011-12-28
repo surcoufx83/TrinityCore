@@ -109,7 +109,7 @@ public:
                 events.ScheduleEvent(EVENT_CURSE, 10000+rand()%15000);
                 events.ScheduleEvent(EVENT_WARRIOR, 30000);
                 if (GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL)
-                    events.ScheduleEvent(EVENT_BLINK, 20000 + rand()%20000);
+                    events.ScheduleEvent(EVENT_BLINK, urand(20000, 40000));
             }
         }
 
@@ -158,7 +158,7 @@ public:
                         if(!me->IsNonMeleeSpellCasted(false))
                         {
                             DoCastAOE(SPELL_CURSE_PLAGUEBRINGER);
-                            events.ScheduleEvent(EVENT_CURSE, 50000 + rand()%10000);
+                        events.ScheduleEvent(EVENT_CURSE, urand(50000, 60000));
                         }
                         return;
                     case EVENT_WARRIOR:
