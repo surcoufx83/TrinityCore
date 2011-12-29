@@ -3125,14 +3125,14 @@ class npc_slain_tualiq_villager : public CreatureScript
 public:
     npc_slain_tualiq_villager() : CreatureScript("npc_slain_tualiq_villager") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new npc_slain_tualiq_villagerAI (pCreature);
+        return new npc_slain_tualiq_villagerAI(creature);
     }
 
     struct npc_slain_tualiq_villagerAI : public Scripted_NoMovementAI
     {
-        npc_slain_tualiq_villagerAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature){ }
+        npc_slain_tualiq_villagerAI(Creature* creature) : Scripted_NoMovementAI(creature){ }
 
         bool credited;
 
@@ -3141,36 +3141,25 @@ public:
             credited = false;
         }
 
-        void SpellHit(Unit* caster, const SpellInfo* spellinfo)
+        void SpellHit(Unit* caster, SpellInfo const* spell)
         {
-            if(credited)
+            if (credited)
                 return;
 
-            if(caster && caster->ToPlayer())
+            if (caster && caster->ToPlayer())
             {
-                if(spellinfo->Id == 66390)
+                if (spell->Id == 66390)
                 {
                     credited = true;
-                    caster->ToPlayer()->KilledMonsterCredit(me->GetEntry(),me->GetGUID());
+                    caster->ToPlayer()->KilledMonsterCredit(me->GetEntry(), 0);
                     me->DespawnOrUnsummon(3000);
                 }
             }
         }
 
-        void AttackStart(Unit* who)
-        {
-            return;
-        }
-
-        void MoveInLineOfSight(Unit *who) 
-        {
-            return;
-        }
-
-        void UpdateAI(const uint32 uiDiff)
-        {
-            return;
-        }
+        void AttackStart(Unit* /*who*/) {}
+        void MoveInLineOfSight(Unit* /*who*/) {}
+        void UpdateAI(uint32 const /*diff*/) {}
     };
 };
 

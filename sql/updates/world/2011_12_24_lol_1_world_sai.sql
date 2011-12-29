@@ -1,9 +1,9 @@
 -- Tyrande Whisperwind
 DELETE FROM `creature_text` WHERE `entry`=7999;
 INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`probability`,`emote`,`duration`,`sound`,`comment`) VALUES
-(2784,1,0,'Anu''dora!',14,0,0,5,0,5885,'Tyrande Whisperwind - Aggro'),
-(2784,1,1,'For Kalimdor!',14,0,0,5,0,5885,'Tyrande Whisperwind - Aggro'),
-(2784,1,2,'Endu''di Rifa!',14,0,0,5,0,5885,'Tyrande Whisperwind - Aggro');
+(7999,1,0,'Anu''dora!',14,0,0,5,0,5885,'Tyrande Whisperwind - Aggro'),
+(7999,1,1,'For Kalimdor!',14,0,0,5,0,5885,'Tyrande Whisperwind - Aggro'),
+(7999,1,2,'Endu''di Rifa!',14,0,0,5,0,5885,'Tyrande Whisperwind - Aggro');
 
 UPDATE `creature_template` SET `unit_flags`=`unit_flags`&~2,`AIName`='SmartAI',`ScriptName`='' WHERE `entry`=7999;
 DELETE FROM `smart_scripts` WHERE `source_type`=0 AND `entryorguid`=7999;
