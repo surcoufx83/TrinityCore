@@ -3230,6 +3230,7 @@ void SpellMgr::LoadDbcDataCorrections()
             case 51136: // Tribunal of Ages - Searing Gaze
                 spellInfo->Effect[1] = 0;
                 break;
+            case 23881: // Bloodthirst (Warrior)
             case 54680: // Monstrous Bite - Rank 1 (Devilsaur)
             case 55495: // Monstrous Bite - Rank 2 (Devilsaur)
             case 55496: // Monstrous Bite - Rank 3 (Devilsaur)
