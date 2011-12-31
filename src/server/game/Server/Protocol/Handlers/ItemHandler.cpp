@@ -509,6 +509,13 @@ void WorldSession::HandleSellItemOpcode(WorldPacket & recv_data)
     Item* pItem = _player->GetItemByGuid(itemguid);
     if (pItem)
     {
+        // PvP.Chars cannot sell items
+        if (GetPlayer()->isPvPCharacter()) {
+            _player->SendSellError(SELL_ERR_CANT_SELL_ITEM, creature, itemguid,
+                    0);
+            return;
+        }
+
         // prevent sell not owner item
         if (_player->GetGUID() != pItem->GetOwnerGUID())
         {

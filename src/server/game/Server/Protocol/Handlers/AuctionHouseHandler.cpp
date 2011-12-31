@@ -28,6 +28,7 @@
 #include "UpdateMask.h"
 #include "Util.h"
 #include "AccountMgr.h"
+#include "Chat.h"
 
 //please DO NOT use iterator++, because it is slower than ++iterator!!!
 //post-incrementation is always slower than pre-incrementation !
@@ -48,6 +49,14 @@ void WorldSession::HandleAuctionHelloOpcode(WorldPacket & recv_data)
     // remove fake death
     if (GetPlayer()->HasUnitState(UNIT_STAT_DIED))
         GetPlayer()->RemoveAurasByType(SPELL_AURA_FEIGN_DEATH);
+
+    if (!sWorld->getBoolConfig(CONFIG_BOOL_PVP_CHARACTER_ALLOWAUCTIONHOUSE)) {
+        if (GetPlayer()->isPvPCharacter()) {
+            ChatHandler(GetPlayer()).PSendSysMessage(
+                    "PvP.Characters cannot use the auction house.");
+            return;
+        }
+    }
 
     SendAuctionHello(guid, unit);
 }

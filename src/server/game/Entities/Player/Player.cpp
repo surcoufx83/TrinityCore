@@ -75,6 +75,7 @@
 #include "InstanceScript.h"
 #include <cmath>
 #include "AccountMgr.h"
+#include "Config.h"
 
 #define ZONE_UPDATE_INTERVAL (1*IN_MILLISECONDS)
 
@@ -4423,8 +4424,78 @@ void Player::_SaveSpellCooldowns(SQLTransaction& trans)
         trans->Append(ss.str().c_str());
 }
 
-uint32 Player::resetTalentsCost() const
+/**
+ * Is this character a PvP only character?<br/>
+ * <br/>
+ */
+bool Player::isPvPCharacter() const
 {
+    uint32 questId = sWorld->getIntConfig(CONFIG_INT_PVP_CHARACTER_QUESTID);
+    if( questId == 0 ) {
+        sLog->outStaticDebug("isPvPCharacter:: CONFIG_INT_PVP_CHARACTER_QUESTID not set");
+        // Not set in config file -> ignore
+        return false;
+    }
+    QuestStatus qStatus = GetQuestStatus(questId);
+
+    sLog->outStaticDebug("isPvPCharacter:: Quest: %d, GetQuestStatus; %d", questId, qStatus);
+    if (qStatus == QUEST_STATUS_REWARDED) {
+        return true;
+    }
+
+    // Death Knight: Different Quest
+    qStatus = GetQuestStatus(questId + 1);
+    sLog->outStaticDebug("isPvPCharacter:: Quest: %d, GetQuestStatus; %d",
+            questId + 1, qStatus);
+    if (qStatus == QUEST_STATUS_REWARDED) {
+        return true;
+    }
+
+	return false;
+}
+/**
+ * Is this character located at a Battleground or Arena Map?<br/>
+ * <br/>
+ */
+bool Player::isInBGorArenaMap() const {
+    sLog->outStaticDebug("resetTisInBGorArenaMap:: %d", GetMapId());
+    // Battlegrounds
+    //  30 - Alterac Valley
+    // 489 - Warsong Gulch
+    // 529 - Arathi Basin
+    // 566 - Eye of the Storm
+    // 607 - Strand of the Ancients
+    if ((GetMapId() == 566) || (GetMapId() == 607) || (GetMapId() == 489)
+            || (GetMapId() == 30) || (GetMapId() == 529)) {
+        sLog->outStaticDebug("resetTisInBGorArenaMap:: Battleground");
+        return true;
+    }
+    // Arena
+    // 559 - Nagrand Arena
+    // 562 - Blade's Edge Arena
+    // 572 - Ruins of Lordaeron
+    // 618 - The Ring of Valor
+    if ((GetMapId() == 559) || (GetMapId() == 562) || (GetMapId() == 572)
+            || (GetMapId() == 618)) {
+        sLog->outStaticDebug("resetTisInBGorArenaMap:: Arena");
+        return true;
+    }
+    sLog->outStaticDebug("resetTisInBGorArenaMap:: FALSE");
+    return false;
+}
+
+
+uint32 Player::resetTalentsCost()
+{
+    // PvP.Character? -> resetTalents ist for free
+    if (isPvPCharacter()) {
+        sLog->outStaticDebug("resetTalentsCost:: Is PvP.Character");
+        //ChatHandler(this).PSendSysMessage("PvP.Characters do not pay for talent reset");
+        return 0;
+    } else {
+        sLog->outStaticDebug("resetTalentsCost:: Not a PvP.Character");
+    }
+
     // The first time reset costs 1 gold
     if (m_resetTalentsCost < 1*GOLD)
         return 1*GOLD;
@@ -5496,7 +5567,8 @@ void Player::DurabilityPointLossForEquipSlot(EquipmentSlots slot)
 
 uint32 Player::DurabilityRepairAll(bool cost, float discountMod, bool guildBank)
 {
-    uint32 TotalCost = 0;
+	sLog->outStaticDebug("DurabilityRepairAll(bool cost, float discountMod, bool guildBank)");
+	uint32 TotalCost = 0;
     // equipped, backpack, bags itself
     for (uint8 i = EQUIPMENT_SLOT_START; i < INVENTORY_SLOT_ITEM_END; i++)
         TotalCost += DurabilityRepair(((INVENTORY_SLOT_BAG_0 << 8) | i), cost, discountMod, guildBank);
@@ -5512,6 +5584,7 @@ uint32 Player::DurabilityRepairAll(bool cost, float discountMod, bool guildBank)
 
 uint32 Player::DurabilityRepair(uint16 pos, bool cost, float discountMod, bool guildBank)
 {
+	sLog->outStaticDebug("DurabilityRepair(uint16 pos, bool cost, float discountMod, bool guildBank)");
     Item* item = GetItemByPos(pos);
 
     uint32 TotalCost = 0;
@@ -5550,6 +5623,13 @@ uint32 Player::DurabilityRepair(uint16 pos, bool cost, float discountMod, bool g
             uint32 costs = uint32(LostDurability*dmultiplier*double(dQualitymodEntry->quality_mod));
 
             costs = uint32(costs * discountMod * sWorld->getRate(RATE_REPAIRCOST));
+
+            if (isPvPCharacter()) {
+                costs = 0;
+				sLog->outStaticDebug("DurabilityRepair:: isPvPChar -> costs = 0");
+			} else {
+				sLog->outStaticDebug("DurabilityRepair:: NOT isPvPChar");
+			}
 
             if (costs == 0)                                   //fix for ITEM_QUALITY_ARTIFACT
                 costs = 1;
@@ -9742,6 +9822,7 @@ void Player::SendInitWorldStates(uint32 zoneid, uint32 areaid)
     }
     GetSession()->SendPacket(&data);
     SendBGWeekendWorldStates();
+
 }
 
 void Player::SendBGWeekendWorldStates()
@@ -11938,8 +12019,10 @@ InventoryResult Player::CanUseItem(ItemTemplate const* proto) const
         {
             if (GetSkillValue(proto->RequiredSkill) == 0)
                 return EQUIP_ERR_NO_REQUIRED_PROFICIENCY;
-            else if (GetSkillValue(proto->RequiredSkill) < proto->RequiredSkillRank)
-                return EQUIP_ERR_CANT_EQUIP_SKILL;
+            else if (GetSkillValue(proto->RequiredSkill)
+                    < proto->RequiredSkillRank)
+                if (!isPvPCharacter())
+                    return EQUIP_ERR_CANT_EQUIP_SKILL;
         }
 
         if (proto->RequiredSpell != 0 && !HasSpell(proto->RequiredSpell))
@@ -20691,6 +20774,26 @@ inline bool Player::_StoreOrEquipNewItem(uint32 vendorslot, uint32 item, uint8 c
         return false;
     }
 
+    // Free for PvP.Char?
+	CreatureTemplate const* ci = sObjectMgr->GetCreatureTemplate(pVendor->GetEntry());
+    bool freeForPvPChar = false;
+	if (ci->SubName.length() != 0) {
+        std::string configSub = ConfigMgr::GetStringDefault("PvP.Character.Vendor", "");
+        sLog->outStaticDebug("BuyItemFromVendor:: PvP.Character.Vendor: '%s'", configSub.c_str());
+        if (isPvPCharacter()) {
+            sLog->outStaticDebug("BuyItemFromVendor:: Is PvP.Character");
+            if (ci->SubName.compare(configSub) == 0) {
+                sLog->outStaticDebug("BuyItemFromVendor:: Special PvP Vendor -> Buyprice == 0");
+                ChatHandler(this).PSendSysMessage(
+                        "PvP.Characters have not to pay for items - buyprice is always 0");
+                freeForPvPChar = true;
+            } else {
+                sLog->outStaticDebug("BuyItemFromVendor:: Not a PvP Vendor -> Buyprice normal");
+            }
+        }
+    } // Vendor has subName
+
+    if(!freeForPvPChar) {
     ModifyMoney(-price);
 
     if (crItem->ExtendedCost)                            // case for new honor system
@@ -20708,6 +20811,7 @@ inline bool Player::_StoreOrEquipNewItem(uint32 vendorslot, uint32 item, uint8 c
                 DestroyItemCount(iece->reqitem[i], (iece->reqitemcount[i] * count), true);
         }
     }
+    } // freeForPvPChar
 
     Item* it = bStore ?
         StoreNewItem(vDest, item, true) :
@@ -20805,6 +20909,41 @@ bool Player::BuyItemFromVendorSlot(uint64 vendorguid, uint32 vendorslot, uint32 
         return false;
     }
 
+    // PvP.Char: Can interact with special pvp vendor
+    // PvE.Char: Can only act with "normal vendors"
+	CreatureTemplate const* ci = sObjectMgr->GetCreatureTemplate(creature->GetEntry());
+    bool freeForPvPChar = false;
+	if (ci->SubName.length() != 0) {
+        std::string configSub = ConfigMgr::GetStringDefault("PvP.Character.Vendor", "");
+        sLog->outStaticDebug("BuyItemFromVendor:: PvP.Character.Vendor: '%s'", configSub.c_str());
+        if (isPvPCharacter()) {
+            sLog->outStaticDebug("BuyItemFromVendor:: Is PvP.Character");
+            if (ci->SubName.compare(configSub) == 0) {
+                sLog->outStaticDebug("BuyItemFromVendor:: Special PvP Vendor -> Buyprice == 0");
+                ChatHandler(this).PSendSysMessage(
+                        "PvP.Characters have not to pay for items - buyprice is always 0");
+                freeForPvPChar = true;
+            } else {
+                sLog->outStaticDebug("BuyItemFromVendor:: Not a PvP Vendor -> Buyprice normal");
+            }
+        } else {
+            // PvE character
+            sLog->outStaticDebug("BuyItemFromVendor:: Not a PvP.Character");
+            if (ci->SubName.compare(configSub) == 0) {
+                sLog->outStaticDebug("BuyItemFromVendor:: Special PvP Vendor -> But PvE Char");
+                ChatHandler(this).PSendSysMessage(
+                        "This vendor is only for PvP Characters.");
+                SendBuyError(BUY_ERR_SELLER_DONT_LIKE_YOU, creature, item, 0);
+                return false;
+            } else {
+                sLog->outStaticDebug("BuyItemFromVendor:: Not a PvP Vendor -> Buyprice normal");
+            }
+        }
+    } // Vendor has subName
+
+    uint32 price = 0;
+    if( !freeForPvPChar ) {
+
     if (crItem->ExtendedCost)
     {
         ItemExtendedCostEntry const* iece = sItemExtendedCostStore.LookupEntry(crItem->ExtendedCost);
@@ -20847,7 +20986,7 @@ bool Player::BuyItemFromVendorSlot(uint64 vendorguid, uint32 vendorslot, uint32 
         }
     }
 
-    uint32 price = 0;
+    price = 0;
     if(crItem->IsGoldRequired(pProto) && pProto->BuyPrice > 0) //Assume price cannot be negative (do not know why it is int32)
     {
         uint32 maxCount = MAX_MONEY_AMOUNT / pProto->BuyPrice;
@@ -20867,6 +21006,8 @@ bool Player::BuyItemFromVendorSlot(uint64 vendorguid, uint32 vendorslot, uint32 
             return false;
         }
     }
+
+    } // freeForPvPChar
 
     if ((bag == NULL_BAG && slot == NULL_SLOT) || IsInventoryPos(bag, slot))
     {
@@ -23202,6 +23343,10 @@ bool Player::CanCaptureTowerPoint()
 
 uint32 Player::GetBarberShopCost(uint8 newhairstyle, uint8 newhaircolor, uint8 newfacialhair, BarberShopStyleEntry const* newSkin)
 {
+    // PvP.Chars do not pay
+    if (isPvPCharacter())
+        return 0;
+
     uint8 level = getLevel();
 
     if (level > GT_MAX_LEVEL)

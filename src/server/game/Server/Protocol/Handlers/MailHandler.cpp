@@ -28,6 +28,7 @@
 #include "DBCStores.h"
 #include "Item.h"
 #include "AccountMgr.h"
+#include "Chat.h"
 
 void WorldSession::HandleSendMail(WorldPacket & recv_data)
 {
@@ -171,6 +172,24 @@ void WorldSession::HandleSendMail(WorldPacket & recv_data)
     {
         SendNotification(GetTrinityString(LANG_MAIL_RECEIVER_REQ), sWorld->getIntConfig(CONFIG_MAIL_LEVEL_REQ));
         return;
+    }
+
+    // PvP.Chars?
+    if (receive) {
+        if ((receive->isPvPCharacter() && !player->isPvPCharacter())
+                || (!receive->isPvPCharacter() && player->isPvPCharacter())) {
+            player->SendMailResult(0, MAIL_SEND, MAIL_ERR_NOT_YOUR_TEAM);
+            ChatHandler(player).PSendSysMessage(
+                    "PvP.Characters and PvE.Characters cannot interchange mail.");
+            return;
+        }
+    } else {
+        if (player->isPvPCharacter()) {
+            player->SendMailResult(0, MAIL_SEND, MAIL_ERR_NOT_YOUR_TEAM);
+            ChatHandler(player).PSendSysMessage(
+                    "The recipient is offline - cannot find out if it is also a PvP.Character.");
+            return;
+        }
     }
 
     uint32 rc_account = receive

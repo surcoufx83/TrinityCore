@@ -1218,6 +1218,15 @@ void World::LoadConfigSettings(bool reload)
     m_int_configs[CONFIG_INT_WARDEN_BANDAY] = ConfigMgr::GetIntDefault("Warden.BanDay", 0);
 
     sScriptMgr->OnConfigLoad(reload);
+
+    m_int_configs[CONFIG_INT_PVP_CHARACTER_QUESTID] = ConfigMgr::GetIntDefault(
+            "PvP.Character.QuestId", 0);
+    m_bool_configs[CONFIG_BOOL_PVP_CHARACTER_ALLOWTRADE]
+            = ConfigMgr::GetBoolDefault("PvP.Character.AllowTrade", false);
+    m_bool_configs[CONFIG_BOOL_PVP_CHARACTER_ALLOWAUCTIONHOUSE]
+            = ConfigMgr::GetBoolDefault("PvP.Character.AllowAuctionHouse",
+                    false);
+
 }
 
 /// Initialize the World

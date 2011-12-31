@@ -866,6 +866,12 @@ bool Guild::BankMoveItemData::InitItem()
 bool Guild::BankMoveItemData::HasStoreRights(MoveItemData* pOther) const
 {
     ASSERT(pOther);
+    if (m_pPlayer->isPvPCharacter()) {
+        sLog->outDebug(LOG_FILTER_GUILD, "HasStoreRights -> PvPChar");
+        ChatHandler(m_pPlayer).PSendSysMessage(
+                "PvP.Characters must not interact with the guild bank.");
+        return false;
+    }
     // Do not check rights if item is being swapped within the same bank tab
     if (pOther->IsBank() && pOther->GetContainer() == m_container)
         return true;
@@ -875,6 +881,12 @@ bool Guild::BankMoveItemData::HasStoreRights(MoveItemData* pOther) const
 bool Guild::BankMoveItemData::HasWithdrawRights(MoveItemData* pOther) const
 {
     ASSERT(pOther);
+    if (m_pPlayer->isPvPCharacter()) {
+        sLog->outDebug(LOG_FILTER_GUILD, "HasWithdrawRights -> PvPChar");
+        ChatHandler(m_pPlayer).PSendSysMessage(
+                "PvP.Characters must not interact with the guild bank.");
+        return false;
+    }
     // Do not check rights if item is being swapped within the same bank tab
     if (pOther->IsBank() && pOther->GetContainer() == m_container)
         return true;

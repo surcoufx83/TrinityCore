@@ -32,6 +32,8 @@
 #include "Group.h"
 #include "LFGMgr.h"
 
+#include "Chat.h"
+
 union u_map_magic
 {
     char asChar[4];
@@ -689,6 +691,205 @@ void Map::RemoveFromMap(T *obj, bool remove)
     }
 }
 
+// Copied from ChatHandler - was protected
+static void HACK_HandleCharacterLevel(Player* player, uint64 player_guid,
+        uint32 oldlevel, uint32 newlevel) {
+    sLog->outStaticDebug("MAP.CPP:: HandleCharacterLevel");
+    if (player) {
+        sLog->outStaticDebug("HandleCharacterLevel - Player ist gesetzt");
+        player->GiveLevel(newlevel);
+        player->InitTalentForLevel();
+        player->SetUInt32Value(PLAYER_XP, 0);
+    } else {
+        sLog->outStaticDebug(
+                "MAP.CPP:: HandleCharacterLevel - else Zweig");
+        // update level and XP at level, all other will be updated at loading
+        CharacterDatabase.PExecute(
+                "UPDATE characters SET level = '%u', xp = 0 WHERE guid = '%u'",
+                newlevel, GUID_LOPART(player_guid));
+    }
+}
+static bool HACK_OnQuestComplete(Player *player, Creature *_Creature,
+        Quest *_Quest) {
+    sLog->outStaticDebug("HACK_OnQuestComplete:: OnQuestComplete");
+    if ((_Quest == NULL) || (_Quest->GetQuestId() == sWorld->getIntConfig(
+            CONFIG_INT_PVP_CHARACTER_QUESTID))) {
+        sLog->outStaticDebug(
+                "HACK_OnQuestComplete:: OnQuestComplete -- PvP.Char Quest");
+        if (player->getLevel() == sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL)) {
+            sLog->outStaticDebug(
+                    "HACK_OnQuestComplete:: OnQuestComplete -- Player has max level - exiting");
+            return true;
+        }
+        // Learn dual spec
+        player->CastSpell(player, 63680, true, NULL, NULL, player->GetGUID());
+        player->CastSpell(player, 63624, true, NULL, NULL, player->GetGUID());
+        // Learn first aid -- Illustrious Grand Master First Aid
+        player->CastSpell(player, 65292, true, NULL, NULL, player->GetGUID());
+        // Set first aid to 450
+        uint32 skill = 129;
+        player->SetSkill(skill, player->GetSkillStep(skill), 450, 450);
+
+        // Set player to max level
+        // -> Player should only be level 1
+        HACK_HandleCharacterLevel(
+                player,
+                player->GetGUID(),
+                player->getLevel(),
+                sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL));
+        // Set maxskill
+        player->UpdateSkillsToMaxSkillsForLevel();
+        // Add spells, that could only be achieved by PvE quests
+        switch (player->getClass()) {
+        case CLASS_WARRIOR:
+            sLog->outStaticDebug(
+                    "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_WARRIOR");
+            //                (0, 1, 71, 'Verteidigungshaltung'),
+            //                (0, 1, 355, 'Taunt');
+            player->CastSpell(player, 8121, true, NULL, NULL, player->GetGUID());
+            //                (0, 1, 2458, 'Berserkerhaltung'),
+            //                (0, 1, 20252, 'Intercept'),
+            player->CastSpell(player, 8616, true, NULL, NULL, player->GetGUID());
+            //                (0, 1, 7386, 'Sunder Armor'),
+            player->CastSpell(player, 8121, true, NULL, NULL, player->GetGUID());
+            break;
+        case CLASS_PALADIN:
+            sLog->outStaticDebug(
+                    "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_PALADIN");
+            //                (0, 2, 5502, 'Sense Undead'),
+            player->CastSpell(player, 5503, true, NULL, NULL, player->GetGUID());
+            //                (0, 2, 7328, 'Redemption');
+            player->CastSpell(player, 7329, true, NULL, NULL, player->GetGUID());
+            switch (player->getRace()) {
+            player->learnSpell(31801, true);
+        case RACE_BLOODELF:
+            //(10, 2, 53736, 'Seal of Corruption'); -- Bloodelf
+            player->learnSpell(53736, true);
+            break;
+            }
+            break;
+        case CLASS_HUNTER:
+            sLog->outStaticDebug(
+                    "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_HUNTER");
+            while (player->m_stableSlots < MAX_PET_STABLES)
+            {
+                StableSlotPricesEntry const* SlotPrice =
+                        sStableSlotPricesStore.LookupEntry(
+                                player->m_stableSlots + 1);
+                // PvP.Chars do not pay for stable slots
+                ++(player->m_stableSlots);
+            }
+
+            //                (0, 3, 2641, 'Dismiss Pet'),
+            //                (0, 3, 883, 'Call Pet'),
+            //                (0, 3, 1515, 'Tame Beast');
+            player->CastSpell(player, 1579, true, NULL, NULL, player->GetGUID());
+            //                (0, 3, 982, 'Revive Pet'),
+            //                (0, 3, 6991, 'Feed Pet'),
+            player->CastSpell(player, 5300, true, NULL, NULL, player->GetGUID());
+
+            break;
+        case CLASS_ROGUE:
+            sLog->outStaticDebug(
+                    "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_ROGUE");
+            break;
+        case CLASS_PRIEST:
+            sLog->outStaticDebug(
+                    "npc_pvpchars_questgiver:: OnQuestComplete -- CLASS_PRIEST");
+            //                (0, 5, 2944, 'Devouring Plague'),
+            player->CastSpell(player, 2946, true, NULL, NULL, player->GetGUID());
+            //                (0, 5, 6346, 'Fear Ward');
+            player->CastSpell(player, 19337, true, NULL, NULL,
+                    player->GetGUID());
+            break;
+        case CLASS_DEATH_KNIGHT:
+            sLog->outStaticDebug(
+                    "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_DEATH_KNIGHT");
+            // Should not be possible
+            //                (0, 6, 48778, 'Acherus Deathcharger'),
+            player->CastSpell(player, 52382, true, NULL, NULL,
+                    player->GetGUID());
+            //                (0, 6, 50977, 'Death Gate'),
+            player->CastSpell(player, 53821, true, NULL, NULL,
+                    player->GetGUID());
+            //                (0, 6, 53428, 'Runeforging ');
+            player->CastSpell(player, 53431, true, NULL, NULL,
+                    player->GetGUID());
+            break;
+        case CLASS_SHAMAN:
+            sLog->outStaticDebug(
+                    "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_SHAMAN");
+            //                (0, 7, 3599, 'Searing Totem(Rank 1)'),
+            player->CastSpell(player, 2075, true, NULL, NULL, player->GetGUID());
+            //                (0, 7, 8071, 'Stoneskin Totem(Rank 1)'),
+            player->CastSpell(player, 8073, true, NULL, NULL, player->GetGUID());
+            //                (0, 7, 5394, 'Healing Stream Totem(Rank 1)');
+            player->CastSpell(player, 5396, true, NULL, NULL, player->GetGUID());
+            break;
+        case CLASS_MAGE:
+            sLog->outStaticDebug(
+                    "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_MAGE");
+            //                (0, 8, 28272, 'Polymorph Pig'),
+            player->CastSpell(player, 28285, true, NULL, NULL,
+                    player->GetGUID());
+            //                (0, 8, 10140, 'Conjure Water '),
+            player->CastSpell(player, 10143, true, NULL, NULL,
+                    player->GetGUID());
+            //                (0, 8, 53140, 'Teleport: Dalaran');
+            player->CastSpell(player, 3578, true, NULL, NULL, player->GetGUID());
+            break;
+        case CLASS_WARLOCK:
+            sLog->outStaticDebug(
+                    "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_WARLOCK");
+            // LEARN summon imp
+            //                (0, 9, 688, 'Summon Imp'),        -- WORKS
+            player->CastSpell(player, 7763, true, NULL, NULL, player->GetGUID());
+            //                (0, 9, 697, 'Summon Voidwalker'), -- WORKS
+            player->CastSpell(player, 11520, true, NULL, NULL,
+                    player->GetGUID());
+            //                (0, 9, 712, 'Summon Succubus'),   -- WORKS
+            player->CastSpell(player, 11519, true, NULL, NULL,
+                    player->GetGUID());
+            //                (0, 9, 691, 'Summon Felhunter'),  -- WORKS
+            player->CastSpell(player, 1373, true, NULL, NULL, player->GetGUID());
+            //                (0, 9, 1122, 'Summon Inferno'),
+            player->CastSpell(player, 1413, true, NULL, NULL, player->GetGUID());
+            //                (0, 9, 18540, 'Ritual of Doom'),
+            player->CastSpell(player, 20700, true, NULL, NULL,
+                    player->GetGUID());
+            //                (0, 9, 23161, 'Dreadsteed');  -- WORKS
+            player->CastSpell(player, 23160, true, NULL, NULL,
+                    player->GetGUID());
+            break;
+        case CLASS_DRUID:
+            sLog->outStaticDebug(
+                    "HACK_OnQuestComplete:: OnQuestComplete -- CLASS_DRUID");
+            //                (0, 11, 5487, 'Bear Form'),
+            //                (0, 11, 6807, 'Maul'),
+            //                (0, 11, 6795, 'Grow'),
+            player->CastSpell(player, 19179, true, NULL, NULL,
+                    player->GetGUID());
+            //                (0, 11, 1066, 'Aquatic Form'),
+            player->CastSpell(player, 1446, true, NULL, NULL, player->GetGUID());
+            //                (0, 11, 40120, 'Swift Flight Form'),
+            player->CastSpell(player, 40123, true, NULL, NULL,
+                    player->GetGUID());
+            //                (0, 11, 8946, 'Cure Poison');
+            player->CastSpell(player, 8947, true, NULL, NULL, player->GetGUID());
+            break;
+        default:
+            sLog->outStaticDebug(
+                    "HACK_OnQuestComplete:: OnQuestComplete -- default");
+            break;
+        }
+    } else {
+        sLog->outStaticDebug(
+                "HACK_OnQuestComplete:: OnQuestComplete -- nicht der PvP.Char Quest");
+    }
+
+    return true;
+}
+
 void Map::PlayerRelocation(Player* player, float x, float y, float z, float orientation)
 {
     ASSERT(player);
@@ -711,6 +912,107 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z, float orie
     }
 
     player->UpdateObjectVisibility(false);
+    // DEBUG
+    sLog->outStaticDebug("isPvPCharacter:: In MAP: %d", player->GetMapId());
+
+    // PvP.Character? -> They are not allowed to be in the open world.
+    if ((!player->InBattleground() || !player->InArena())
+            && player->isPvPCharacter()) {
+        // **HACK**
+        // I could not get the NPC AI to work, so I will do it here
+        if (player->getLevel() < sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL)) {
+            HACK_OnQuestComplete(player, NULL, NULL);
+        }
+
+        // Has completed the "I am PvP" Quest
+        sLog->outStaticDebug("Ist PvP.Character **");
+        sLog->outStaticDebug("Player ist in Map: %d", player->GetMapId());
+        sLog->outStaticDebug("Dies ist Map: %d", this->GetId());
+        uint32 zone_id, area_id;
+        player->GetZoneAndAreaId(zone_id, area_id);
+        // Relocate player
+        // Horde or Alliance?
+        if (player->getRaceMask() & RACEMASK_ALLIANCE) {
+            sLog->outStaticDebug("Ist PvP.Character:: RACEMASK_ALLIANCE");
+            // In Stockade or DireMaul -> set PhaseMask
+            if ((player->GetMapId() == 34) || (player->GetMapId() == 429)) {
+                sLog->outStaticDebug(
+                        "Ist PvP.Character:: Stockade or Diremaul --> Phase 2");
+                player->SetPhaseMask(2, false);
+            } else {
+                // Still in Stormwind?
+                if (!(((player->GetMapId() == 0) && (area_id == 1519)) // SW Village
+                        || ((player->GetMapId() == 0) && (area_id == 12)) // Elwynn forest in front of SW Village
+                        || player->isInBGorArenaMap()
+                )) {
+                    // Relocate Player
+                    sLog->outStaticDebug(
+                            "Ist PvP.Character:: Nicht mehr in Stormwind");
+                    ChatHandler(player).PSendSysMessage(
+                            "PvP.Characters must not be in the open world - porting back to home city");
+                    // Slow fall
+                    player->CastSpell(player, 12438, false);
+                    player->TeleportTo(0, -8833.38f, 628.628f, 94.356f,
+                            player->GetOrientation(), 0);
+                    player->SetPhaseMask(PHASEMASK_NORMAL, false);
+                    return;
+                } else {
+                    sLog->outStaticDebug("Ist PvP.Character:: No Relocation");
+                    player->SetPhaseMask(PHASEMASK_NORMAL, false);
+                }
+            }
+        } else {
+            // Map 450: Horde PvP Kaserne
+            sLog->outStaticDebug("Ist PvP.Character:: RACEMASK_HORDE");
+            // Still in Orgrimmar or in PvP Kaserne?
+            // In Ragefire or DireMaul -> set PhaseMask
+            if ((player->GetMapId() == 389) || (player->GetMapId() == 429)) {
+                sLog->outStaticDebug(
+                        "Ist PvP.Character:: Ragefire or Diremaul --> Phase 2");
+                player->SetPhaseMask(2, false);
+            } else {
+                if (!((player->GetMapId() == 450) // Horde Kaserne
+                        || ((player->GetMapId() == 1) && (area_id == 1637)) // Org Village
+                        || ((player->GetMapId() == 1) && (area_id == 14)) // Durotar in front of Org Village
+                        || player->isInBGorArenaMap()
+                )
+                ) {
+                    // Relocate Player
+                    sLog->outStaticDebug(
+                            "Ist PvP.Character:: Nicht mehr in Orgrimmar");
+                    ChatHandler(player).PSendSysMessage(
+                            "PvP.Characters must not be in the open world - porting back to home city");
+                    if (false) {
+                        GameTele const* tele =
+                                ChatHandler(player).extractGameTeleFromLink(
+                                        "Orgrimmar");
+                        if (!tele) {
+                            ChatHandler(player).PSendSysMessage(
+                                    "Teleport location 'Orgrimmar' not found in your game_tele table!");
+                            ChatHandler(player).SendSysMessage(
+                                    LANG_COMMAND_TELE_NOTFOUND);
+                            ChatHandler(player).SetSentErrorMessage(true);
+                            return;
+                        }
+                        player->TeleportTo(tele->mapId, tele->position_x,
+                                tele->position_y, tele->position_z,
+                                tele->orientation);
+                    } else {
+                        // Slow fall
+                        player->CastSpell(player, 12438, false);
+                        player->TeleportTo(1, 1629.36f, -4373.39f, 31.4828f,
+                                player->GetOrientation(), 0);
+                    }
+                    player->SetPhaseMask(PHASEMASK_NORMAL, false);
+                    return;
+                } else {
+                    sLog->outStaticDebug("Ist PvP.Character:: No Relocation");
+                    player->SetPhaseMask(PHASEMASK_NORMAL, false);
+                }
+            }
+        }
+
+    } // not in battleground AND is PvP.Character
 }
 
 void Map::CreatureRelocation(Creature* creature, float x, float y, float z, float ang, bool respawnRelocationOnFail)
