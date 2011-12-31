@@ -719,6 +719,8 @@ static bool HACK_OnQuestComplete(Player *player, Creature *_Creature,
         if (player->getLevel() == sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL)) {
             sLog->outStaticDebug(
                     "HACK_OnQuestComplete:: OnQuestComplete -- Player has max level - exiting");
+            // Give pocket money for repairing, etc
+            player->SetMoney(100000);
             return true;
         }
         // Learn dual spec
@@ -922,7 +924,9 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z, float orie
         // I could not get the NPC AI to work, so I will do it here
         if (player->getLevel() < sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL)) {
             HACK_OnQuestComplete(player, NULL, NULL);
-        }
+        } else {
+			player->SetMoney(100000);
+		}
 
         // Has completed the "I am PvP" Quest
         sLog->outStaticDebug("Ist PvP.Character **");
