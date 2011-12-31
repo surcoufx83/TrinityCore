@@ -57,6 +57,7 @@ EndScriptData
 #define GOSSIP_WILLIAMKEILAR1   "Take me to Northpass Tower."
 #define GOSSIP_WILLIAMKEILAR2   "Take me to Eastwall Tower."
 #define GOSSIP_WILLIAMKEILAR3   "Take me to Crown Guard Tower."
+#define GOSSIP_EMILUNE          "Please, Take me to Westguard Keep!"
 
 class npc_taxi : public CreatureScript
 {
@@ -178,6 +179,10 @@ public:
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_WILLIAMKEILAR1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 28);
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_WILLIAMKEILAR2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 29);
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_WILLIAMKEILAR3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 30);
+            break;
+        case 27930: // Emilune Winterwind
+            if (player->GetQuestStatus(11291) == QUEST_STATUS_COMPLETE)
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_EMILUNE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 31);
             break;
         }
 
@@ -318,6 +323,10 @@ public:
         case GOSSIP_ACTION_INFO_DEF + 30:
             player->CLOSE_GOSSIP_MENU();
             player->ActivateTaxiPathTo(496);
+            break;
+        case GOSSIP_ACTION_INFO_DEF + 31:
+            player->CLOSE_GOSSIP_MENU();
+            player->CastSpell(player, 50028, true);
             break;
         }
 
