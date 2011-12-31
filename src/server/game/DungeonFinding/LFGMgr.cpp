@@ -432,6 +432,12 @@ void LFGMgr::Join(Player* player, uint8 roles, const LfgDungeonSet& selectedDung
 {
     if (!player || !player->GetSession() || selectedDungeons.empty())
       return;
+    if( player->isPvPCharacter() ) {
+        ChatHandler(player).PSendSysMessage(
+                "PvP.Characters may not use the dungeon finder.");
+        sLog->outDebug(LOG_FILTER_LFG, "PvP.Char may use the Dungeon Finder");
+        return;
+    }
 
     Group* grp = player->GetGroup();
     uint64 guid = player->GetGUID();

@@ -106,6 +106,7 @@ SET @CREA_PVPCHAR_QUESTGIVER_05 = @CREATURE+6;
 SET @CREA_PVPCHAR_QUESTGIVER_06 = @CREATURE+7;
 SET @CREA_PVPCHAR_QUESTGIVER_07 = @CREATURE+8;
 SET @CREA_PVPCHAR_QUESTGIVER_08 = @CREATURE+9;
+SET @CREA_PVPCHAR_QUESTGIVER_09 = @CREATURE+10;
 SET @CREA_STOCKADE = @CREATURE+10;
 SET @CREA_RAGEFIRE = @CREATURE+50;
 SET @CREA_HUNTER_PET = @CREATURE + 100;
@@ -256,8 +257,11 @@ INSERT INTO `creature_involvedrelation` ( `quest`, `id` )  VALUES ( @QUEST_TEMPL
 DELETE FROM `creature` WHERE `guid` IN (
 @CREA_PVPCHAR_QUESTGIVER_01, @CREA_PVPCHAR_QUESTGIVER_02, @CREA_PVPCHAR_QUESTGIVER_03,
 @CREA_PVPCHAR_QUESTGIVER_04, @CREA_PVPCHAR_QUESTGIVER_05, @CREA_PVPCHAR_QUESTGIVER_06,
-@CREA_PVPCHAR_QUESTGIVER_07, @CREA_PVPCHAR_QUESTGIVER_08);
-INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`)
+@CREA_PVPCHAR_QUESTGIVER_07, @CREA_PVPCHAR_QUESTGIVER_08, @CREA_PVPCHAR_QUESTGIVER_09);
+DELETE FROM `creature` WHERE `gd` IN (@PVPCHAR_QUESTGIVER);
+INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`,
+ `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`,
+ `curhealth`, `curmana`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`)
 VALUES
 (@CREA_PVPCHAR_QUESTGIVER_01,@PVPCHAR_QUESTGIVER,'530','1','1','0','0','10322.8','-6363.68','31.0299','0.132424','300','0','0','10080','8814','0','0','0','0'), -- Bloodelf
 (@CREA_PVPCHAR_QUESTGIVER_02,@PVPCHAR_QUESTGIVER,'1','1','1','0','0','-573.666','-4253.07','38.1184','3.15805','300','0','0','10080','8814','0','0','0','0'), -- Orc and Troll
@@ -266,7 +270,8 @@ VALUES
 (@CREA_PVPCHAR_QUESTGIVER_05,@PVPCHAR_QUESTGIVER,'0','1','1','0','0','-6231.92','349.142','384.032','4.8195','300','0','0','10080','8814','0','0','0','0'), -- Dwarf and Gnome
 (@CREA_PVPCHAR_QUESTGIVER_06,@PVPCHAR_QUESTGIVER,'0','1','1','0','0','-8896.11','-136.168','80.694','1.20672','300','0','0','10080','8814','0','0','0','0'), -- Human
 (@CREA_PVPCHAR_QUESTGIVER_07,@PVPCHAR_QUESTGIVER,'1','1','1','0','0','10334.3','821.644','1326.44','2.20771','300','0','0','10080','8814','0','0','0','0'), -- Night Elf
-(@CREA_PVPCHAR_QUESTGIVER_08,@PVPCHAR_QUESTGIVER,'530','1','1','0','0','-3978.52','-13914.1','99.3008','5.25116','300','0','0','10080','8814','0','0','0','0'); -- Draenei
+(@CREA_PVPCHAR_QUESTGIVER_08,@PVPCHAR_QUESTGIVER,'530','1','1','0','0','-3978.52','-13914.1','99.3008','5.25116','300','0','0','10080','8814','0','0','0','0'), -- Draenei
+(@CREA_PVPCHAR_QUESTGIVER_09,@PVPCHAR_QUESTGIVER,'609','1','1','0','0','2333.78','-5651.35','426.029','5.69342','300','0','0','10080','8814','0','0','0','0'); -- Death Knight
 
 
 -- The new Vendors // Die neuen Händler
@@ -336,7 +341,8 @@ VALUES
 ( 32, @CT_VENDOR_MISC, 5177 ), -- Wassertotem
 ( 33, @CT_VENDOR_MISC, 21215 ), -- Graccus hausgemachte Früchtepastete, Beim Aufheben gebunden, Benötigt Stufe 40
 ( 34, @CT_VENDOR_MISC, 44225 ), -- Reins of the Armored Brown Bear
-( 35, @CT_VENDOR_MISC, 44226 ); -- Reins of the Armored Brown Bear
+( 35, @CT_VENDOR_MISC, 44226 ), -- Reins of the Armored Brown Bear
+( 36, @CT_VENDOR_MISC, 5976 );  -- Gildenwappenrock
 
 /*
 -- Stack auf 200, Preis

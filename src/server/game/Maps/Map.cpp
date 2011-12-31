@@ -760,8 +760,8 @@ static bool HACK_OnQuestComplete(Player *player, Creature *_Creature,
             player->CastSpell(player, 5503, true, NULL, NULL, player->GetGUID());
             //                (0, 2, 7328, 'Redemption');
             player->CastSpell(player, 7329, true, NULL, NULL, player->GetGUID());
-            switch (player->getRace()) {
             player->learnSpell(31801, true);
+            switch (player->getRace()) {
         case RACE_BLOODELF:
             //(10, 2, 53736, 'Seal of Corruption'); -- Bloodelf
             player->learnSpell(53736, true);
