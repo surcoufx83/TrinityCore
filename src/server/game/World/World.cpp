@@ -1226,6 +1226,8 @@ void World::LoadConfigSettings(bool reload)
     m_bool_configs[CONFIG_BOOL_PVP_CHARACTER_ALLOWAUCTIONHOUSE]
             = ConfigMgr::GetBoolDefault("PvP.Character.AllowAuctionHouse",
                     false);
+    m_int_configs[CONFIG_INT_PVP_CHARACTER_MONEY] = ConfigMgr::GetIntDefault(
+            "PvP.Character.Money", 0);
 
 }
 

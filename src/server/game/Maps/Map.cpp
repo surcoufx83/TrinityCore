@@ -719,8 +719,11 @@ static bool HACK_OnQuestComplete(Player *player, Creature *_Creature,
         if (player->getLevel() == sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL)) {
             sLog->outStaticDebug(
                     "HACK_OnQuestComplete:: OnQuestComplete -- Player has max level - exiting");
-            // Give pocket money for repairing, etc
-            player->SetMoney(100000);
+            // Give pocket money for repairing, arena, etc
+            if (sWorld->getIntConfig(CONFIG_INT_PVP_CHARACTER_MONEY) != 0) {
+                player->SetMoney(
+                        sWorld->getIntConfig(CONFIG_INT_PVP_CHARACTER_MONEY));
+            }
             return true;
         }
         // Learn dual spec
@@ -925,7 +928,11 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z, float orie
         if (player->getLevel() < sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL)) {
             HACK_OnQuestComplete(player, NULL, NULL);
         } else {
-			player->SetMoney(100000);
+            // Give pocket money for repairing, arena, etc
+            if (sWorld->getIntConfig(CONFIG_INT_PVP_CHARACTER_MONEY) != 0) {
+                player->SetMoney(
+                        sWorld->getIntConfig(CONFIG_INT_PVP_CHARACTER_MONEY));
+            }
 		}
 
         // Has completed the "I am PvP" Quest
@@ -947,6 +954,7 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z, float orie
                 // Still in Stormwind?
                 if (!(((player->GetMapId() == 0) && (area_id == 1519)) // SW Village
                         || ((player->GetMapId() == 0) && (area_id == 12)) // Elwynn forest in front of SW Village
+                        || ((player->GetMapId() == 571) && (zone_id == 4395)) // Dalaran
                         || player->isInBGorArenaMap()
                 )) {
                     // Relocate Player
@@ -978,6 +986,7 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z, float orie
                 if (!((player->GetMapId() == 450) // Horde Kaserne
                         || ((player->GetMapId() == 1) && (area_id == 1637)) // Org Village
                         || ((player->GetMapId() == 1) && (area_id == 14)) // Durotar in front of Org Village
+                        || ((player->GetMapId() == 571) && (zone_id == 4395)) // Dalaran
                         || player->isInBGorArenaMap()
                 )
                 ) {

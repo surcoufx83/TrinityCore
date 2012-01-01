@@ -258,7 +258,7 @@ DELETE FROM `creature` WHERE `guid` IN (
 @CREA_PVPCHAR_QUESTGIVER_01, @CREA_PVPCHAR_QUESTGIVER_02, @CREA_PVPCHAR_QUESTGIVER_03,
 @CREA_PVPCHAR_QUESTGIVER_04, @CREA_PVPCHAR_QUESTGIVER_05, @CREA_PVPCHAR_QUESTGIVER_06,
 @CREA_PVPCHAR_QUESTGIVER_07, @CREA_PVPCHAR_QUESTGIVER_08, @CREA_PVPCHAR_QUESTGIVER_09);
-DELETE FROM `creature` WHERE `gd` IN (@PVPCHAR_QUESTGIVER);
+DELETE FROM `creature` WHERE `id` IN (@PVPCHAR_QUESTGIVER);
 INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`,
  `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`,
  `curhealth`, `curmana`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`)
@@ -2948,7 +2948,7 @@ INSERT INTO gossip_menu_option (`menu_id`,`id`,`option_icon`,`option_text`,`opti
 -- -- Cities Submenu --
 -- --------------------
 (@Sub_Cities,0,0, 'What other locations can you teleport me to?',1,1,@Main,0,0,0, ''),
--- (@Sub_Cities,1,2, 'Teleport me to Dalaran please',1,1,0,0,0,@Money_C, 'Are you sure you wish to visit Dalaran?'),
+(@Sub_Cities,1,2, 'Teleport me to Dalaran please',1,1,0,0,0,@Money_C, 'Are you sure you wish to visit Dalaran?'),
 (@Sub_Cities,2,2, 'Teleport me to Stormwind',1,1,0,0,0,@Money_C, 'Are you sure you wish to visit Stormwind?'),
 -- (@Sub_Cities,3,2, 'Teleport me to Ironforge',1,1,0,0,0,@Money_C, 'Are you sure you wish to visit Ironforge'),
 -- (@Sub_Cities,4,2, 'Teleport me to Darnassus',1,1,0,0,0,@Money_C, 'Are you sure you wish to visit Darnassus?'),
