@@ -65,7 +65,7 @@ enum Spells
 
     // Ingvar Spells undead form
     SPELL_DARK_SMASH                            = 42723,
-    H_SPELL_DARK_SMASH                          = 59709,
+ // H_SPELL_DARK_SMASH                          = 59709,  // Unused
     SPELL_DREADFUL_ROAR                         = 42729,
     H_SPELL_DREADFUL_ROAR                       = 59734,
     SPELL_WOE_STRIKE                            = 42730,
@@ -246,8 +246,7 @@ class boss_ingvar_the_plunderer : public CreatureScript
                         {
                             if (Creature* target = ObjectAccessor::GetCreature(*me, _targetGUID))
                             {
-                                DoCast(target, _isUndead ? DUNGEON_MODE(SPELL_DARK_SMASH, H_SPELL_DARK_SMASH) 
-                                                         : DUNGEON_MODE(SPELL_SMASH, H_SPELL_SMASH));
+                                DoCast(target, _isUndead ? SPELL_DARK_SMASH : DUNGEON_MODE(SPELL_SMASH, H_SPELL_SMASH));
                                 me->SetFacingToObject(target);
                             }
                             _targetGUID = 0;
@@ -336,7 +335,7 @@ class mob_annhylde_the_caller : public CreatureScript
                             ingvar->RemoveAura(SPELL_SUMMON_BANSHEE);
                             ingvar->CastSpell(ingvar, SPELL_SCOURG_RESURRECTION_DUMMY, true);
                             DoCast(ingvar, SPELL_SCOURG_RESURRECTION_BEAM);
-                            _resurectTimer = 8000;
+                            _resurectTimer = 10000;
                             _resurectPhase = 1;
                             break;
                         case 2:
@@ -374,8 +373,8 @@ class mob_annhylde_the_caller : public CreatureScript
                             {
                                 ingvar->RemoveAurasDueToSpell(SPELL_SCOURG_RESURRECTION_DUMMY);
 
-                                if (boss_ingvar_the_plunderer::boss_ingvar_the_plundererAI* pAI = CAST_AI(boss_ingvar_the_plunderer::boss_ingvar_the_plundererAI, ingvar->AI()))
-                                    pAI->StartZombiePhase();
+                                if (boss_ingvar_the_plunderer::boss_ingvar_the_plundererAI* ai = CAST_AI(boss_ingvar_the_plunderer::boss_ingvar_the_plundererAI, ingvar->AI()))
+                                    ai->StartZombiePhase();
 
                                 me->GetMotionMaster()->MovePoint(2, _x + 1, _y, _z + 30);
                                 ++_resurectPhase;
