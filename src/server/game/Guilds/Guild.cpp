@@ -1630,6 +1630,15 @@ void Guild::HandleMemberDepositMoney(WorldSession* session, uint32 amount)
 {
     Player* player = session->GetPlayer();
 
+    // Not allowed for PvP.Chars
+    if( player->isPvPCharacter()) {
+        ChatHandler(player).PSendSysMessage("PvP.Chars are not allowed to deposit money.");
+        sLog->outCommand(player->GetSession()->GetAccountId(),
+            "PvP.Char %s (Account: %u) tried to deposit money (Amount: %u) to guild bank (Guild ID %u)",
+            player->GetName(), player->GetSession()->GetAccountId(), amount, m_id);
+        return;
+    }
+
     // Call script after validation and before money transfer.
     sScriptMgr->OnGuildMemberDepositMoney(this, player, amount);
 
