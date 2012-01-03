@@ -1374,6 +1374,8 @@ INSERT INTO `npc_trainer` (entry, spell, spellcost, reqskill, reqskillvalue, req
 VALUES (@CT_CLASS_TRAINER+1, '-200002', '0', '0', '0', '0');
 INSERT INTO `npc_trainer` (entry, spell, spellcost, reqskill, reqskillvalue, reqlevel)
 VALUES (@CT_CLASS_TRAINER+1, '-200001', '0', '0', '0', '0');
+INSERT INTO `npc_trainer` (entry, spell, spellcost, reqskill, reqskillvalue, reqlevel)
+VALUES (@CT_CLASS_TRAINER+1, '8616', '0', '0', '0', '0');  -- Berserker
 DELETE FROM `npc_vendor` WHERE `entry` = (@CT_CLASS_TRAINER+1);
 INSERT INTO `npc_vendor` (entry, item, ExtendedCost)
 VALUES (@CT_CLASS_TRAINER+1, '43420', '0'), -- Glyph of Barbaric Insults
@@ -3442,9 +3444,20 @@ worldconfig
 #        If you want that PvP.Chars can also use the auction house, then set this to 1
 #        Default: 0 - PvP Chars are not allowed to use the auction house
 #
+#    PvP.Character.Money
+#        Set this to the amount of money, that a PvP.Char should have.
+#        Value is in copper - so 1000000 means 100 gold
+#        Default: 0 - PvP Chars do not have money
+#
 ###################################################################################################################
-PvP.Character.QuestId = 32
+PvP.Character.QuestId = 30000
 PvP.Character.Vendor = LoL BG Team
 PvP.Character.AllowTrade = 0
 PvP.Character.AllowAuctionHouse = 0
+#PvP.Character.Money = 1000000
+PvP.Character.Money = 50000
 */
+
+-- Command changes
+-- WAS: UPDATE command SET SECURITY = 3 WHERE `name` LIKE 'maxskill';
+UPDATE command SET SECURITY = 0 WHERE `name` LIKE 'maxskill';

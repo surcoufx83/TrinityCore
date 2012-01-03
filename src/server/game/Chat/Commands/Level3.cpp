@@ -73,6 +73,11 @@ bool ChatHandler::HandleMaxSkillCommand(const char* /*args*/)
         SetSentErrorMessage(true);
         return false;
     }
+    // Also allow PvP.Chars
+    if (!SelectedPlayer->isPvPCharacter()) {
+        PSendSysMessage("Only PvP.Chars and stuff members may use this command.");
+        return false;
+    }
 
     // each skills that have max skill value dependent from level seted to current level max skill value
     SelectedPlayer->UpdateSkillsToMaxSkillsForLevel();
