@@ -136,7 +136,7 @@ public:
             _stormboltTimer = urand(5, 7) *IN_MILLISECONDS;
             _chargeTimer = urand(13, 17) *IN_MILLISECONDS;
             _summonTimer = urand(20, 40) *IN_MILLISECONDS;
-            _layonhandsTimer = 5 *MINUTE;
+            _layonhandsTimer = 5*IN_MILLISECONDS*MINUTE;
         }
 
         void JustSummoned(Creature* summoned)

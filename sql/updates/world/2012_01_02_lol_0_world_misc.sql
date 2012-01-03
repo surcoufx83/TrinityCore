@@ -1,0 +1,7 @@
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`) VALUES(9543, 0, 0, 0, 62, 0, 100, 0, 60000, 0, 0, 0, 2, 14, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 'On gossip select - Creature Aggro'),
+(9543, 0, 1, 0, 0, 0, 100, 0, 0, 0, 0, 0, 2, 14, 0, 0, 0, 0, 0, 10, 1181086, 10043, 0, 0, 0, 0, 0, ''),
+(9543, 0, 2, 0, 0, 0, 100, 0, 0, 0, 0, 0, 2, 14, 0, 0, 0, 0, 0, 10, 1181087, 10043, 0, 0, 0, 0, 0, ''),
+(9543, 0, 3, 0, 0, 0, 100, 0, 0, 0, 0, 0, 2, 14, 0, 0, 0, 0, 0, 10, 1181088, 10043, 0, 0, 0, 0, 0, '');
+INSERT INTO `gossip_menu_option` (`menu_id`, `id`, `option_icon`, `option_text`, `option_id`, `npc_option_npcflag`, `action_menu_id`, `action_poi_id`, `action_script_id`, `box_coded`, `box_money`, `box_text`) VALUES(60000, 0, 0, 'Wollt ihr mich etwa st\ören\?', 1, 1, 0, 0, 0, 0, 0, '');
+INSERT INTO `gossip_menu` (`entry`, `text_id`) VALUES(60000, 60000);
+UPDATE `creature_template` SET `gossip_menu_id` = 60000, `AIName` = 'SmartAI' WHERE `entry` = 9543;
