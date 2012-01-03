@@ -29,6 +29,7 @@
 #include "WaypointMovementGenerator.h"
 #include "DestinationHolderImp.h"
 
+#include "Chat.h"
 void WorldSession::HandleTaxiNodeStatusQueryOpcode(WorldPacket & recv_data)
 {
     sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Received CMSG_TAXINODE_STATUS_QUERY");
@@ -93,6 +94,12 @@ void WorldSession::HandleTaxiQueryAvailableNodes(WorldPacket & recv_data)
 
 void WorldSession::SendTaxiMenu(Creature* unit)
 {
+    // Not allowed for PvP.Chars
+    if( GetPlayer()->isPvPCharacter()) {
+        ChatHandler(GetPlayer()).PSendSysMessage("PvP.Chars cannot use Taxies.");
+        return;
+    }
+
     // find current node
     uint32 curloc = sObjectMgr->GetNearestTaxiNode(unit->GetPositionX(), unit->GetPositionY(), unit->GetPositionZ(), unit->GetMapId(), GetPlayer()->GetTeam());
 
