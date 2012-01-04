@@ -403,6 +403,7 @@ class boss_algalon : public CreatureScript
                 if (_phase == 2 && HealthBelowPct(2))
                 {
                     summons.DespawnAll();
+                    me->InterruptNonMeleeSpells(true);
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     me->SetReactState(REACT_PASSIVE);
                     me->RemoveAllAuras();
