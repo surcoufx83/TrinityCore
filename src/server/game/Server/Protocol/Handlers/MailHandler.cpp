@@ -554,6 +554,12 @@ void WorldSession::HandleGetMailList(WorldPacket & recv_data)
 
     Player* player = _player;
 
+    // Not allowed for PvP.Chars
+    if (player->isPvPCharacter()) {
+        ChatHandler(player).PSendSysMessage("PvP.Characters cannot receive mail.");
+        return;
+    }
+
     //load players mails, and mailed items
     if (!player->m_mailsLoaded)
         player ->_LoadMail();
