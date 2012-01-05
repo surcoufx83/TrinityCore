@@ -156,8 +156,8 @@ public:
                 return;
             } else if (m_uiDespawn == true) m_uiDespawnTimer -= diff;
 			
-			if (m_uiTimeout == true && m_uiTimeoutTimer <= diff)
-			{
+	    	if (m_uiTimeout == true && m_uiTimeoutTimer <= diff)
+		    {
 				Reset();
 				me->ForcedDespawn(0);
 				return;
@@ -167,7 +167,8 @@ public:
             if (!UpdateVictim())
                 return;
 			
-			DoMeleeAttackIfReady();
+	    	DoMeleeAttackIfReady();
+	    
         }
     };
 
