@@ -1,4 +1,4 @@
-DELETE FROM `creature` WHERE `id`=25453;d
+DELETE FROM `creature` WHERE `id`=25453;
 INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`) VALUES 
 (568209,25453,571,1,1,23941,0,2704.636963,6030.293457,31.513306,4.410034,300,0,0,106000,0,0,0,0,0);
 UPDATE `creature_template` SET `faction_A` = 188, `faction_H` = 188, `AIName`='SmartAI' WHERE `entry` = 25453;
