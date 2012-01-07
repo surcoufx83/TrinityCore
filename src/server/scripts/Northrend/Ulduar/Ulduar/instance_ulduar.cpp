@@ -645,9 +645,6 @@ public:
         void OnGameObjectRemove(GameObject* go)
         {
             switch (go->GetEntry())
-                if (!creature)
-                    return;
-
             {
                 case GO_LEVIATHAN_DOOR:
                     AddDoor(go, false);
