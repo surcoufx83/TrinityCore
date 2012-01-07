@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -1336,8 +1336,6 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
                 target = targets->front();
             }
 
-            bool run = e.action.setRun.run ? true : false;
-            CAST_AI(SmartAI, me->AI())->SetRun(run);
             if(!target)
                 me->GetMotionMaster()->MovePoint(0, e.target.x, e.target.y, e.target.z);
             else
