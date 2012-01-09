@@ -70,53 +70,58 @@ enum TeleportSpells
 
 class ulduar_teleporter : public GameObjectScript
 {
-public:
-    ulduar_teleporter() : GameObjectScript("ulduar_teleporter") { }
+    public:
+        ulduar_teleporter() : GameObjectScript("ulduar_teleporter") { }
 
-    bool OnGossipSelect(Player *pPlayer, GameObject * /*pGO*/, uint32 sender, uint32 action)
-    {
-        pPlayer->PlayerTalkClass->ClearMenus();
-        if (sender != GOSSIP_SENDER_MAIN)
-            return false;
-        if (!pPlayer->getAttackers().empty())
-            return false;
-
-        int pos = action - GOSSIP_ACTION_INFO_DEF;
-        if (pos >= 0 && pos < MAX)
-            pPlayer->TeleportTo(MAP_ULDUAR, TeleportPointsUlduarGOs[pos][0], TeleportPointsUlduarGOs[pos][1], TeleportPointsUlduarGOs[pos][2], 0.0f);
-        pPlayer->CLOSE_GOSSIP_MENU();
-
-        return true;
-    }
-
-    bool OnGossipHello(Player *pPlayer, GameObject *pGO)
-    {
-        pPlayer->Dismount();
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Expedition Base Camp", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + BASE_CAMP);
-        if (InstanceScript* pInstance = pGO->GetInstanceScript())
+        bool OnGossipSelect(Player* player, GameObject* /*go*/, uint32 sender, uint32 action)
         {
-            if (pInstance->GetData(TYPE_COLOSSUS) == 2) //count of 2 collossus death
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Formation Grounds", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + GROUNDS);
-            if (pInstance->GetBossState(TYPE_LEVIATHAN) == DONE)
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Colossal Forge", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + FORGE);
-            if (pInstance->GetBossState(TYPE_XT002) == DONE)
-            {
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Scrapyard", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + SCRAPYARD);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Antechamber of Ulduar", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + ANTECHAMBER);
-            }
-            if (pInstance->GetBossState(TYPE_KOLOGARN) == DONE)
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Shattered Walkway", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + WALKWAY);
-            if (pInstance->GetBossState(TYPE_AURIAYA) == DONE)
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Conservatory of Life", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + CONSERVATORY);
-            if (pInstance->GetBossState(TYPE_FREYA) == DONE)
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Spark of Imagination", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + SPARK);
-            if (pInstance->GetBossState(TYPE_VEZAX) == DONE)
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to Descent into Madness", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + MADNESS);
-        }
-        pPlayer->SEND_GOSSIP_MENU(pGO->GetGOInfo()->GetGossipMenuId(), pGO->GetGUID());
-        return true;
-    }
+            player->PlayerTalkClass->ClearMenus();
 
+            if (sender != GOSSIP_SENDER_MAIN)
+                return false;
+
+            if (!player->getAttackers().empty())
+                return false;
+
+            int pos = action - GOSSIP_ACTION_INFO_DEF;
+            if (pos >= 0 && pos < MAX)
+                player->TeleportTo(MAP_ULDUAR, TeleportPointsUlduarGOs[pos][0], TeleportPointsUlduarGOs[pos][1], TeleportPointsUlduarGOs[pos][2], 0.0f);
+
+            player->CLOSE_GOSSIP_MENU();
+            return true;
+        }
+
+        bool OnGossipHello(Player* player, GameObject* go)
+        {
+            player->Dismount();
+            player->RemoveAurasByType(SPELL_AURA_MOUNTED);
+
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Expedition Base Camp", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + BASE_CAMP);
+
+            if (InstanceScript* instance = go->GetInstanceScript())
+            {
+                if (instance->GetData(TYPE_COLOSSUS) == 2) // count of 2 collossus death
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Formation Grounds", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + GROUNDS);
+                if (instance->GetBossState(TYPE_LEVIATHAN) == DONE)
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Colossal Forge", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + FORGE);
+                if (instance->GetBossState(TYPE_XT002) == DONE)
+                {
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Scrapyard", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + SCRAPYARD);
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Antechamber of Ulduar", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + ANTECHAMBER);
+                }
+                if (instance->GetBossState(TYPE_KOLOGARN) == DONE)
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Shattered Walkway", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + WALKWAY);
+                if (instance->GetBossState(TYPE_AURIAYA) == DONE)
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Conservatory of Life", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + CONSERVATORY);
+                if (instance->GetBossState(TYPE_FREYA) == DONE)
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Spark of Imagination", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + SPARK);
+                if (instance->GetBossState(TYPE_VEZAX) == DONE)
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to Descent into Madness", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + MADNESS);
+            }
+
+            player->SEND_GOSSIP_MENU(go->GetGOInfo()->GetGossipMenuId(), go->GetGUID());
+            return true;
+        }
 };
 
 void AddSC_ulduar_teleporter()
