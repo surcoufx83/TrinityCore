@@ -2898,6 +2898,7 @@ void SpellMgr::LoadSpellCustomAttr()
             case 68321: // Charge
             case 63010: // Charge
             case 63003: // Charge
+            case 68498: // Charge
             case 62544: // Trust
             case 64588: // Trust
             case 66479: // Trust
@@ -3464,6 +3465,10 @@ void SpellMgr::LoadDbcDataCorrections()
                 break;
             case 56790: // Create Harpoon
                 spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_TARGET_ANY;
+                break;
+            case 68282: // Charge
+                spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_TARGET_ENEMY;
+                spellInfo->EffectTriggerSpell[1] = 43807;
                 break;
             // ULDUAR SPELLS
             //

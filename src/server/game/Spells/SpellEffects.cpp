@@ -4514,7 +4514,7 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
         {
             switch (m_spellInfo->Id)
             {
-                //Ebon Blade Banner
+                // Ebon Blade Banner
                 case 23301:
                 {
                     if (!unitTarget || m_caster->GetTypeId() != TYPEID_PLAYER || unitTarget->GetTypeId() != TYPEID_UNIT)
@@ -4529,7 +4529,7 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
 
                     return;
                 }
-                //Shield Breaker
+                // Shield Breaker
                 case 62575:
                 case 66480:
                 case 64595:
@@ -4537,15 +4537,15 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                     if (!unitTarget || !m_caster)
                         return;
 
-                    switch(m_spellInfo->Id)
+                    switch (m_spellInfo->Id)
                     {
-                    case 66480: // 10k Damage
-                    case 64595:
-                        m_caster->CastSpell(unitTarget,64590,true);
-                        break;
-                    case 62575: // 2k Damage
-                        m_caster->CastSpell(unitTarget,62626,true);
-                        break;
+                        case 66480: // 10k Damage
+                        case 64595:
+                            m_caster->CastSpell(unitTarget, 64590, true);
+                            break;
+                        case 62575: // 2k Damage
+                            m_caster->CastSpell(unitTarget, 62626, true);
+                            break;
                     }
 
                     return;
@@ -4556,19 +4556,20 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                     if (!unitTarget || !m_caster)
                         return;
 
-                    if(Unit* damager = m_caster->GetCharmerOrOwnerOrSelf())
+                    if (Unit* damager = m_caster->GetCharmerOrOwnerOrSelf())
                     {
-                        m_caster->CastSpell(unitTarget,63661,true);
-                        damager->CastSpell(unitTarget,68321,true);
+                        m_caster->CastSpell(unitTarget, 63661, true);
+                        damager->CastSpell(unitTarget, 68321, true);
                     }
 
                     return;
                 }
-                //Shield Breaker Trigger
+                // Shield Breaker Trigger
                 case 62626:
                 case 64590:
                 case 65147:
-                //Charge Effekt
+                // Charge Effekt
+                case 68498:
                 case 68321:
                 case 63010:
                 case 63003:
@@ -4576,38 +4577,38 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                     if (!unitTarget || !m_caster)
                         return;
 
-                    if(unitTarget->HasAura(62552))
+                    if (unitTarget->HasAura(62552))
                     {
                         Aura* defendaura = unitTarget->GetAura(62552);
-                        defendaura->ModStackAmount(-1,AURA_REMOVE_BY_ENEMY_SPELL);
+                        defendaura->ModStackAmount(-1, AURA_REMOVE_BY_ENEMY_SPELL);
                     }
 
-                    if(unitTarget->HasAura(66482))
+                    if (unitTarget->HasAura(66482))
                     {
                         Aura* defendaura = unitTarget->GetAura(66482);
-                        defendaura->ModStackAmount(-1,AURA_REMOVE_BY_ENEMY_SPELL);
+                        defendaura->ModStackAmount(-1, AURA_REMOVE_BY_ENEMY_SPELL);
                     }
 
-                    if(unitTarget->HasAura(64100))
+                    if (unitTarget->HasAura(64100))
                     {
                         Aura* defendaura = unitTarget->GetAura(64100);
-                        defendaura->ModStackAmount(-1,AURA_REMOVE_BY_ENEMY_SPELL);
+                        defendaura->ModStackAmount(-1, AURA_REMOVE_BY_ENEMY_SPELL);
                     }
 
-                    if(unitTarget->HasAura(62719))
+                    if (unitTarget->HasAura(62719))
                     {
                         Aura* defendaura = unitTarget->GetAura(62719);
-                        defendaura->ModStackAmount(-1,AURA_REMOVE_BY_ENEMY_SPELL);
+                        defendaura->ModStackAmount(-1, AURA_REMOVE_BY_ENEMY_SPELL);
                     }
                     return;
                 }
                 // Chum the Water
                 case 66741:
                 {
-                    if(!m_caster)
+                    if (!m_caster)
                         return;
 
-                    m_caster->CastSpell(m_caster,RAND(66740,66739,66738,66737),true);
+                    m_caster->CastSpell(m_caster, RAND(66740,66739,66738,66737), true);
                     return;
                 }
                 // Glyph of Backstab
