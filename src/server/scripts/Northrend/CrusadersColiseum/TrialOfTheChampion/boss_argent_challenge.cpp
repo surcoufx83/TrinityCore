@@ -31,7 +31,10 @@ enum Spells
     // Eadric
     SPELL_EADRIC_ACHIEVEMENT    = 68197,
     SPELL_HAMMER_JUSTICE        = 66863,
+    SPELL_HAMMER_STUN           = 66940,
+    SPELL_HAMMER_SCRIPT_EFFECT  = 66941,
     SPELL_HAMMER_RIGHTEOUS      = 66867,
+    SPELL_HAMMER_CATCH          = 66904,
     SPELL_RADIANCE              = 66935,
     SPELL_VENGEANCE             = 66865,
 
@@ -78,7 +81,7 @@ enum Spells
 
 enum Misc
 {
-    ACHIEV_FACEROLLER           = 3803,
+    DATA_FACEROLLER = 1,
     ACHIEV_CONF                 = 3802
 };
 
@@ -102,6 +105,143 @@ enum Enums
     SAY_START_P                 = -1999955,
     SAY_START_7                 = -1999954,
     SAY_START_6                 = -1999951
+};
+
+enum Events
+{
+    EVENT_HAMMER = 1,
+    EVENT_RADIANCE,
+    EVENT_VENGEANCE
+};
+
+class boss_eadric : public CreatureScript
+{
+    public:
+        boss_eadric() : CreatureScript("boss_eadric") { }
+
+        struct boss_eadricAI : public ScriptedAI
+        {
+            boss_eadricAI(Creature* creature) : ScriptedAI(creature)
+            {
+                _instance = creature->GetInstanceScript();
+                _faceroller = false;
+                _resetTimer = 5000;
+                _done = false;
+                creature->SetReactState(REACT_PASSIVE);
+                creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+            }
+
+            void Reset()
+            {
+                _events.Reset();
+            }
+
+            void DamageTaken(Unit* /*attacker*/, uint32 &damage)
+            {
+                if (damage >= me->GetHealth())
+                {
+                    _done = true;
+                    damage = 0;
+                    EnterEvadeMode();
+                    me->setFaction(35);
+                    DoScriptText(SAY_DEATH_E, me);
+
+                    if (GameObject* go = GameObject::GetGameObject(*me, _instance->GetData64(DATA_MAIN_GATE)))
+                        _instance->HandleGameObject(go->GetGUID(), true);
+                    if (GameObject* go = GameObject::GetGameObject(*me, _instance->GetData64(DATA_PORTCULLIS)))
+                        _instance->HandleGameObject(go->GetGUID(), true);
+                }
+            }
+
+            void EnterCombat(Unit* /*who*/)
+            {
+                DoScriptText(SAY_START_E, me);
+
+                if (_instance)
+                    _instance->SetData(BOSS_ARGENT_CHALLENGE_E, IN_PROGRESS);
+
+                _events.ScheduleEvent(EVENT_HAMMER, urand(15000, 20000));
+                _events.ScheduleEvent(EVENT_RADIANCE, urand(5000, 7000));
+                _events.ScheduleEvent(EVENT_VENGEANCE, urand(10000, 15000));
+            }
+
+            void KilledUnit(Unit* /*victim*/)
+            {
+                DoScriptText(urand(0, 1) ? SAY_KILL1_E : SAY_KILL2_E, me);
+            }
+
+            void SetData(uint32 type, uint32 /*value*/)
+            {
+                if (type == DATA_FACEROLLER)
+                    _faceroller = true;
+            }
+
+            void SpellHitTarget(Unit* target, SpellInfo const* spell)
+            {
+                if (spell->Id == SPELL_HAMMER_SCRIPT_EFFECT)
+                    DoCast(target, SPELL_HAMMER_RIGHTEOUS);
+            }
+
+            void UpdateAI(uint32 const diff)
+            {
+                if (_done)
+                    if (_resetTimer <= diff)
+                    {
+                        if (_instance)
+                            _instance->SetData(BOSS_ARGENT_CHALLENGE_E, DONE);
+
+                        me->DespawnOrUnsummon(1000);
+                        _done = false;
+
+                        if (_faceroller)
+                            DoCast(SPELL_EADRIC_ACHIEVEMENT);
+                    }
+                    else
+                        _resetTimer -= diff;
+
+                if (!UpdateVictim())
+                    return;
+
+                _events.Update(diff);
+
+                if (me->HasUnitState(UNIT_STAT_CASTING))
+                    return;
+
+                while (uint32 eventId = _events.ExecuteEvent())
+                {
+                    switch (eventId)
+                    {
+                        case EVENT_HAMMER:
+                            if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 250.0f, true))
+                                DoCast(target, SPELL_HAMMER_JUSTICE);
+                            _events.ScheduleEvent(EVENT_HAMMER, urand(20000, 25000));
+                            break;
+                        case EVENT_RADIANCE:
+                            DoCastAOE(SPELL_RADIANCE);
+                             _events.ScheduleEvent(EVENT_RADIANCE, urand(15000, 18000));
+                            break;
+                        case EVENT_VENGEANCE:
+                            DoCast(SPELL_VENGEANCE);
+                            _events.ScheduleEvent(EVENT_VENGEANCE, urand(10000, 12000));
+                            break;
+                    }
+                }
+
+                DoMeleeAttackIfReady();
+            }
+
+        private:
+            InstanceScript* _instance;
+            EventMap _events;
+            uint32 _resetTimer;
+            bool _faceroller;
+            bool _done;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new boss_eadricAI(creature);
+        }
 };
 
 class OrientationCheck : public std::unary_function<Unit*, bool>
@@ -129,7 +269,7 @@ class spell_eadric_radiance : public SpellScriptLoader
 
             void FilterTargets(std::list<Unit*>& unitList)
             {
-                unitList.remove_if (OrientationCheck(GetCaster()));
+                unitList.remove_if(OrientationCheck(GetCaster()));
             }
 
             void Register()
@@ -145,128 +285,82 @@ class spell_eadric_radiance : public SpellScriptLoader
         }
 };
 
-class boss_eadric : public CreatureScript
+class spell_eadric_hammer_missile : public SpellScriptLoader
 {
-public:
-    boss_eadric() : CreatureScript("boss_eadric") { }
+    public:
+        spell_eadric_hammer_missile() : SpellScriptLoader("spell_eadric_hammer_missile") { }
 
-    struct boss_eadricAI : public ScriptedAI
-    {
-        boss_eadricAI(Creature* creature) : ScriptedAI(creature)
+        class spell_eadric_hammer_missile_SpellScript : public SpellScript
         {
-            instance = creature->GetInstanceScript();
-            creature->SetReactState(REACT_PASSIVE);
-            creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-        }
+            PrepareSpellScript(spell_eadric_hammer_missile_SpellScript);
 
-        InstanceScript* instance;
-
-        uint32 uiVenganceTimer;
-        uint32 uiRadianceTimer;
-        uint32 uiHammerJusticeTimer;
-        uint32 uiResetTimer;
-
-        bool bDone;
-
-        void Reset()
-        {
-            uiVenganceTimer = 10000;
-            uiRadianceTimer = 16000;
-            uiHammerJusticeTimer = 25000;
-            uiResetTimer = 5000;
-
-            bDone = false;
-        }
-
-        void DamageTaken(Unit* /*attacker*/, uint32 &damage)
-        {
-            if (damage >= me->GetHealth())
+            bool Validate(SpellInfo const* /*spellInfo*/)
             {
-                damage = 0;
-                EnterEvadeMode();
-                me->setFaction(35);
-                bDone = true;
-                DoScriptText(SAY_DEATH_E, me);
+                if (!sSpellMgr->GetSpellInfo(SPELL_HAMMER_CATCH))
+                    return false;
 
-                if (GameObject* go = GameObject::GetGameObject(*me, instance->GetData64(DATA_MAIN_GATE)))
-                    instance->HandleGameObject(go->GetGUID(), true);
-                if (GameObject* go = GameObject::GetGameObject(*me, instance->GetData64(DATA_MAIN_GATE1)))
-                    instance->HandleGameObject(go->GetGUID(), true);
+                return true;
             }
-        }
 
-        void EnterCombat(Unit* /*who*/)
-        {
-            DoScriptText(SAY_START_E, me);
-        }
-
-        void KilledUnit(Unit* /*victim*/)
-        {
-            DoScriptText(urand(0, 1) ? SAY_KILL1_E : SAY_KILL2_E, me);
-            if (instance)
-                instance->SetData(BOSS_ARGENT_CHALLENGE_E, IN_PROGRESS);
-        }
-
-        void UpdateAI(uint32 const diff)
-        {
-            if (bDone && uiResetTimer <= diff)
+            void HandleTriggerMissile(SpellEffIndex /*effIndex*/)
             {
-                me->GetMotionMaster()->MovePoint(0, 746.87f, 665.87f, 411.75f);
+                Unit* caster = GetCaster();
+                Unit* target = GetHitUnit();
 
-                instance->SetData(BOSS_ARGENT_CHALLENGE_E, DONE);
-                me->DisappearAndDie();
-
-                bDone = false;
-
-                if (IsHeroic())
-                    instance->DoCompleteAchievement(ACHIEV_FACEROLLER);
-
-            }
-            else
-                uiResetTimer -= diff;
-
-            if (!UpdateVictim())
-                return;
-
-            if (uiHammerJusticeTimer <= diff)
-            {
-                me->InterruptNonMeleeSpells(true);
-
-                if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 250, true))
+                if (caster && target && !target->HasAura(SPELL_HAMMER_STUN))
                 {
-                    DoCast(target, SPELL_HAMMER_JUSTICE);
-                    DoCast(target, SPELL_HAMMER_RIGHTEOUS);
+                    PreventHitDefaultEffect(EFFECT_0);
+                    caster->CastSpell(target, SPELL_HAMMER_CATCH, true);
                 }
-
-                uiHammerJusticeTimer = 25000;
             }
-            else
-                uiHammerJusticeTimer -= diff;
 
-            if (uiVenganceTimer <= diff)
+            void Register()
             {
-                DoCast(me, SPELL_VENGEANCE);
-                uiVenganceTimer = 10000;
+                OnEffectHitTarget += SpellEffectFn(spell_eadric_hammer_missile_SpellScript::HandleTriggerMissile, EFFECT_0, SPELL_EFFECT_TRIGGER_MISSILE);
             }
-            else 
-                uiVenganceTimer -= diff;
+        };
 
-            if (uiRadianceTimer <= diff)
-            {
-                DoCastAOE(SPELL_RADIANCE);
-                uiRadianceTimer = 16000;
-            }
-            else
-                uiRadianceTimer -= diff;
-
-            DoMeleeAttackIfReady();
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_eadric_hammer_missile_SpellScript();
         }
-    };
+};
 
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return new boss_eadricAI(creature);
-    }
+class spell_eadric_hammer_throw_back : public SpellScriptLoader
+{
+    public:
+        spell_eadric_hammer_throw_back() : SpellScriptLoader("spell_eadric_hammer_throw_back") { }
+
+        class spell_eadric_hammer_throw_back_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_eadric_hammer_throw_back_SpellScript);
+
+            void RemoveAura()
+            {
+                GetCaster()->RemoveAurasDueToSpell(SPELL_HAMMER_CATCH);
+            }
+
+            void CheckDamage()
+            {
+                Creature* target = GetHitCreature();
+                if (!target)
+                    return;
+
+                if (GetHitDamage() >= int32(target->GetHealth()))
+                    target->AI()->SetData(DATA_FACEROLLER, 1);
+            }
+
+            void Register()
+            {
+                AfterCast += SpellCastFn(spell_eadric_hammer_throw_back_SpellScript::RemoveAura);
+                OnHit += SpellHitFn(spell_eadric_hammer_throw_back_SpellScript::CheckDamage);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_eadric_hammer_throw_back_SpellScript();
+        }
 };
 
 class boss_paletress : public CreatureScript
@@ -338,7 +432,7 @@ public:
 
                 if (GameObject* go = GameObject::GetGameObject(*me, instance->GetData64(DATA_MAIN_GATE)))
                     instance->HandleGameObject(go->GetGUID(), true);
-                if (GameObject* go = GameObject::GetGameObject(*me, instance->GetData64(DATA_MAIN_GATE1)))
+                if (GameObject* go = GameObject::GetGameObject(*me, instance->GetData64(DATA_PORTCULLIS)))
                     instance->HandleGameObject(go->GetGUID(), true);
 
                 instance->SetData(BOSS_ARGENT_CHALLENGE_P, DONE);
@@ -861,9 +955,11 @@ class spell_gen_reflective_shield : public SpellScriptLoader
 void AddSC_boss_argent_challenge()
 {
     new boss_eadric();
+    new spell_eadric_radiance();
+    new spell_eadric_hammer_missile();
+    new spell_eadric_hammer_throw_back();
     new boss_paletress();
     new npc_memory();
     new npc_argent_soldier();
-    new spell_eadric_radiance();
     new spell_gen_reflective_shield();
 }

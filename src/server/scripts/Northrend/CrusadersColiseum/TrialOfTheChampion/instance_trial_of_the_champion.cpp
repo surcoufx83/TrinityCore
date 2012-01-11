@@ -43,7 +43,7 @@ public:
 
         uint64 announcerGUID;
         uint64 mainGateGUID;
-        uint64 mainGate1GUID;
+        uint64 portcullisGUID;
         uint64 grandChampion1GUID;
         uint64 grandChampion2GUID;
         uint64 grandChampion3GUID;
@@ -62,7 +62,7 @@ public:
 
             announcerGUID = 0;
             mainGateGUID = 0;
-            mainGate1GUID = 0;
+            portcullisGUID = 0;
             grandChampion1GUID = 0;
             grandChampion2GUID = 0;
             grandChampion3GUID = 0;
@@ -166,8 +166,8 @@ public:
                 case GO_MAIN_GATE:
                     mainGateGUID = go->GetGUID();
                     break;
-                case GO_MAIN_GATE1:
-                    mainGate1GUID = go->GetGUID();
+                case GO_NORTH_PORTCULLIS:
+                    portcullisGUID = go->GetGUID();
                     break;
                 case GO_CHAMPIONS_LOOT:
                 case GO_CHAMPIONS_LOOT_H:
@@ -293,7 +293,7 @@ public:
             {
                 case DATA_ANNOUNCER: return announcerGUID;
                 case DATA_MAIN_GATE: return mainGateGUID;
-                case DATA_MAIN_GATE1: return mainGate1GUID;
+                case DATA_PORTCULLIS: return portcullisGUID;
 
                 case DATA_GRAND_CHAMPION_1: return grandChampion1GUID;
                 case DATA_GRAND_CHAMPION_2: return grandChampion2GUID;

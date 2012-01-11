@@ -319,7 +319,7 @@ public:
                 case DATA_START:
                     if (GameObject* go = GameObject::GetGameObject(*me, instance->GetData64(DATA_MAIN_GATE)))
                         instance->HandleGameObject(go->GetGUID(), true);
-                    if (GameObject* go = GameObject::GetGameObject(*me, instance->GetData64(DATA_MAIN_GATE1)))
+                    if (GameObject* go = GameObject::GetGameObject(*me, instance->GetData64(DATA_PORTCULLIS)))
                         instance->HandleGameObject(go->GetGUID(), false);
                     instance->SetData(DATA_MOVEMENT_DONE, 0);
 
@@ -565,7 +565,7 @@ public:
 
             me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
 
-            if (GameObject* go = GameObject::GetGameObject(*me, instance->GetData64(DATA_MAIN_GATE1)))
+            if (GameObject* go = GameObject::GetGameObject(*me, instance->GetData64(DATA_PORTCULLIS)))
                 instance->HandleGameObject(go->GetGUID(), false);
 
             if (instance->GetData(BOSS_BLACK_KNIGHT) == NOT_STARTED)

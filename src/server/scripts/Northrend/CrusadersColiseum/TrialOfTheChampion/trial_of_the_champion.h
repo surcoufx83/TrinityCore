@@ -38,7 +38,7 @@ enum Data64
 {
     DATA_ANNOUNCER,
     DATA_MAIN_GATE,
-    DATA_MAIN_GATE1,
+    DATA_PORTCULLIS,
 
     DATA_GRAND_CHAMPION_1,
     DATA_GRAND_CHAMPION_2,
@@ -126,7 +126,7 @@ enum Npcs
 enum GameObjects
 {
     GO_MAIN_GATE                = 195647,
-    GO_MAIN_GATE1               = 195650,
+    GO_NORTH_PORTCULLIS         = 195650,
 
     GO_CHAMPIONS_LOOT           = 195709,
     GO_CHAMPIONS_LOOT_H         = 195710,
