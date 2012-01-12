@@ -492,7 +492,9 @@ class boss_flame_leviathan : public CreatureScript
                     }
                 }
 
-                DoBatteringRamIfReady();
+                if (!me->HasAura(SPELL_SYSTEMS_SHUTDOWN))
+                    DoBatteringRamIfReady();
+
                 EnterEvadeIfOutOfCombatArea(diff);
             }
 
