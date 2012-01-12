@@ -888,7 +888,7 @@ class npc_simon_bunny : public CreatureScript
                 colorSequence.clear();
                 playableSequence.clear();
                 playerSequence.clear();
-                me->SetFloatValue(OBJECT_FIELD_SCALE_X, large ? 2 : 1);
+                me->SetFloatValue(OBJECT_FIELD_SCALE_X, large ? 2.0f : 1.0f);
 
                 std::list<WorldObject*> ClusterList;
                 Trinity::AllWorldObjectsInRange objects(me, searchDistance);
@@ -1227,6 +1227,64 @@ class go_apexis_relic : public GameObjectScript
         }
 };
 
+/*######
+## npc_scalewing_serpent
+######*/
+
+enum ScalewingSerpent
+{
+    SPELL_LIGHTNING_STRIKE   = 37841,
+    SPELL_MAGNETO_SPHERE     = 37830,
+    NPC_RIDE_THE_LIGHTNING   = 21910  // Quest: Ride the Lightning, #10657
+};
+
+class npc_scalewing_serpent : public CreatureScript
+{
+    public:
+        npc_scalewing_serpent() : CreatureScript("npc_scalewing_serpent") { }
+
+        struct npc_scalewing_serpentAI : public ScriptedAI
+        {
+            npc_scalewing_serpentAI(Creature* creature) : ScriptedAI(creature) { }
+
+            void Reset()
+            {
+                _lightningStrikeTimer = 5000;
+            }
+
+            void SpellHitTarget(Unit* target, SpellInfo const* spell)
+            {
+                if (spell->Id == SPELL_LIGHTNING_STRIKE)
+                    if (target->ToPlayer() && target->HasAura(SPELL_MAGNETO_SPHERE))
+                        target->ToPlayer()->KilledMonsterCredit(NPC_RIDE_THE_LIGHTNING, 0);
+            }
+
+            void UpdateAI(uint32 const diff)
+            {
+                if (!UpdateVictim())
+                    return;
+
+                if (_lightningStrikeTimer <= diff)
+                {
+                    DoCast(SPELL_LIGHTNING_STRIKE);
+                    _lightningStrikeTimer = urand(4000, 8000);
+                }
+                else
+                    _lightningStrikeTimer -= diff;
+
+                DoMeleeAttackIfReady();
+            }
+
+        private:
+            uint32 _lightningStrikeTimer;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new npc_scalewing_serpentAI(creature);
+        }
+};
+
 void AddSC_blades_edge_mountains()
 {
     new mobs_bladespire_ogre();
@@ -1243,6 +1301,7 @@ void AddSC_blades_edge_mountains()
     new go_simon_cluster();
     new go_apexis_relic();
     new mob_wrangled_aether_ray();
+    new npc_scalewing_serpent();
     /*
         UPDATE creature_template SET scriptname = 'mob_aether_ray' WHERE entry = 22181;
         UPDATE creature_template SET scriptname = 'mob_wrangled_aether_ray' WHERE entry = 23343;
