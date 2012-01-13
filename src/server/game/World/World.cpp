@@ -1221,8 +1221,19 @@ void World::LoadConfigSettings(bool reload)
 
     m_int_configs[CONFIG_INT_PVP_CHARACTER_QUESTID] = ConfigMgr::GetIntDefault(
             "PvP.Character.QuestId", 0);
+
     m_bool_configs[CONFIG_BOOL_PVP_CHARACTER_ALLOWTRADE]
             = ConfigMgr::GetBoolDefault("PvP.Character.AllowTrade", false);
+    std::string pvpAllowedItems = ConfigMgr::GetStringDefault("PvP.Character.AllowTrade.Items", "");
+    mPvPCharsAllowedTradeItems.clear();
+    char * pch = strtok ((char *)pvpAllowedItems.c_str(), " ");
+    while (pch != NULL)
+    {
+      mPvPCharsAllowedTradeItems[std::string(pch)] = true;
+      sLog->outDetail("PvP.Character.AllowTrade.Items: ID: '%s'", pch);
+      pch = strtok (NULL, " ");
+    }
+
     m_bool_configs[CONFIG_BOOL_PVP_CHARACTER_ALLOWAUCTIONHOUSE]
             = ConfigMgr::GetBoolDefault("PvP.Character.AllowAuctionHouse",
                     false);
@@ -1230,6 +1241,27 @@ void World::LoadConfigSettings(bool reload)
             "PvP.Character.Money", 0);
 
 }
+
+/**
+ * Is it allowed to trade this item between a PvP.Char and a PvE.Char?
+ *
+ * Valid items are specified inside the config file using PvP.Character.AllowTrade.Items
+ * Note:
+ * You must enable the trade before by setting "PvP.Character.AllowTrade" to 1
+ *
+ */
+bool World::PvPCanTradeItem(uint32 item_id) {
+    std::string s;
+    std::ostringstream outStream;
+    outStream << item_id;
+    s = outStream.str();
+    PvPCharsAllowedTradeItems::const_iterator itr = mPvPCharsAllowedTradeItems.find( s );
+    if( itr != mPvPCharsAllowedTradeItems.end() )
+        return itr->second;
+    return false;
+}
+
+
 
 /// Initialize the World
 void World::SetInitialWorldSettings()
