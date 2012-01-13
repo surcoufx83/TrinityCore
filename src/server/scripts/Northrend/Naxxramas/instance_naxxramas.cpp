@@ -222,6 +222,8 @@ public:
             uiKelthuzadTrigger  = 0;
 
             memset(uiPortals, 0, sizeof(uiPortals));
+            playerDied                = 0;
+            gothikDoorState           = GO_STATE_ACTIVE;
 
             memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
             gothikDoorState = GO_STATE_ACTIVE;

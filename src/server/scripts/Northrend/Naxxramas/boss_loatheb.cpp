@@ -162,9 +162,65 @@ class mob_loatheb_spore : public CreatureScript
         }
 };
 
+class achievement_spore_loser : public AchievementCriteriaScript
+{
+    public:
+        achievement_spore_loser() : AchievementCriteriaScript("achievement_spore_loser") { }
+
+        bool OnCheck(Player* /*source*/, Unit* target)
+        {
+            return target && target->GetAI()->GetData(DATA_ACHIEVEMENT_SPORE_LOSER);
+        }
+};
+
+typedef boss_loatheb::boss_loathebAI LoathebAI;
+
+class spell_loatheb_necrotic_aura_warning : public SpellScriptLoader
+{
+    public:
+        spell_loatheb_necrotic_aura_warning() : SpellScriptLoader("spell_loatheb_necrotic_aura_warning") { }
+
+        class spell_loatheb_necrotic_aura_warning_AuraScript : public AuraScript
+        {
+            PrepareAuraScript(spell_loatheb_necrotic_aura_warning_AuraScript);
+
+            bool Validate(SpellInfo const* /*spell*/)
+            {
+                if (!sSpellStore.LookupEntry(SPELL_WARN_NECROTIC_AURA))
+                    return false;
+                return true;
+            }
+
+            void HandleEffectApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
+            {
+                if (GetTarget()->IsAIEnabled)
+                    CAST_AI(LoathebAI, GetTarget()->GetAI())->Talk(SAY_NECROTIC_AURA_APPLIED);
+            }
+
+            void HandleEffectRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
+            {
+                if (GetTarget()->IsAIEnabled)
+                    CAST_AI(LoathebAI, GetTarget()->GetAI())->Talk(SAY_NECROTIC_AURA_REMOVED);
+            }
+
+            void Register()
+            {
+                AfterEffectApply += AuraEffectApplyFn(spell_loatheb_necrotic_aura_warning_AuraScript::HandleEffectApply, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+                AfterEffectRemove += AuraEffectRemoveFn(spell_loatheb_necrotic_aura_warning_AuraScript::HandleEffectRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+            }
+        };
+
+        AuraScript* GetAuraScript() const
+        {
+            return new spell_loatheb_necrotic_aura_warning_AuraScript();
+        }
+};
+
 void AddSC_boss_loatheb()
 {
     new boss_loatheb();
     new spell_fungal_creep_targeting();
     new mob_loatheb_spore();
+    new achievement_spore_loser();
+    new spell_loatheb_necrotic_aura_warning();
 }
