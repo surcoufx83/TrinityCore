@@ -28,7 +28,6 @@ EndContentData */
 
 #include "ScriptPCH.h"
 #include "trial_of_the_champion.h"
-#include "Vehicle.h"
 
 #define GOSSIP_START_EVENT1     "I'm ready to start challenge."
 #define GOSSIP_START_EVENT2     "I'm ready for the next challenge."
@@ -86,8 +85,8 @@ public:
             instance = creature->GetInstanceScript();
         }
 
-        uint32 uiIntroTimer;
-        uint8 uiIntroPhase;
+        uint32 introTimer;
+        uint8 introPhase;
 
         IntroPhase Phase;
 
@@ -103,8 +102,8 @@ public:
         {
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
             Phase = IDLE;
-            uiIntroTimer = 0;
-            uiIntroPhase = 0;
+            introTimer = 0;
+            introPhase = 0;
             Trall = NULL;
             Garrosh = NULL;
             King = NULL;
@@ -158,7 +157,7 @@ public:
             if (Phase != INTRO)
                 return;
 
-            if (uiIntroTimer <= diff)
+            if (introTimer <= diff)
             {
                 if (!Trall)
                     return;
@@ -171,51 +170,51 @@ public:
                 if (!Highlord)
                     return;
 
-                switch (uiIntroPhase)
+                switch (introPhase)
                 {
                     case 0:
-                        ++uiIntroPhase;
-                        uiIntroTimer = 4000;
+                        ++introPhase;
+                        introTimer = 4000;
                         break;
                     case 1:
                         DoScriptText(AN_1, me);
-                        ++uiIntroPhase;
-                        uiIntroTimer = 10000;
+                        ++introPhase;
+                        introTimer = 10000;
                         break;
                     case 2:
                         DoScriptText(AN_2, me);
-                        ++uiIntroPhase;
-                        uiIntroTimer = 13000;
+                        ++introPhase;
+                        introTimer = 13000;
                         break;
                     case 3:
                         DoScriptText(AN_3, Trall);
-                        ++uiIntroPhase;
-                        uiIntroTimer = 8000;
+                        ++introPhase;
+                        introTimer = 8000;
                         break;
                     case 4:
                         DoScriptText(AN_4, Garrosh);
-                        ++uiIntroPhase;
-                        uiIntroTimer = 6000;
+                        ++introPhase;
+                        introTimer = 6000;
                         break;
                     case 5:
                         DoScriptText(AN_5, King);
-                        ++uiIntroPhase;
-                        uiIntroTimer = 8000;
+                        ++introPhase;
+                        introTimer = 8000;
                         break;
                     case 6:
                         DoScriptText(AN_6, Lady);
-                        ++uiIntroPhase;
-                        uiIntroTimer = 8000;
+                        ++introPhase;
+                        introTimer = 8000;
                         break;
                     case 7:
                         DoScriptText(AN_7, Highlord);
-                        ++uiIntroPhase;
-                        uiIntroTimer = 3000;
+                        ++introPhase;
+                        introTimer = 3000;
                         break;
                     case 8:
                         DoScriptText(AN_8, me);
-                        ++uiIntroPhase;
-                        uiIntroTimer = 4000;
+                        ++introPhase;
+                        introTimer = 4000;
                         break;
                     case 9:
                         if (Creature* announcertoc5 = me->SummonCreature(NPC_ANNOUNCER, 746.626f, 618.54f, 411.09f, 4.63158f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 60000))
@@ -233,7 +232,7 @@ public:
                 }
             }
             else
-                uiIntroTimer -= diff;
+                introTimer -= diff;
         }
     };
 
@@ -254,19 +253,18 @@ public:
         {
             instance = creature->GetInstanceScript();
 
-            uiSummonTimes = 0;
-            uiPosition = 0;
-            uiLesserChampions = 0;
+            summonTimes = 0;
+            lesserChampions = 0;
             defeatedGrandChampions = 0;
 
-            uiFirstBoss = 0;
-            uiSecondBoss = 0;
-            uiThirdBoss = 0;
+            firstBoss = 0;
+            secondBoss = 0;
+            thirdBoss = 0;
 
-            uiArgentChampion = 0;
+            argentChampion = 0;
 
-            uiPhase = 0;
-            uiTimer = 0;
+            phase = 0;
+            timer = 0;
 
             Champion1List.clear();
             Champion2List.clear();
@@ -282,19 +280,17 @@ public:
 
         InstanceScript* instance;
 
-        uint8 uiSummonTimes;
-        uint8 uiPosition;
-        uint8 uiLesserChampions;
+        uint8 summonTimes;
+        uint8 lesserChampions;
         uint8 defeatedGrandChampions;
 
-        uint32 uiArgentChampion;
+        uint32 argentChampion;
+        uint32 firstBoss;
+        uint32 secondBoss;
+        uint32 thirdBoss;
 
-        uint32 uiFirstBoss;
-        uint32 uiSecondBoss;
-        uint32 uiThirdBoss;
-
-        uint32 uiPhase;
-        uint32 uiTimer;
+        uint32 phase;
+        uint32 timer;
 
         std::list<uint64> Champion1List;
         std::list<uint64> Champion2List;
@@ -302,11 +298,11 @@ public:
 
         void NextStep(uint32 timerStep, bool nextStep = true, uint8 phaseStep = 0)
         {
-            uiTimer = timerStep;
+            timer = timerStep;
             if (nextStep)
-                ++uiPhase;
+                ++phase;
             else
-                uiPhase = phaseStep;
+                phase = phaseStep;
         }
 
         void SetData(uint32 type, uint32 data)
@@ -324,7 +320,7 @@ public:
                     instance->SetData(DATA_MOVEMENT_DONE, 0);
 
                     DoScriptText(SAY_START, me);
-                    DoSummonGrandChampion(uiFirstBoss);
+                    DoSummonGrandChampion(firstBoss);
                     NextStep(10000, false, 1);
                     break;
                 case DATA_IN_POSITION: // movement done.
@@ -335,11 +331,11 @@ public:
                     break;
                 case DATA_LESSER_CHAMPIONS_DEFEATED:
                 {
-                    ++uiLesserChampions;
+                    ++lesserChampions;
                     std::list<uint64> tempList;
-                    if (uiLesserChampions == 3 || uiLesserChampions == 6)
+                    if (lesserChampions == 3 || lesserChampions == 6)
                     {
-                        switch (uiLesserChampions)
+                        switch (lesserChampions)
                         {
                             case 3:
                                 tempList = Champion2List;
@@ -353,7 +349,7 @@ public:
                             if (Creature* summon = Unit::GetCreature(*me, *itr))
                                 AggroAllPlayers(summon);
                     }
-                    else if (uiLesserChampions == 9)
+                    else if (lesserChampions == 9)
                         StartGrandChampionsAttack();
 
                     break;
@@ -409,7 +405,7 @@ public:
 
         void DoSummonGrandChampion(uint32 bossId)
         {
-            ++uiSummonTimes;
+            ++summonTimes;
             uint32 NPC_TO_SUMMON_1 = 0; // Grand Champion
             uint32 NPC_TO_SUMMON_2 = 0; // Faction Champions
             switch (bossId)
@@ -440,41 +436,16 @@ public:
 
             if (Creature* boss = me->SummonCreature(NPC_TO_SUMMON_1, SpawnPosition))
             {
-                switch (uiSummonTimes)
-                {
-                    case 1:
-                    {
-                        if (instance)
-                            instance->SetData64(DATA_GRAND_CHAMPION_1, boss->GetGUID());
+                if (instance)
+                    instance->SetData64(DATA_GRAND_CHAMPION_1 - 1 + summonTimes, boss->GetGUID());
 
-                        boss->AI()->SetData(1, 0);
-                        break;
-                    }
-                    case 2:
-                    {
-                        if (instance)
-                            instance->SetData64(DATA_GRAND_CHAMPION_2, boss->GetGUID());
-
-                        boss->AI()->SetData(2, 0);
-                        break;
-                    }
-                    case 3:
-                    {
-                        if (instance)
-                            instance->SetData64(DATA_GRAND_CHAMPION_3, boss->GetGUID());
-
-                        boss->AI()->SetData(3, 0);
-                        break;
-                    }
-                    default:
-                        return;
-                }
+                boss->AI()->SetData(summonTimes, 0);
 
                 for (uint8 i = 0; i < 3; ++i)
                 {
                     if (Creature* add = me->SummonCreature(NPC_TO_SUMMON_2, SpawnPosition, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000))
                     {
-                        switch (uiSummonTimes)
+                        switch (summonTimes)
                         {
                             case 1:
                                 Champion1List.push_back(add->GetGUID());
@@ -509,7 +480,7 @@ public:
             DoScriptText(SAY_START3, me);
             me->GetMotionMaster()->MovePoint(1, 735.81f, 661.92f, 412.39f);
 
-            if (me->SummonCreature(uiArgentChampion, SpawnPosition))
+            if (me->SummonCreature(argentChampion, SpawnPosition))
             {
                 for (uint8 i = 0; i < 3; ++i)
                 {
@@ -534,28 +505,22 @@ public:
 
         void SetGrandChampionsForEncounter()
         {
-            uiFirstBoss = urand(0, 4);
+            firstBoss = urand(0, 4);
 
-            while (uiSecondBoss == uiFirstBoss || uiThirdBoss == uiFirstBoss || uiThirdBoss == uiSecondBoss)
+            while (secondBoss == firstBoss || thirdBoss == firstBoss || thirdBoss == secondBoss)
             {
-                uiSecondBoss = urand(0, 4);
-                uiThirdBoss = urand(0, 4);
+                secondBoss = urand(0, 4);
+                thirdBoss = urand(0, 4);
             }
         }
 
         void SetArgentChampion()
         {
-            uint8 tempBoss = urand(0, 1);
+            argentChampion = urand(0, 1) ? NPC_PALETRESS : NPC_EADRIC;
 
-            switch (tempBoss)
-            {
-                case 0:
-                    uiArgentChampion = NPC_EADRIC;
-                    break;
-                case 1:
-                    uiArgentChampion = NPC_PALETRESS;
-                    break;
-            }
+            // DEBUG
+            argentChampion = NPC_EADRIC;
+            //
         }
 
         void StartEncounter()
@@ -579,16 +544,16 @@ public:
                         DoStartArgentChampionEncounter();
                 }
 
-               if ((instance->GetData(BOSS_GRAND_CHAMPIONS) == DONE && instance->GetData(BOSS_ARGENT_CHALLENGE_E) == DONE) ||
-                   instance->GetData(BOSS_ARGENT_CHALLENGE_P) == DONE)
-               {
-                   me->SummonCreature(VEHICLE_BLACK_KNIGHT, 769.834f, 651.915f, 447.035f, 0);
+                if (instance->GetData(BOSS_GRAND_CHAMPIONS) == DONE && (instance->GetData(BOSS_ARGENT_CHALLENGE_E) == DONE ||
+                    instance->GetData(BOSS_ARGENT_CHALLENGE_P) == DONE))
+                {
+                    me->SummonCreature(VEHICLE_BLACK_KNIGHT, 769.834f, 651.915f, 447.035f, 0);
 
-                   if (GameObject* go = GameObject::GetGameObject(*me, instance->GetData64(DATA_MAIN_GATE)))
-                       instance->HandleGameObject(go->GetGUID(), false);
+                    if (GameObject* go = GameObject::GetGameObject(*me, instance->GetData64(DATA_MAIN_GATE)))
+                        instance->HandleGameObject(go->GetGUID(), false);
 
-                   DoScriptText(SAY_START5, me);
-               }
+                    DoScriptText(SAY_START5, me);
+                }
             }
         }
 
@@ -634,16 +599,16 @@ public:
 
        void UpdateAI(uint32 const diff)
         {
-            if (uiTimer <= diff)
+            if (timer <= diff)
             {
-                switch (uiPhase)
+                switch (phase)
                 {
                     case 1:
-                        DoSummonGrandChampion(uiSecondBoss);
+                        DoSummonGrandChampion(secondBoss);
                         NextStep(10000, true);
                         break;
                     case 2:
-                        DoSummonGrandChampion(uiThirdBoss);
+                        DoSummonGrandChampion(thirdBoss);
                         NextStep(0, false);
                         break;
                     case 3:
@@ -658,7 +623,7 @@ public:
                 }
             }
             else
-                uiTimer -= diff;
+                timer -= diff;
 
             if (!UpdateVictim())
                 return;
@@ -707,7 +672,6 @@ public:
             instance->GetData(BOSS_BLACK_KNIGHT) == DONE &&
             (instance->GetData(BOSS_ARGENT_CHALLENGE_E) == DONE ||
             instance->GetData(BOSS_ARGENT_CHALLENGE_P) == DONE))
-
             return false;
 
         if (instance &&

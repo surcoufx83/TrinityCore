@@ -445,13 +445,14 @@ public:
         void EnterCombat(Unit* /*who*/)
         {
             DoScriptText(SAY_START_P, me);
+
+            if (instance)
+                instance->SetData(BOSS_ARGENT_CHALLENGE_P, IN_PROGRESS);
         }
 
         void KilledUnit(Unit* /*victim*/)
         {
             DoScriptText(urand(0, 1) ? SAY_KILL1_P : SAY_KILL2_P, me);
-            if (instance)
-                instance->SetData(BOSS_ARGENT_CHALLENGE_P, IN_PROGRESS);
         }
 
         void UpdateAI(uint32 const diff)
@@ -592,6 +593,11 @@ public:
         {
             MemoryGUID = summon->GetGUID();
         }
+
+        void SummonedCreatureDies(Creature* /*summon*/, Unit* /*killer*/)
+        {
+            SetData(1, 0);
+        }
     };
 
     CreatureAI* GetAI(Creature* creature) const
@@ -652,14 +658,6 @@ public:
                 uiShadowPastTimer -= diff;
 
             DoMeleeAttackIfReady();
-        }
-
-        void JustDied(Unit* /*killer*/)
-        {
-            if (me->isSummon())
-                if (Unit* summoner = me->ToTempSummon()->GetSummoner())
-                    if (summoner->isAlive())
-                        summoner->GetAI()->SetData(1, 0);
         }
     };
 
