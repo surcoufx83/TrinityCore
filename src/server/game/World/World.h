@@ -771,7 +771,7 @@ class World
         uint32 GetCleaningFlags() const { return m_CleaningFlags; }
         void   SetCleaningFlags(uint32 flags) { m_CleaningFlags = flags; }
         void   ResetEventSeasonalQuests(uint16 event_id);
-        bool World::PvPCanTradeItem(uint32 item_id);
+        bool   PvPCanTradeItem(uint32 item_id);
     protected:
         void _UpdateGameTime();
         // callback for UpdateRealmCharacters

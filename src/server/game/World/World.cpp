@@ -1261,8 +1261,6 @@ bool World::PvPCanTradeItem(uint32 item_id) {
     return false;
 }
 
-
-
 /// Initialize the World
 void World::SetInitialWorldSettings()
 {
