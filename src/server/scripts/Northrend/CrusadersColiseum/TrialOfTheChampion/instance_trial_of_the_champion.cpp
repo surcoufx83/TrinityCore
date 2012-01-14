@@ -264,6 +264,9 @@ public:
                         }
                     }
                     break;
+                case BOSS_BLACK_KNIGHT:
+                    m_auiEncounter[3] = data;
+                    break;
             }
 
             if (data == DONE)
