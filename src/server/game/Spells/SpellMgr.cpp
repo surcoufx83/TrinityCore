@@ -2898,6 +2898,7 @@ void SpellMgr::LoadSpellCustomAttr()
             case 68321: // Charge
             case 63010: // Charge
             case 63003: // Charge
+            case 68498: // Charge
             case 62544: // Trust
             case 64588: // Trust
             case 66479: // Trust
@@ -3128,9 +3129,9 @@ void SpellMgr::LoadDbcDataCorrections()
             case 64599: // Arcane Barrage
             case 64607: // Arcane Barrage
             case 47731: // Critter
-            case 48246: // Ball of Flame
             case 62301: // Cosmic Smash
             case 52479: // Gift of the Harvester
+            case 48246: // Ball of Flame
                 spellInfo->MaxAffectedTargets = 1;
                 break;
             case 57697: //Lavastrike Hack - Sartharion
@@ -3356,6 +3357,7 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectDieSides[0] = 0;
                 break;
             case 48278: // Paralyze
+                spellInfo->AttributesEx3 |= SPELL_ATTR3_STACK_FOR_DIFF_CASTERS;
                 spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_TARGET_ENEMY;
                 break;
             case 28299:
@@ -3464,6 +3466,10 @@ void SpellMgr::LoadDbcDataCorrections()
                 break;
             case 56790: // Create Harpoon
                 spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_TARGET_ANY;
+                break;
+            case 68282: // Charge
+                spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_TARGET_ENEMY;
+                spellInfo->EffectTriggerSpell[1] = 43807;
                 break;
             // ULDUAR SPELLS
             //

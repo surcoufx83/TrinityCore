@@ -167,9 +167,9 @@ public:
             bDeathArmyDone = false;
             bFight = false;
 
-            if (GameObject* go = GameObject::GetGameObject(*me, instance->GetData64(DATA_MAIN_GATE1)))
+            if (GameObject* go = GameObject::GetGameObject(*me, instance->GetData64(DATA_MAIN_GATE)))
                 instance->HandleGameObject(go->GetGUID(), true);
-            if (GameObject* go = GameObject::GetGameObject(*me, instance->GetData64(DATA_MAIN_GATE1)))
+            if (GameObject* go = GameObject::GetGameObject(*me, instance->GetData64(DATA_PORTCULLIS)))
                 instance->HandleGameObject(go->GetGUID(), false);
 
             if (bEventInBattle)
@@ -357,9 +357,9 @@ public:
             DoScriptText(SAY_AGGRO_2, me);
             SetEquipmentSlots(false, EQUIP_SWORD, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE);
 
-            if (GameObject* go = GameObject::GetGameObject(*me, instance->GetData64(DATA_MAIN_GATE1)))
-                instance->HandleGameObject(go->GetGUID(), false);
             if (GameObject* go = GameObject::GetGameObject(*me, instance->GetData64(DATA_MAIN_GATE)))
+                instance->HandleGameObject(go->GetGUID(), false);
+            if (GameObject* go = GameObject::GetGameObject(*me, instance->GetData64(DATA_PORTCULLIS)))
                 instance->HandleGameObject(go->GetGUID(), false);
         }
 
@@ -396,7 +396,7 @@ public:
             DoCast(me, SPELL_KILL_CREDIT);
             DoScriptText(SAY_DEATH_3, me);
 
-            if (GameObject* go = GameObject::GetGameObject(*me, instance->GetData64(DATA_MAIN_GATE1)))
+            if (GameObject* go = GameObject::GetGameObject(*me, instance->GetData64(DATA_PORTCULLIS)))
                 instance->HandleGameObject(go->GetGUID(), true);
 
             if (instance)

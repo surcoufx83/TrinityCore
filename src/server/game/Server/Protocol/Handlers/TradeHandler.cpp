@@ -549,6 +549,8 @@ void WorldSession::HandleCancelTradeOpcode(WorldPacket& /*recvPacket*/)
 
 void WorldSession::HandleInitiateTradeOpcode(WorldPacket& recvPacket)
 {
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "HandleInitiateTradeOpcode");
+
     if (GetPlayer()->m_trade)
     {
         recvPacket.rfinish();
@@ -637,16 +639,21 @@ void WorldSession::HandleInitiateTradeOpcode(WorldPacket& recvPacket)
         SendTradeStatus(TRADE_STATUS_WRONG_FACTION);
         return;
     }
-
+    bool pveAndPvpTrade = (pOther->isPvPCharacter()
+            && !_player->isPvPCharacter()) || (!pOther->isPvPCharacter()
+            && _player->isPvPCharacter());
     // PvP.Chars?
     if (!sWorld->getBoolConfig(CONFIG_BOOL_PVP_CHARACTER_ALLOWTRADE)) {
-        if ((pOther->isPvPCharacter() && !_player->isPvPCharacter())
-                || (!pOther->isPvPCharacter() && _player->isPvPCharacter())) {
+        if (pveAndPvpTrade) {
             SendTradeStatus(TRADE_STATUS_WRONG_FACTION);
             ChatHandler(_player).PSendSysMessage(
-                    "PvP.Characters and PvE.Characters cannot trade");
+                    "PvP.Characters and PvE.Characters cannot trade.");
+            ChatHandler(pOther).PSendSysMessage(
+                    "PvP.Characters and PvE.Characters cannot trade.");
             return;
         }
+    } else {
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "CONFIG_BOOL_PVP_CHARACTER_ALLOWTRADE == TRUE");
     }
 
     if (!pOther->IsWithinDistInMap(_player, 10.0f, false))
@@ -673,12 +680,32 @@ void WorldSession::HandleInitiateTradeOpcode(WorldPacket& recvPacket)
 
 void WorldSession::HandleSetTradeGoldOpcode(WorldPacket& recvPacket)
 {
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "HandleSetTradeGoldOpcode");
     uint32 gold;
     recvPacket >> gold;
 
     TradeData* my_trade = _player->GetTradeData();
     if (!my_trade)
         return;
+
+    if (gold == 0)
+        return;
+
+    Player* trader = my_trade->GetTrader();
+
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "HandleSetTradeGoldOpcode::pveAndPvpTrade");
+    bool pveAndPvpTrade = (trader->isPvPCharacter()
+            && !_player->isPvPCharacter()) || (!trader->isPvPCharacter()
+            && _player->isPvPCharacter());
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "HandleSetTradeGoldOpcode:: if pveAndPvpTrade");
+    if (pveAndPvpTrade) {
+        ChatHandler(_player).PSendSysMessage(
+                "PvP.Characters and PvE.Characters cannot trade money.");
+        ChatHandler(trader).PSendSysMessage(
+                "PvP.Characters and PvE.Characters cannot trade money.");
+        return;
+    }
+
 
     // gold can be incorrect, but this is checked at trade finished.
     my_trade->SetMoney(gold);
@@ -699,6 +726,8 @@ void WorldSession::HandleSetTradeItemOpcode(WorldPacket& recvPacket)
     if (!my_trade)
         return;
 
+    Player* trader = my_trade->GetTrader();
+
     // invalid slot number
     if (tradeSlot >= TRADE_SLOT_COUNT)
     {
@@ -715,6 +744,23 @@ void WorldSession::HandleSetTradeItemOpcode(WorldPacket& recvPacket)
     }
 
     uint64 iGUID = item->GetGUID();
+
+    // Check if the item is ok
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "HandleSetTradeItemOpcode::pveAndPvpTrade");
+    bool pveAndPvpTrade = (trader->isPvPCharacter()
+            && !_player->isPvPCharacter()) || (!trader->isPvPCharacter()
+            && _player->isPvPCharacter());
+
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "HandleSetTradeItemOpcode::if pveAndPvpTrade");
+    if (pveAndPvpTrade) {
+        if (!sWorld->PvPCanTradeItem(item->GetEntry())) {
+            ChatHandler(_player).PSendSysMessage(
+                    "PvP.Characters and PvE.Characters trade: Item is not allowed - Ignoring it.");
+            ChatHandler(trader).PSendSysMessage(
+                    "PvP.Characters and PvE.Characters trade: Item is not allowed - Ignoring it.");
+            return;
+        }
+    }
 
     // prevent place single item into many trade slots using cheating and client bugs
     if (my_trade->HasItem(iGUID))

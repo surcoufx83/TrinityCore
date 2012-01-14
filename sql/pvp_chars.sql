@@ -1358,8 +1358,10 @@ VALUES
 DELETE FROM `gameobject` WHERE `id` = 201742 AND `map` IN (34, 389);
 INSERT INTO `gameobject` (`id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`)
 VALUES
-('201742','34', '1','2','115.216', '5.077',  '-25.6062','4.76', '0','0','0.0123592','0.999924','300','0','1'), -- Stockade
-('201742','389','1','2','-69.6914','-42.328','-17.092', '1.726','0','0','0.0237436','0.999718','300','0','1'); -- Ragefire Chasm
+('201742','34', '1','2','115.216', '5.077',  '-25.6062','4.76', '0','0','0.0123592','0.999924','300','0','1'), -- Stockade - visual
+('190557','34', '1','2','115.216', '5.077',  '-25.6062','4.76', '0','0','0.0123592','0.999924','300','0','1'), -- Stockade, real forge
+('201742','389','1','2','-69.6914','-42.328','-17.092', '1.726','0','0','0.0237436','0.999718','300','0','1'), -- Ragefire Chasm
+('190557','389','1','2','-69.6914','-42.328','-17.092', '1.726','0','0','0.0237436','0.999718','300','0','1'); -- Ragefire Chasm, real forge
 
 
 -- Warrior Trainer 26332
@@ -2371,7 +2373,7 @@ VALUES
 
 ---
 -- Free Gems // Kostenlose Edelsteine
--- Thanks to Nature12
+-- Thanks to Nature12 and ZoundByrnes
 DELETE FROM `creature_template` WHERE `entry` = @CT_VENDOR_GEMS_FREE;
 INSERT INTO `creature_template` (`entry`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`,
 `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_walk`,
@@ -2397,40 +2399,66 @@ DELETE FROM npc_vendor WHERE entry = @CT_VENDOR_GEMS_FREE;
 INSERT INTO `npc_vendor` (entry, item, ExtendedCost, slot)
 VALUES
 (@CT_VENDOR_GEMS_FREE, '40043', '0', '1'), --  (Agi + Crit)
-(@CT_VENDOR_GEMS_FREE, '40050', '0', '2'), --  (Int + Abhärtung)
+(@CT_VENDOR_GEMS_FREE, '40050', '0', '2'), --  (Int + Abhärtung) Eigenwilliger Monarchentopas
 (@CT_VENDOR_GEMS_FREE, '40046', '0', '3'), --  (Agi + Tempo)
-(@CT_VENDOR_GEMS_FREE, '40037', '0', '4'), --  (Stäe + Crit)
-(@CT_VENDOR_GEMS_FREE, '40048', '0', '5'), -- (Int+ Crit)
-(@CT_VENDOR_GEMS_FREE, '40040', '0', '6'), --  (Stäe + Abhärtung)
-(@CT_VENDOR_GEMS_FREE, '40051', '0', '7'), --  (Int + Tempo)
+(@CT_VENDOR_GEMS_FREE, '40037', '0', '4'), --  (Stäe + Crit) Gravierter Monarchentopas
+(@CT_VENDOR_GEMS_FREE, '40048', '0', '5'), -- (Int+ Crit) Mächtiger Monarchentopas
+(@CT_VENDOR_GEMS_FREE, '40040', '0', '6'), --  (Stäe + Abhärtung) Prunkvoller Monarchentopas
+(@CT_VENDOR_GEMS_FREE, '40051', '0', '7'), --  (Int + Tempo) Tollkühner Monarchentopas
 (@CT_VENDOR_GEMS_FREE, '40054', '0', '8'), --  (Agi + Abhärtung)
-(@CT_VENDOR_GEMS_FREE, '40052', '0', '9'), --  (Agi + Crit)
-(@CT_VENDOR_GEMS_FREE, '40010', '0', '10'), --  (Wille)
-(@CT_VENDOR_GEMS_FREE, '40008', '0', '11'), --  (Ausdauer)
-(@CT_VENDOR_GEMS_FREE, '40011', '0', '12'), --  (Zauberdurchschlagskraft)
-(@CT_VENDOR_GEMS_FREE, '40013', '0', '13'), --  (Crit)
-(@CT_VENDOR_GEMS_FREE, '40016', '0', '14'), --  (Abhärtung)
-(@CT_VENDOR_GEMS_FREE, '40017', '0', '15'), --  (Tempo)
+(@CT_VENDOR_GEMS_FREE, '40052', '0', '9'), --  (Agi + Crit) Tödlicher Monarchentopas
+(@CT_VENDOR_GEMS_FREE, '40010', '0', '10'), --  (Wille) Funkelnder Himmelssaphir
+(@CT_VENDOR_GEMS_FREE, '40008', '0', '11'), --  (Ausdauer) Gediegener Himmelssaphir
+(@CT_VENDOR_GEMS_FREE, '40011', '0', '12'), --  (Zauberdurchschlagskraft) Stürmischer Himmelssaphir
+(@CT_VENDOR_GEMS_FREE, '40013', '0', '13'), --  (Crit) Glatter Herbstglimmer
+(@CT_VENDOR_GEMS_FREE, '40016', '0', '14'), --  (Abhärtung) Mystischer Herbstglimmer
+(@CT_VENDOR_GEMS_FREE, '40017', '0', '15'), --  (Tempo) Spiegelnder Herbstglimmer
 (@CT_VENDOR_GEMS_FREE, '40012', '0', '16'), --  (Int)
-(@CT_VENDOR_GEMS_FREE, '40090', '0', '17'), -- (Ausdauer + Abhärtung)
-(@CT_VENDOR_GEMS_FREE, '40100', '0', '18'), -- (Hit + Tempo)
-(@CT_VENDOR_GEMS_FREE, '40105', '0', '19'), -- (Tempo + Wille)
+(@CT_VENDOR_GEMS_FREE, '40090', '0', '17'), -- (Ausdauer + Abhärtung) Beständiger Waldsmaragd
+(@CT_VENDOR_GEMS_FREE, '40100', '0', '18'), -- (Hit + Tempo) Blitzender Waldsmaragd
+(@CT_VENDOR_GEMS_FREE, '40105', '0', '19'), -- (Tempo + Wille) Geladener Waldsmaragd
 (@CT_VENDOR_GEMS_FREE, '40033', '0', '20'), -- (Crit + Ausdauer)
-(@CT_VENDOR_GEMS_FREE, '40091', '0', '21'), -- (Tempo + Ausdauer)
-(@CT_VENDOR_GEMS_FREE, '40095', '0', '22'), -- (Crit + Wille)
+(@CT_VENDOR_GEMS_FREE, '40091', '0', '21'), -- (Tempo + Ausdauer) Kraftvoller Waldsmaragd
+(@CT_VENDOR_GEMS_FREE, '40095', '0', '22'), -- (Crit + Wille) Nebliger Waldsmaragd
 (@CT_VENDOR_GEMS_FREE, '40101', '0', '23'), -- (Crit + Zauberdurchschlag)
-(@CT_VENDOR_GEMS_FREE, '40102', '0', '24'), -- (Abhäung + Wille)
-(@CT_VENDOR_GEMS_FREE, '40058', '0', '25'), -- (Wk + Hit)
-(@CT_VENDOR_GEMS_FREE, '40028', '0', '26'), -- (Int+ Zauberdurchschlag)
+(@CT_VENDOR_GEMS_FREE, '40102', '0', '24'), -- (Abhärtung + Wille) Trüber Waldsmaragd
+(@CT_VENDOR_GEMS_FREE, '40058', '0', '25'), -- (Wk + Hit) Akkurater Zwielichtopal
+(@CT_VENDOR_GEMS_FREE, '40028', '0', '26'), -- (Int+ Zauberdurchschlag) Geheimnisvoller Zwielichtopal
 (@CT_VENDOR_GEMS_FREE, '40092', '0', '27'), -- (Int + Wille)
-(@CT_VENDOR_GEMS_FREE, '40038', '0', '28'), -- (Stärke + Hit)
+(@CT_VENDOR_GEMS_FREE, '40038', '0', '28'), -- (Stärke + Hit) Geätzter Zwielichtopal
 (@CT_VENDOR_GEMS_FREE, '40053', '0', '29'), -- (Agi + Hit)
-(@CT_VENDOR_GEMS_FREE, '40022', '0', '30'), -- (Stäe + Ausdauer)
-(@CT_VENDOR_GEMS_FREE, '40049', '0', '31'), -- (Int + Hit)
-(@CT_VENDOR_GEMS_FREE, '40023', '0', '32'), -- (Agi + Ausdauer)
-(@CT_VENDOR_GEMS_FREE, '39997', '0', '33'), -- (Beweglichkeit)
-(@CT_VENDOR_GEMS_FREE, '39996', '0', '34'), -- (Stärke)
-(@CT_VENDOR_GEMS_FREE, '40003', '0', '35'); -- (Wk)
+(@CT_VENDOR_GEMS_FREE, '40022', '0', '30'), -- (Stäe + Ausdauer) Stattlicher Zwielichtopal
+(@CT_VENDOR_GEMS_FREE, '40049', '0', '31'), -- (Int + Hit) Verschleierter Zwielichtopal
+(@CT_VENDOR_GEMS_FREE, '40023', '0', '32'), -- (Agi + Ausdauer) Veränderlicher Zwielichtopal
+(@CT_VENDOR_GEMS_FREE, '39997', '0', '33'), -- (Beweglichkeit) Feingeschliffener Scharlachrubin
+(@CT_VENDOR_GEMS_FREE, '39996', '0', '34'), -- (Stärke) Klobiger Scharlachrubin
+(@CT_VENDOR_GEMS_FREE, '40003', '0', '35'), -- (Wk) Präziser Scharlachrubin
+(@CT_VENDOR_GEMS_FREE, '36918', '0', '36'), --  Scharlachrubin
+(@CT_VENDOR_GEMS_FREE, '39998', '0', '37'), --  Glänzender Scharlachrubin
+(@CT_VENDOR_GEMS_FREE, '40001', '0', '38'), --  Scheinender Scharlachrubin
+(@CT_VENDOR_GEMS_FREE, '36924', '0', '39'), --  Himmelssaphir
+(@CT_VENDOR_GEMS_FREE, '40014', '0', '40'), --  Massiver Himmelssaphir
+(@CT_VENDOR_GEMS_FREE, '36921', '0', '41'), --  Herbstglimmer
+(@CT_VENDOR_GEMS_FREE, '40000', '0', '42'), --  Fragiler Herbstglimmer
+(@CT_VENDOR_GEMS_FREE, '36927', '0', '43'), --  Zwielichtopal
+(@CT_VENDOR_GEMS_FREE, '40025', '0', '44'), --  Zeitloser Zwielichtopal
+(@CT_VENDOR_GEMS_FREE, '40026', '0', '45'), --  GelÃ¤uterter Zwielichtopal
+(@CT_VENDOR_GEMS_FREE, '40032', '0', '46'), --  Zwielichtopal des Verteidigers
+(@CT_VENDOR_GEMS_FREE, '40034', '0', '47'), --  Zwielichtopal des WÃ¤chters
+(@CT_VENDOR_GEMS_FREE, '40044', '0', '48'), --  Glitzernder Zwielichtopal
+(@CT_VENDOR_GEMS_FREE, '36933', '0', '49'), --  Waldsmaragd
+(@CT_VENDOR_GEMS_FREE, '40086', '0', '50'), --  Gezackter Waldsmaragd
+(@CT_VENDOR_GEMS_FREE, '40088', '0', '51'), --  Geschickter Waldsmaragd
+(@CT_VENDOR_GEMS_FREE, '40089', '0', '52'), --  MajestÃ¤tischer Waldsmaragd
+(@CT_VENDOR_GEMS_FREE, '40098', '0', '53'), --  Strahlender Waldsmaragd
+(@CT_VENDOR_GEMS_FREE, '40106', '0', '54'), --  Zerschmetterter Waldsmaragd
+(@CT_VENDOR_GEMS_FREE, '36930', '0', '55'), --  Monarchentopas
+(@CT_VENDOR_GEMS_FREE, '40039', '0', '56'), --  Monarchentopas des Champions
+(@CT_VENDOR_GEMS_FREE, '40041', '0', '57'), --  Wilder Monarchentopas
+(@CT_VENDOR_GEMS_FREE, '40045', '0', '58'), --  Transparenter Monarchentopas
+(@CT_VENDOR_GEMS_FREE, '40055', '0', '59'), --  Gewandter Monarchentopas
+(@CT_VENDOR_GEMS_FREE, '40057', '0', '60'), --  Bruchfester Monarchentopas
+(@CT_VENDOR_GEMS_FREE, '40059', '0', '61'); --  Resoluter Monarchentopas
 --
 -- Free Gems // Kostenlose Edelsteine :: ENDE
 --

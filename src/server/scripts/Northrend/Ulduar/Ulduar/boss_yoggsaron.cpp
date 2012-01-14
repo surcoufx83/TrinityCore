@@ -2892,54 +2892,83 @@ class spell_lunatic_gaze_targeting : public SpellScriptLoader
         }
 };
 
+class brainLinkTargetSelector
+{
+    public:
+        bool operator() (Unit* unit)
+        {
+            return unit->GetPositionZ() < 300.0f;
+        }
+};
+
 class spell_brain_link_periodic_dummy : public SpellScriptLoader
 {
     public:
         spell_brain_link_periodic_dummy() : SpellScriptLoader("spell_brain_link_periodic_dummy") { }
 
-    class spell_brain_link_periodic_dummy_AuraScript : public AuraScript
-    {
-        PrepareAuraScript(spell_brain_link_periodic_dummy_AuraScript)
-
-        void HandlePeriodicDummy(AuraEffect const* aurEff)
+        class spell_brain_link_periodic_dummy_SpellScript : public SpellScript
         {
-            PreventDefaultAction();
-            if (Unit* trigger = GetTarget())
-            {
-                if (trigger->GetTypeId() == TYPEID_PLAYER)
-                {
-                    if(!trigger->GetMap()->IsDungeon())
-                        return;
+            PrepareSpellScript(spell_brain_link_periodic_dummy_SpellScript);
 
-                    Map::PlayerList const &players = trigger->GetMap()->GetPlayers();
-                    for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-                        if (Player* player = itr->getSource())
-                            if(player->HasAura(SPELL_BRAIN_LINK) && player->GetGUID() != trigger->GetGUID() )
-                            {
-                                trigger->CastSpell(player, SPELL_BRAIN_LINK_DUMMY, true);
-                                if(Unit* caster = GetCaster())
-                                if (!player->IsWithinDist(trigger, float(aurEff->GetAmount())))
+            void FilterTargets(std::list<Unit*>& unitList)
+            {
+                unitList.remove_if(brainLinkTargetSelector());
+            }
+
+            void Register()
+            {
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_brain_link_periodic_dummy_SpellScript::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+            }
+        };
+
+        class spell_brain_link_periodic_dummy_AuraScript : public AuraScript
+        {
+            PrepareAuraScript(spell_brain_link_periodic_dummy_AuraScript)
+
+            void HandlePeriodicDummy(AuraEffect const* aurEff)
+            {
+                PreventDefaultAction();
+                if (Unit* trigger = GetTarget())
+                {
+                    if (trigger->GetTypeId() == TYPEID_PLAYER)
+                    {
+                        if(!trigger->GetMap()->IsDungeon())
+                            return;
+
+                        Map::PlayerList const &players = trigger->GetMap()->GetPlayers();
+                        for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+                            if (Player* player = itr->getSource())
+                                if(player->HasAura(SPELL_BRAIN_LINK) && player->GetGUID() != trigger->GetGUID() )
                                 {
-                                    caster->CastSpell(trigger, SPELL_BRAIN_LINK_DAMAGE, true);
-                                    if(InstanceScript* pInstance = caster->GetInstanceScript())
-                                        if(caster->ToCreature() && caster->GetGUID() == pInstance->GetData64(TYPE_SARA))
-                                            CAST_AI(boss_sara::boss_saraAI,caster->ToCreature()->AI())->ModifySanity(player,-2);
+                                    trigger->CastSpell(player, SPELL_BRAIN_LINK_DUMMY, true);
+                                    if(Unit* caster = GetCaster())
+                                    if (!player->IsWithinDist(trigger, float(aurEff->GetAmount())))
+                                    {
+                                        caster->CastSpell(trigger, SPELL_BRAIN_LINK_DAMAGE, true);
+                                        if(InstanceScript* pInstance = caster->GetInstanceScript())
+                                            if(caster->ToCreature() && caster->GetGUID() == pInstance->GetData64(TYPE_SARA))
+                                                CAST_AI(boss_sara::boss_saraAI,caster->ToCreature()->AI())->ModifySanity(player,-2);
+                                    }
                                 }
-                            }
+                    }
                 }
             }
-        }
 
-        void Register()
+            void Register()
+            {
+                OnEffectPeriodic += AuraEffectPeriodicFn(spell_brain_link_periodic_dummy_AuraScript::HandlePeriodicDummy, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
         {
-            OnEffectPeriodic += AuraEffectPeriodicFn(spell_brain_link_periodic_dummy_AuraScript::HandlePeriodicDummy, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+            return new spell_brain_link_periodic_dummy_SpellScript();
         }
-    };
 
-    AuraScript *GetAuraScript() const
-    {
-        return new spell_brain_link_periodic_dummy_AuraScript();
-    }
+        AuraScript* GetAuraScript() const
+        {
+            return new spell_brain_link_periodic_dummy_AuraScript();
+        }
 };
 
 class NotIsWeakenedImmortalCheck
