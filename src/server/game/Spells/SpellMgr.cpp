@@ -3129,7 +3129,6 @@ void SpellMgr::LoadDbcDataCorrections()
             case 64599: // Arcane Barrage
             case 64607: // Arcane Barrage
             case 47731: // Critter
-            case 48246: // Ball of Flame
             case 62301: // Cosmic Smash
             case 52479: // Gift of the Harvester
             case 48246: // Ball of Flame
@@ -3358,6 +3357,7 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectDieSides[0] = 0;
                 break;
             case 48278: // Paralyze
+                spellInfo->AttributesEx3 |= SPELL_ATTR3_STACK_FOR_DIFF_CASTERS;
                 spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_TARGET_ENEMY;
                 break;
             case 28299:
@@ -3671,7 +3671,6 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->AreaGroupId = 0; // originally, these require area 4522, which is... outside of Icecrown Citadel
                 break;
             case 70602: // Corruption
-            case 48278: // Paralyze
                 spellInfo->AttributesEx3 |= SPELL_ATTR3_STACK_FOR_DIFF_CASTERS;
                 break;
             case 70715: // Column of Frost (visual marker)

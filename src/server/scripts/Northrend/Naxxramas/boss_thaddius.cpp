@@ -86,9 +86,9 @@ enum ThaddiusSpells
     SPELL_CHAIN_LIGHTNING       = 28167,
     H_SPELL_CHAIN_LIGHTNING     = 54531,
     SPELL_BERSERK               = 27680,
-    SPELL_POSITIVE_CHARGE       = 28062,
+    SPELL_POSITIVE_CHARGE_AURA  = 28062,
     SPELL_POSITIVE_CHARGE_STACK = 29659,
-    SPELL_NEGATIVE_CHARGE       = 28085,
+    SPELL_NEGATIVE_CHARGE_AURA  = 28085,
     SPELL_NEGATIVE_CHARGE_STACK = 29660
 };
 
@@ -484,11 +484,11 @@ class spell_thaddius_pos_neg_charge : public SpellScriptLoader
 
             bool Validate(SpellInfo const* /*spell*/)
             {
-                if (!sSpellMgr->GetSpellInfo(SPELL_POSITIVE_CHARGE))
+                if (!sSpellMgr->GetSpellInfo(SPELL_POSITIVE_CHARGE_AURA))
                     return false;
                 if (!sSpellMgr->GetSpellInfo(SPELL_POSITIVE_CHARGE_STACK))
                     return false;
-                if (!sSpellMgr->GetSpellInfo(SPELL_NEGATIVE_CHARGE))
+                if (!sSpellMgr->GetSpellInfo(SPELL_POSITIVE_CHARGE_AURA))
                     return false;
                 if (!sSpellMgr->GetSpellInfo(SPELL_NEGATIVE_CHARGE_STACK))
                     return false;
@@ -513,7 +513,7 @@ class spell_thaddius_pos_neg_charge : public SpellScriptLoader
                 {
                     uint32 spellId = 0;
 
-                    if (GetSpellInfo()->Id == SPELL_POSITIVE_CHARGE)
+                    if (GetSpellInfo()->Id == SPELL_POSITIVE_CHARGE_AURA)
                         spellId = SPELL_POSITIVE_CHARGE_STACK;
                     else // if (GetSpellInfo()->Id == SPELL_NEGATIVE_CHARGE)
                         spellId = SPELL_NEGATIVE_CHARGE_STACK;

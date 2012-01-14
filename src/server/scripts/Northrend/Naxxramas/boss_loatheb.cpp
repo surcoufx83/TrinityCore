@@ -27,7 +27,8 @@ enum Spells
     SPELL_INEVITABLE_DOOM     = 29204,
     H_SPELL_INEVITABLE_DOOM   = 55052,
     SPELL_BERSERK             = 27680,
-    SPELL_FUNGAL_CREEP        = 29232
+    SPELL_FUNGAL_CREEP        = 29232,
+    SPELL_WARN_NECROTIC_AURA  = 59481
 };
 
 enum Events
@@ -36,6 +37,18 @@ enum Events
     EVENT_BLOOM,
     EVENT_DOOM,
     EVENT_BERSERK
+};
+
+enum Texts
+{
+   SAY_NECROTIC_AURA_APPLIED       = 0,
+   SAY_NECROTIC_AURA_REMOVED       = 1,
+   SAY_NECROTIC_AURA_FADING        = 2,
+};
+
+enum Achievement
+{
+   DATA_ACHIEVEMENT_SPORE_LOSER    = 21822183,
 };
 
 class boss_loatheb : public CreatureScript
