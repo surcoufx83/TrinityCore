@@ -145,4 +145,9 @@ enum Vehicles
     VEHICLE_BLACK_KNIGHT        = 35491
 };
 
+enum Faction
+{
+    FACTION_HOSTILE_FOR_ALL     = 16
+};
+
 #endif
