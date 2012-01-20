@@ -112,7 +112,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const
     {
-        return new boss_thaddiusAI (creature);
+        return new boss_thaddiusAI(creature);
     }
 
     struct boss_thaddiusAI : public BossAI
@@ -124,26 +124,27 @@ public:
 
             // Moreover, the adds may not yet be spawn. So just track down the status if mob is spawn
             // and each mob will send its status at reset (meaning that it is alive)
-            checkFeugenAlive = false;
-            if (Creature* Feugen = me->GetCreature(*me, instance->GetData64(DATA_FEUGEN)))
-                checkFeugenAlive = Feugen->isAlive();
-
-            checkStalaggAlive = false;
-            if (Creature* Stalagg = me->GetCreature(*me, instance->GetData64(DATA_STALAGG)))
-                checkStalaggAlive = Stalagg->isAlive();
-
-            if (!checkFeugenAlive && !checkStalaggAlive)
+            if(instance = c->GetInstanceScript())
             {
-                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED);
-                me->SetReactState(REACT_AGGRESSIVE);
-            }
-            else
-            {
-                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED);
-                me->SetReactState(REACT_PASSIVE);
-            }
+                checkFeugenAlive = false;
+                if (Creature* Feugen = me->GetCreature(*me, instance->GetData64(DATA_FEUGEN)))
+                    checkFeugenAlive = Feugen->isAlive();
 
-            instance = c->GetInstanceScript();
+                checkStalaggAlive = false;
+                if (Creature* Stalagg = me->GetCreature(*me, instance->GetData64(DATA_STALAGG)))
+                    checkStalaggAlive = Stalagg->isAlive();
+
+                if (!checkFeugenAlive && !checkStalaggAlive)
+                {
+                    me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED);
+                    me->SetReactState(REACT_AGGRESSIVE);
+                }
+                else
+                {
+                    me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED);
+                    me->SetReactState(REACT_PASSIVE);
+                }
+            }
         }
 
         bool checkStalaggAlive;
