@@ -32,6 +32,8 @@ enum Yells
     SAY_SUMMON_TRIO                             = -1603187,
     SAY_SUMMON_LASHERS                          = -1603188,
     SAY_YS_HELP                                 = -1603189,
+    EMOTE_ALLIES                                = -1603105,
+    EMOTE_GIFT                                  = -1603106,
 
     // Elder Brightleaf
     SAY_BRIGHTLEAF_AGGRO                        = -1603190,
@@ -106,8 +108,8 @@ enum Spells
 
     SPELL_FREYA_UNSTABLE_ENERGY_10              = 62451,
     SPELL_FREYA_UNSTABLE_ENERGY_25              = 62865,
-    SPELL_FREYA_IRON_ROOTS_10                   = 62283,
-    SPELL_FREYA_IRON_ROOTS_25                   = 62930,
+    SPELL_FREYA_IRON_ROOTS_10                   = 62438,
+    SPELL_FREYA_IRON_ROOTS_25                   = 62861,
     SPELL_FREYA_GROUND_TREMOR_10                = 62437,
     SPELL_FREYA_GROUND_TREMOR_25                = 62859,
 
@@ -186,8 +188,8 @@ enum Spells
     SPELL_IMPALE_25                             = 62928,
     SPELL_THORN_SWARM_10                        = 62285, // Need Target fix ?
     SPELL_THORN_SWARM_25                        = 62931,
-    SPELL_IRON_ROOTS_10                         = 62438,
-    SPELL_IRON_ROOTS_25                         = 62861,
+    SPELL_IRON_ROOTS_10                         = 62283,
+    SPELL_IRON_ROOTS_25                         = 62930,
 
     //Elder Stonebark
     //every spell is not triggered
@@ -313,7 +315,7 @@ public:
                 unstableEnergyTimer = 15000;
                 Berserk_Timer = 600000;
                 Lifebinders_Gift_Timer = 30000;
-                uiNaturalBomb_Timer = 30000;
+                uiNaturalBomb_Timer = 60000;
                 inFightAggroCheck_Timer = 5000;
                 attunedToNature = 0;
 
@@ -325,7 +327,6 @@ public:
                     Elder[n] = ObjectAccessor::GetCreature(*me, pInstance->GetData64(TYPE_ELDER_BRIGHTLEAF + n));
                     if (Elder[n] && Elder[n]->isAlive())
                     {
-                        //Elder[n]->RemoveAllAuras();
                         Elder[n]->ResetLootMode();
                         Elder[n]->AI()->EnterEvadeMode();
                     }
@@ -469,8 +470,9 @@ public:
         void DoSummonWave()
         {
             uint32 spawntype = WaveCount % 3;
+            DoScriptText(EMOTE_ALLIES, me);
             DoCast(WaveSpells[SpawnWaves[spawntype]]);
-            WaveCount++;
+            ++WaveCount;
         }
 
         uint32 GetElderCount()
@@ -607,6 +609,7 @@ public:
             }
 
             if (WaveCount < 6)
+            {
                 if (uiWave_Timer < diff)
                 {
                     if (!me->IsNonMeleeSpellCasted(false))
@@ -614,16 +617,18 @@ public:
                         DoSummonWave();
                         uiWave_Timer = 60000;
                     }
-                } else uiWave_Timer -= diff;
+                }
+                else
+                    uiWave_Timer -= diff;
+            }
             else
             {
                 if (uiNaturalBomb_Timer <= diff)
                 {
-                    std::list<Player*> plrList = me->GetNearestPlayersList(500);
-                    Trinity::RandomResizeList<Player*>(plrList, uint32(Is25ManRaid() ? urand(10, 15) : urand(4, 6)));
-                    for (std::list<Player*>::const_iterator itr = plrList.begin(); itr != plrList.end(); ++itr)
-                        if (*itr)
-                            me->CastSpell((*itr), SPELL_NATURE_BOMB_VISUAL, true);
+                    std::list<Player*> playerList = me->GetNearestPlayersList(500.0f);
+                    Trinity::RandomResizeList<Player*>(playerList, uint32(Is25ManRaid() ? urand(10, 15) : urand(4, 6)));
+                    for (std::list<Player*>::const_iterator itr = playerList.begin(); itr != playerList.end(); ++itr)
+                        me->CastSpell(*itr, SPELL_NATURE_BOMB_VISUAL, true);
 
                     uiNaturalBomb_Timer = urand(20000, 30000);
                 }
@@ -687,6 +692,7 @@ public:
 
             if (Lifebinders_Gift_Timer <= diff)
             {
+                DoScriptText(EMOTE_GIFT, me);
                 DoCastAOE(RAID_MODE<uint32>(SPELL_LIFEBINDERS_GIFT_TRIGGER_MISSILE_1, SPELL_LIFEBINDERS_GIFT_TRIGGER_MISSILE_2), true);
                 Lifebinders_Gift_Timer = 35000 + urand(2000, 10000);
             } else Lifebinders_Gift_Timer -= diff;
@@ -1659,7 +1665,6 @@ class mob_freya_sunbeam : public CreatureScript
         }
 };
 
-// Freya HM and Elder Ironbranch
 class mob_iron_roots : public CreatureScript
 {
     public:
@@ -1670,33 +1675,44 @@ class mob_iron_roots : public CreatureScript
             mob_iron_rootsAI(Creature* creature) : ScriptedAI(creature)
             {
                 SetImmuneToPushPullEffects(true);
+                _checkTimer = 3000;
             }
 
-            void Reset()
+            void IsSummonedBy(Unit* summoner)
             {
-                std::list<Player*> plrList = me->GetNearestPlayersList(20);
-                for (std::list<Player*>::const_iterator itr = plrList.begin(); itr != plrList.end(); ++itr)
-                    if ((*itr) && ((*itr)->HasAura(RAID_MODE(SPELL_IRON_ROOTS_10, SPELL_IRON_ROOTS_25)) || (*itr)->HasAura(RAID_MODE(SPELL_FREYA_IRON_ROOTS_10, SPELL_FREYA_IRON_ROOTS_25))))
-                        _RootsGUID = (*itr)->GetGUID();
+                _victimGUID = summoner->GetGUID();
             }
 
             void JustDied(Unit* /*killer*/)
             {
-                if (Unit* Roots = Unit::GetUnit((*me), _RootsGUID))
+                if (Unit* victim = ObjectAccessor::GetUnit(*me, _victimGUID))
                 {
-                    if (Roots->HasAura(RAID_MODE(SPELL_IRON_ROOTS_10, SPELL_IRON_ROOTS_25)))
-                        Roots->RemoveAura(RAID_MODE(SPELL_IRON_ROOTS_10, SPELL_IRON_ROOTS_25));
-                    if (Roots->HasAura(RAID_MODE(SPELL_FREYA_IRON_ROOTS_10, SPELL_FREYA_IRON_ROOTS_25)))
-                        Roots->RemoveAura(RAID_MODE(SPELL_FREYA_IRON_ROOTS_10, SPELL_FREYA_IRON_ROOTS_25));
+                    victim->RemoveAurasDueToSpell(RAID_MODE<uint32>(SPELL_IRON_ROOTS_10, SPELL_IRON_ROOTS_25));
+                    victim->RemoveAurasDueToSpell(RAID_MODE<uint32>(SPELL_FREYA_IRON_ROOTS_10, SPELL_FREYA_IRON_ROOTS_25));
                 }
 
                 me->DespawnOrUnsummon(2000);
             }
 
-            void UpdateAI(uint32 const /*diff*/) { }
+            void UpdateAI(uint32 const diff)
+            {
+                if (_checkTimer <= diff)
+                {
+                    Unit* victim = ObjectAccessor::GetUnit(*me, _victimGUID);
+
+                    if (!victim || (!victim->HasAura(RAID_MODE<uint32>(SPELL_IRON_ROOTS_10, SPELL_IRON_ROOTS_25)) &&
+                        !victim->HasAura(RAID_MODE<uint32>(SPELL_FREYA_IRON_ROOTS_10, SPELL_FREYA_IRON_ROOTS_25))))
+                        me->DespawnOrUnsummon(2000);
+
+                    _checkTimer = 3000;
+                }
+                else
+                    _checkTimer -= diff;
+            }
 
         private:
-            uint64 _RootsGUID;
+            uint32 _checkTimer;
+            uint64 _victimGUID;
         };
 
         CreatureAI* GetAI(Creature* creature) const
@@ -1714,8 +1730,6 @@ class IsNoAllyOfNature
             {
                 switch (unit->ToCreature()->GetEntry())
                 {
-                    case 33088: // Iron Roots
-                    case 33168: // Strengthened Iron Roots
                     case 32918: // Detonating Lasher
                     case 33202: // Ancient Water Spirit
                     case 32919: // Storm Lasher
