@@ -124,26 +124,23 @@ public:
 
             // Moreover, the adds may not yet be spawn. So just track down the status if mob is spawn
             // and each mob will send its status at reset (meaning that it is alive)
-            if(instance = c->GetInstanceScript())
+            checkFeugenAlive = false;
+            if (Creature* Feugen = me->GetCreature(*me, instance ? instance->GetData64(DATA_FEUGEN) : 0))
+                checkFeugenAlive = Feugen->isAlive();
+
+            checkStalaggAlive = false;
+            if (Creature* Stalagg = me->GetCreature(*me, instance ? instance->GetData64(DATA_STALAGG) : 0))
+                checkStalaggAlive = Stalagg->isAlive();
+
+            if (!checkFeugenAlive && !checkStalaggAlive)
             {
-                checkFeugenAlive = false;
-                if (Creature* Feugen = me->GetCreature(*me, instance->GetData64(DATA_FEUGEN)))
-                    checkFeugenAlive = Feugen->isAlive();
-
-                checkStalaggAlive = false;
-                if (Creature* Stalagg = me->GetCreature(*me, instance->GetData64(DATA_STALAGG)))
-                    checkStalaggAlive = Stalagg->isAlive();
-
-                if (!checkFeugenAlive && !checkStalaggAlive)
-                {
-                    me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED);
-                    me->SetReactState(REACT_AGGRESSIVE);
-                }
-                else
-                {
-                    me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED);
-                    me->SetReactState(REACT_PASSIVE);
-                }
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED);
+                me->SetReactState(REACT_AGGRESSIVE);
+            }
+            else
+            {
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED);
+                me->SetReactState(REACT_PASSIVE);
             }
         }
 
@@ -152,20 +149,18 @@ public:
         bool shocking;
         uint32 addsTimer;
 
-        InstanceScript* instance;
-
         void Reset()
         {
             _Reset();
             shocking = true;
 
-            if (Creature* Feugen = me->GetCreature(*me, instance->GetData64(DATA_FEUGEN)))
+            if (Creature* Feugen = me->GetCreature(*me, instance ? instance->GetData64(DATA_FEUGEN) : 0))
             {
                 Feugen->Respawn(true);
                 checkFeugenAlive = Feugen->isAlive();
             }
 
-            if (Creature* Stalagg = me->GetCreature(*me, instance->GetData64(DATA_STALAGG)))
+            if (Creature* Stalagg = me->GetCreature(*me, instance ? instance->GetData64(DATA_STALAGG) : 0))
             {
                 Stalagg->Respawn(true);
                 checkStalaggAlive = Stalagg->isAlive();
@@ -272,15 +267,13 @@ public:
                 {
                     if (!checkStalaggAlive)
                     {
-                        if (instance)
-                            if (Creature* Stalagg = me->GetCreature(*me, instance->GetData64(DATA_STALAGG)))
-                                Stalagg->Respawn();
+                        if (Creature* Stalagg = me->GetCreature(*me, instance ? instance->GetData64(DATA_STALAGG) : 0))
+                            Stalagg->Respawn();
                     }
                     else
                     {
-                        if (instance)
-                            if (Creature* Feugen = me->GetCreature(*me, instance->GetData64(DATA_FEUGEN)))
-                                Feugen->Respawn();
+                        if (Creature* Feugen = me->GetCreature(*me, instance ? instance->GetData64(DATA_FEUGEN) : 0))
+                            Feugen->Respawn();
                     }
                 }
             }
@@ -346,10 +339,9 @@ public:
 
         void Reset()
         {
-            if (instance)
-                if (Creature* Thaddius = me->GetCreature(*me, instance->GetData64(DATA_THADDIUS)))
-                    if (Thaddius->AI())
-                        Thaddius->AI()->DoAction(ACTION_STALAGG_RESET);
+            if (Creature* Thaddius = me->GetCreature(*me, instance ? instance->GetData64(DATA_THADDIUS) : 0))
+                if (Thaddius->AI())
+                    Thaddius->AI()->DoAction(ACTION_STALAGG_RESET);
             powerSurgeTimer = urand(20000, 25000);
             magneticPullTimer = 20000;
         }
@@ -361,10 +353,9 @@ public:
 
         void JustDied(Unit* /*killer*/)
         {
-            if (instance)
-                if (Creature* Thaddius = me->GetCreature(*me, instance->GetData64(DATA_THADDIUS)))
-                    if (Thaddius->AI())
-                        Thaddius->AI()->DoAction(ACTION_STALAGG_DIED);
+            if (Creature* Thaddius = me->GetCreature(*me, instance ? instance->GetData64(DATA_THADDIUS) : 0))
+                if (Thaddius->AI())
+                    Thaddius->AI()->DoAction(ACTION_STALAGG_DIED);
         }
 
         void UpdateAI(uint32 const diff)
@@ -374,7 +365,7 @@ public:
 
             if (magneticPullTimer <= diff)
             {
-                if (Creature* Feugen = me->GetCreature(*me, instance->GetData64(DATA_FEUGEN)))
+                if (Creature* Feugen = me->GetCreature(*me, instance ? instance->GetData64(DATA_FEUGEN) : 0))
                 {
                     Unit* StalaggVictim = me->getVictim();
                     Unit* FeugenVictim = Feugen->getVictim();
@@ -438,10 +429,9 @@ public:
 
         void Reset()
         {
-            if (instance)
-                if (Creature* Thaddius = me->GetCreature(*me, instance->GetData64(DATA_THADDIUS)))
-                    if (Thaddius->AI())
-                        Thaddius->AI()->DoAction(ACTION_FEUGEN_RESET);
+            if (Creature* Thaddius = me->GetCreature(*me, instance ? instance->GetData64(DATA_THADDIUS) : 0))
+                if (Thaddius->AI())
+                    Thaddius->AI()->DoAction(ACTION_FEUGEN_RESET);
             staticFieldTimer = 5000;
         }
 
@@ -452,10 +442,9 @@ public:
 
         void JustDied(Unit* /*killer*/)
         {
-            if (instance)
-                if (Creature* Thaddius = me->GetCreature(*me, instance->GetData64(DATA_THADDIUS)))
-                    if (Thaddius->AI())
-                        Thaddius->AI()->DoAction(ACTION_FEUGEN_DIED);
+            if (Creature* Thaddius = me->GetCreature(*me, instance ? instance->GetData64(DATA_THADDIUS) : 0))
+                if (Thaddius->AI())
+                    Thaddius->AI()->DoAction(ACTION_FEUGEN_DIED);
         }
 
         void UpdateAI(uint32 const diff)
