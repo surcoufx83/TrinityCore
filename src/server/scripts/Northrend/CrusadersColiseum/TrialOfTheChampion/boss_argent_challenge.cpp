@@ -514,7 +514,7 @@ class boss_paletress : public CreatureScript
                         case EVENT_RENEW:
                             if (Unit* friendly = DoSelectLowestHpFriendly(200.0f, 20000))
                                 DoCast(friendly, SPELL_RENEW);
-                            _events.ScheduleEvent(EVENT_RENEW, urand(15000, 17000));
+                            _events.ScheduleEvent(EVENT_RENEW, urand(25000, 27000));
                             break;
                     }
                 }
@@ -611,11 +611,11 @@ class npc_memory : public CreatureScript
                             if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1, 40.0f))
                                 DoCast(target, SPELL_SHADOWS_PAST);
                             _events.ScheduleEvent(EVENT_SHADOWS, urand(5000, 7000));
-                            break;
+                            return;
                         case EVENT_NIGHTMARE:
                             DoCast(me, SPELL_WAKING_NIGHTMARE);
                             _events.ScheduleEvent(EVENT_NIGHTMARE, urand(13000, 14000));
-                            break;
+                            return;
                     }
                 }
 
@@ -845,6 +845,36 @@ class npc_argent_soldier : public CreatureScript
         }
 };
 
+class spell_light_rain : public SpellScriptLoader
+{
+    public:
+        spell_light_rain() : SpellScriptLoader("spell_light_rain") { }
+
+        class spell_light_rain_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_light_rain_SpellScript);
+
+            void SelectTarget(std::list<Unit*>& unitList)
+            {
+                if (unitList.empty())
+                    return;
+
+                unitList.sort(Trinity::HealthPctOrderPred());
+                unitList.resize(1);
+            }
+
+            void Register()
+            {
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_light_rain_SpellScript::SelectTarget, EFFECT_0, TARGET_UNIT_SRC_AREA_ALLY);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_light_rain_SpellScript();
+        }
+};
+
 void AddSC_boss_argent_challenge()
 {
     new boss_eadric();
@@ -855,4 +885,5 @@ void AddSC_boss_argent_challenge()
     new spell_paletress_reflective_shield();
     new npc_memory();
     new npc_argent_soldier();
+    new spell_light_rain();
 }

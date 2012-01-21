@@ -548,7 +548,12 @@ class boss_grand_champion_toc5 : public CreatureScript
                 {
                     case SPELL_TRAMPLE:
                         if (_phase == 2 && !me->HasAura(SPELL_STUNNED) && caster->isCharmed())
+                        {
+                            // temporary stop motion
+                            me->GetMotionMaster()->MovementExpired();
+                            me->GetMotionMaster()->MoveIdle();
                             caster->CastSpell(me, SPELL_STUNNED, true);
+                        }
                         break;
                     case SPELL_CHARGE_TRIGGERED:
                         caster->CastSpell(me, SPELL_CHARGE_DMG, true);
@@ -564,17 +569,25 @@ class boss_grand_champion_toc5 : public CreatureScript
                     me->GetMotionMaster()->MovePoint(_point, Waypoints[_point + 4 * _waypointPath]);
                 }
 
-                if (_phase == 0)
-                    if (_phaseChangeTimer <= diff)
-                    {
-                        me->RestoreFaction();
-                        _phase = 3;
-                        DoZoneInCombat(me, 150.0f);
-                    }
-                    else
-                        _phaseChangeTimer -= diff;
+                switch (_phase)
+                {
+                    case 0:
+                        if (_phaseChangeTimer <= diff)
+                        {
+                            me->RestoreFaction();
+                            _phase = 3;
+                            DoZoneInCombat(me, 150.0f);
+                        }
+                        else
+                            _phaseChangeTimer -= diff;
+                        break;
+                    case 2:
+                        if (!me->HasAura(SPELL_STUNNED) && !me->isMoving())
+                            SearchMount();
+                        return;
+                }
 
-                if (!UpdateVictim() || _phase == 2)
+                if (!UpdateVictim())
                     return;
 
                 _events.Update(diff);
