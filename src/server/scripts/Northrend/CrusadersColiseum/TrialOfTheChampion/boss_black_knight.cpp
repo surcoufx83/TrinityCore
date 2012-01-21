@@ -44,6 +44,9 @@ enum Enums
 enum Spells
 {
     // Phase 1
+    SPELL_FEIGN_DEATH       = 66804, // 1
+    SPELL_RAISE_BRIGHTSTAR  = 67705, // 46
+    SPELL_RAISE_SUNSWORN    = 67715, // 46
     SPELL_PLAGUE_STRIKE_H   = 67884,
     SPELL_PLAGUE_STRIKE     = 67724,
     SPELL_ICY_TOUCH_H       = 67881,

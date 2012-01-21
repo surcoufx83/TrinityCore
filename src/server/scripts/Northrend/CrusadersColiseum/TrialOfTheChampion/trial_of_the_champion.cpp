@@ -517,10 +517,6 @@ public:
         void SetArgentChampion()
         {
             argentChampion = urand(0, 1) ? NPC_PALETRESS : NPC_EADRIC;
-
-            // DEBUG
-            argentChampion = NPC_EADRIC;
-            //
         }
 
         void StartEncounter()

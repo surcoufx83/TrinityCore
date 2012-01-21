@@ -231,6 +231,7 @@ public:
                                 announcer->GetMotionMaster()->MovePoint(0, 748.309f, 619.487f, 411.171f);
                                 announcer->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
                                 announcer->SummonGameObject(instance->IsHeroic() ? GO_CHAMPIONS_LOOT_H : GO_CHAMPIONS_LOOT, 746.59f, 618.49f, 411.09f, 1.42f, 0, 0, 0, 0, 90000000);
+                                BindPlayersToInstance(announcer);
                             }
                         }
                     }
@@ -263,6 +264,7 @@ public:
                             announcer->GetMotionMaster()->MovePoint(0, 748.309f, 619.487f, 411.171f);
                             announcer->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
                             announcer->SummonGameObject(instance->IsHeroic() ? GO_EADRIC_LOOT_H : GO_EADRIC_LOOT, 746.59f, 618.49f, 411.09f, 1.42f, 0, 0, 0, 0, 90000000);
+                            BindPlayersToInstance(announcer);
                         }
                     }
                     break;
@@ -281,6 +283,7 @@ public:
                             announcer->GetMotionMaster()->MovePoint(0, 748.309f, 619.487f, 411.171f);
                             announcer->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
                             announcer->SummonGameObject(instance->IsHeroic() ? GO_PALETRESS_LOOT_H : GO_PALETRESS_LOOT, 746.59f, 618.49f, 411.09f, 1.42f, 0, 0, 0, 0, 90000000);
+                            BindPlayersToInstance(announcer);
                         }
                     }
                     break;

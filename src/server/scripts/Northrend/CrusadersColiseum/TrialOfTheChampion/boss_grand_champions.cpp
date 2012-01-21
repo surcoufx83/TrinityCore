@@ -520,9 +520,8 @@ class boss_grand_champion_toc5 : public CreatureScript
                             break;
                         case 3:
                             DoScriptText(SAY_START_1, me);
-                            me->GetMotionMaster()->MoveIdle();
                             me->InterruptNonMeleeSpells(true);
-                            DoCast(SPELL_KNEEL);
+                            DoCast(me, SPELL_KNEEL, true);
                             if (_instance)
                                 _instance->SetData(BOSS_GRAND_CHAMPIONS, DONE);
                             me->SetReactState(REACT_PASSIVE);
