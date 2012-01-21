@@ -138,7 +138,7 @@ class boss_krystallus : public CreatureScript
                         if (IsSlam)
                         {
                             IsSlam = false;
-                            if (me->GetMotionMaster()->GetCurrentMovementGeneratorType() != TARGETED_MOTION_TYPE)
+                            if (me->GetMotionMaster()->GetCurrentMovementGeneratorType() != CHASE_MOTION_TYPE)
                             {
                                 if (me->getVictim())
                                     me->GetMotionMaster()->MoveChase(me->getVictim());

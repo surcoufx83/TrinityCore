@@ -663,7 +663,7 @@ public:
 
             if(me->IsWithinMeleeRange(me->getVictim()))
             {
-                if(me->GetMotionMaster()->GetCurrentMovementGeneratorType() != TARGETED_MOTION_TYPE)
+                if(me->GetMotionMaster()->GetCurrentMovementGeneratorType() != CHASE_MOTION_TYPE)
                     DoStartMovement(me->getVictim());
 
                 DoMeleeAttackIfReady();

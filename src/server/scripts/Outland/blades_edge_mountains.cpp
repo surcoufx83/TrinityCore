@@ -561,7 +561,7 @@ public:
         void EnterCombat(Unit *who) { }
         void UpdateAI(const uint32 diff)
         {
-            if(me->GetMotionMaster()->GetCurrentMovementGeneratorType() != TARGETED_MOTION_TYPE)
+            if(me->GetMotionMaster()->GetCurrentMovementGeneratorType() != CHASE_MOTION_TYPE)
             {
                 Unit* ownerlink = me->GetUnit((*me),me->GetOwnerGUID() );
                 if(ownerlink)

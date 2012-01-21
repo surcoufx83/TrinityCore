@@ -1555,11 +1555,6 @@ void Creature::setDeathState(DeathState s)
     }
 }
 
-        return false;
-
-    // Hack ... ground_Z should not be invalid
-    // If Vmap is fixed remove this
-    if(ground_Z == -200000.0f)
 void Creature::Respawn(bool force)
 {
     DestroyForNearbyPlayers();
