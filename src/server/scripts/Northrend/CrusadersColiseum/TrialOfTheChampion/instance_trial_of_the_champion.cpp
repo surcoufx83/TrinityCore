@@ -98,43 +98,63 @@ public:
             {
                 // Grand Champions
                 case NPC_MOKRA:
+                    if (ServerAllowsTwoSideGroups())
+                        creature->setFaction(FACTION_HOSTILE_FOR_ALL);
                     if (teamInInstance == HORDE)
                         creature->UpdateEntry(NPC_JACOB, ALLIANCE);
                     break;
                 case NPC_ERESSEA:
+                    if (ServerAllowsTwoSideGroups())
+                        creature->setFaction(FACTION_HOSTILE_FOR_ALL);
                     if (teamInInstance == HORDE)
                         creature->UpdateEntry(NPC_AMBROSE, ALLIANCE);
                     break;
                 case NPC_RUNOK:
+                    if (ServerAllowsTwoSideGroups())
+                        creature->setFaction(FACTION_HOSTILE_FOR_ALL);
                     if (teamInInstance == HORDE)
                         creature->UpdateEntry(NPC_COLOSOS, ALLIANCE);
                     break;
                 case NPC_ZULTORE:
+                    if (ServerAllowsTwoSideGroups())
+                        creature->setFaction(FACTION_HOSTILE_FOR_ALL);
                     if (teamInInstance == HORDE)
                         creature->UpdateEntry(NPC_JAELYNE, ALLIANCE);
                     break;
                 case NPC_VISCERI:
+                    if (ServerAllowsTwoSideGroups())
+                        creature->setFaction(FACTION_HOSTILE_FOR_ALL);
                     if (teamInInstance == HORDE)
                         creature->UpdateEntry(NPC_LANA, ALLIANCE);
                     break;
                 // Faction Champios
                 case NPC_ORGRIMMAR_CHAMPION:
+                    if (ServerAllowsTwoSideGroups())
+                        creature->setFaction(FACTION_HOSTILE_FOR_ALL);
                     if (teamInInstance == HORDE)
                         creature->UpdateEntry(NPC_STORMWIND_CHAMPION, ALLIANCE);
                     break;
                 case NPC_SILVERMOON_CHAMPION:
+                    if (ServerAllowsTwoSideGroups())
+                        creature->setFaction(FACTION_HOSTILE_FOR_ALL);
                     if (teamInInstance == HORDE)
                         creature->UpdateEntry(NPC_GNOMEREGAN_CHAMPION, ALLIANCE);
                     break;
                 case NPC_THUNDER_CHAMPION:
+                    if (ServerAllowsTwoSideGroups())
+                        creature->setFaction(FACTION_HOSTILE_FOR_ALL);
                     if (teamInInstance == HORDE)
                         creature->UpdateEntry(NPC_EXODAR_CHAMPION, ALLIANCE);
                     break;
                 case NPC_TROLL_CHAMPION:
+                    if (ServerAllowsTwoSideGroups())
+                        creature->setFaction(FACTION_HOSTILE_FOR_ALL);
                     if (teamInInstance == HORDE)
                         creature->UpdateEntry(NPC_DARNASSUS_CHAMPION, ALLIANCE);
                     break;
                 case NPC_UNDERCITY_CHAMPION:
+                    if (ServerAllowsTwoSideGroups())
+                        creature->setFaction(FACTION_HOSTILE_FOR_ALL);
                     if (teamInInstance == HORDE)
                         creature->UpdateEntry(NPC_IRONFORGE_CHAMPION, ALLIANCE);
                     break;
@@ -211,6 +231,7 @@ public:
                                 announcer->GetMotionMaster()->MovePoint(0, 748.309f, 619.487f, 411.171f);
                                 announcer->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
                                 announcer->SummonGameObject(instance->IsHeroic() ? GO_CHAMPIONS_LOOT_H : GO_CHAMPIONS_LOOT, 746.59f, 618.49f, 411.09f, 1.42f, 0, 0, 0, 0, 90000000);
+                                BindPlayersToInstance(announcer);
                             }
                         }
                     }
@@ -243,6 +264,7 @@ public:
                             announcer->GetMotionMaster()->MovePoint(0, 748.309f, 619.487f, 411.171f);
                             announcer->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
                             announcer->SummonGameObject(instance->IsHeroic() ? GO_EADRIC_LOOT_H : GO_EADRIC_LOOT, 746.59f, 618.49f, 411.09f, 1.42f, 0, 0, 0, 0, 90000000);
+                            BindPlayersToInstance(announcer);
                         }
                     }
                     break;
@@ -261,8 +283,12 @@ public:
                             announcer->GetMotionMaster()->MovePoint(0, 748.309f, 619.487f, 411.171f);
                             announcer->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
                             announcer->SummonGameObject(instance->IsHeroic() ? GO_PALETRESS_LOOT_H : GO_PALETRESS_LOOT, 746.59f, 618.49f, 411.09f, 1.42f, 0, 0, 0, 0, 90000000);
+                            BindPlayersToInstance(announcer);
                         }
                     }
+                    break;
+                case BOSS_BLACK_KNIGHT:
+                    m_auiEncounter[3] = data;
                     break;
             }
 

@@ -3132,6 +3132,7 @@ void SpellMgr::LoadDbcDataCorrections()
             case 62301: // Cosmic Smash
             case 52479: // Gift of the Harvester
             case 48246: // Ball of Flame
+            case 66545: // Summon Memory
                 spellInfo->MaxAffectedTargets = 1;
                 break;
             case 57697: //Lavastrike Hack - Sartharion

@@ -1574,7 +1574,7 @@ public:
                 multi_shoot_timer = 15000;
             }else multi_shoot_timer -= diff;
 
-            if((*me).GetMotionMaster()->GetCurrentMovementGeneratorType() == TARGETED_MOTION_TYPE)
+            if((*me).GetMotionMaster()->GetCurrentMovementGeneratorType() == CHASE_MOTION_TYPE)
             {
                 if(me->IsWithinDistInMap(me->getVictim(), 7))
                 {

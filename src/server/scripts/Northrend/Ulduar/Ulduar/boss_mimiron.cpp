@@ -399,9 +399,10 @@ class boss_mimiron : public CreatureScript
                                 VX_001->getStandState() == UNIT_STAND_STATE_DEAD &&
                                 AerialUnit->getStandState() == UNIT_STAND_STATE_DEAD)
                             {
-                                Leviathan->DisappearAndDie();
+                                Leviathan->DespawnOrUnsummon(5*MINUTE*IN_MILLISECONDS);
                                 VX_001->DisappearAndDie();
                                 AerialUnit->DisappearAndDie();
+                                me->Kill(Leviathan);
                                 DespawnCreatures(NPC_FLAMES_INITIAL, 100.0f);
                                 DespawnCreatures(NPC_PROXIMITY_MINE, 100.0f);
                                 DespawnCreatures(NPC_ROCKET, 100);
@@ -761,15 +762,13 @@ public:
 
     struct boss_leviathan_mkAI : public BossAI
     {
-        boss_leviathan_mkAI(Creature* creature) : BossAI(creature, TYPE_MIMIRON), phase(PHASE_NULL), vehicle(creature->GetVehicleKit())
+        boss_leviathan_mkAI(Creature* creature) : BossAI(creature, TYPE_MIMIRON), phase(PHASE_NULL)
         {
             me->ApplySpellImmune(0, IMMUNITY_ID, SPELL_ROCKET_STRIKE_DMG, true);
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         }
 
-        Vehicle* vehicle;
         Phases phase;
-        EventMap events;
         bool MimironHardMode;
 
         void Reset()
@@ -783,7 +782,7 @@ public:
             events.SetPhase(PHASE_NULL);
             MimironHardMode = false;
 
-            if (Creature *turret = CAST_CRE(me->GetVehicleKit()->GetPassenger(3)))
+            if (Creature* turret = CAST_CRE(me->GetVehicleKit()->GetPassenger(3)))
             {
                 turret->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE_1);
                 turret->SetReactState(REACT_PASSIVE);
@@ -1087,7 +1086,6 @@ public:
         }
 
         Phases phase;
-        EventMap events;
         bool MimironHardMode;
 
         bool spinning;
@@ -1231,13 +1229,13 @@ public:
                     if (Creature* leviathan = me->GetVehicleCreatureBase())
                     {
                         float orient = leviathan->GetOrientation();
-                        leviathan->SetFacing(orient + (direction ? M_PI/60 : -M_PI/60));
+                        leviathan->SetFacingTo(orient + (direction ? M_PI/60 : -M_PI/60));
                         me->SetOrientation(orient + (direction ? M_PI/60 : -M_PI/60));
                     }
                     else
                     {
                         float orient = me->GetOrientation();
-                        me->SetFacing(orient + (direction ? M_PI/60 : -M_PI/60));
+                        me->SetFacingTo(orient + (direction ? M_PI/60 : -M_PI/60));
                         float x, y, z;
                         z = me->GetPositionZ();
                         me->GetNearPoint2D(x, y, 10.0f, me->GetOrientation());
@@ -1273,7 +1271,7 @@ public:
                             {
                                 float orient = float(2*M_PI * rand_norm());
                                 leviathan->CastSpell(leviathan, 14821, true); // temporary
-                                leviathan->SetFacing(orient);
+                                leviathan->SetFacingTo(orient);
                                 leviathan->SetOrientation(orient);
                                 me->SetOrientation(orient);
                             }
@@ -1315,9 +1313,7 @@ public:
                             me->GetCreatureListWithEntryInGrid(_flames, NPC_FLAME_SPREAD, 150.0f);
                             if (!_flames.empty())
                             {
-                                std::list<Creature*>::iterator itr = _flames.begin();
-                                std::advance(itr, urand(0, _flames.size() - 1));
-                                if (Creature* flame = (*itr))
+                                if (Creature* flame = SelectRandomContainerElement(_flames))
                                     me->SummonCreature(NPC_FROST_BOMB, *flame, TEMPSUMMON_TIMED_DESPAWN, 11000);
                             }
                             else
@@ -1422,7 +1418,6 @@ public:
         }
 
         Phases phase;
-        EventMap events;
         bool MimironHardMode;
         uint8 spawnedAdds;
 
@@ -1656,7 +1651,7 @@ class npc_magnetic_core : public CreatureScript
                 if (Creature* AerialUnit = me->FindNearestCreature(NPC_AERIAL_COMMAND_UNIT, 100.0f, true))
                 {
                     AerialUnit->AI()->DoAction(DO_DISABLE_AERIAL);
-                    me->GetMotionMaster()->MoveFall(364.314f);
+                    me->GetMotionMaster()->MoveFall();
                 }
             }
         };

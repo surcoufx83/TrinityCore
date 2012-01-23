@@ -357,15 +357,18 @@ class mob_saronit_vapor : public CreatureScript
             void Reset()
             {
                 _randomMoveTimer = urand(5000, 7500);
+                _dead = false;
             }
 
             void DamageTaken(Unit* /*attacker*/, uint32 &damage)
             {
                 if (damage >= me->GetHealth())
                 {
+                    _dead = true;
                     damage = me->GetHealth() - 1;
-                    me->GetMotionMaster()->Clear();
+                    me->GetMotionMaster()->Clear(false);
                     me->GetMotionMaster()->MoveIdle();
+                    me->StopMoving();
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_DISABLE_MOVE);
                     me->SetStandState(UNIT_STAND_STATE_DEAD);
                     me->SetHealth(me->GetMaxHealth());
@@ -381,6 +384,9 @@ class mob_saronit_vapor : public CreatureScript
 
             void UpdateAI(uint32 const diff)
             {
+                if (_dead)
+                    return;
+
                 if (_randomMoveTimer < diff)
                 {
                     me->GetMotionMaster()->MoveRandom(25.0f);
@@ -393,6 +399,7 @@ class mob_saronit_vapor : public CreatureScript
         private:
             InstanceScript* _instance;
             uint32 _randomMoveTimer;
+            bool _dead;
         };
 
         CreatureAI* GetAI(Creature* creature) const

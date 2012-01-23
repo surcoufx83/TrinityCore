@@ -30,6 +30,7 @@ enum Spells
     SPELL_SHIELD                    = 66482,
     SPELL_TRAMPLE                   = 67866,
     SPELL_STUNNED                   = 65918,
+    SPELL_KNEEL                     = 68442,
 
     // Defend
     SPELL_DEFEND                    = 66482,
@@ -281,21 +282,23 @@ class npc_faction_champion_toc5 : public CreatureScript
                                 me->GetMotionMaster()->MoveChase(me->getVictim());
                                 DoCast(target, SPELL_CHARGE);
                             }
-                            else
+                            else if (!GetRangedTarget(8.0f, 200.0f, me)) // all targets below 8 yd distance, try to get range
                             {
                                 float x, y, z;
-                                me->GetNearPoint(me, x, y, z, 1.0f, 15.0f, float(M_PI*2*rand_norm()));
+                                me->GetNearPoint(me, x, y, z, 1.0f, 12.0f, float(M_PI*2*rand_norm()));
                                 me->GetMotionMaster()->MovePoint(POINT_RANGE, x, y, z);
                             }
-                            _events.ScheduleEvent(EVENT_CHARGE, urand(7000, 14000));
+                            else if (me->getVictim())
+                                me->GetMotionMaster()->MoveChase(me->getVictim());
+                            _events.ScheduleEvent(EVENT_CHARGE, urand(6000, 12000));
                             break;
                         case EVENT_SHIELD:
                             DoCast(me, SPELL_SHIELD);
-                            _events.ScheduleEvent(EVENT_SHIELD, urand(15000, 25000));
+                            _events.ScheduleEvent(EVENT_SHIELD, urand(10000, 15000));
                             break;
                         case EVENT_THRUST:
                             DoCastVictim(SPELL_THRUST);
-                            _events.ScheduleEvent(EVENT_THRUST, urand(3000, 4000));
+                            _events.ScheduleEvent(EVENT_THRUST, urand(2000, 3000));
                             break;
                     }
                 }
@@ -433,8 +436,8 @@ class boss_grand_champion_toc5 : public CreatureScript
                     // Shaman
                     case NPC_COLOSOS:
                     case NPC_RUNOK:
-                        _events.ScheduleEvent(EVENT_CHAINLIGHTNING, urand(10000, 15000));
-                        _events.ScheduleEvent(EVENT_HEALINGWAVE, urand(15000, 20000));
+                        _events.ScheduleEvent(EVENT_CHAINLIGHTNING, urand(5000, 10000));
+                        _events.ScheduleEvent(EVENT_HEALINGWAVE, urand(8000, 12000));
                         _events.ScheduleEvent(EVENT_EARTHSHIELD, urand(500, 1000));
                         _events.ScheduleEvent(EVENT_HEXOFMENDING, urand(1000, 3000));
                         break;
@@ -465,10 +468,10 @@ class boss_grand_champion_toc5 : public CreatureScript
                 {
                     case 1:
                         me->CastCustomSpell(SPELL_SHIELD, SPELLVALUE_AURA_STACK, 3, me, true);
-                        _events.ScheduleEvent(EVENT_THRUST, urand(5000, 10000));
-                        _events.ScheduleEvent(EVENT_CHARGE, urand(5000, 15000));
-                        _events.ScheduleEvent(EVENT_SHIELD, urand(10000, 15000));
-                        _events.ScheduleEvent(EVENT_SHIELDBREAKER, urand(5000, 20000));
+                        _events.ScheduleEvent(EVENT_THRUST, urand(5000, 8000));
+                        _events.ScheduleEvent(EVENT_CHARGE, urand(5000, 10000));
+                        _events.ScheduleEvent(EVENT_SHIELD, urand(7000, 15000));
+                        _events.ScheduleEvent(EVENT_SHIELDBREAKER, urand(5000, 12000));
                         break;
                     case 3:
                         InitUnmountedEvents();
@@ -517,10 +520,11 @@ class boss_grand_champion_toc5 : public CreatureScript
                             break;
                         case 3:
                             DoScriptText(SAY_START_1, me);
+                            me->InterruptNonMeleeSpells(true);
+                            DoCast(me, SPELL_KNEEL, true);
                             if (_instance)
                                 _instance->SetData(BOSS_GRAND_CHAMPIONS, DONE);
                             me->SetReactState(REACT_PASSIVE);
-                            me->GetMotionMaster()->MoveIdle();
                             _phase = 2;
                             break;
                     }
@@ -544,7 +548,12 @@ class boss_grand_champion_toc5 : public CreatureScript
                 {
                     case SPELL_TRAMPLE:
                         if (_phase == 2 && !me->HasAura(SPELL_STUNNED) && caster->isCharmed())
+                        {
+                            // temporary stop motion
+                            me->GetMotionMaster()->MovementExpired();
+                            me->GetMotionMaster()->MoveIdle();
                             caster->CastSpell(me, SPELL_STUNNED, true);
+                        }
                         break;
                     case SPELL_CHARGE_TRIGGERED:
                         caster->CastSpell(me, SPELL_CHARGE_DMG, true);
@@ -560,17 +569,25 @@ class boss_grand_champion_toc5 : public CreatureScript
                     me->GetMotionMaster()->MovePoint(_point, Waypoints[_point + 4 * _waypointPath]);
                 }
 
-                if (_phase == 0)
-                    if (_phaseChangeTimer <= diff)
-                    {
-                        me->RestoreFaction();
-                        _phase = 3;
-                        DoZoneInCombat(me, 150.0f);
-                    }
-                    else
-                        _phaseChangeTimer -= diff;
+                switch (_phase)
+                {
+                    case 0:
+                        if (_phaseChangeTimer <= diff)
+                        {
+                            me->RestoreFaction();
+                            _phase = 3;
+                            DoZoneInCombat(me, 150.0f);
+                        }
+                        else
+                            _phaseChangeTimer -= diff;
+                        break;
+                    case 2:
+                        if (!me->HasAura(SPELL_STUNNED) && !me->isMoving())
+                            SearchMount();
+                        return;
+                }
 
-                if (!UpdateVictim() || _phase == 2)
+                if (!UpdateVictim())
                     return;
 
                 _events.Update(diff);
@@ -591,27 +608,29 @@ class boss_grand_champion_toc5 : public CreatureScript
                                 me->GetMotionMaster()->MoveChase(me->getVictim());
                                 DoCast(target, SPELL_CHARGE);
                             }
-                            else
+                            else if (!GetRangedTarget(8.0f, 200.0f, me)) // all targets below 8 yd distance, try to get range
                             {
                                 float x, y, z;
-                                me->GetNearPoint(me, x, y, z, 1.0f, 15.0f, float(M_PI*2*rand_norm()));
+                                me->GetNearPoint(me, x, y, z, 1.0f, 12.0f, float(M_PI*2*rand_norm()));
                                 me->GetMotionMaster()->MovePoint(POINT_RANGE, x, y, z);
                             }
-                            _events.ScheduleEvent(EVENT_CHARGE, urand(7000, 10000));
+                            else if (me->getVictim())
+                                me->GetMotionMaster()->MoveChase(me->getVictim());
+                            _events.ScheduleEvent(EVENT_CHARGE, urand(5000, 9000));
                             break;
                         case EVENT_SHIELD:
                             DoCast(me, SPELL_SHIELD);
-                            _events.ScheduleEvent(EVENT_SHIELD, urand(5000, 10000));
+                            _events.ScheduleEvent(EVENT_SHIELD, urand(5000, 7000));
                             break;
                         case EVENT_THRUST:
                             DoCastVictim(SPELL_THRUST);
-                            _events.ScheduleEvent(EVENT_THRUST, urand(2500, 3000));
+                            _events.ScheduleEvent(EVENT_THRUST, 2000);
                             break;
                         case EVENT_SHIELDBREAKER:
                             if (Unit* target = GetRangedTarget(10.0f, 30.0f, me))
                             {
                                 DoCast(target, SPELL_SHIELD_BREAKER, true);
-                                _events.ScheduleEvent(EVENT_SHIELDBREAKER, urand(8000, 12000));
+                                _events.ScheduleEvent(EVENT_SHIELDBREAKER, urand(6000, 11000));
                             }
                             else
                                 _events.ScheduleEvent(EVENT_SHIELDBREAKER, 1000);
@@ -619,16 +638,16 @@ class boss_grand_champion_toc5 : public CreatureScript
                         // Rogue
                         case EVENT_EVISCERATE:
                             DoCastVictim(SPELL_EVISCERATE);
-                            _events.ScheduleEvent(EVENT_EVISCERATE, urand(7000, 10000));
+                            _events.ScheduleEvent(EVENT_EVISCERATE, urand(5000, 8000));
                             break;
                         case EVENT_FANOFKNIVES:
                             DoCastAOE(SPELL_FAN_OF_KNIVES);
-                            _events.ScheduleEvent(EVENT_FANOFKNIVES, urand(12000, 14000));
+                            _events.ScheduleEvent(EVENT_FANOFKNIVES, urand(7000, 10000));
                             break;
                         case EVENT_POISONBOTTLE:
                             if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
                                 DoCast(target, SPELL_POISON_BOTTLE);
-                            _events.ScheduleEvent(EVENT_POISONBOTTLE, urand(15000, 19000));
+                            _events.ScheduleEvent(EVENT_POISONBOTTLE, urand(12000, 16000));
                             break;
                         // Hunter
                         //case EVENT_DISENGAGE:
@@ -652,22 +671,22 @@ class boss_grand_champion_toc5 : public CreatureScript
                         case EVENT_CHAINLIGHTNING:
                             if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
                                 DoCast(target, SPELL_CHAIN_LIGHTNING);
-                            _events.ScheduleEvent(EVENT_CHAINLIGHTNING, urand(10000, 16000));
+                            _events.ScheduleEvent(EVENT_CHAINLIGHTNING, urand(6000, 12000));
                             break;
                         case EVENT_HEALINGWAVE:
                             if (Unit* friendly = DoSelectLowestHpFriendly(40.0f, 20000))
                                 DoCast(friendly, SPELL_HEALING_WAVE);
                             else
                                 DoCast(me, SPELL_HEALING_WAVE);
-                            _events.ScheduleEvent(EVENT_HEALINGWAVE, urand(10000, 12000));
+                            _events.ScheduleEvent(EVENT_HEALINGWAVE, urand(7000, 10000));
                             break;
                         case EVENT_EARTHSHIELD:
                             DoCast(me, SPELL_EARTH_SHIELD);
-                            _events.ScheduleEvent(EVENT_EARTHSHIELD, urand(30000, 35000));
+                            _events.ScheduleEvent(EVENT_EARTHSHIELD, urand(25000, 35000));
                             break;
                         case EVENT_HEXOFMENDING:
                             DoCastVictim(SPELL_HEX_OF_MENDING);
-                            _events.ScheduleEvent(EVENT_HEXOFMENDING, urand(20000, 25000));
+                            _events.ScheduleEvent(EVENT_HEXOFMENDING, urand(16000, 22000));
                             break;
                         // Mage
                         case EVENT_FIREBALL:
@@ -676,7 +695,7 @@ class boss_grand_champion_toc5 : public CreatureScript
                             break;
                         case EVENT_BLASTWAVE:
                             DoCastAOE(SPELL_BLAST_WAVE);
-                            _events.ScheduleEvent(EVENT_BLASTWAVE, urand(15000, 20000));
+                            _events.ScheduleEvent(EVENT_BLASTWAVE, urand(10000, 18000));
                             break;
                         case EVENT_HASTE:
                             DoCast(me, SPELL_HASTE);

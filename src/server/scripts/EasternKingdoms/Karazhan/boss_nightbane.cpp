@@ -172,7 +172,7 @@ public:
         void MovementInform(uint32 type, uint32 id)
         {
             if (type != POINT_MOTION_TYPE)
-                    return;
+                return;
 
             if (id == 8)
             {
