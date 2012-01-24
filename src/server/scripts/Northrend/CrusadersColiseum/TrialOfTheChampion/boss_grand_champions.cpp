@@ -574,7 +574,7 @@ class boss_grand_champion_toc5 : public CreatureScript
                     case 0:
                         if (_phaseChangeTimer <= diff)
                         {
-                            me->RestoreFaction();
+                            me->setFaction(FACTION_HOSTILE_FOR_ALL);
                             _phase = 3;
                             DoZoneInCombat(me, 150.0f);
                         }
@@ -582,7 +582,7 @@ class boss_grand_champion_toc5 : public CreatureScript
                             _phaseChangeTimer -= diff;
                         break;
                     case 2:
-                        if (!me->HasAura(SPELL_STUNNED) && !me->isMoving())
+                        if (!me->HasAura(SPELL_KNEEL) && !me->HasAura(SPELL_STUNNED) && !me->isMoving())
                             SearchMount();
                         return;
                 }
