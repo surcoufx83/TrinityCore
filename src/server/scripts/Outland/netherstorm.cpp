@@ -30,6 +30,7 @@ npc_commander_dawnforge
 npc_bessy
 npc_maxx_a_million
 go_captain_tyralius_prison
+npc_zeppit
 EndContentData */
 
 #include "ScriptPCH.h"
@@ -1077,6 +1078,72 @@ class go_captain_tyralius_prison : public GameObjectScript
         }
 };
 
+/*######
+## npc_zeppit
+######*/
+
+enum Zeppit
+{
+    NPC_WARP_CHASER                 = 18884,
+    SPELL_GATHER_WARP_CHASER_BLOOD  = 39244,
+    QUEST_BLOODY_IMPOSSIBLE         = 10924,
+};
+
+class npc_zeppit : public CreatureScript
+{
+public:
+    npc_zeppit() : CreatureScript("npc_zeppit") { }
+    
+    struct npc_zeppitAI : public ScriptedAI
+    {
+        
+        npc_zeppitAI(Creature* c) : ScriptedAI(c) {}
+        
+        if (me->isSummon())
+            Unit* player = me->ToTempSummon()->GetSummoner()
+        
+        void Reset() {}
+        void EnterCombat(Unit* who) 
+        {
+            if (me->IsValidAttackTarget(who))
+                AttackStart(who);
+        }
+        
+        void UpdateAI(const uint32 /*diff*/)
+        {
+            
+            if (player && player->GetQuestStatus(QUEST_BLOODY_IMPOSSIBLE) == QUEST_STATUS_INCOMPLETE)
+            {
+                
+                if (Creature* pTarget = me->FindNearestCreature(NPC_WARP_CHASER, 5.0f, true))
+                {
+                    
+                    if (pTarget->isDead())
+                    {
+                        
+                        me->GetMotionMaster()->MoveChase(pTarget, 0f, 0f);
+                        me->CastSpell(pTarget, SPELL_GATHER_WARP_CHASER_BLOOD);
+                        
+                    }
+                    
+                }
+            
+            }
+                
+                
+            DoMeleeAttackIfReady();
+            
+        }
+        
+    };
+    
+    CreatureAI* GetAI(Creature* creature) const
+    {
+        return new npc_zeppitAI(creature);
+    }
+    
+};
+
 void AddSC_netherstorm()
 {
     new go_manaforge_control_console();
@@ -1088,4 +1155,5 @@ void AddSC_netherstorm()
     new npc_bessy();
     new npc_maxx_a_million_escort();
     new go_captain_tyralius_prison();
+    new npc_zeppit();
 }
