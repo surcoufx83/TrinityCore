@@ -73,7 +73,9 @@ enum Spells
     SPELL_EVISCERATE                = 67709,
     SPELL_EVISCERATE_H              = 68317,
     SPELL_FAN_OF_KNIVES             = 67706,
-    SPELL_POISON_BOTTLE             = 67701
+    SPELL_POISON_BOTTLE             = 67701,
+    SPELL_DEADLY_POISON             = 67710,
+    SPELL_DEADLY_POISON_H           = 68315
 };
 
 enum Enums
@@ -94,6 +96,7 @@ enum Events
     EVENT_EVISCERATE,
     EVENT_FANOFKNIVES,
     EVENT_POISONBOTTLE,
+    EVENT_DEADLYPOISON,
     // Hunter
     EVENT_DISENGAGE,
     EVENT_SHOOT,
@@ -424,6 +427,7 @@ class boss_grand_champion_toc5 : public CreatureScript
                         _events.ScheduleEvent(EVENT_EVISCERATE, urand(5000, 8000));
                         _events.ScheduleEvent(EVENT_FANOFKNIVES, urand(10000, 14000));
                         _events.ScheduleEvent(EVENT_POISONBOTTLE, urand(12000, 19000));
+                        _events.ScheduleEvent(EVENT_DEADLYPOISON, urand(5000, 10000));
                         break;
                     // Hunter
                     case NPC_JAELYNE:
@@ -561,6 +565,12 @@ class boss_grand_champion_toc5 : public CreatureScript
                 }
             }
 
+            void SpellHitTarget(Unit* target, SpellInfo const* spell)
+            {
+                if (spell->Id == SPELL_FAN_OF_KNIVES)
+                    DoCast(target, SPELL_DEADLY_POISON, true);
+            }
+
             void UpdateAI(uint32 const diff)
             {
                 if (_waypointReached)
@@ -574,7 +584,7 @@ class boss_grand_champion_toc5 : public CreatureScript
                     case 0:
                         if (_phaseChangeTimer <= diff)
                         {
-                            me->RestoreFaction();
+                            me->setFaction(FACTION_HOSTILE_FOR_ALL);
                             _phase = 3;
                             DoZoneInCombat(me, 150.0f);
                         }
@@ -582,7 +592,7 @@ class boss_grand_champion_toc5 : public CreatureScript
                             _phaseChangeTimer -= diff;
                         break;
                     case 2:
-                        if (!me->HasAura(SPELL_STUNNED) && !me->isMoving())
+                        if (!me->HasAura(SPELL_KNEEL) && !me->HasAura(SPELL_STUNNED) && !me->isMoving())
                             SearchMount();
                         return;
                 }
@@ -648,6 +658,10 @@ class boss_grand_champion_toc5 : public CreatureScript
                             if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
                                 DoCast(target, SPELL_POISON_BOTTLE);
                             _events.ScheduleEvent(EVENT_POISONBOTTLE, urand(12000, 16000));
+                            break;
+                        case EVENT_DEADLYPOISON:
+                            DoCastVictim(SPELL_DEADLY_POISON);
+                            _events.ScheduleEvent(EVENT_DEADLYPOISON, urand(5000, 7500));
                             break;
                         // Hunter
                         //case EVENT_DISENGAGE:
